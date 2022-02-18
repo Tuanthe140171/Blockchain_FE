@@ -1,12 +1,12 @@
-import React from "react";
 import ReactDOM from "react-dom";
-import App from './App'
-// import ContextProvider from "./stores/store";
-import "./themes/index.css";
+import { BrowserRouter } from "react-router-dom";
+import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
+import "./styles/main.scss";
+import App from "./App";
 
 ReactDOM.render(
-  // <ContextProvider>
-  <App />,
-  // </ContextProvider>,
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
   document.getElementById("root")
 );

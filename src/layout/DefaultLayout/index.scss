@@ -1,0 +1,58 @@
+@import '../../styles/variables';
+
+.ant-menu-horizontal, .ant-menu-item::after, .ant-menu-submenu::after {
+    border: none !important;
+}
+
+.header {
+    font-family: Readex;
+    padding: 0px 75px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__menu {
+        width: 400px;
+        margin-left: 90px;
+    }
+
+    &__left {
+        display: flex;
+        align-items: center;
+    }
+
+    &__right {
+        display: flex;
+    }
+
+    &__btn {
+        margin-left: 10px;
+    }
+}
+
+.menu {
+    &__icon {
+        padding: 5px !important;
+        line-height: normal;
+        transition: .2s all ease-out !important;
+
+        &:hover {
+            & > span {
+                color: $primaryColor !important;
+            }
+
+            transform: translateY(-2px);
+        }
+
+        & > span {
+            color: #000000;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+        
+        &:not(:first-child) {
+            margin-left: 50px;
+        }
+    }
+}

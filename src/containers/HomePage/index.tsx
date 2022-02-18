@@ -1,7 +1,7 @@
 import React from "react";
 
-const CRV001 = () => {
+const HomePage = () => {
   return <div>Charity Verse</div>;
 };
 
-export default CRV001;
+export default HomePage;

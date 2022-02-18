@@ -1,25 +1,22 @@
-import CRV001 from "./containers/CRV001";
-import "./themes/App.css";
+import routes, { CRVRoute } from "./routes";
+import { Route, Routes } from "react-router-dom";
+import { Suspense } from "react";
+import DefaultLayout from "./layout/DefaultLayout";
 
-function App() {
+const App = () => {
+  const renderContainers = (routes: CRVRoute[]) => {
+    return routes.map((route) => (
+      <Route path={route.path} element={<route.component />} key={route.path} />
+    ));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <CRV001 />
-      </header>
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <DefaultLayout>
+        <Routes>{renderContainers(routes)}</Routes>
+      </DefaultLayout>
+    </Suspense>
   );
-}
+};
 
 export default App;
