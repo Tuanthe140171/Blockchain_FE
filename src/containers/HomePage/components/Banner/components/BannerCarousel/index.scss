@@ -1,0 +1,135 @@
+@import "../../../../../../styles/variables";
+
+.banner-carousel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    width: 100%;
+    color: white;
+    backdrop-filter: blur(70px);
+    border: 1px solid #FFFFFF;
+    border-right: none;
+    border-left: none;
+    padding: 10px 0px;
+
+    & .slick-slide {
+        padding: 40px 0px !important;
+    }
+
+    & .slick-dots {
+        width: 30px;
+        display: flex;
+        align-items: center;
+        right: 100px;
+
+        & > li {
+            align-items: center;
+            height: 6px;
+            width: 6px;
+
+            & > button {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+            }
+
+            &.slick-active {
+                height: auto;
+                width: 15px;
+                height: 15px;
+
+                & > button {
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
+                    border: 1px solid #FFFFFF;
+                }
+            }
+
+            &:not(:last-child) {
+                margin-bottom: 16px;
+            }
+        }
+    }
+
+    &__item {
+        display: flex !important;
+        align-items: flex-start;
+
+        &--first, &--second {
+            max-width: 340px;
+        }
+
+        &--first {
+            margin-left: 260px;
+            margin-right: 100px;
+        }
+
+        &--second {
+            margin-left: 70px;
+        }
+    }
+
+    &__divider {
+        width: 1px;
+        height: 123px;
+        background-color: #9E9E9E;
+    }
+}
+
+
+.carousel-item {
+    &__icon {
+        color: white;
+    }
+
+    &__title {
+        color: #ffffff !important;
+        font-style: normal;
+        font-weight: normal !important;
+        font-size: 20px !important;
+    }
+
+    &__desc {
+        font-style: normal;
+        font-weight: 300 !important;
+        font-size: 14px;
+        color: #C5C5C5;
+        margin-top: 10px;
+        display: -webkit-box;
+        line-height: 1.4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: $lines-to-show;
+    }
+
+    &__link {
+        display: flex;
+        align-items: center;
+
+        & > .anticon {
+            font-size: 13px;
+            transition: .2s all ease-in;
+        }
+
+        &:hover {
+            & > .carousel-item__view-more {
+                color: $secondaryColor;
+            }
+
+            & > .anticon {
+                transform: translateX(2px);
+                color: $secondaryColor;
+            }
+        }
+    }
+
+    &__view-more {
+        font-weight: normal;
+        font-size: 16px;
+        color: white;
+        margin-right: 10px;
+    }
+}
