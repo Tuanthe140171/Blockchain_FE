@@ -15,7 +15,7 @@ type ButtonProps = {
 const Button: React.FC<ButtonProps> = (props) => {
     const { 
       content, 
-      className = "override-btn", 
+      className = "", 
       bgColor = "#3156DB", 
       width = "180px",
       padding = "30px 50px",
@@ -23,7 +23,7 @@ const Button: React.FC<ButtonProps> = (props) => {
       fontSize = "22px"
   } = props;
   return (
-    <AntdButton className={className} style={{
+    <AntdButton className={`override-btn ${className}`} style={{
         backgroundColor: `${bgColor}`,
         border: 'none',
         color: 'white',

@@ -4,7 +4,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
 import TopTierCharityCard from "./components/TopCharityCard";
-import TopTierCharityBtn, { Direction } from "./components/TopTierCharityBtn";
+import MyCarouselBtn, { Direction } from "../../../../components/MyCarouselBtn";
 
 import "./index.scss";
 
@@ -94,7 +94,6 @@ const mockData = [
 const TopTierCharity: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRef = useRef<Carousel | null>();
-    console.log(currentSlide);
   return (
     <div className="top-charity">
       <Image
@@ -111,8 +110,8 @@ const TopTierCharity: React.FC = () => {
           Trong số 3.000 gia đình mà chương trình Mỗi Ngày Một Quả Trứng (MNMQT)
         </p>
         <div className="header-charity__carousel-btns">
-          <TopTierCharityBtn direction={Direction.LEFT} disabled={currentSlide === 0} onClick={() => carouselRef.current?.goToSlide(currentSlide > 1 ? currentSlide - 1: 0)}/>
-          <TopTierCharityBtn direction={Direction.RIGHT} disabled={false} onClick={() => carouselRef.current?.goToSlide(currentSlide + 1 <= mockData.length - 2 ? currentSlide + 1: 0)}/>
+          <MyCarouselBtn direction={Direction.LEFT} disabled={currentSlide === 0} onClick={() => carouselRef.current?.goToSlide(currentSlide > 1 ? currentSlide - 1: 0)}/>
+          <MyCarouselBtn direction={Direction.RIGHT} disabled={false} onClick={() => carouselRef.current?.goToSlide(currentSlide + 1 <= mockData.length - 2 ? currentSlide + 1: 0)}/>
         </div>
       </div>
       <div className="top-charity__cards">
