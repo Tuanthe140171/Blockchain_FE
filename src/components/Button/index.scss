@@ -1,0 +1,19 @@
+@import '../../styles/variables';
+
+.override-btn {
+    // height: 60px;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: normal;
+    font-weight: normal;
+
+    &:hover {
+        background-color: $secondaryColor !important;
+    }
+
+    &:active {
+        transform: translateY(-3px);
+    }
+}

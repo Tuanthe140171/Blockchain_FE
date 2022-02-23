@@ -1,0 +1,58 @@
+@import '../../../../styles/variables';
+
+.banner {
+    position: relative;
+
+    &__content {
+        position: absolute;
+        top: 50%;
+        left: 260px;
+        z-index: 999;
+        max-width: 560px;
+        transform: translateY(-50%);
+    }
+
+    &__title {
+        font-family: Readex;
+        color: white !important;
+        font-size: 48px !important;
+        font-weight: normal !important;
+    }
+}
+
+.donate-cta {
+    display: flex;
+    align-items: center;
+    color: white;
+    margin-top: 40px;
+
+    &__link {
+        display: flex;
+        align-items: center;
+
+        & > .anticon {
+            font-size: 16px;
+            transition: .2s all ease-in;
+        }
+
+        &:hover {
+            & > .donate-cta__view-more {
+                color: $secondaryColor;
+            }
+
+            & > .anticon {
+                transform: translateX(2px);
+                color: $secondaryColor;
+            }
+        }
+    }
+
+    &__view-more {
+        font-weight: normal;
+        font-size: 22px;
+        color: white;
+        margin-left: 32px;
+        margin-right: 20px;
+    }
+
+}

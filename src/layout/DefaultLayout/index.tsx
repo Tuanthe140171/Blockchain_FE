@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react";
 import { Layout, Menu, Image, Input, Button } from "antd";
 import { CaretDownOutlined, SearchOutlined } from "@ant-design/icons";
+import ConnectWalletBtn from "../components/ConnectWalletBtn";
 import "./index.scss";
 
 const DefaultLayout: React.FC = (props): ReactElement => {
@@ -31,9 +32,11 @@ const DefaultLayout: React.FC = (props): ReactElement => {
           </Menu>
         </div>
         <div className="header__right">
-            {/* <SearchOutlined /> */}
-            <Input.Search placeholder="Basic usage" />
-            <Button type="primary" className="header__btn">Connect Wallet</Button>
+            <div className="search">
+                <Input className="search__input" placeholder="" />
+                <Button className="search__btn" type="default" shape="circle" icon={<SearchOutlined />} />
+            </div>
+            <ConnectWalletBtn />
         </div>
       </Layout.Header>
       {props.children}

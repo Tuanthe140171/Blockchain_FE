@@ -4,6 +4,10 @@
     border: none !important;
 }
 
+.container {
+    background-color: white;
+}
+
 .header {
     font-family: Readex;
     padding: 0px 75px;
@@ -11,6 +15,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    &__logo {
+        cursor: pointer;
+    }
 
     &__menu {
         width: 400px;
@@ -24,10 +32,31 @@
 
     &__right {
         display: flex;
+        align-items: center;
+    }
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    &:hover {
+        &__input {
+            display: block;
+        }
     }
 
-    &__btn {
-        margin-left: 10px;
+    &__input {
+        transition: .2s all ease-in;
+        border-radius: 20px;
+        margin-right: 10px;
+        max-width: 50%; /*Set max-wdith*/
+
+
+        &:focus {
+            max-width: 100%; /* Update the max-width of hover*/
+        }
     }
 }
 
@@ -47,7 +76,7 @@
 
         & > span {
             color: #000000;
-            font-size: 1rem;
+            font-size: 16px;
             font-weight: 400;
         }
         
