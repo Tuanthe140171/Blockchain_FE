@@ -1,6 +1,8 @@
 import routes, { CRVRoute } from "./routes";
 import { Route, Routes } from "react-router-dom";
 import { Suspense } from "react";
+
+import Web3ReactManager from "./components/Web3ReactManager";
 import DefaultLayout from "./layout/DefaultLayout";
 
 const App = () => {
@@ -13,7 +15,9 @@ const App = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <DefaultLayout>
-        <Routes>{renderContainers(routes)}</Routes>
+        <Web3ReactManager>
+          <Routes>{renderContainers(routes)}</Routes>
+        </Web3ReactManager>
       </DefaultLayout>
     </Suspense>
   );
