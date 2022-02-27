@@ -7,27 +7,25 @@ export interface CRVRoute extends RouteProps {
   exact: boolean;
 }
 
-const HomePage = lazy(() => import("../containers/HomePage"));
-const CRV002Page = lazy(() => import("../containers/CRV002"));
-const CRV003Page = lazy(() => import("../containers/CRV003"));
-
+// const HomePage = lazy(() => import("../containers/HomePage"));
+const Dashboard = lazy(() => import("../containers/Dashboard"));
 
 const routes: CRVRoute[] = [
   {
-    path: "/",
-    component: HomePage,
+    path: "/dashboard/user",
+    component: Dashboard,
     exact: true,
   },
-  {
-    path: "/CRV002",
-    component: CRV002Page,
-    exact: true,
-  },
-  {
-    path: "/CRV003",
-    component: CRV003Page,
-    exact: true,
-  },
+  // {
+  //   path: "/CRV002",
+  //   component: CRV002Page,
+  //   exact: true,
+  // },
+  // {
+  //   path: "/CRV003",
+  //   component: CRV003Page,
+  //   exact: true,
+  // },
 ];
 
 export default routes;

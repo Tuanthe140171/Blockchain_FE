@@ -1,7 +1,9 @@
-import routes, { CRVRoute } from "./routes";
+import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import { Suspense } from "react";
-import DefaultLayout from "./layout/DefaultLayout";
+import routes, { CRVRoute } from "./routes";
+import UserLayout from "./layout/UserLayout";
+
+const HomePage = lazy(() => import("./containers/HomePage"));
 
 const App = () => {
   const renderContainers = (routes: CRVRoute[]) => {
@@ -12,9 +14,12 @@ const App = () => {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <DefaultLayout>
+      <Routes>
+        <Route path={"/"} element={<HomePage />} key={"/"} />
+      </Routes>
+      <UserLayout>
         <Routes>{renderContainers(routes)}</Routes>
-      </DefaultLayout>
+      </UserLayout>
     </Suspense>
   );
 };

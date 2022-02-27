@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import { Layout, Menu, Image, Input, Button } from "antd";
 import { CaretDownOutlined, SearchOutlined } from "@ant-design/icons";
-import ConnectWalletBtn from "../components/ConnectWalletBtn";
+import ConnectWalletBtn from "./components/ConnectWalletBtn";
 import "./index.scss";
 
 const DefaultLayout: React.FC = (props): ReactElement => {
