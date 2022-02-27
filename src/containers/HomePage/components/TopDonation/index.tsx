@@ -105,6 +105,7 @@ const TopDonation: React.FC = () => {
                             name={topDonations[i].name}
                             lastDonation={topDonations[i].lastDonation}
                             totalDonation={topDonations[i].totalDonation}
+                            key={i}
                         />
                     );
 
@@ -115,6 +116,7 @@ const TopDonation: React.FC = () => {
                                 name={topDonations[i + 1].name}
                                 lastDonation={topDonations[i + 1].lastDonation}
                                 totalDonation={topDonations[i + 1].totalDonation}
+                                key={i + 1}
                             />
                         );
 
@@ -125,6 +127,7 @@ const TopDonation: React.FC = () => {
                                 name={topDonations[i + 2].name}
                                 lastDonation={topDonations[i + 2].lastDonation}
                                 totalDonation={topDonations[i + 2].totalDonation}
+                                key={i + 2}
                             />
                         );
 
@@ -135,6 +138,7 @@ const TopDonation: React.FC = () => {
                                 name={topDonations[i + 3].name}
                                 lastDonation={topDonations[i + 3].lastDonation}
                                 totalDonation={topDonations[i + 3].totalDonation}
+                                key={i + 3}
                             />
                         );
 
