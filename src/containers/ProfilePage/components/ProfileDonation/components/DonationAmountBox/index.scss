@@ -1,0 +1,21 @@
+.donation-amount-box {
+    max-width: 100px;
+    width: 96px;
+    padding: 12px 0px;
+    border: 1px solid #C3D1ED;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+    color: #2F497F;
+    cursor: pointer;
+
+    &__txt {
+        margin-left: 8px;
+    }
+}
