@@ -4,7 +4,11 @@ import React from "react";
 
 import "./index.scss";
 
-const ProfileIntroduction: React.FC = () => {
+type ProfileIntroductionProps = {
+    isOwner: boolean
+}
+
+const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
     return (
         <div className="profile-intro">
             <div className="profile-intro__details">
@@ -16,8 +20,8 @@ const ProfileIntroduction: React.FC = () => {
                     <span>Hà Nội Việt Nam</span>
                 </p>
                 <Button className="follow-btn">
-                    <Image src="/icon/plus.svg" className="follow-btn__icon" />
-                    <span className="follow-btn__txt">Follow</span>
+                    <Image src={!props.isOwner ? "/icon/plus.svg": "/icon/edit.svg"} className="follow-btn__icon" />
+                    <span className="follow-btn__txt">{!props.isOwner ? "Follow": "Edit your profile"}</span>
                 </Button>
                 <div className="profile-intro__metrics">
                     <div className="profile-intro__tier profile-intro__metrics-block">

@@ -1,0 +1,128 @@
+.profile-post {
+    padding: 50px 25px;
+    padding-bottom: 25px;
+    width: 100%;
+    background-color: white;
+    margin-top: 12px;
+
+    &__poster {
+        display: flex;
+        align-items: center;
+    }
+
+    &__metrics {
+        margin-top: 30px;
+        display: flex;
+        align-items: center;
+    }
+
+    &__images {
+        margin-top: 20px;
+    }
+
+    &__cta {
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    &__content {
+        margin-top: 30px;
+        font-style: normal;
+        font-weight: 300;
+        font-size: 16px;
+        line-height: 29px;
+        color: #2F497F;
+    }
+
+    &__see-more {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 28px;
+        color: #5677BB;
+    }
+
+    &__divider {
+        height: 1px;
+        background: #E0E6F1;
+        margin-top: 30px;
+    }
+}
+
+.cta {
+    &__like, &__share {
+        display: flex;
+    
+        &-txt {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 13.6413px;
+            line-height: 27px;
+            color: #002169;
+            margin-left: 5px;
+        }
+
+        &-icon {
+            width: 14px;
+            height: 14px;
+        }
+    }
+
+    &__like {
+        margin-right: 45px;
+    }
+}
+
+.metrics {
+    margin-top: 30px;
+
+    &__likes, &__comments {
+        font-style: normal;
+        font-weight: 300;
+        font-size: 16.6588px;
+        line-height: 22px;
+        color: #A7B2C8;
+    }
+
+    &__likes {
+        display: flex;
+        align-items: center;
+        margin-right: 25px;
+    }
+}
+
+.poster {
+    &__info {
+        margin-left: 10px;
+    }
+    
+    &__avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    &__name {
+        margin-bottom: 5px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 19.4353px;
+        line-height: 28px;
+        color: #002169;
+    }
+
+    &__timestamp {
+        font-style: normal;
+        font-weight: 300;
+        font-size: 16.6588px;
+        line-height: 22px;
+        color: #A7B2C8;
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
+
+        & > span {
+            margin-right: 5px;
+        }
+    }
+}
