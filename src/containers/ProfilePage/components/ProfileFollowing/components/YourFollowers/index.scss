@@ -1,0 +1,35 @@
+.your-followers {
+    background-color: white;
+    padding: 30px 25px;
+    margin-top: 25px;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &-title {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 18px;
+            line-height: 22px;
+            color: #2F497F;
+            margin-bottom: 0;
+        }
+
+        &-see {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            color: #3156DB;
+        }
+    }
+
+    &__cards {
+        margin-top: 45px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+}

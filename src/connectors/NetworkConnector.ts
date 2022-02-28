@@ -1,5 +1,5 @@
 import invariant from 'tiny-invariant'
-import { AbstractConnector } from 'web3-react-abstract-connector'
+import { AbstractConnector } from '@web3-react/abstract-connector'
 import { ConnectorUpdate } from 'web3-react-types'
 
 interface NetworkConnectorArguments {
