@@ -13,7 +13,7 @@ const HomePage = lazy(() => import("../containers/HomePage"));
 
 const routes: CRVRoute[] = [
   {
-    path: "/dashboard/user",
+    path: "/dashboard/",
     component: Dashboard,
     exact: true,
   },

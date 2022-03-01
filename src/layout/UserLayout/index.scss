@@ -35,16 +35,21 @@
         margin: 19px 0;
 
         & > span > input {
+          border: none;
+          background-color: #2F4980;
           height: 46px;
           width: 454px !important;
         }
 
         & > span > span {
+          background-color: #2F4980;
           height: 46px;
           width: 46px !important;
         }
 
         & > span > span > button {
+          color: #A7B2C8;
+          background-color: #2F4980;
           border: none;
         }
       }

@@ -1,8 +1,9 @@
 import {
   BellOutlined,
-  DashboardOutlined, SwapOutlined,
+  DashboardOutlined,
+  SwapOutlined,
   TeamOutlined,
-  WhatsAppOutlined
+  WhatsAppOutlined,
 } from "@ant-design/icons";
 import { Badge, Image, Input, Layout, Menu } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
@@ -39,7 +40,7 @@ const UserLayout: React.FC = (props): ReactElement => {
           className="main-layout__sider__img"
         />
         <Menu
-          defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={["Dashboard"]}
           mode="inline"
           theme="light"
           className="main-layout__sider__menu"
@@ -99,7 +100,7 @@ const UserLayout: React.FC = (props): ReactElement => {
             />
           </div>
         </Header>
-        <Content style={{ margin: "0 16px" }}>
+        <Content>
           <Suspense fallback={loading}>
             <Routes>
               {routes.map((route, index) => {

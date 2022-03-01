@@ -1,0 +1,58 @@
+@import "../../../../styles/variables.scss";
+
+.dash-date {
+  &__group,
+  &__group-hidden {
+    & button {
+      border: none;
+      border-radius: 22.5px;
+      color: #a8b2c8;
+      font-size: 14px;
+    }
+  }
+
+  &__group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #002169;
+    border-radius: 22.5px;
+
+    & button {
+      color: #002169;
+      font-size: 14px;
+    }
+
+    .divider {
+      background: #002169;
+      margin: 0 4px;
+      height: 20px;
+      width: 1px;
+    }
+
+    .picker {
+      border: none;
+      background: transparent;
+
+      input {
+        color: #002169;
+        font-size: 14px;
+      }
+    }
+
+    .ant-picker-focused {
+      box-shadow: none;
+    }
+
+    .ant-picker-suffix {
+      display: none;
+    }
+  }
+
+  &__group-hidden {
+    .divider,
+    .picker {
+      display: none;
+    }
+  }
+  // display: none;
+}

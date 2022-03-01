@@ -20,13 +20,13 @@ const App = () => {
         <Route path={"/"} element={<HomePage />} key={"/"} />
       </Routes>
       <UserLayout>
-        <Routes>{renderContainers(routes)}</Routes>
-      </UserLayout>
-      <DefaultLayout>
         <Web3ReactManager>
           <Routes>{renderContainers(routes)}</Routes>
         </Web3ReactManager>
-      </DefaultLayout>
+      </UserLayout>
+      {/* <DefaultLayout>
+          <Routes>{renderContainers(routes)}</Routes>
+      </DefaultLayout> */}
     </Suspense>
   );
 };
