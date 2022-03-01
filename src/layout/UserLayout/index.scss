@@ -1,26 +1,27 @@
 @import "../../styles/variables";
 
 .main-layout {
-  .ant-image {
-    height: 150px;
-    padding: 34px 0 0 26px;
-  }
-
-  .ant-menu-inline .ant-menu-item-selected {
-    border-left: 4px solid #002169;
-  }
-
-  .ant-menu-inline .ant-menu-item-selected::after {
-    display: none;
-  }
-
   &__sider {
     &__menu {
+      
       &__item {
         height: 64px !important;
         margin: 0 !important;
         font-size: 16px;
       }
+
+      .ant-menu-item-selected {
+        border-left: 4px solid #002169;
+      }
+
+      .ant-menu-item-selected::after {
+        display: none;
+      }
+    }
+
+    &__img {
+      height: 150px;
+      padding: 34px 0 0 26px;
     }
   }
 
@@ -36,20 +37,20 @@
 
         & > span > input {
           border: none;
-          background-color: #2F4980;
+          background-color: #2f4980;
           height: 46px;
           width: 454px !important;
         }
 
         & > span > span {
-          background-color: #2F4980;
+          background-color: #2f4980;
           height: 46px;
           width: 46px !important;
         }
 
         & > span > span > button {
-          color: #A7B2C8;
-          background-color: #2F4980;
+          color: #a7b2c8;
+          background-color: #2f4980;
           border: none;
         }
       }

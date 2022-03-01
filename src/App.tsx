@@ -24,9 +24,6 @@ const App = () => {
           <Routes>{renderContainers(routes)}</Routes>
         </Web3ReactManager>
       </UserLayout>
-      {/* <DefaultLayout>
-          <Routes>{renderContainers(routes)}</Routes>
-      </DefaultLayout> */}
     </Suspense>
   );
 };
