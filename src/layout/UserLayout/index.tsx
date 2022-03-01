@@ -34,11 +34,9 @@ const UserLayout: React.FC = (props): ReactElement => {
         className="main-layout__sider"
         theme="light"
       >
-        <Image
-          src="../../icon/logo.svg"
-          preview={false}
-          className="main-layout__sider__img"
-        />
+        <div className="main-layout__sider__img">
+          <img src="../../icon/logo.svg" alt="" />
+        </div>
         <Menu
           defaultSelectedKeys={["Dashboard"]}
           mode="inline"
