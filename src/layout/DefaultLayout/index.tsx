@@ -1,15 +1,15 @@
-import React, { ReactElement } from "react";
-import { Layout, Menu, Image, Button } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
-import { UnsupportedChainIdError, useWeb3React } from "web3-react-core";
+import { Button, Image, Layout, Menu } from "antd";
 import { BigNumber } from "bignumber.js";
-
-import { useNativeCurrencyBalances } from "../../hooks/useCurrencyBalance";
+import React, { ReactElement } from "react";
+import { UnsupportedChainIdError, useWeb3React } from "web3-react-core";
 import { injected } from "../../connectors";
-import { shortenAddress } from "../../utils";
 import { CHAIN_INFO } from "../../constants/chainInfo";
 import { SupportedChainId } from "../../constants/chains";
+import { useNativeCurrencyBalances } from "../../hooks/useCurrencyBalance";
+import { shortenAddress } from "../../utils";
 import "./index.scss";
+
 
 
 const DefaultLayout: React.FC = (props): ReactElement => {

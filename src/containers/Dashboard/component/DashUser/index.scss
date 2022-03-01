@@ -1,0 +1,77 @@
+@import "../../../../styles/variables.scss";
+
+.dash-system {
+  & > div {
+    margin-bottom: 23px;
+  }
+
+  .chart-group {
+    background-color: #ffffff;
+    padding: 24px;
+
+    &__header {
+      display: flex;
+      justify-content: space-between;
+
+      &__title {
+        color: #002169;
+        font-size: 20px;
+        margin: 0;
+      }
+
+      &__icons {
+        align-self: center;
+
+        &__zoom {
+          margin-right: 10px;
+        }
+      }
+    }
+
+    &__data-group {
+      &__title {
+        color: #a8b2c8;
+        font-size: 12px;
+      }
+
+      &__data {
+        font-size: 20px;
+
+        &__rate {
+          font-size: 12px;
+          margin-left: 20px;
+        }
+      }
+    }
+  }
+
+  .table-group {
+    background-color: #ffffff;
+    padding: 24px;
+
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 24px;
+
+      &__title {
+        color: #002169;
+        font-size: 20px;
+        margin: 0;
+      }
+
+      &__right-group {
+        display: flex;
+
+        &__icons {
+          align-self: center;
+          margin-left: 20px;
+
+          &__zoom {
+            margin-right: 10px;
+          }
+        }
+      }
+    }
+  }
+}

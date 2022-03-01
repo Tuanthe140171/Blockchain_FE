@@ -1,0 +1,43 @@
+@import "../../styles/variables.scss";
+
+.dashboard {
+  &__header {
+    padding: 39px 64px 0;
+
+    &__title {
+      color: #000000;
+      font-size: 32px;
+    }
+
+    &__buttons {
+      & button {
+        border: none;
+        color: #3156db;
+        width: 130px;
+        font-size: 20px;
+        padding-bottom: 14px;
+      }
+
+      &__button {
+        border-bottom: 3px solid !important;
+      }
+    }
+
+    &__date {
+      float: left;
+    }
+
+    .divide {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  &__divider {
+    margin-top: 0;
+  }
+
+  &__body {
+    padding: 0 64px;
+  }
+}
