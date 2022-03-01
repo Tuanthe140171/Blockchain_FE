@@ -1,5 +1,5 @@
 import { InjectedConnector } from "web3-react-injected-connector";
-import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from "../constants/chains";
+import { ALL_SUPPORTED_CHAIN_IDS } from "../constants/chains";
 import { INFURA_NETWORK_URLS } from "../constants/infura";
 import { Web3Provider } from "@ethersproject/providers";
 import { NetworkConnector } from "./NetworkConnector";
