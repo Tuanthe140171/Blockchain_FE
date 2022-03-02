@@ -1,11 +1,12 @@
-import React, { useState, lazy } from "react";
-
+import React, { useState } from "react";
+import ProfileSocialPersonal from "./components/ProfileSocialPersonal";
+import ProfileSocialPosts from "./components/ProfileSocialPosts";
 import ProfileSocialSelection from "./components/ProfileSocialSelection";
 
 import "./index.scss";
 
-const ProfileSocialPersonal = lazy(() => import("./components/ProfileSocialPersonal"));
-const ProfileSocialPosts = lazy(() => import("./components/ProfileSocialPosts"));
+// const ProfileSocialPersonal = lazy(() => import("./components/ProfileSocialPersonal"));
+// const ProfileSocialPosts = lazy(() => import("./components/ProfileSocialPosts"));
 
 
 export type BreadCrumbItem = {

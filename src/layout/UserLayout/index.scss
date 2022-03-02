@@ -59,7 +59,7 @@
         float: right;
         height: 88px;
         right: 0;
-        width: 240px;
+        // width: 240px;
         color: #ffffff;
         display: flex;
         justify-content: space-around;
@@ -67,15 +67,112 @@
         margin: 0;
 
         &__date {
-          margin: 0;
+          margin: 0 15px;
           padding: 0;
         }
 
         &__avatar {
           height: 50px;
           width: 50px;
+          margin-left: 15px;
         }
       }
     }
+  }
+}
+
+.connect-btn {
+  color: $primaryColor;
+  border-color: $primaryColor;
+  margin-left: 24px;
+  transition: 0.2s all ease-in;
+  display: flex;
+  align-items: center;
+  padding: 10px 24px;
+
+  & > span {
+    font-size: 16px;
+  }
+
+  &:hover {
+    background-color: $primaryColor;
+    color: white;
+  }
+
+  &:active {
+    transform: translateY(-3px);
+  }
+}
+
+.connected-account {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  background-color: white;
+  padding: 5px 15px;
+  border-radius: 30px;
+  color: #142D85;
+  height: 40px;
+
+  &__balance {
+      margin: 0;
+      margin-right: 10px;
+  }
+
+  &__addr {
+      padding: 5px 10px;
+      background-color: #142D85;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      border-radius: 30px;
+  }
+}
+
+.switch-network {
+  & > span {
+    color: $primaryColor;
+  }
+}
+
+.wrong-network, .switch-network {
+  display: flex;
+  align-items: center;
+  margin-left: 30px;
+  background: white;
+  color: #F33B2F;
+  padding: 5px 15px;
+  border-radius: 30px;
+  height: 40px;
+
+  &__txt {
+      margin-left: 5px;
+      margin-bottom: 0;
+      font-weight: 600;
+      font-size: 14px;
+  }
+}
+
+.selected-network {
+  display: flex;
+  align-items: center;
+  background-color: #ECECEC;
+  height: 40px;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 30px;
+  color: black;
+
+  &__icon {
+      width: 25px;
+      height: 25px;
+      object-fit: cover;
+  }
+
+  &__txt {
+      margin-bottom: 0;
+      margin-left: 15px;
   }
 }

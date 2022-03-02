@@ -1,14 +1,22 @@
 import {
   BellOutlined,
   DashboardOutlined,
-  SwapOutlined,
   TeamOutlined,
   WhatsAppOutlined,
+  SwapOutlined
 } from "@ant-design/icons";
-import { Badge, Image, Input, Layout, Menu } from "antd";
+import { Badge, Image, Input, Layout, Menu, Button } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
-import React, { ReactElement, Suspense, useState } from "react";
+import React, { ReactElement, Suspense, useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
+import { UnsupportedChainIdError, useWeb3React } from "web3-react-core";
+import { BigNumber } from "bignumber.js";
+import { injected } from "../../connectors";
+import { CHAIN_INFO } from "../../constants/chainInfo";
+import { SupportedChainId } from "../../constants/chains";
+import { useNativeCurrencyBalances } from "../../hooks/useCurrencyBalance";
+import { shortenAddress } from "../../utils"
+import { signTypedMessage, verifyTypedMessage } from "../../blockchain/signMessage";
 import routes from "../../routes";
 import "./index.scss";
 
@@ -23,6 +31,111 @@ const loading = (
 
 const UserLayout: React.FC = (props): ReactElement => {
   const [collapsed, setCollapsed] = useState(false);
+
+  const { activate, account, chainId, error, library } = useWeb3React();
+  const userBalance = useNativeCurrencyBalances(account);
+
+  const {
+    logoUrl,
+    label,
+    nativeCurrency: { symbol: nativeCurrencySymbol },
+  } = CHAIN_INFO[chainId ? chainId as SupportedChainId : SupportedChainId.CHARITY];
+
+  useEffect(() => {
+    const requestSignature = async () => {
+      if (account && library && !error) {
+        const signature = await signTypedMessage(library, account);
+        console.log(verifyTypedMessage(signature, account));
+      }
+    }
+
+    requestSignature();
+  }, [account, error, library]);
+
+  const handleBtnConnect = () => {
+    activate(injected);
+  }
+
+  const renderWeb3Account = () => {
+    if (account && userBalance) {
+      return (
+        <>
+          <div className="selected-network">
+            <Image className="selected-network__icon" src={logoUrl} preview={false} />
+            <p className="selected-network__txt">{label}</p>
+          </div>
+          <div className="connected-account">
+            <p className="connected-account__balance">
+              {`${new BigNumber(userBalance).toFixed(3)} ${nativeCurrencySymbol}`}
+            </p>
+            <div className="connected-account__addr">
+              {shortenAddress(account)}
+            </div>
+          </div>
+
+          <p className="main-layout__site-layout__header__group-avatar__date">
+            Tue, 30 Dec 2022
+          </p>
+          <Badge count={0} size="small" showZero>
+            <BellOutlined style={{ fontSize: "20  px", color: "#ffffff" }} />
+          </Badge>
+          <Avatar
+            src="../../assets/ava.png"
+            className="main-layout__site-layout__header__group-avatar__avatar"
+          />
+        </>)
+    } else if (error) {
+      return (
+        <>
+          <Button className="switch-network" onClick={async () => {
+            try {
+              // check if the chain to connect to is installed
+              await (window as any).ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: '0x7E2' }], // chainId must be in hexadecimal numbers
+              });
+            } catch (error: any) {
+              // This error code indicates that the chain has not been added to MetaMask
+              // if it is not, then install it into the user MetaMask
+              if (error.code === 4902) {
+                console.log("ADDING NETWORK");
+                try {
+                  await (window as any).ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                      {
+                        chainId: '0x7E2',
+                        chainName: 'CharityVerse',
+                        rpcUrls: 'http://35.208.109.149:8545',
+                        blockExplorerUrls: 'https://35.206.106.18:4000"',
+                        nativeCurrency: {
+                          name: "CharityVerse",
+                          symbol: "CRV", // 2-6 characters long
+                          decimals: 18
+                        }
+                      },
+                    ],
+                  });
+                } catch (addError) {
+                  console.error(addError);
+                }
+              }
+              console.error(error);
+            }
+          }}>
+            <SwapOutlined />
+            <span>Switch Network</span>
+          </Button>
+          <div className="wrong-network">
+            <Image src="/icon/wrong-network.svg" preview={false} />
+            <p className="wrong-network__txt">{error instanceof UnsupportedChainIdError ? "Wrong Network" : "Error"}</p>
+          </div>
+        </>
+      )
+    }
+
+    return <Button className="connect-btn" onClick={handleBtnConnect}>Connect Wallet</Button>;
+  }
 
   return (
     <Layout style={{ minHeight: "100vh" }} className="main-layout">
@@ -86,16 +199,7 @@ const UserLayout: React.FC = (props): ReactElement => {
             placeholder="Search donee, history..."
           />
           <div className="main-layout__site-layout__header__group-avatar">
-            <p className="main-layout__site-layout__header__group-avatar__date">
-              Tue, 30 Dec 2022
-            </p>
-            <Badge count={0} size="small" showZero>
-              <BellOutlined style={{ fontSize: "20  px", color: "#ffffff" }} />
-            </Badge>
-            <Avatar
-              src="../../assets/ava.png"
-              className="main-layout__site-layout__header__group-avatar__avatar"
-            />
+            {renderWeb3Account()}
           </div>
         </Header>
         <Content>
