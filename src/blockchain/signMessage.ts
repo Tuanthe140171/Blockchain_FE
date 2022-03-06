@@ -17,12 +17,6 @@ const value = {
     message: "Welcome to CharityVerse"
 }
 
-export const signTypedMessage = async (library: Web3Provider, account: string): Promise<string> => {
-    const signer = await getSigner(library, account);
-
-    return await signer._signTypedData(domain, types, value);
-}
-
 export const verifyTypedMessage = (signature: string, account: string) => {
     return ethers.utils.verifyTypedData(
         domain,
@@ -30,4 +24,10 @@ export const verifyTypedMessage = (signature: string, account: string) => {
         value,
         signature
     ) === account;
+}
+
+export const signTypedMessage = async (library: Web3Provider, account: string): Promise<string> => {
+    const signer = await getSigner(library, account);
+
+    return await signer._signTypedData(domain, types, value);
 }

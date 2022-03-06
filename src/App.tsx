@@ -3,27 +3,50 @@ import { Route, Routes } from "react-router-dom";
 import routes, { CRVRoute } from "./routes";
 import UserLayout from "./layout/UserLayout";
 import Web3ReactManager from "./components/Web3ReactManager";
-import DefaultLayout from "./layout/DefaultLayout";
 
 const HomePage = lazy(() => import("./containers/HomePage"));
 
 const App = () => {
   const renderContainers = (routes: CRVRoute[]) => {
     return routes.map((route) => (
-      <Route path={route.path} element={<route.component />} key={route.path} />
+      <Route path={route.path} element={<UserLayout><route.component /></UserLayout>} key={route.path} />
     ));
   };
 
+  // useEffect(() => {
+  //   const calling = async () => {
+  //     const data = await axios.post("http://35.206.106.18:8000/subgraphs/name/DynamoVue/CharityVerse", {
+  //     query:  ` 
+  //       {
+  //           donations()) {
+  //             id
+  //             from {
+  //               id
+  //               totalDonation
+  //             }
+  //             to {
+  //               id
+  //               totalDonation
+  //             }
+  //             amount
+  //           }
+  //       }
+  //     `
+  //   });
+  //   console.log(data);
+  //   }
+
+  //   calling();
+  // });
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <Routes>
-        <Route path={"/"} element={<HomePage />} key={"/"} />
-      </Routes>
-      <UserLayout>
-        <Web3ReactManager>
-          <Routes>{renderContainers(routes)}</Routes>
-        </Web3ReactManager>
-      </UserLayout>
+      <Web3ReactManager>
+        <Routes>
+          <Route path={"/"} element={<HomePage />} key={"/"} />
+          {renderContainers(routes)}
+        </Routes>
+      </Web3ReactManager>
     </Suspense>
   );
 };

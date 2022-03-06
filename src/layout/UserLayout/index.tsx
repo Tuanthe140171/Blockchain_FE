@@ -45,7 +45,7 @@ const UserLayout: React.FC = (props): ReactElement => {
     const requestSignature = async () => {
       if (account && library && !error) {
         const signature = await signTypedMessage(library, account);
-        console.log(verifyTypedMessage(signature, account));
+        console.log(signature);
       }
     }
 

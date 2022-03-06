@@ -1,9 +1,11 @@
 import { CaretDownOutlined } from "@ant-design/icons";
 import { Button, Image, Layout, Menu } from "antd";
+import { useNavigate } from "react-router-dom";
 import React, { ReactElement } from "react";
 import "./index.scss";
 
 const DefaultLayout: React.FC = (props): ReactElement => { 
+  const navigate = useNavigate();
   return (
     <Layout className="container">
       <Layout.Header className="header">
@@ -31,7 +33,7 @@ const DefaultLayout: React.FC = (props): ReactElement => {
           </Menu>
         </div>
         <div className="header__right">
-        <Button className="connect-btn">Launch App</Button>;
+        <Button className="connect-btn" onClick={() => navigate("/dashboard")}>Launch App</Button>
         </div>
       </Layout.Header>
       {props.children}
