@@ -7,8 +7,8 @@ import {
 } from "@ant-design/icons";
 import { Badge, Image, Input, Layout, Menu, Button } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
-import React, { ReactElement, Suspense, useEffect, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import React, { ReactElement, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { UnsupportedChainIdError, useWeb3React } from "web3-react-core";
 import { BigNumber } from "bignumber.js";
 import { injected } from "../../connectors";
@@ -16,8 +16,7 @@ import { CHAIN_INFO } from "../../constants/chainInfo";
 import { SupportedChainId } from "../../constants/chains";
 import { useNativeCurrencyBalances } from "../../hooks/useCurrencyBalance";
 import { shortenAddress } from "../../utils"
-import { signTypedMessage, verifyTypedMessage } from "../../blockchain/signMessage";
-import routes from "../../routes";
+// import { signTypedMessage, verifyTypedMessage } from "../../blockchain/signMessage";
 import "./index.scss";
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -32,6 +31,7 @@ const loading = (
 const UserLayout: React.FC = (props): ReactElement => {
   const [collapsed, setCollapsed] = useState(false);
 
+  const navigate = useNavigate();
   const { activate, account, chainId, error, library } = useWeb3React();
   const userBalance = useNativeCurrencyBalances(account);
 
@@ -147,7 +147,7 @@ const UserLayout: React.FC = (props): ReactElement => {
         className="main-layout__sider"
         theme="light"
       >
-        <div className="main-layout__sider__img">
+        <div className="main-layout__sider__img" style={{ cursor: 'pointer' }} onClick={() => navigate("/")}>
           <img src="../../icon/logo.svg" alt="" />
         </div>
         <Menu
@@ -158,38 +158,41 @@ const UserLayout: React.FC = (props): ReactElement => {
         >
           <Menu.Item
             key="Dashboard"
-            icon={<DashboardOutlined />}
+            icon={<Image src="/icon/dashboard.svg" preview={false} />}
             className="main-layout__sider__menu__item"
+            onClick={() => navigate("/dashboard")}
           >
             Dashboard
           </Menu.Item>
           <Menu.Item
             key="Donee"
-            icon={<TeamOutlined />}
+            icon={<Image src="/icon/donee.svg" preview={false} />}
             className="main-layout__sider__menu__item"
           >
             Donee
           </Menu.Item>
           <Menu.Item
             key="Exchange"
-            icon={<SwapOutlined />}
+            icon={<Image src="/icon/exchange.svg" preview={false} />}
             className="main-layout__sider__menu__item"
           >
             Exchange Money
           </Menu.Item>
           <Menu.Item
             key="ContactF"
-            icon={<WhatsAppOutlined />}
+            icon={<Image src="/icon/contact-us.svg" preview={false} />}
             className="main-layout__sider__menu__item"
           >
             Contact us
           </Menu.Item>
-          {/* <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-            <Menu.Item key="3">Tom</Menu.Item>
-            <Menu.Item key="4">Bill</Menu.Item>
-            <Menu.Item key="5">Alex</Menu.Item>
-          </SubMenu>
-          </Menu.Item> */}
+          <Menu.Item
+            key="Voting"
+            icon={<Image src="/icon/voting.svg" preview={false} />}
+            className="main-layout__sider__menu__item"
+            onClick={() => navigate("/voting")}
+          >
+            Voting
+          </Menu.Item>
         </Menu>
       </Sider>
       <Layout className="main-layout__site-layout">

@@ -7,20 +7,42 @@
     min-width: 260px !important;
     width: 260px !important;
 
+    .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected { 
+      background: #F6FAFF;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      color: #002169;
+    }
+
     &__menu {
       
       &__item {
         height: 64px !important;
         margin: 0 !important;
         font-size: 16px;
+        display: flex;
+        align-items: center;
+
+        & > .ant-menu-title-content {
+          margin-left: 20px;
+        }
       }
 
       .ant-menu-item-selected {
-        border-left: 4px solid #002169;
-      }
+        position: relative;
 
-      .ant-menu-item-selected::after {
-        display: none;
+        &::after {
+          animation: infinite-spinning .4s ease-in forwards;
+          height: 0px;
+          position: absolute;
+          left: 0px;
+          top: 0;
+          height: 100%;
+          width: 4px;
+          background-color: #002169;
+          border-right: none;
+        }
       }
     }
 
@@ -179,5 +201,14 @@
   &__txt {
       margin-bottom: 0;
       margin-left: 15px;
+  }
+}
+
+@keyframes infinite-spinning {
+  from {
+    height: 0;
+  }
+  to {
+    height: 100%;
   }
 }
