@@ -1,61 +1,79 @@
-import React from "react";
-import { Typography, Table, Button, Image, Tooltip } from "antd";
+import React, { useState } from "react";
+import { Typography, Table, Button, Input } from "antd";
+import VotingConfirmation from "./components/VotingConfirmation";
 import "./index.scss";
 
-const columns = [
-    {
-        title: 'ID',
-        dataIndex: 'id',
-    },
-    {
-        title: 'Donee',
-        dataIndex: 'donee',
-    },
-    {
-        title: 'Address',
-        dataIndex: 'address',
-    },
-    {
-        title: 'Date of Birth',
-        dataIndex: 'date',
-    },
-    {
-        title: 'Hoàn cảnh',
-        dataIndex: 'situation',
-    },
-    {
-        title: 'Time summit',
-        dataIndex: 'time',
-    },
-    {
-        title: 'Status',
-        dataIndex: 'status',
-        render:  (text: any, row: any, index: any) => {
-            if (text === "Checked") {
-                return <Tooltip title="Checked">
-                    <Image src="/icon/tick.svg" preview={false}/>
-                </Tooltip>
-            } 
-
-            return <Button className="voting__check-btn">{text}</Button>
-        }
-    },
-];
+const { Search } = Input;
 
 const VotingPage: React.FC = () => {
+    const [confirmationVisible, setConfirmationVisible] = useState(false);
+
+    const columns = [
+        {
+            title: 'ID',
+            dataIndex: 'id',
+        },
+        {
+            title: 'Donee',
+            dataIndex: 'donee',
+        },
+        {
+            title: 'Address',
+            dataIndex: 'address',
+        },
+        {
+            title: 'Date of Birth',
+            dataIndex: 'date',
+        },
+        {
+            title: 'Hoàn cảnh',
+            dataIndex: 'situation',
+            width: '20%',
+            render: (text: any, row: any, index: any) => {
+                return (
+                    <div className="voting__situation">
+                        <span>{text}</span>
+                        {
+                            row.more % 2 === 0 && <span className="voting__situation-more">3 more</span>
+                        }
+                    </div>
+                )
+            }
+        },
+        {
+            title: 'Time summit',
+            dataIndex: 'time',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            render: (text: any, row: any, index: any) => {
+                return (
+                    <Button
+                        className={`voting__check-btn voting__check-btn--${text.toLowerCase()}`}
+                        onClick={() => text.toLowerCase() === "check" && setConfirmationVisible(true)}
+                    >
+                        {text}
+                    </Button>
+                )
+            }
+        },
+    ];
+
     const { Title } = Typography;
     const data = [];
     for (let i = 0; i < 100; i++) {
-    data.push({
-        key: i,
-        id: i,
-        donee: `Edward King ${i}`,
-        address: `London, Park Lane no. ${i}`,
-        date: "10/01/2020",
-        situation: i %  2 === 0 ? "Người khuyết tật": "Người nghèo",
-        time: "02/02/1990",
-        status: i % 2 === 0 ? "Checked": "Check"
-    });
+        data.push({
+            key: i,
+            id: i,
+            donee: `Edward King ${i}`,
+            address: `London, Park Lane no. ${i}`,
+            date: "10/01/2020",
+            situation: i % 2 === 0 ? "Người khuyết tật" : "Người nghèo",
+            time: "02/02/1990",
+            status: i % 2 === 0 ? "Claimed" : "Check",
+            more: i
+        });
     }
     return (
         <div className="voting">
@@ -63,10 +81,18 @@ const VotingPage: React.FC = () => {
                 Voting
             </Title>
             <div className="voting__list">
-                <Title level={4} className="voting__list-title">
-                    Pre-Donee list
-                </Title>
+                <div className="voting__list-header">
+                    <Title level={4} className="voting__list-title">
+                        Pre-Donee list
+                    </Title>
+                    <Search placeholder="Search donee, history..." onSearch={() => { }} style={{ width: 260 }} className="voting__list-input" />
+                </div>
                 <Table className="voting__table" bordered={false} columns={columns} dataSource={data} scroll={{ y: 400 }} />
+                <VotingConfirmation 
+                    visible={confirmationVisible} 
+                    onClose={() => setConfirmationVisible(false)} 
+                    setConfirmationVisible={setConfirmationVisible}
+                />
             </div>
         </div>
     )

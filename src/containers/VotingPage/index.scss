@@ -22,6 +22,13 @@
             font-size: 20px !important;
             line-height: 25px !important;
             color: #002169 !important;
+            margin-bottom: 0 !important;
+        }
+
+        &-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
     }
 
@@ -72,5 +79,30 @@
         color: #3156DB; 
         background: #F6FAFF;
         border: 1px solid #C3D1ED;
+        width: 90%;
+        max-width: 90%;
+
+        &--claimed {
+            background-color: #F0CF27;
+            color: #002169;
+            border-color: #F0CF27;
+        }
+    }
+
+    &__situation {
+        width: 200px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        &-more {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;
+            color: white;
+            padding: 4px 9px;
+            border-radius: 25px;
+            background: #A7B2C8;            
+        }
     }
 }

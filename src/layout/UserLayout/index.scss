@@ -2,6 +2,11 @@
 
 .main-layout {
   &__sider {
+    flex: 0 0 260px !important;
+    max-width: 260px !important;
+    min-width: 260px !important;
+    width: 260px !important;
+
     &__menu {
       
       &__item {
