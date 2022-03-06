@@ -44,8 +44,8 @@ const UserLayout: React.FC = (props): ReactElement => {
   useEffect(() => {
     const requestSignature = async () => {
       if (account && library && !error) {
-        const signature = await signTypedMessage(library, account);
-        console.log(signature);
+        // const signature = await signTypedMessage(library, account);
+        // console.log(signature);
       }
     }
 
@@ -203,21 +203,7 @@ const UserLayout: React.FC = (props): ReactElement => {
           </div>
         </Header>
         <Content>
-          <Suspense fallback={loading}>
-            <Routes>
-              {routes.map((route, index) => {
-                return (
-                  route.component && (
-                    <Route
-                      path={route.path}
-                      element={<route.component />}
-                      key={index}
-                    />
-                  )
-                );
-              })}
-            </Routes>
-          </Suspense>
+          {props.children}
         </Content>
         {/* <Footer style={{ textAlign: "center" }}>
           Ant Design ©2018 Created by Ant UED

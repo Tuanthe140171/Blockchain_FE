@@ -41,12 +41,12 @@ const App = () => {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <Web3ReactManager>
-        <Routes>
-          <Route path={"/"} element={<HomePage />} key={"/"} />
-          {renderContainers(routes)}
-        </Routes>
-      </Web3ReactManager>
+        <Web3ReactManager>
+          <Routes>
+            {renderContainers(routes)}
+            <Route path={"/*"} element={<HomePage />} key={"/"} />
+          </Routes>
+        </Web3ReactManager>
     </Suspense>
   );
 };
