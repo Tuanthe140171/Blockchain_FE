@@ -91,9 +91,7 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
 
   const onTagClose = (e: any, index: any) => {
     const itemPos = selectedList.indexOf(e);
-    console.log(itemPos);
     const { [itemPos]: item, ...rest } = selectedList;
-    console.log(Object.values(rest));
     setSelectedList(Object.values(rest));
     return;
   };
@@ -118,7 +116,7 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
         <Tag
           closable
           onClose={() => onTagClose(tag, index)}
-          key={index}
+          key={tag}
           className="profile-drawer__tags__tag"
           color={randomColor()}
         >
