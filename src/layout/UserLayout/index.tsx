@@ -98,7 +98,6 @@ const UserLayout: React.FC = (props): ReactElement => {
               // This error code indicates that the chain has not been added to MetaMask
               // if it is not, then install it into the user MetaMask
               if (error.code === 4902) {
-                console.log("ADDING NETWORK");
                 try {
                   await (window as any).ethereum.request({
                     method: 'wallet_addEthereumChain',
@@ -106,8 +105,8 @@ const UserLayout: React.FC = (props): ReactElement => {
                       {
                         chainId: '0x7E2',
                         chainName: 'CharityVerse',
-                        rpcUrls: 'http://35.208.109.149:8545',
-                        blockExplorerUrls: 'https://35.206.106.18:4000"',
+                        rpcUrls: ["https://custom.charityverse.info"],
+                        blockExplorerUrls: ["https://35.209.169.120:4000"],
                         nativeCurrency: {
                           name: "CharityVerse",
                           symbol: "CRV", // 2-6 characters long
