@@ -1,0 +1,58 @@
+// @import "../../styles/variables.scss";
+
+.profile-payment {
+  background-color: #ffffff;
+  padding: 37px 40px;
+
+  &__title {
+    font-size: 24px;
+    color: #002169;
+    margin-bottom: 50px;
+  }
+
+  &__container {
+    display: flex;
+
+    &__avatar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 60px;
+      color: aqua;
+
+      & > span {
+        margin-bottom: 20px;
+      }
+
+      button {
+        color: aqua;
+        border: none;
+      }
+    }
+
+    &__information {
+      &__form {
+        max-width: 600px;
+        &__form-item {
+          & > div {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          .ant-form-item-control {
+            width: 100%;
+
+            & input {
+              height: 40px;
+            }
+          }
+        }
+
+        &__submit {
+          height: 40px;
+        }
+      }
+    }
+  }
+}

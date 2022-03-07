@@ -1,0 +1,33 @@
+.profile-upload {
+  &__title {
+    top: 15px;
+    background: #ffffff;
+    padding: 5px;
+    margin: 0 15px; 
+  }
+
+  &__wrapper {
+    padding: 0 15px;
+    border: 1px solid #e0e6f1;
+
+    &__container {
+      position: relative;
+      padding: 15px;
+
+      &__button {
+        position: absolute;
+        top: 60px;
+        left: 425px;
+        z-index: 100;
+      }
+
+      .ant-upload-list-item-card-actions-btn {
+        display: none;
+      }
+    }
+
+    &__download {
+      margin: -10px 0 5px;
+    }
+  }
+}
