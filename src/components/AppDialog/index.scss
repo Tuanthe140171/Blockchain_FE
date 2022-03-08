@@ -1,0 +1,55 @@
+.app-dialog {
+  padding: 40px 96px;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+
+  &__title {
+    color: #002169;
+    font-size: 27px;
+  }
+
+  &__description {
+    color: #a7b2c8;
+    font-size: 15px;
+  }
+
+  &__buttons {
+    width: 70%;
+    display: flex;
+    justify-content: space-evenly;
+    
+    button {
+      height: 45px;
+      width: 115px;
+      color: #ffffff;
+    }
+
+    &__btn-cancel {
+      background-color: #e6e6e6;
+    }
+
+    &__btn-confirm {
+      background-color: #7b61ff;
+    }
+
+    &__btn-warning {
+      background-color: #ea6a3f;
+    }
+  }
+
+  &__button {
+    button {
+      height: 45px;
+      width: 115px;
+      color: #ffffff;
+    }
+
+    &__btn-infor {
+      background-color: #52bfd6;
+    }
+  }
+}

@@ -5,7 +5,9 @@ import {
 } from "@ant-design/icons";
 import { Button, Cascader, Drawer, Tag, Upload } from "antd";
 import React, { useState } from "react";
+import AppDialog from "../../../../components/AppDialog";
 import Circumstances from "../../../../constants/circumstances";
+import Message from "../../../../constants/message";
 import ProfileUpload from "./component/ProfileEditUpload";
 import "./index.scss";
 
@@ -140,70 +142,88 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
     };
   })();
 
+  const [openDialog, setOpenDialog] = useState(false);
+
   return (
-    <Drawer
-      title="Thông tin cá nhân"
-      placement="right"
-      visible={isVisible}
-      mask={false}
-      onClose={closeModal}
-      closeIcon={<ArrowLeftOutlined />}
-      width="45%"
-      className="profile-drawer"
-      headerStyle={{ height: "98px", padding: "24px 65px 0 39px" }}
-      bodyStyle={{ padding: "24px 65px 0 39px" }}
-    >
-      <Button
-        disabled={!selectedList.length}
-        className="profile-drawer__btn-submit"
-        type="primary"
+    <>
+      {openDialog ? (
+        <AppDialog
+          type="infor"
+          title={Message.INFOR_01}
+          description={Message.INFOR_DC_01}
+          confirmText={Message.INFOR_CF_01}
+          onConfirm={() => {
+            console.log("Xác nhận");
+            setOpenDialog(false);
+            closeModal();
+          }}
+        />
+      ) : null}
+      <Drawer
+        title="Thông tin cá nhân"
+        placement="right"
+        visible={isVisible}
+        mask={true}
+        onClose={closeModal}
+        closeIcon={<ArrowLeftOutlined />}
+        width="45%"
+        className="profile-drawer"
+        headerStyle={{ height: "98px", padding: "24px 65px 0 39px" }}
+        bodyStyle={{ padding: "24px 65px 0 39px" }}
       >
-        Confirm
-      </Button>
-      <div className="profile-drawer__text">
-        Bạn hãy chọn những hoàn cảnh phù hợp với hoàn cảnh của bạn :
-      </div>
-      <Cascader
-        options={options}
-        onChange={onChange}
-        value={selectedList}
-        style={{ width: "100%" }}
-        className="profile-drawer__cascader"
-        multiple
-        maxTagCount={0}
-        maxTagPlaceholder={
-          <div>
-            <Tag closable onClose={() => setSelectedList([])} color="#108ee9">
-              {selectedList.length}
-            </Tag>
-            Hoàn cảnh
-          </div>
-        }
-        dropdownStyle={{ width: "100%" }}
-      />
-      {/* {setSelectedList.length > 0 ? <div>adu</div> : <div>adu2</div>} */}
-      <div className="profile-drawer__tags">{renderTag()}</div>
-      <div className="profile-drawer__text">
-        Bạn hãy điền và gửi các giấy tờ vào{" "}
-        {selectedList.length + 1 > 1 ? selectedList.length + 1 : ""} form sau:
-      </div>
-      <div className="profile-drawer__cmnd">
-        <Button type="text" className="profile-drawer__cmnd__title">
-          Giấy CMND
+        <Button
+          disabled={!selectedList.length}
+          className="profile-drawer__btn-submit"
+          type="primary"
+          onClick={() => setOpenDialog(true)}
+        >
+          Confirm
         </Button>
-        <div className="profile-drawer__cmnd__wrapper">
-          <Upload {...props1} className="profile-upload__wrapper__container">
-            <Tag
-              className="profile-drawer__cmnd__wrapper__container__button"
-              color={"#3156DB"}
-            >
-              Add file
-            </Tag>
-          </Upload>
+        <div className="profile-drawer__text">
+          Bạn hãy chọn những hoàn cảnh phù hợp với hoàn cảnh của bạn :
         </div>
-      </div>
-      {renderProof()}
-    </Drawer>
+        <Cascader
+          options={options}
+          onChange={onChange}
+          value={selectedList}
+          style={{ width: "100%" }}
+          className="profile-drawer__cascader"
+          multiple
+          maxTagCount={0}
+          maxTagPlaceholder={
+            <div>
+              <Tag closable onClose={() => setSelectedList([])} color="#108ee9">
+                {selectedList.length}
+              </Tag>
+              Hoàn cảnh
+            </div>
+          }
+          dropdownStyle={{ width: "100%" }}
+        />
+        {/* {setSelectedList.length > 0 ? <div>adu</div> : <div>adu2</div>} */}
+        <div className="profile-drawer__tags">{renderTag()}</div>
+        <div className="profile-drawer__text">
+          Bạn hãy điền và gửi các giấy tờ vào{" "}
+          {selectedList.length + 1 > 1 ? selectedList.length + 1 : ""} form sau:
+        </div>
+        <div className="profile-drawer__cmnd">
+          <Button type="text" className="profile-drawer__cmnd__title">
+            Giấy CMND
+          </Button>
+          <div className="profile-drawer__cmnd__wrapper">
+            <Upload {...props1} className="profile-upload__wrapper__container">
+              <Tag
+                className="profile-drawer__cmnd__wrapper__container__button"
+                color={"#3156DB"}
+              >
+                Add file
+              </Tag>
+            </Upload>
+          </div>
+        </div>
+        {renderProof()}
+      </Drawer>
+    </>
   );
 };
 
