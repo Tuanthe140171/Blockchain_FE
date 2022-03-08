@@ -1,5 +1,6 @@
 import { Breadcrumb, Button, Divider } from "antd";
 import React, { useState } from "react";
+import AppDialog from "../../components/AppDialog";
 import ProfileModal from "./component/ProfileEditModal";
 import ProfilePayment from "./component/ProfileEditPayment";
 import ProfilePerson from "./component/ProfileEditPersonal";
@@ -8,6 +9,7 @@ import "./index.scss";
 const Dashboard = () => {
   const [isSystem, setIsSystem] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
 
   const closeModal = () => {
     setIsModalVisible(false);
@@ -19,6 +21,7 @@ const Dashboard = () => {
         <Button
           className="profile-edit__header__confirm"
           onClick={() => setIsModalVisible(true)}
+          disabled={isSubmit}
         >
           Xác nhận hộ nghèo
         </Button>
@@ -56,7 +59,7 @@ const Dashboard = () => {
       <div className="profile-edit__body">
         {isSystem ? <ProfilePerson /> : <ProfilePayment />}
       </div>
-      <ProfileModal isVisible={isModalVisible} closeModal={closeModal}/>
+      <ProfileModal isVisible={isModalVisible} closeModal={closeModal} />
     </div>
   );
 };

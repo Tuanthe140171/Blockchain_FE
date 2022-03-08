@@ -110,8 +110,12 @@ const ProfilePayment = () => {
                 key={4}
                 className="profile-payment__container__information__form__form-item"
               >
-                <Form.Item label="Giới tính" name="gender">
-                  <Radio.Group defaultValue={"male"}>
+                <Form.Item
+                  label="Giới tính"
+                  name="gender"
+                  initialValue={"male"}
+                >
+                  <Radio.Group>
                     <Radio value="male">Nam</Radio>
                     <Radio value="female">Nữ</Radio>
                     <Radio value="other">Khác</Radio>
