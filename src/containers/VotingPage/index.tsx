@@ -12,10 +12,12 @@ const VotingPage: React.FC = () => {
         {
             title: 'ID',
             dataIndex: 'id',
+            width: '10%',
         },
         {
             title: 'Donee',
             dataIndex: 'donee',
+            width: '10%'
         },
         {
             title: 'Address',
@@ -24,6 +26,7 @@ const VotingPage: React.FC = () => {
         {
             title: 'Date of Birth',
             dataIndex: 'date',
+            width: '10%'
         },
         {
             title: 'Hoàn cảnh',
@@ -43,10 +46,12 @@ const VotingPage: React.FC = () => {
         {
             title: 'Time summit',
             dataIndex: 'time',
+            width: '10%'
         },
         {
             title: 'Status',
             dataIndex: 'status',
+            width: '20%',
             render: (text: any, row: any, index: any) => {
                 return (
                     <Button
