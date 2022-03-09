@@ -1,6 +1,5 @@
 import { Breadcrumb, Button, Divider } from "antd";
 import React, { useState } from "react";
-import AppDialog from "../../components/AppDialog";
 import ProfileModal from "./component/ProfileEditModal";
 import ProfilePayment from "./component/ProfileEditPayment";
 import ProfilePerson from "./component/ProfileEditPersonal";

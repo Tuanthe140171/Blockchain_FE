@@ -1,7 +1,6 @@
 import {
   ArrowLeftOutlined,
-  StarOutlined,
-  UploadOutlined,
+  StarOutlined
 } from "@ant-design/icons";
 import { Button, Cascader, Drawer, Tag, Upload } from "antd";
 import React, { useState } from "react";
