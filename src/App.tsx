@@ -1,7 +1,8 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 //@ts-ignore
 import Lottie from 'react-lottie';
+import axios from 'axios';
 import * as animationData from './lottie/donation.json'
 import routes, { CRVRoute } from "./routes";
 import UserLayout from "./layout/UserLayout";
@@ -26,31 +27,33 @@ const App = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const calling = async () => {
-  //     const data = await axios.post("http://35.206.106.18:8000/subgraphs/name/DynamoVue/CharityVerse", {
-  //     query:  ` 
-  //       {
-  //           donations()) {
-  //             id
-  //             from {
-  //               id
-  //               totalDonation
-  //             }
-  //             to {
-  //               id
-  //               totalDonation
-  //             }
-  //             amount
-  //           }
-  //       }
-  //     `
-  //   });
-  //   console.log(data);
-  //   }
+  useEffect(() => {
+    const calling = async () => {
+      const data = await axios.post("http://35.206.106.18:8000/subgraphs/name/DynamoVue/CharityVerse", {
+        query: ` 
+          query DonationTransaction($first: BigInt!, $orderBy: String!, $orderDirection: String!) {
+            donationTransactions(first: $first, orderBy: $orderBy, orderDirection: $orderDirection) {
+                id
+                from {
+                  id
+                }
+                to {
+                  id
+                }
+            }
+          }
+      `,
+        variables: {
+          first: 5,
+          orderBy: 'id',
+          orderDirection: 'desc'
+        }
+      });
+      console.log(data);
+    }
 
-  //   calling();
-  // });
+    calling();
+  });
 
   return (
     <Suspense fallback={

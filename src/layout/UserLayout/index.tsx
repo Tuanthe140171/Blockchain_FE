@@ -1,8 +1,5 @@
 import {
   BellOutlined,
-  DashboardOutlined,
-  TeamOutlined,
-  WhatsAppOutlined,
   SwapOutlined,
 } from "@ant-design/icons";
 import { Badge, Image, Input, Layout, Menu, Button } from "antd";
@@ -198,6 +195,7 @@ const UserLayout: React.FC = (props): ReactElement => {
             key="Donee"
             icon={<Image src="/icon/donee.svg" preview={false} />}
             className="main-layout__sider__menu__item"
+            onClick={() => navigate("/donee")}
           >
             Donee
           </Menu.Item>

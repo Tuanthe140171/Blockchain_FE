@@ -3,6 +3,10 @@
   position: absolute;
   height: 1050px;
 
+  .ant-drawer-wrapper-body {
+    padding-top: 88px;
+  }
+
   &__btn-submit {
     position: absolute;
     top: 24px;
