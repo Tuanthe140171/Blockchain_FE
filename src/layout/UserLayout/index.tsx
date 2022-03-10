@@ -4,16 +4,15 @@ import {
 } from "@ant-design/icons";
 import { Badge, Image, Input, Layout, Menu, Button } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UnsupportedChainIdError, useWeb3React } from "web3-react-core";
 import { BigNumber } from "bignumber.js";
-import { injected } from "../../connectors";
 import { CHAIN_INFO } from "../../constants/chainInfo";
 import { SupportedChainId } from "../../constants/chains";
 import { useNativeCurrencyBalances } from "../../hooks/useCurrencyBalance";
 import { shortenAddress } from "../../utils";
-// import { signTypedMessage, verifyTypedMessage } from "../../blockchain/signMessage";
+
 import "./index.scss";
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -29,7 +28,7 @@ const UserLayout: React.FC = (props): ReactElement => {
   const [collapsed, setCollapsed] = useState(false);
 
   const navigate = useNavigate();
-  const { activate, account, chainId, error, library } = useWeb3React();
+  const { account, chainId, error } = useWeb3React();
   const userBalance = useNativeCurrencyBalances(account);
 
   const {
@@ -39,21 +38,6 @@ const UserLayout: React.FC = (props): ReactElement => {
   } = CHAIN_INFO[
     chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
   ];
-
-  useEffect(() => {
-    const requestSignature = async () => {
-      if (account && library && !error) {
-        // const signature = await signTypedMessage(library, account);
-        // console.log(signature);
-      }
-    };
-
-    requestSignature();
-  }, [account, error, library]);
-
-  const handleBtnConnect = () => {
-    activate(injected);
-  };
 
   const renderWeb3Account = () => {
     if (account && userBalance) {
@@ -145,12 +129,6 @@ const UserLayout: React.FC = (props): ReactElement => {
         </>
       );
     }
-
-    return (
-      <Button className="connect-btn" onClick={handleBtnConnect}>
-        Connect Wallet
-      </Button>
-    );
   };
 
   return (
