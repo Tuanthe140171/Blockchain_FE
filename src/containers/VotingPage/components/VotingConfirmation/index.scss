@@ -258,3 +258,7 @@
         margin-left: 0;
     }
 }
+
+.PhotoView-Slider__ArrowLeft, .PhotoView-Slider__ArrowRight, .PhotoView-Portal {
+    z-index: 99999999999999999999;
+}
