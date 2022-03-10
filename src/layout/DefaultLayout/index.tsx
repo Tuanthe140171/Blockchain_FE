@@ -47,9 +47,9 @@ const DefaultLayout: React.FC = (props): ReactElement => {
     }
   }, [authorizeError, library, account]);
 
-  useEffect(() => {
-    doAuthorize();
-  }, [authorizeError, library, account, doAuthorize]);
+  // useEffect(() => {
+  //   doAuthorize();
+  // }, [authorizeError, library, account, doAuthorize]);
 
   return (
     <Layout className="container">

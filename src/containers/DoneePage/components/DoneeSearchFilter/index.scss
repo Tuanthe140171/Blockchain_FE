@@ -1,0 +1,19 @@
+.donee-filter {
+    max-width: 240px;
+
+    &__title {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 22px;
+        text-transform: capitalize;
+        color: #002169;
+    }
+
+    &__divider {
+        margin: 32px 0px;
+        height: 1px;
+        width: 100%;
+        background-color: #E0E6F1;
+    }
+}

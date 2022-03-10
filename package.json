@@ -2,6 +2,7 @@
   "name": "charity-verse",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://35.209.169.120:3000",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@ethersproject/providers": "5.4.0",
@@ -25,7 +26,7 @@
     "react-lottie": "^1.2.3",
     "react-multi-carousel": "^2.8.0",
     "react-photo-view": "^1.0.0-beta.5",
-    "react-router-dom": "^6.0.0",
+    "react-router-dom": "6.2.2",
     "react-scripts": "5.0.0",
     "sass": "^1.49.8",
     "tiny-invariant": "^1.2.0",
