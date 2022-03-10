@@ -1,0 +1,6 @@
+.app-drawer {
+  & > div.ant-drawer-content-wrapper {
+    position: absolute;
+    top: 88px;
+  }
+}

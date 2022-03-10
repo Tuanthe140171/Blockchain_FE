@@ -1,0 +1,55 @@
+.activity-noti {
+  position: relative;
+
+  &__dotted {
+    width: 9px;
+    height: 9px;
+    background-color: #90cdf4;
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    border-radius: 50%;
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+
+    &__ava {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 76px;
+      height: 76px;
+    }
+
+    &__message {
+      max-width: 398px;
+      color: #002169;
+      font-size: 16px;
+    }
+  }
+
+  &__description {
+    color: #002169;
+    font-size: 15px;
+    border-left: 4px solid #dddee1;
+    padding-left: 9px;
+    margin: 0 0 8px 76px;
+  }
+
+  &__bottom {
+    color: #a5acb8;
+    font-size: 15px;
+    margin: 2px 0 19px 76px;
+    padding-bottom: 19px;
+  }
+}
+
+.follow-read {
+  background-color: #ffffff;
+}
+
+.follow-not-read {
+  background-color: #f6faff;
+}
