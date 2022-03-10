@@ -1,0 +1,46 @@
+.follow-noti {
+  position: relative;
+
+  &__dotted {
+    width: 9px;
+    height: 9px;
+    background-color: #90cdf4;
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    border-radius: 50%;
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+
+    &__ava {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 76px;
+      height: 58px;
+    }
+
+    &__message {
+      max-width: 398px;
+      color: #002169;
+      font-size: 16px;
+    }
+  }
+  
+  &__bottom {
+    margin: 2px 0 19px 76px;
+    color: #a5acb8;
+    font-size: 15px;
+  }
+}
+
+.follow-read {
+  background-color: #ffffff;
+}
+
+.follow-not-read {
+  background-color: #f6faff;
+}

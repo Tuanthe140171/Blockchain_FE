@@ -1,15 +1,14 @@
-import {
-  BellOutlined,
-  SwapOutlined,
-} from "@ant-design/icons";
-import { Badge, Image, Input, Layout, Menu, Button } from "antd";
+import { BellOutlined, SwapOutlined } from "@ant-design/icons";
+import { Badge, Button, Image, Input, Layout, Menu, Popover } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
-import React, { ReactElement, useState } from "react";
+import { BigNumber } from "bignumber.js";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UnsupportedChainIdError, useWeb3React } from "web3-react-core";
-import { BigNumber } from "bignumber.js";
+import { injected } from "../../connectors";
 import { CHAIN_INFO } from "../../constants/chainInfo";
 import { SupportedChainId } from "../../constants/chains";
+import ModalHeader from "../../containers/Modal";
 import { useNativeCurrencyBalances } from "../../hooks/useCurrencyBalance";
 import { shortenAddress } from "../../utils";
 
@@ -65,9 +64,19 @@ const UserLayout: React.FC = (props): ReactElement => {
           <p className="main-layout__site-layout__header__group-avatar__date">
             Tue, 30 Dec 2022
           </p>
-          <Badge count={0} size="small" showZero>
-            <BellOutlined style={{ fontSize: "20  px", color: "#ffffff" }} />
-          </Badge>
+          <Popover
+            overlayClassName="main-layout__site-layout__header__group-avatar__noti"
+            placement="bottomRight"
+            arrowPointAtCenter
+            title={null}
+            zIndex={99999}
+            content={<ModalHeader type={0} />}
+            trigger="click"
+          >
+            <Badge count={0} size="small" showZero>
+              <BellOutlined style={{ fontSize: "20  px", color: "#ffffff" }} />
+            </Badge>
+          </Popover>
           <Avatar
             src="../../assets/ava.png"
             className="main-layout__site-layout__header__group-avatar__avatar"
