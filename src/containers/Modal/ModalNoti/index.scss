@@ -1,0 +1,42 @@
+.modal-noti {
+  width: 492px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    background-color: #618afb;
+    height: 50px;
+    padding: 0 18px;
+    align-items: center;
+
+    &__title {
+      font-size: 18px;
+      color: #F6FAFF;
+    }
+  }
+
+  &__wrapper {
+    
+    &__header {
+      border-top: 0.5px solid #e4e8ee;
+      border-bottom: 0.5px solid #e4e8ee;
+      display: flex;
+      justify-content: space-between;
+      height: 64px;
+      padding: 0 18px;
+      align-items: center;
+
+      &__title {
+        font-weight: bold;
+        font-size: 20px;
+        color: #002169;
+      }
+    }
+  }
+
+  button {
+    font-size: 15px;
+    border: none;
+    color: #3156DB;
+  }
+}

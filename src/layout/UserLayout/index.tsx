@@ -80,7 +80,9 @@ const UserLayout: React.FC = (props): ReactElement => {
             Tue, 30 Dec 2022
           </p>
           <Popover
+            overlayClassName="main-layout__site-layout__header__group-avatar__noti"
             placement="bottomRight"
+            arrowPointAtCenter  
             title={null}
             zIndex={99999}
             content={<ModalHeader type={0} />}

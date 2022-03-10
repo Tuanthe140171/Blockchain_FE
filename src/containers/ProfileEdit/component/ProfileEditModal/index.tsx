@@ -1,10 +1,8 @@
-import {
-  ArrowLeftOutlined,
-  StarOutlined
-} from "@ant-design/icons";
+import { ArrowLeftOutlined, StarOutlined } from "@ant-design/icons";
 import { Button, Cascader, Drawer, Tag, Upload } from "antd";
 import React, { useState } from "react";
 import AppDialog from "../../../../components/AppDialog";
+import AppDrawer from "../../../../components/AppDrawer";
 import Circumstances from "../../../../constants/circumstances";
 import Message from "../../../../constants/message";
 import ProfileUpload from "./component/ProfileEditUpload";
@@ -143,33 +141,9 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
 
   const [openDialog, setOpenDialog] = useState(false);
 
-  return (
-    <>
-      {openDialog ? (
-        <AppDialog
-          type="infor"
-          title={Message.INFOR_01}
-          description={Message.INFOR_DC_01}
-          confirmText={Message.INFOR_CF_01}
-          onConfirm={() => {
-            console.log("Xác nhận");
-            setOpenDialog(false);
-            closeModal();
-          }}
-        />
-      ) : null}
-      <Drawer
-        title="Thông tin cá nhân"
-        placement="right"
-        visible={isVisible}
-        mask={true}
-        onClose={closeModal}
-        closeIcon={<ArrowLeftOutlined />}
-        width="45%"
-        className="profile-drawer"
-        headerStyle={{ height: "98px", padding: "24px 65px 0 39px" }}
-        bodyStyle={{ padding: "24px 65px 0 39px" }}
-      >
+  const drawerContent = () => {
+    return (
+      <>
         <Button
           disabled={!selectedList.length}
           className="profile-drawer__btn-submit"
@@ -221,7 +195,44 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
           </div>
         </div>
         {renderProof()}
-      </Drawer>
+      </>
+    );
+  };
+
+  return (
+    <>
+      {openDialog ? (
+        <AppDialog
+          type="infor"
+          title={Message.INFOR_01}
+          description={Message.INFOR_DC_01}
+          confirmText={Message.INFOR_CF_01}
+          onConfirm={() => {
+            console.log("Xác nhận");
+            setOpenDialog(false);
+            closeModal();
+          }}
+        />
+      ) : null}
+      <AppDrawer
+        title="Thông tin cá nhân"
+        isVisible={isVisible}
+        closeModal={closeModal}
+        className="profile-drawer"
+        content={drawerContent()}
+      />
+      {/* <Drawer
+        title="Thông tin cá nhân"
+        placement="right"
+        visible={isVisible}
+        mask={true}
+        onClose={closeModal}
+        closeIcon={<ArrowLeftOutlined />}
+        width="45%"
+        className="profile-drawer"
+        headerStyle={{ height: "98px", padding: "24px 65px 0 39px" }}
+        bodyStyle={{ padding: "24px 65px 0 39px" }}
+      ></Drawer> */}
     </>
   );
 };
