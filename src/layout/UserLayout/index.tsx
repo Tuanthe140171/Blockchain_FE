@@ -11,7 +11,7 @@ import { SupportedChainId } from "../../constants/chains";
 import ModalHeader from "../../containers/Modal";
 import { useNativeCurrencyBalances } from "../../hooks/useCurrencyBalance";
 import { shortenAddress } from "../../utils";
-// import { signTypedMessage, verifyTypedMessage } from "../../blockchain/signMessage";
+
 import "./index.scss";
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -27,7 +27,7 @@ const UserLayout: React.FC = (props): ReactElement => {
   const [collapsed, setCollapsed] = useState(false);
 
   const navigate = useNavigate();
-  const { activate, account, chainId, error, library } = useWeb3React();
+  const { account, chainId, error } = useWeb3React();
   const userBalance = useNativeCurrencyBalances(account);
 
   const {
@@ -37,21 +37,6 @@ const UserLayout: React.FC = (props): ReactElement => {
   } = CHAIN_INFO[
     chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
   ];
-
-  useEffect(() => {
-    const requestSignature = async () => {
-      if (account && library && !error) {
-        // const signature = await signTypedMessage(library, account);
-        // console.log(signature);
-      }
-    };
-
-    requestSignature();
-  }, [account, error, library]);
-
-  const handleBtnConnect = () => {
-    activate(injected);
-  };
 
   const renderWeb3Account = () => {
     if (account && userBalance) {
@@ -82,7 +67,7 @@ const UserLayout: React.FC = (props): ReactElement => {
           <Popover
             overlayClassName="main-layout__site-layout__header__group-avatar__noti"
             placement="bottomRight"
-            arrowPointAtCenter  
+            arrowPointAtCenter
             title={null}
             zIndex={99999}
             content={<ModalHeader type={0} />}
@@ -153,12 +138,6 @@ const UserLayout: React.FC = (props): ReactElement => {
         </>
       );
     }
-
-    return (
-      <Button className="connect-btn" onClick={handleBtnConnect}>
-        Connect Wallet
-      </Button>
-    );
   };
 
   return (
@@ -203,6 +182,7 @@ const UserLayout: React.FC = (props): ReactElement => {
             key="Donee"
             icon={<Image src="/icon/donee.svg" preview={false} />}
             className="main-layout__sider__menu__item"
+            onClick={() => navigate("/donee")}
           >
             Donee
           </Menu.Item>

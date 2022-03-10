@@ -28,6 +28,5 @@ export const verifyTypedMessage = (signature: string, account: string) => {
 
 export const signTypedMessage = async (library: Web3Provider, account: string): Promise<string> => {
     const signer = await getSigner(library, account);
-
     return await signer._signTypedData(domain, types, value);
 }
