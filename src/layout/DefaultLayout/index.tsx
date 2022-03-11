@@ -1,7 +1,7 @@
 import { CaretDownOutlined } from "@ant-design/icons";
 import { Button, Image, Layout, Menu, Modal, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import React, { ReactElement, useEffect, useCallback } from "react";
+import React, { ReactElement, useState, useEffect, useCallback } from "react";
 import { WarningOutlined } from "@ant-design/icons";
 import { useWeb3React } from "web3-react-core";
 import { injected } from "../../connectors";
@@ -15,11 +15,17 @@ const DefaultLayout: React.FC = (props): ReactElement => {
   const navigate = useNavigate();
   const { activate, library, account } = useWeb3React();
   const authorizeError = useAuthorization();
+  console.log(authorizeError);
   const [charityStorage, setCharityStorage] = useLocalStorage("charity", { auth: {} });
+  const [showSignatureModal, setShowSignatureModal] = useState(false);
 
   useEffect(() => {
     activate && activate(injected);
   }, [activate]);
+
+  useEffect(() => {
+    authorizeError && setShowSignatureModal(authorizeError === AuthorizeErrorType.UNAUTHORIZED)
+  }, [authorizeError]);
 
   const doAuthorize = useCallback(async () => {
     if (authorizeError === AuthorizeErrorType.UNAUTHORIZED && library && account) {
@@ -47,9 +53,9 @@ const DefaultLayout: React.FC = (props): ReactElement => {
     }
   }, [authorizeError, library, account]);
 
-  useEffect(() => {
-    doAuthorize();
-  }, [authorizeError, library, account, doAuthorize]);
+  // useEffect(() => {
+  //   doAuthorize();
+  // }, [authorizeError, library, account, doAuthorize]);
 
   return (
     <Layout className="container">
@@ -102,6 +108,8 @@ const DefaultLayout: React.FC = (props): ReactElement => {
               } catch (addError) {
                 console.log(addError);
               }
+            } else if (authorizeError === AuthorizeErrorType.UNAUTHORIZED) {
+              setShowSignatureModal(true);
             }
           }
           }>
@@ -109,22 +117,20 @@ const DefaultLayout: React.FC = (props): ReactElement => {
               authorizeError === AuthorizeErrorType.NONE ? "Launch App" : "Connect Wallet"
             }
           </Button>
-          {
-            authorizeError === AuthorizeErrorType.UNAUTHORIZED && account && (
-              <Modal
-                visible={true}
-                closable={false}
-                centered={true}
-                footer={null}
-                className="signature-require-modal"
-              >
-                <WarningOutlined className="signature-require-modal__icon" />
-                <p className="signature-require-modal__title">Signature Required</p>
-                <p className="signature-require-modal__desc">Please sign on your wallet to confirm</p>
-                <Button className="signature-require-modal__btn" onClick={doAuthorize}>Sign</Button>
-              </Modal>
-            )
-          }
+          <Modal
+            visible={showSignatureModal}
+            centered={true}
+            closable={false}
+            maskClosable={true}
+            footer={null}
+            onCancel={() => setShowSignatureModal(false)}
+            className="signature-require-modal"
+          >
+            <WarningOutlined className="signature-require-modal__icon" />
+            <p className="signature-require-modal__title">Signature Required</p>
+            <p className="signature-require-modal__desc">Please sign on your wallet to confirm</p>
+            <Button className="signature-require-modal__btn" onClick={doAuthorize}>Sign</Button>
+          </Modal>
         </div>
       </Layout.Header>
       {props.children}

@@ -6,7 +6,7 @@ import * as animationData from './lottie/donation.json'
 import routes, { CRVRoute } from "./routes";
 import UserLayout from "./layout/UserLayout";
 import Web3ReactManager from "./components/Web3ReactManager";
-import PrivateRoute from "./components/PrivateRoute";
+import AppPrivateRoute from "./components/AppPrivateRoute";
 import "./index.scss";
 
 const HomePage = lazy(() => import("./containers/HomePage"));
@@ -17,11 +17,11 @@ const App = () => {
       <Route 
         path={route.path} 
         element={
-          <PrivateRoute>
+          <AppPrivateRoute>
             <UserLayout>
               <route.component />
             </UserLayout>
-          </PrivateRoute>
+          </AppPrivateRoute>
         } 
         key={route.path} 
       />

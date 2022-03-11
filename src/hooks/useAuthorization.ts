@@ -35,7 +35,6 @@ const useAuthorization = (): AuthorizeErrorType => {
 
     useEffect(() => {
         const requestSignature = async () => {
-            console.log(error, error instanceof UnsupportedChainIdError);
             try {
                 const authInfo = charityStorage.auth;
                 if (error && error instanceof UnsupportedChainIdError) {

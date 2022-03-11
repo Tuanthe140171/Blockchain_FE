@@ -17,12 +17,6 @@ import "./index.scss";
 const { Header, Footer, Sider, Content } = Layout;
 const { Search } = Input;
 
-const loading = (
-  <div className="pt-3 text-center">
-    <div className="sk-spinner sk-spinner-pulse"></div>
-  </div>
-);
-
 const UserLayout: React.FC = (props): ReactElement => {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -137,6 +131,8 @@ const UserLayout: React.FC = (props): ReactElement => {
           </div>
         </>
       );
+    } else {
+      navigate("/");
     }
   };
 
