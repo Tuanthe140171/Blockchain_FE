@@ -15,7 +15,7 @@ const DoneeSearchFilter: React.FC = () => {
                 name: CIRCUMSTANCE
             }))} />
             <div className="donee-filter__divider"></div>
-            <DonationFieldsSearch title="Theo địa điểm" fields={provincesData ? provincesData.map(provinceData => ({
+            <DonationFieldsSearch loading={loading} title="Theo địa điểm" fields={provincesData ? provincesData.map(provinceData => ({
                 id: provinceData.code,
                 name: provinceData.name
             })) : []} />

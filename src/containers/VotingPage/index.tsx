@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Typography, Table, Button, Input } from "antd";
 import VotingConfirmation from "./components/VotingConfirmation";
+import AppPagination from "../../components/AppPagination";
 import "./index.scss";
 
 const { Search } = Input;

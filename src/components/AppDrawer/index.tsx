@@ -4,7 +4,7 @@ import React from "react";
 import "./index.scss";
 
 type AppDrawerProps = {
-  title: string;
+  title?: string;
   isVisible: boolean;
   closeModal: any;
   className: string;
@@ -20,6 +20,7 @@ const AppDrawer: React.FC<AppDrawerProps> = (props) => {
       placement="right"
       visible={isVisible}
       mask={true}
+      closable={title ? true: false}
       onClose={closeModal}
       closeIcon={<ArrowLeftOutlined />}
       width="45%"
