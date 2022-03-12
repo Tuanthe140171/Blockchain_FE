@@ -1,0 +1,139 @@
+.profile-media {
+  padding: 32px;
+  background-color: white;
+  margin-top: 12px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__title {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 22px;
+      color: #2f497f;
+      margin-bottom: 0;
+    }
+  }
+
+  &__divider {
+    height: 1px;
+    background-color: #e0e6f1;
+    margin: 20px 0;
+  }
+
+  &__images {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    &__image {
+      width: 30%;
+      height: 220px;
+      position: relative;
+      margin-bottom: 20px;
+      cursor: pointer;
+
+      .hidden {
+        display: none;
+      }
+
+      &__mask {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        // background-color:-webkit-gradient(
+        //     linear, left top, left bottom,
+        //     from(rgba(255,255,255,0.1)),
+        //     to(rgba(255,255,255,0.8)),
+        //     color-stop(.9,#fff));
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+
+        & > div:first-child {
+          width: 50px;
+          height: 24px;
+          border-radius: 70px;
+          background-color: #002169;
+          border: none;
+          align-self: flex-end;
+          color: #fff;
+          font-size: 25px;
+          margin: 15px 15px 0 0;
+          display: flex;
+          justify-content: center;
+          align-items: flex-end;
+        }
+
+        &__info {
+          display: flex;
+          margin-bottom: 10px;
+          //   background-image: linear-gradient(#002169, #fff);
+          -webkit-mask-image: -webkit-gradient(
+            linear,
+            left 90%,
+            left bottom,
+            from(rgba(0, 0, 0, 1)),
+            to(rgba(0, 0, 0, 0))
+          );
+
+          & > div {
+            display: flex;
+            align-items: center;
+            width: 20%;
+            margin: 0 10px;
+
+            .icon {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &__popup-option {
+    width: 238px;
+    height: 208px;
+
+    .ant-popover-inner-content {
+      padding: 24px;
+    }
+
+    &__wrapper {
+      &__body {
+        font-size: 14px;
+        color: #002169;
+        
+        & > div {
+          display: flex;
+          align-items: center;
+
+          .icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 14px;
+          }
+        }
+      }
+
+      &__footer {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        color: #002169;
+
+        .icon {
+          width: 18px;
+          height: 18px;
+          margin-right: 14px;
+        }
+      }
+    }
+  }
+}
