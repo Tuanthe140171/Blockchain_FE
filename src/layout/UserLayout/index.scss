@@ -116,6 +116,12 @@
           }
         }
 
+        &__profile {
+          .ant-popover-inner-content {
+            padding: 0;
+          }
+        }
+
         &__avatar {
           height: 50px;
           width: 50px;
