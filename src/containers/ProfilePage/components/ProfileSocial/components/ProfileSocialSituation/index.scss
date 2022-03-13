@@ -1,0 +1,79 @@
+.profile-situation {
+  padding: 32px;
+  background-color: white;
+  margin-top: 12px;
+
+  &__details {
+    padding-left: 0;
+  }
+
+  &__detail {
+    margin-top: 40px;
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+
+    &-label {
+      text-align: left;
+      display: flex;
+      align-items: center;
+
+      & > span {
+        font-style: normal;
+        font-weight: 300;
+        font-size: 16px;
+        color: #a7b2c8;
+        margin-left: 15px;
+      }
+    }
+
+    &-content {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 20px;
+      line-height: 25px;
+      color: #2f497f;
+    }
+
+    &-view-more {
+      & > span {
+        font-style: normal;
+        font-weight: 300;
+        font-size: 14px;
+        line-height: 17px;
+        color: #a7b2c8;
+      }
+
+      & > a {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 15px;
+        color: #5677bb;
+        margin-left: 8px;
+      }
+    }
+  }
+
+  &__add-info {
+    display: flex;
+    align-items: center;
+    margin-top: 40px;
+
+    & > span {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 22px;
+      color: #3156db;
+      margin-left: 10px;
+    }
+
+    & > .ant-image {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+    }
+  }
+}

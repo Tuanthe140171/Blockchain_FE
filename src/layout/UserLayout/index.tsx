@@ -71,10 +71,20 @@ const UserLayout: React.FC = (props): ReactElement => {
               <BellOutlined style={{ fontSize: "20  px", color: "#ffffff" }} />
             </Badge>
           </Popover>
-          <Avatar
-            src="../../assets/ava.png"
-            className="main-layout__site-layout__header__group-avatar__avatar"
-          />
+          <Popover
+            overlayClassName="main-layout__site-layout__header__group-avatar__profile"
+            placement="bottomRight"
+            arrowPointAtCenter
+            title={null}
+            zIndex={99999}
+            content={<ModalHeader type={1} />}
+            trigger="click"
+          >
+            <Avatar
+              src="../../assets/ava.png"
+              className="main-layout__site-layout__header__group-avatar__avatar"
+            />
+          </Popover>
         </>
       );
     } else if (error) {

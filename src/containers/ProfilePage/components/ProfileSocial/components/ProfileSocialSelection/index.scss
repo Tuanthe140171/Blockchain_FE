@@ -1,47 +1,48 @@
 @import "../../../../../../styles/variables.scss";
 
 .profile-social-selection {
-    display: flex;
-    padding: 0 0 0 24px;
-    background-color: white;
-    
-    &__item {
-        font-style: normal;
-        font-weight: normal;
-        font-size: 20px;
-        line-height: 25px;
-        color: #A7B2C8;
-        padding: 28px 0px 17px 0px;
-        cursor: pointer;
+  background-color: white;
+  overflow: auto;
+  white-space: nowrap;
 
-        &:not(:last-child) {
-            margin-right: 50px;
-        }
+  &__item {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 25px;
+    color: #a7b2c8;
+    padding: 29px 24px 13px;
+    display: inline-block;
+    cursor: pointer;
 
-        &--active {
-            position: relative;
-            transition: .2 all ease-in;
-            color: $primaryColor;
+    &--active {
+      position: relative;
+      transition: 0.2 all ease-in;
+      color: $primaryColor;
 
-            &::after {
-                content: "";
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 0%;
-                height: 2px;
-                background-color: $primaryColor;
-                animation: infinite-spinning .3s ease-out forwards;
-            }
-        }
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 2px;
+        background-color: $primaryColor;
+        animation: infinite-spinning 0.3s ease-out forwards;
+      }
     }
+  }
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @keyframes infinite-spinning {
-    from {
-        width: 0;
-    }
-    to {
-        width: 100%;
-    }
+  from {
+    width: 0;
   }
+  to {
+    width: 100%;
+  }
+}

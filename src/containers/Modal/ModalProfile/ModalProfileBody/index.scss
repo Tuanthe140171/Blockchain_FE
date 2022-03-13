@@ -1,0 +1,27 @@
+.modal-profile {
+  &__body {
+    &__line {
+      display: flex;
+      height: 24px;
+      margin-top: 20px;
+
+      &__icon {
+        width: 21px;
+        height: 21px;
+        margin-right: 13px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      &__text {
+        font-size: 16px;
+        color: #002169;
+      }
+    }
+
+    & > div:nth-child(2) {
+      margin: 20px 0;
+    }
+  }
+}
