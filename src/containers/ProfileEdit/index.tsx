@@ -3,61 +3,80 @@ import React, { useState } from "react";
 import ProfileModal from "./component/ProfileEditModal";
 import ProfilePayment from "./component/ProfileEditPayment";
 import ProfilePerson from "./component/ProfileEditPersonal";
+import ProfileSituation from "./component/ProfileEditSituation";
 import "./index.scss";
 
 const Dashboard = () => {
-  const [isSystem, setIsSystem] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [selectedTab, setSelectedTab] = useState(1);
 
   const closeModal = () => {
     setIsModalVisible(false);
   };
 
+  const renderTab = () => {
+    if (selectedTab === 1) return <ProfilePerson />;
+    else if (selectedTab === 2) return <ProfilePayment />;
+    else return <ProfileSituation />;
+  };
+
   return (
     <div className="profile-edit">
       <div className="profile-edit__header">
-        <Button
-          className="profile-edit__header__confirm"
-          onClick={() => setIsModalVisible(true)}
-          disabled={isSubmit}
-        >
-          Xác nhận hộ nghèo
-        </Button>
+        {selectedTab === 1 ? (
+          <Button
+            className="profile-edit__header__confirm"
+            onClick={() => setIsModalVisible(true)}
+            disabled={isSubmit}
+          >
+            Xác nhận hộ nghèo
+          </Button>
+        ) : null}
         <Breadcrumb separator=">" className="profile-edit__header__breadcrumb">
           <Breadcrumb.Item className="profile-edit__header__breadcrumb__from">
             Profile
           </Breadcrumb.Item>
           <Breadcrumb.Item className="profile-edit__header__breadcrumb__to">
-            Personal Information
+            {selectedTab === 1
+              ? "Personal Information"
+              : selectedTab === 2
+              ? "Payment Method"
+              : "Situation"}
           </Breadcrumb.Item>
         </Breadcrumb>
         <div className="divide">
           <div className="profile-edit__header__buttons">
             <button
               className={
-                isSystem ? `profile-edit__header__buttons__button` : ""
+                selectedTab === 1 ? `profile-edit__header__buttons__button` : ""
               }
-              onClick={() => setIsSystem(true)}
+              onClick={() => setSelectedTab(1)}
             >
               Personal Information
             </button>
             <button
               className={
-                isSystem ? "" : `profile-edit__header__buttons__button`
+                selectedTab === 2 ? `profile-edit__header__buttons__button` : ""
               }
-              onClick={() => setIsSystem(false)}
+              onClick={() => setSelectedTab(2)}
             >
               Payment Method
+            </button>
+            <button
+              className={
+                selectedTab === 3 ? `profile-edit__header__buttons__button` : ""
+              }
+              onClick={() => setSelectedTab(3)}
+            >
+              Situation
             </button>
           </div>
           <div className="profile-edit__header__date"></div>
         </div>
         <Divider className="profile-edit__divider" />
       </div>
-      <div className="profile-edit__body">
-        {isSystem ? <ProfilePerson /> : <ProfilePayment />}
-      </div>
+      <div className="profile-edit__body">{renderTab()}</div>
       <ProfileModal isVisible={isModalVisible} closeModal={closeModal} />
     </div>
   );

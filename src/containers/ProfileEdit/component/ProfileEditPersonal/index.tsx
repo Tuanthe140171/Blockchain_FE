@@ -1,58 +1,75 @@
 import { AntDesignOutlined, UploadOutlined } from "@ant-design/icons";
 import { Avatar, Button, Col, Form, Input, Radio, Row } from "antd";
-import {
-  ArcElement,
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-} from "chart.js";
 import React from "react";
+import useFetch from "../../../../hooks/useFetch";
 import "./index.scss";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement
-);
+const ProfilePerson = () => {
+  // const { initialState } = useSelector((state: any) => state.dashboard);
+  // const dispatch = useDispatch();
 
-const ProfilePayment = () => {
+  // useEffect(()=>{
+  //   dispatch()
+  // }, [])
+
+  // const userData = useFetch(
+  //   "https://provinces.open-api.vn/users/get-user-by-id",
+  //   {
+  //     method: "POST",
+  //     headers: {},
+  //     body: JSON.stringify({}),
+  //   }
+  // );
+
+  // const multipleFile = useFetch(
+  //   "https://provinces.open-api.vn//users/upload-multiple-file",
+  //   {
+  //     method: "POST",
+  //     body: JSON.stringify({}),
+  //   }
+  // );
+
+  // const updateProfile = useFetch(
+  //   "https://provinces.open-api.vn/users/update-user-profile",
+  //   {
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       // name: dob,
+  //     }),
+  //   }
+  // );
+
   const [form] = Form.useForm();
-  const buttonItemLayout = {
-    wrapperCol: { span: 14, offset: 4 },
+
+  const onSubmit = (values: any) => {
+    console.log(values);
   };
+
   return (
-    <div className="profile-payment">
-      <div className="profile-payment__title">Personal Information</div>
-      <div className="profile-payment__container">
-        <div className="profile-payment__container__avatar">
+    <div className="profile-person">
+      <div className="profile-person__title">Personal Information</div>
+      <div className="profile-person__description">* Indicates required</div>
+      <div className="profile-person__container">
+        <div className="profile-person__container__avatar">
           <Avatar
-            size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 150, xxl: 200 }}
+            size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 150, xxl: 174 }}
             icon={<AntDesignOutlined />}
           />
           <div>
             <Button type="ghost" icon={<UploadOutlined />} /> Upload
           </div>
         </div>
-        <div className="profile-payment__container__information">
+        <div className="profile-person__container__information">
           <Form
             form={form}
-            className="profile-payment__container__information__form"
+            className="profile-person__container__information__form"
+            onFinish={onSubmit}
           >
             <Row gutter={24}>
               <Col
                 span={13}
                 key={1}
-                className="profile-payment__container__information__form__form-item"
+                className="profile-person__container__information__form__form-item"
               >
                 <Form.Item
                   name={"name"}
@@ -70,7 +87,7 @@ const ProfilePayment = () => {
               <Col
                 span={11}
                 key={2}
-                className="profile-payment__container__information__form__form-item"
+                className="profile-person__container__information__form__form-item"
               >
                 <Form.Item
                   name={"lastName"}
@@ -90,7 +107,7 @@ const ProfilePayment = () => {
               <Col
                 span={9}
                 key={3}
-                className="profile-payment__container__information__form__form-item"
+                className="profile-person__container__information__form__form-item"
               >
                 <Form.Item
                   name={"dob"}
@@ -108,7 +125,7 @@ const ProfilePayment = () => {
               <Col
                 span={15}
                 key={4}
-                className="profile-payment__container__information__form__form-item"
+                className="profile-person__container__information__form__form-item"
               >
                 <Form.Item
                   label="Giới tính"
@@ -127,7 +144,7 @@ const ProfilePayment = () => {
               <Col
                 span={24}
                 key={5}
-                className="profile-payment__container__information__form__form-item"
+                className="profile-person__container__information__form__form-item"
               >
                 <Form.Item
                   name={"nation"}
@@ -147,7 +164,7 @@ const ProfilePayment = () => {
               <Col
                 span={24}
                 key={6}
-                className="profile-payment__container__information__form__form-item"
+                className="profile-person__container__information__form__form-item"
               >
                 <Form.Item
                   name={"nativeAddress"}
@@ -167,7 +184,7 @@ const ProfilePayment = () => {
               <Col
                 span={24}
                 key={7}
-                className="profile-payment__container__information__form__form-item"
+                className="profile-person__container__information__form__form-item"
               >
                 <Form.Item
                   name={"permanentAddress"}
@@ -187,7 +204,7 @@ const ProfilePayment = () => {
               <Col
                 span={24}
                 key={8}
-                className="profile-payment__container__information__form__form-item"
+                className="profile-person__container__information__form__form-item"
               >
                 <Form.Item
                   name={"address"}
@@ -207,7 +224,7 @@ const ProfilePayment = () => {
               <Col
                 span={8}
                 key={9}
-                className="profile-payment__container__information__form__form-item"
+                className="profile-person__container__information__form__form-item"
               >
                 <Form.Item
                   name={"cmnd"}
@@ -225,7 +242,7 @@ const ProfilePayment = () => {
               <Col
                 span={8}
                 key={10}
-                className="profile-payment__container__information__form__form-item"
+                className="profile-person__container__information__form__form-item"
               >
                 <Form.Item
                   name={"date"}
@@ -243,7 +260,7 @@ const ProfilePayment = () => {
               <Col
                 span={8}
                 key={11}
-                className="profile-payment__container__information__form__form-item"
+                className="profile-person__container__information__form__form-item"
               >
                 <Form.Item
                   name={"place"}
@@ -261,7 +278,8 @@ const ProfilePayment = () => {
             </Row>
             <Button
               type="primary"
-              className="profile-payment__container__information__form__submit"
+              className="profile-person__container__information__form__submit"
+              htmlType="submit"
             >
               Save Information
             </Button>
@@ -272,4 +290,4 @@ const ProfilePayment = () => {
   );
 };
 
-export default ProfilePayment;
+export default ProfilePerson;

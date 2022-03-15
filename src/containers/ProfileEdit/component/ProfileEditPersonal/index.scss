@@ -1,12 +1,16 @@
-// @import "../../styles/variables.scss";
-
-.profile-payment {
+.profile-person {
   background-color: #ffffff;
   padding: 37px 40px;
 
   &__title {
     font-size: 24px;
     color: #002169;
+    margin-bottom: 20px;
+  }
+
+  &__description {
+    font-size: 14px;
+    color: #a7b2c8;
     margin-bottom: 50px;
   }
 
@@ -17,15 +21,16 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-right: 60px;
-      color: aqua;
+      margin-right: 132px;
+      color: #3156db;
+      font-size: 20px;
 
       & > span {
-        margin-bottom: 20px;
+        margin-bottom: 26px;
       }
 
       button {
-        color: aqua;
+        color: #3156db;
         border: none;
       }
     }
@@ -38,6 +43,11 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
+
+            & > div:first-child > label {
+              color: #2f497f;
+              font-size: 18px;
+            }
           }
 
           .ant-form-item-control {
@@ -50,7 +60,10 @@
         }
 
         &__submit {
-          height: 40px;
+          height: 56px;
+          width: 258px;
+          font-size: 20px;
+          background-color: #3156DB;
         }
       }
     }
