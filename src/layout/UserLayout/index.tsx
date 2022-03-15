@@ -10,8 +10,8 @@ import { SupportedChainId } from "../../constants/chains";
 import ModalHeader from "../../containers/Modal";
 import { useNativeCurrencyBalances } from "../../hooks/useCurrencyBalance";
 import { shortenAddress } from "../../utils";
-
 import "./index.scss";
+
 
 const { Header, Footer, Sider, Content } = Layout;
 const { Search } = Input;

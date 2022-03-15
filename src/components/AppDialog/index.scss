@@ -22,7 +22,7 @@
     display: flex;
     justify-content: space-evenly;
     
-    button {
+    & button {
       height: 45px;
       width: 115px;
       color: #ffffff;
@@ -42,7 +42,7 @@
   }
 
   &__button {
-    button {
+    & button {
       height: 45px;
       width: 115px;
       color: #ffffff;
