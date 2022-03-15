@@ -1,30 +1,8 @@
 import { AntDesignOutlined, UploadOutlined } from "@ant-design/icons";
 import { Avatar, Button, Col, Form, Input, Radio, Row } from "antd";
-import {
-  ArcElement,
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-} from "chart.js";
 import React from "react";
-import "./index.scss";
 import useFetch from "../../../../hooks/useFetch";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement
-);
+import "./index.scss";
 
 const ProfilePerson = () => {
   // const { initialState } = useSelector((state: any) => state.dashboard);
@@ -62,9 +40,6 @@ const ProfilePerson = () => {
   );
 
   const [form] = Form.useForm();
-  const buttonItemLayout = {
-    wrapperCol: { span: 14, offset: 4 },
-  };
 
   const onSubmit = (values: any) => {
     console.log(values);
@@ -73,10 +48,11 @@ const ProfilePerson = () => {
   return (
     <div className="profile-person">
       <div className="profile-person__title">Personal Information</div>
+      <div className="profile-person__description">* Indicates required</div>
       <div className="profile-person__container">
         <div className="profile-person__container__avatar">
           <Avatar
-            size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 150, xxl: 200 }}
+            size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 150, xxl: 174 }}
             icon={<AntDesignOutlined />}
           />
           <div>

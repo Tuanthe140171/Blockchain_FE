@@ -88,9 +88,13 @@
         }
 
         & > span > span > button {
-          color: #a7b2c8;
+          color: #a7b2c8 !important;
           background-color: #2f4980;
           border: none;
+        }
+
+        & > span > span > button > span {
+          font-size: 20px;
         }
       }
 
