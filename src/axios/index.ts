@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const auth = localStorage.getItem("charity") ? JSON.parse(localStorage.getItem("charity") || ""): {};
 
-const instance = axios.create({});
+const instance = axios.create({  });
 
 instance.defaults.headers.common['Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept";
 instance.defaults.headers.common['Access-Control-Allow-Origin'] = '*';

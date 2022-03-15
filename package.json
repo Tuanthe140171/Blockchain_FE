@@ -2,7 +2,6 @@
   "name": "charity-verse",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://35.209.169.120:3000",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@ethersproject/providers": "5.4.0",
