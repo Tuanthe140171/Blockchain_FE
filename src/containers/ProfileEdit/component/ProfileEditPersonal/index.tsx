@@ -12,32 +12,32 @@ const ProfilePerson = () => {
   //   dispatch()
   // }, [])
 
-  const userData = useFetch(
-    "https://provinces.open-api.vn/users/get-user-by-id",
-    {
-      method: "POST",
-      headers: {},
-      body: JSON.stringify({}),
-    }
-  );
+  // const userData = useFetch(
+  //   "https://provinces.open-api.vn/users/get-user-by-id",
+  //   {
+  //     method: "POST",
+  //     headers: {},
+  //     body: JSON.stringify({}),
+  //   }
+  // );
 
-  const multipleFile = useFetch(
-    "https://provinces.open-api.vn//users/upload-multiple-file",
-    {
-      method: "POST",
-      body: JSON.stringify({}),
-    }
-  );
+  // const multipleFile = useFetch(
+  //   "https://provinces.open-api.vn//users/upload-multiple-file",
+  //   {
+  //     method: "POST",
+  //     body: JSON.stringify({}),
+  //   }
+  // );
 
-  const updateProfile = useFetch(
-    "https://provinces.open-api.vn/users/update-user-profile",
-    {
-      method: "POST",
-      body: JSON.stringify({
-        // name: dob,
-      }),
-    }
-  );
+  // const updateProfile = useFetch(
+  //   "https://provinces.open-api.vn/users/update-user-profile",
+  //   {
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       // name: dob,
+  //     }),
+  //   }
+  // );
 
   const [form] = Form.useForm();
 
