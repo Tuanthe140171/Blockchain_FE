@@ -5,7 +5,7 @@ import "./index.scss";
 
 const DoneeSearchFilter: React.FC = () => {
     const CIRCUMSTANCES = ["Trẻ em mồ côi", "Người dân tộc thiểu số ", "Người dân tộc thiểu số", "Người cao tuổi", "Người khuyết tật"];
-    const { loading, data: provincesData } = useFetch<[{ code: number, name: string }]>("https://provinces.open-api.vn/api/")
+    const { loading, data: provincesData } = useFetch<[{ code: number, name: string }]>("https://provinces.open-api.vn/api/", true)
     return (
         <div className="donee-filter">
             <span className="donee-filter__title">Bộ lọc tìm kiếm</span>
