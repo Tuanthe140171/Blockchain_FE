@@ -2,10 +2,9 @@ import { BellOutlined, SwapOutlined } from "@ant-design/icons";
 import { Badge, Button, Image, Input, Layout, Menu, Popover } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
 import { BigNumber } from "bignumber.js";
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UnsupportedChainIdError, useWeb3React } from "web3-react-core";
-import { injected } from "../../connectors";
 import { CHAIN_INFO } from "../../constants/chainInfo";
 import { SupportedChainId } from "../../constants/chains";
 import ModalHeader from "../../containers/Modal";
@@ -196,6 +195,7 @@ const UserLayout: React.FC = (props): ReactElement => {
             key="Exchange"
             icon={<Image src="/icon/exchange.svg" preview={false} />}
             className="main-layout__sider__menu__item"
+            onClick={() => navigate("/exchange")}
           >
             Exchange Money
           </Menu.Item>

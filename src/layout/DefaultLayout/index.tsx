@@ -5,19 +5,34 @@ import React, { ReactElement, useState, useEffect, useCallback } from "react";
 import { WarningOutlined } from "@ant-design/icons";
 import { useWeb3React } from "web3-react-core";
 import { injected } from "../../connectors";
+import useFetch from "../../hooks/useFetch";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import useAuthorization, { AuthorizeErrorType } from "../../hooks/useAuthorization";
 import { signTypedMessage } from "../../blockchain/signMessage";
-import axios from '../../axios';
 import "./index.scss";
 
 const DefaultLayout: React.FC = (props): ReactElement => {
-  const navigate = useNavigate();
-  const { activate, library, account } = useWeb3React();
+  const [showSignatureModal, setShowSignatureModal] = useState(false);
+  const [signature, setSignature] = useState<string | undefined>();
+
   const authorizeError = useAuthorization();
   console.log(authorizeError);
+  const navigate = useNavigate();
+  const { activate, library, account } = useWeb3React();
   const [charityStorage, setCharityStorage] = useLocalStorage("charity", { auth: {} });
-  const [showSignatureModal, setShowSignatureModal] = useState(false);
+
+  const { data: accessToken, loading } = useFetch<any>(
+    "auth",
+    false,
+    [signature, account],
+    {
+      body: JSON.stringify({
+        signature,
+        address: account
+      }),
+      method: "POST"
+    }
+  );
 
   useEffect(() => {
     activate && activate(injected);
@@ -27,35 +42,31 @@ const DefaultLayout: React.FC = (props): ReactElement => {
     authorizeError && setShowSignatureModal(authorizeError === AuthorizeErrorType.UNAUTHORIZED)
   }, [authorizeError]);
 
+  useEffect(() => {
+    if (accessToken && account) {
+      setSignature(undefined);
+      setCharityStorage({
+        auth: {
+          ...charityStorage.auth,
+          [account]: {
+            token: accessToken,
+            address: account
+          }
+        }
+      })
+    }
+  }, [accessToken, account]);
+
   const doAuthorize = useCallback(async () => {
     if (authorizeError === AuthorizeErrorType.UNAUTHORIZED && library && account) {
       try {
         const signature = await signTypedMessage(library, account);
-        const response = await axios.post("/auth", {
-          signature,
-          address: account
-        });
-
-        if (response.data.status === 200 && response.data.data) {
-          setCharityStorage({
-            auth: {
-              ...charityStorage.auth,
-              [account]: {
-                token: response.data.data,
-                address: account
-              }
-            }
-          })
-        }
+        setSignature(signature);
       } catch (err: any) {
         message.error(err.message, 3);
       }
     }
   }, [authorizeError, library, account]);
-
-  // useEffect(() => {
-  //   doAuthorize();
-  // }, [authorizeError, library, account, doAuthorize]);
 
   return (
     <Layout className="container">

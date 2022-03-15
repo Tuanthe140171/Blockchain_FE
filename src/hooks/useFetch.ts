@@ -14,7 +14,10 @@ type Action<T> =
   | { type: 'fetched'; payload: T }
   | { type: 'error'; payload: Error }
 
-function useFetch<T = unknown>(url?: string, options?: RequestInit): State<T> {
+
+const BASE_URL = process.env.REACT_APP_API_URL;
+
+function useFetch<T = unknown>(url?: string, useCustomUrl: boolean = false, dependencies: any[] = [], options?: RequestInit): State<T> {
   const cache = useRef<Cache<T>>({})
 
   // Used to prevent state update if the component is unmounted
@@ -49,23 +52,23 @@ function useFetch<T = unknown>(url?: string, options?: RequestInit): State<T> {
     const fetchData = async () => {
       dispatch({ type: 'loading' })
 
-      // If a cache exists for this url, return it
-      if (cache.current[url]) {
-        dispatch({ type: 'fetched', payload: cache.current[url] })
-        return
-      }
-
       try {
-        const response = await fetch(url, options)
+        const auth = localStorage.getItem("charity") ? JSON.parse(localStorage.getItem("charity") || ""): {};
+        const response = await fetch(useCustomUrl ? url: `${BASE_URL}${url}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            authorization: auth.token
+          },
+          ...options
+        })
         if (!response.ok) {
           throw new Error(response.statusText)
         }
 
         const data = (await response.json()) as T
-        cache.current[url] = data
-        if (cancelRequest.current) return
 
-        dispatch({ type: 'fetched', payload: data })
+        dispatch({ type: 'fetched', payload: useCustomUrl ? data: (data as any).data })
       } catch (error) {
         if (cancelRequest.current) return
 
@@ -73,15 +76,16 @@ function useFetch<T = unknown>(url?: string, options?: RequestInit): State<T> {
       }
     }
 
-    void fetchData()
+    dependencies.every(dependency => dependency !== undefined) && void fetchData()
 
     // Use the cleanup function for avoiding a possibly...
     // ...state update after the component was unmounted
     return () => {
-      cancelRequest.current = true
+      console.log("HERE");
+      // cancelRequest.current = true
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url])
+  }, [url, ...dependencies])
 
   return state;
 }
