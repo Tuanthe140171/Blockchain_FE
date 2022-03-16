@@ -16,12 +16,11 @@ const DefaultLayout: React.FC = (props): ReactElement => {
   const [signature, setSignature] = useState<string | undefined>();
 
   const authorizeError = useAuthorization();
-  console.log(authorizeError);
   const navigate = useNavigate();
   const { activate, library, account } = useWeb3React();
   const [charityStorage, setCharityStorage] = useLocalStorage("charity", { auth: {} });
 
-  const { data: accessToken, loading } = useFetch<any>(
+  const { data: accessToken, loading, error } = useFetch<any>(
     "auth",
     false,
     [signature, account],
@@ -31,6 +30,12 @@ const DefaultLayout: React.FC = (props): ReactElement => {
         address: account
       }),
       method: "POST"
+    },
+    () => {
+      setSignature(undefined)
+    },
+    () => {
+      setSignature(undefined)
     }
   );
 
@@ -44,7 +49,6 @@ const DefaultLayout: React.FC = (props): ReactElement => {
 
   useEffect(() => {
     if (accessToken && account) {
-      setSignature(undefined);
       setCharityStorage({
         auth: {
           ...charityStorage.auth,
@@ -56,6 +60,10 @@ const DefaultLayout: React.FC = (props): ReactElement => {
       })
     }
   }, [accessToken, account]);
+
+  useEffect(() => {
+    setSignature(undefined);
+  }, [account]);
 
   const doAuthorize = useCallback(async () => {
     if (authorizeError === AuthorizeErrorType.UNAUTHORIZED && library && account) {
@@ -106,7 +114,7 @@ const DefaultLayout: React.FC = (props): ReactElement => {
                     {
                       chainId: "0x7E2",
                       chainName: "CharityVerse",
-                      rpcUrls: ["https://custom.charityverse.info"],
+                      rpcUrls: ["https://rpc.test.charityverse.info"],
                       blockExplorerUrls: ["https://35.209.169.120:4000"],
                       nativeCurrency: {
                         name: "CharityVerse",
