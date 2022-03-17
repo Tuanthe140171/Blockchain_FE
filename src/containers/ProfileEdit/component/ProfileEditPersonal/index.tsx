@@ -7,7 +7,7 @@ import useFetch from "../../../../hooks/useFetch";
 import "./index.scss";
 
 const ProfilePerson = () => {
-  const userData = useFetch<any>("users/get-user-by-id", false, [], {
+  const userData = useFetch<any>("users/get-user-by-id", {}, false, [], {
     method: "GET",
   });
 
@@ -33,7 +33,7 @@ const ProfilePerson = () => {
     setImg(formData);
   };
 
-  const submitImg = useFetch<any>("image/upload-multiple-file", false, [img], {
+  const submitImg = useFetch<any>("image/upload-multiple-file", {}, false, [img], {
     method: "POST",
     body: img,
   });

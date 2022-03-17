@@ -80,7 +80,10 @@ const plugins = [
 const DashSystem = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [chartRef, setChartRef] = useState<any>();
-  const { data: transactionsResp, loading } = useFetch<any>(`transactions?page=${currentPage}`);
+  const { data: transactionsResp, loading } = useFetch<any>(`transactions?page=${currentPage}`, {
+    "Content-Type": "application/json",
+    Accept: "application/json"
+  });
   
   var gradientStroke = chartRef?.ctx?.createLinearGradient(0, 500, 0, 100);
   gradientStroke?.addColorStop(1, "rgba(238, 201, 9, 0.27)");
