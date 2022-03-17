@@ -5,11 +5,19 @@ import {
 } from "@ant-design/icons";
 import React from "react";
 import "./index.scss";
+import { useNavigate } from "react-router-dom";
 
 const ModalProfileBody = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="modal-profile__body">
-      <div className="modal-profile__body__line">
+      <div
+        className="modal-profile__body__line"
+        onClick={() => {
+          navigate("/profile/edit");
+        }}
+      >
         <UserOutlined
           className="modal-profile__body__line__icon"
           width={21}

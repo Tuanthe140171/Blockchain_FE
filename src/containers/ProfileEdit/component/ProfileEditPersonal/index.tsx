@@ -1,48 +1,56 @@
-import { AntDesignOutlined, UploadOutlined } from "@ant-design/icons";
-import { Avatar, Button, Col, Form, Input, Radio, Row } from "antd";
-import React from "react";
+import { UploadOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Input, Radio, Row, Upload } from "antd";
+import ImgCrop from "antd-img-crop";
+import React, { useState } from "react";
+import { useWeb3React } from "web3-react-core";
 import useFetch from "../../../../hooks/useFetch";
 import "./index.scss";
 
 const ProfilePerson = () => {
-  // const { initialState } = useSelector((state: any) => state.dashboard);
-  // const dispatch = useDispatch();
-
-  // useEffect(()=>{
-  //   dispatch()
-  // }, [])
-
-  // const userData = useFetch(
-  //   "https://provinces.open-api.vn/users/get-user-by-id",
-  //   {
-  //     method: "POST",
-  //     headers: {},
-  //     body: JSON.stringify({}),
-  //   }
-  // );
-
-  // const multipleFile = useFetch(
-  //   "https://provinces.open-api.vn//users/upload-multiple-file",
-  //   {
-  //     method: "POST",
-  //     body: JSON.stringify({}),
-  //   }
-  // );
-
-  // const updateProfile = useFetch(
-  //   "https://provinces.open-api.vn/users/update-user-profile",
-  //   {
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       // name: dob,
-  //     }),
-  //   }
-  // );
+  const userData = useFetch<any>("users/get-user-by-id", false, [], {
+    method: "GET",
+  });
 
   const [form] = Form.useForm();
+  const onSubmit = (values: any) => {};
 
-  const onSubmit = (values: any) => {
-    console.log(values);
+  const [fileList, setFileList] = useState<any>([
+    {
+      uid: "-1",
+      name: "image.png",
+      status: "done",
+      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+    },
+  ]);
+
+  const [img, setImg] = useState<any>(null);
+  const { account } = useWeb3React();
+
+  const onChange = ({ fileList: newFileList }: any) => {
+    setFileList(newFileList);
+    let formData = new FormData();
+    formData.append("files", newFileList[0].originFileObj);
+    setImg(formData);
+  };
+
+  const submitImg = useFetch<any>("image/upload-multiple-file", false, [img], {
+    method: "POST",
+    body: img,
+  });
+
+  const onPreview = async (file: any) => {
+    let src = file.url;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        reader.onload = () => resolve(reader.result);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow && imgWindow.document.write(image.outerHTML);
   };
 
   return (
@@ -51,13 +59,24 @@ const ProfilePerson = () => {
       <div className="profile-person__description">* Indicates required</div>
       <div className="profile-person__container">
         <div className="profile-person__container__avatar">
-          <Avatar
-            size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 150, xxl: 174 }}
-            icon={<AntDesignOutlined />}
-          />
-          <div>
-            <Button type="ghost" icon={<UploadOutlined />} /> Upload
-          </div>
+          <ImgCrop rotate>
+            <Upload
+              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              listType="picture-card"
+              fileList={fileList}
+              maxCount={1}
+              onChange={onChange}
+              onPreview={onPreview}
+              className="profile-person__container__avatar__wrapper"
+            >
+              <Button
+                type="ghost"
+                icon={<UploadOutlined />}
+                className="profile-person__container__avatar__wrapper__button"
+              />{" "}
+              Upload
+            </Upload>
+          </ImgCrop>
         </div>
         <div className="profile-person__container__information">
           <Form

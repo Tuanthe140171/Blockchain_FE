@@ -20,28 +20,15 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
   //     setIsModalVisible(false);
   //   };
 
-  const props1: any = {
-    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-    defaultFileList: [
-      {
-        name: "Chứng minh nhân dân",
-        status: "done",
-        // response: "Server Error 500", // custom error message to show
-        url: "http://www.baidu.com/xxx.png",
-      },
-    ],
-    showUploadList: {
-      showDownloadIcon: true,
-      downloadIcon: "download ",
-      showRemoveIcon: true,
-      removeIcon: (
-        <StarOutlined
-          size={60}
-          onClick={(e) => console.log(e, "custom removeIcon event")}
-        />
-      ),
+  const fileList: any = [
+    {
+      name: `Chứng minh nhân dân acb mặt 1.jpg`,
+      status: "done",
+      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+      thumbUrl:
+        "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
     },
-  };
+  ];
 
   const options = [
     {
@@ -184,13 +171,13 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
             Giấy CMND
           </Button>
           <div className="profile-drawer__cmnd__wrapper">
-            <Upload {...props1} className="profile-upload__wrapper__container">
-              <Tag
-                className="profile-drawer__cmnd__wrapper__container__button"
-                color={"#3156DB"}
-              >
-                Add file
-              </Tag>
+            <Upload
+              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              defaultFileList={fileList}
+              maxCount={2}
+              className="profile-drawer__cmnd__wrapper__container"
+            >
+              <Button>+ Add more file</Button>
             </Upload>
           </div>
         </div>
@@ -221,18 +208,6 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
         className="profile-drawer"
         content={drawerContent()}
       />
-      {/* <Drawer
-        title="Thông tin cá nhân"
-        placement="right"
-        visible={isVisible}
-        mask={true}
-        onClose={closeModal}
-        closeIcon={<ArrowLeftOutlined />}
-        width="45%"
-        className="profile-drawer"
-        headerStyle={{ height: "98px", padding: "24px 65px 0 39px" }}
-        bodyStyle={{ padding: "24px 65px 0 39px" }}
-      ></Drawer> */}
     </>
   );
 };

@@ -14,7 +14,7 @@
   &__sider {
     z-index: 99999;
 
-    .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+    & .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
       background: #f6faff;
       font-style: normal;
       font-weight: normal;
@@ -92,7 +92,7 @@
         }
 
         & > span > span > button {
-          color: #a7b2c8 !important;
+          // color: #a7b2c8 !important;
           background-color: #2f4980;
           border: none;
         }

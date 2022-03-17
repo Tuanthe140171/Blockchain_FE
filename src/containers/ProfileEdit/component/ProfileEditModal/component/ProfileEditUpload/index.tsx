@@ -31,8 +31,8 @@ const ProfileUpload: React.FC<ProfileModalProps> = (props) => {
           action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
           listType="picture"
           defaultFileList={fileList}
-          accept={".pdf"}
           className="profile-upload__wrapper__container"
+          maxCount={1}
         >
           <Button className="profile-upload__wrapper__container__button">
             Upload file
