@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef } from 'react'
-
+import { useWeb3React } from 'web3-react-core';
 interface State<T> {
   data?: T
   error?: Error,
@@ -19,6 +19,7 @@ const BASE_URL = process.env.REACT_APP_API_URL;
 
 function useFetch<T = unknown>(url?: string, useCustomUrl: boolean = false, dependencies: any[] = [], options?: RequestInit, onSuccess?: () => void, onError?: () => void): State<T> {
   const cache = useRef<Cache<T>>({})
+  const { account } = useWeb3React();
 
   // Used to prevent state update if the component is unmounted
   const cancelRequest = useRef<boolean>(false)
@@ -55,12 +56,14 @@ function useFetch<T = unknown>(url?: string, useCustomUrl: boolean = false, depe
       try {
         const auth = localStorage.getItem("charity") ? JSON.parse(localStorage.getItem("charity") || ""): {};
         const headers = {
-          // "Content-Type": "application/json",
-          // Accept: "application/json"
+          "Content-Type": "application/json",
+          Accept: "application/json"
         } as any;
-  
-        if (!useCustomUrl) {
-          headers.authorization = auth.token;
+
+        console.log(auth, account, useCustomUrl);
+
+        if (!useCustomUrl && account && auth && auth.auth[account]) {
+          headers.authorization = `Bearer ${auth.auth[account].token}`;
         }
 
         const response = await fetch(useCustomUrl ? url: `${BASE_URL}${url}`, {
@@ -73,7 +76,7 @@ function useFetch<T = unknown>(url?: string, useCustomUrl: boolean = false, depe
 
         const data = (await response.json()) as T
 
-        dispatch({ type: 'fetched', payload: useCustomUrl ? data: (data as any).data })
+        dispatch({ type: 'fetched', payload: useCustomUrl ? data: (data as any) })
         onSuccess && onSuccess();
       } catch (error) {
         if (cancelRequest.current) return
@@ -83,7 +86,7 @@ function useFetch<T = unknown>(url?: string, useCustomUrl: boolean = false, depe
       }
     }
 
-    dependencies.every(dependency => dependency !== undefined) && void fetchData()
+    dependencies.every(dependency => dependency !== undefined) && account && void fetchData()
 
     // Use the cleanup function for avoiding a possibly...
     // ...state update after the component was unmounted
@@ -91,7 +94,7 @@ function useFetch<T = unknown>(url?: string, useCustomUrl: boolean = false, depe
       cancelRequest.current = true
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, ...dependencies])
+  }, [url, account, ...dependencies])
 
   return state;
 }

@@ -19,7 +19,11 @@ export function shortenAddress(address: string, chars = 4): string {
       throw Error(`Invalid 'address' parameter '${address}'.`)
     }
     return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
-  }
+}
+
+export function shortenTx(tx: string, chars = 4): string {
+    return `${tx.substring(0, chars + 2)}...${tx.substring(66 - chars)}`
+}
 
 // account is not optional
 export function getSigner(library: Web3Provider, account: string): JsonRpcSigner {
