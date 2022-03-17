@@ -61,6 +61,21 @@ const DashUser = () => {
         {
           ticks: { display: false },
         },
+        {
+          gridLines: {
+              display:false
+          }
+        }
+      ],
+      yAxes: [
+        {
+          ticks: { display: false },
+        },
+        {
+          gridLines: {
+              display:false
+          }
+        }
       ],
     },
   };
