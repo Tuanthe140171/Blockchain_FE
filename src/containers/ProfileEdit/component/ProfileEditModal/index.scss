@@ -3,10 +3,6 @@
   position: absolute;
   height: 1050px;
 
-  .ant-drawer-wrapper-body {
-    padding-top: 88px;
-  }
-
   &__btn-submit {
     position: absolute;
     top: 24px;
@@ -50,27 +46,25 @@
     }
 
     &__wrapper {
-      padding: 0 15px;
-      border: 1px solid #e0e6f1;
-
       &__container {
-        position: relative;
-        padding: 15px;
+        display: flex;
+        flex-direction: column-reverse;
 
-        &__button {
-          position: absolute;
-          top: 100px;
-          left: 505px;
-          z-index: 100;
+        & .ant-upload-select-text button {
+          width: 100%;
+          height: 45px;
+          background-color: #F6FAFF;
+          font-size: 12px;
+          color: #3156DB;
         }
 
-        .ant-upload-list-item-card-actions-btn {
-          display: none;
+        & .ant-upload-list-text {
+          height: 80px;
+          display: flex;
+          align-items: center;
+          border: 1px solid #E0E6F1;
+          padding: 0 20px;
         }
-      }
-
-      &__download {
-        margin: -10px 0 5px;
       }
     }
   }

@@ -107,6 +107,7 @@ const DefaultLayout: React.FC = (props): ReactElement => {
                       chainId: "0x7E2",
                       chainName: "CharityVerse",
                       rpcUrls: ["https://custom.charityverse.info"],
+                      // rpcUrls: ["https://rpc.test.charityverse.info"],
                       blockExplorerUrls: ["https://35.209.169.120:4000"],
                       nativeCurrency: {
                         name: "CharityVerse",

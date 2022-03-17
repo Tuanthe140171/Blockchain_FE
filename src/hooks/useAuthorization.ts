@@ -41,7 +41,7 @@ const useAuthorization = (): AuthorizeErrorType => {
                     setAuthorizeError(AuthorizeErrorType.WRONG_NETWORK);
                 } else if (account && library && !error && authInfo && authInfo[account]) {
                     const userInfo = parseJwt(authInfo[account].token);
-                    console.log(userInfo);
+                    // console.log(userInfo);
                     const isAuthorized = ethers.utils.getAddress(userInfo.address) === ethers.utils.getAddress(account);
                     isAuthorized && setAuthorizeError(AuthorizeErrorType.NONE);
                 } else if (account && !error && (!authInfo || !authInfo[account])) {

@@ -169,7 +169,7 @@ const TopDonation: React.FC = () => {
                     // autoplay
                     ref={(el: CarouselRef) => carouselRef.current = el}
                     afterChange={(slide) => {
-                        console.log(slide);
+                        // console.log(slide);
                         setCurrentSlide(slide);
                     }}    
                 >

@@ -9,7 +9,7 @@ type VotingNotiProps = {
 
 const ActivityNoti: React.FC<VotingNotiProps> = (props) => {
   const { data } = props;
-  console.log(data);
+  // console.log(data);
 
   return (
     <div
