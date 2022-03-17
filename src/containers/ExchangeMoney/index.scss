@@ -56,13 +56,13 @@
                 width: 0%;
                 height: 2px;
                 background-color: #3156DB;
-                animation: infinite-spinning-1 0.2s ease-in forwards;
+                animation: infinite-spinning-2 0.2s ease-in forwards;
             }
         }
     }
 }
 
-@keyframes infinite-spinning-1 {
+@keyframes infinite-spinning-2 {
     from {
       width: 0;
     }

@@ -7,9 +7,10 @@ import useFetch from "../../../../hooks/useFetch";
 import "./index.scss";
 
 const ProfilePerson = () => {
-  const userData = useFetch<any>("users/get-user-by-id", {}, false, [], {
-    method: "GET",
-  });
+  const userData = useFetch<any>("users/get-user-by-id", {
+    "Content-Type": "application/json",
+    Accept: "application/json"
+  }, false, []);
 
   const [form] = Form.useForm();
   const onSubmit = (values: any) => {};
