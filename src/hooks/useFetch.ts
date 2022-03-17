@@ -18,6 +18,7 @@ const BASE_URL = process.env.REACT_APP_API_URL;
 
 function useFetch<T = unknown>(
   url?: string,
+  headers: any = {},
   useCustomUrl: boolean = false,
   dependencies: any[] = [],
   options?: RequestInit,
@@ -63,12 +64,6 @@ function useFetch<T = unknown>(
         const auth = localStorage.getItem("charity")
           ? JSON.parse(localStorage.getItem("charity") || "")
           : {};
-        const headers = {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        } as any;
-
-        console.log(auth, account, useCustomUrl);
 
         if (!useCustomUrl && account && auth && auth.auth[account]) {
           headers.authorization = `Bearer ${auth.auth[account].token}`;
@@ -86,7 +81,7 @@ function useFetch<T = unknown>(
 
         dispatch({
           type: "fetched",
-          payload: useCustomUrl ? data : (data as any),
+          payload: useCustomUrl ? data : (data as any).data,
         });
         onSuccess && onSuccess();
       } catch (error) {

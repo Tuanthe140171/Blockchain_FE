@@ -22,6 +22,10 @@ const DefaultLayout: React.FC = (props): ReactElement => {
 
   const { data: accessToken, loading, error } = useFetch<any>(
     "auth",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
     false,
     [signature, account],
     {
