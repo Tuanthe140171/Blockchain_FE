@@ -9,6 +9,7 @@ import {
   CategoryScale,
   Chart as ChartJS,
   ChartData,
+  Filler,
   Legend,
   LinearScale,
   LineElement,
@@ -16,8 +17,11 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import React from "react";
+import {useState} from "react";
 import { Line, Pie } from "react-chartjs-2";
+import useFetch from "../../../../hooks/useFetch";
+import { shortenAddress, shortenTx } from "../../../../utils";
+import moment from "moment";
 import "./index.scss";
 
 const { Search } = Input;
@@ -30,42 +34,106 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  Filler,
   ArcElement
 );
 
+
+const plugins = [
+  {
+    afterDraw: (chart: { tooltip?: any; scales?: any; ctx?: any }) => {
+      // eslint-disable-next-line no-underscore-dangle
+      if (chart.tooltip && chart.tooltip._active && chart.tooltip._active.length) {
+        // find coordinates of tooltip
+        const activePoint = chart.tooltip._active[0];
+        const { ctx } = chart;
+        const { x, y } = activePoint.element;
+        const topY = chart.scales.y.top;
+        const bottomY = chart.scales.y.bottom;
+        const topX = chart.scales.x.left;
+        const bottomX = chart.scales.x.right;
+
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]);
+        ctx.strokeStyle = '#EEC909';
+
+        // draw vertical line
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(x, topY);
+        ctx.lineTo(x, bottomY);
+        ctx.stroke();
+
+        
+        // Draw horizontal line
+        ctx.beginPath();
+        ctx.moveTo(topX, y);
+        ctx.lineTo(bottomX, y);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+    },
+  },
+];
+
 const DashSystem = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [chartRef, setChartRef] = useState<any>();
+  const { data: transactionsResp, loading } = useFetch<any>(`transactions?page=${currentPage}`);
+  
+  var gradientStroke = chartRef?.ctx?.createLinearGradient(0, 500, 0, 100);
+  gradientStroke?.addColorStop(1, "rgba(238, 201, 9, 0.27)");
+  gradientStroke?.addColorStop(0.3, "rgba(255, 255, 255, 0)");
+
   const data: ChartData<"line", any, unknown> = {
-    labels: [1, 5, 10, 15, 20, 25],
-    // backgroundColor: ["rgba(255,0,0,1)"],
-    // lineTension: 1,
+    labels: [1, 5, 10, 15, 20, 25, 30],
     datasets: [
       {
-        label: "HSN",
-        fill: false,
-        borderColor: "rgba(255, 0, 0, 0.3)",
-        pointRadius: 2,
+        label: 'My First Dataset',
+        fill: true,
         data: [65, 59, 80, 81, 56, 55, 40],
-        cubicInterpolationMode: "monotone",
-        tension: 0.4,
+        backgroundColor: gradientStroke,
+        borderColor: '#EEC909',
+        tension: 0.5,
+        pointBorderWidth: 0,
+        pointHoverBorderWidth: 2,
+        pointHoverBackgroundColor: "white"
       },
     ],
   };
 
-  var options = {
-    legend: {
-      position: "right",
-      labels: {
-        boxWidth: 10,
-      },
+  var options: any = {
+    plugins: {
+      legend: {
+        display: false
+      }
     },
     scales: {
-      xAxes: [
-        {
-          ticks: { display: false },
-        },
-      ],
+      x: {
+        grid: {
+          display: false
+        }
+      },
+      y: {
+        grid: {
+          display: false
+        }
+      },
     },
-  };
+    interaction: {
+      intersect: false,
+      mode: 'index',
+    },
+    // maintainAspectRatio: false,
+    // elements: {
+    //   point: {
+    //     radius: 5,
+    //     hoverRadius: 4,
+    //   },
+    // }
+  }
+
 
   const tableColumns: any = [
     {
@@ -143,63 +211,15 @@ const DashSystem = () => {
     },
   ];
 
-  const tableData = [
-    {
-      id: "1",
-      key: "1",
-      name: "John Brown",
-      donee: "A",
-      status: ["loser"],
-      date: "20/12/2022",
-      amount: "11,234,678 ETH",
-    },
-    {
-      id: "2",
-
-      key: "2",
-      name: "John Brown",
-      donee: "A",
-      status: ["loser"],
-      date: "20/12/2022",
-      amount: "11,234,678 ETH",
-    },
-    {
-      id: "3",
-      key: "3",
-      name: "John Brown",
-      donee: "A",
-      status: ["loser"],
-      date: "20/12/2022",
-      amount: "11,234,678 ETH",
-    },
-    {
-      id: "4",
-      key: "4",
-      name: "John Brown",
-      donee: "A",
-      status: ["loser"],
-      date: "20/12/2022",
-      amount: "11,234,678 ETH",
-    },
-    {
-      id: "5",
-      key: "5",
-      name: "John Brown",
-      donee: "A",
-      status: ["loser"],
-      date: "20/12/2022",
-      amount: "11,234,678 ETH",
-    },
-    {
-      id: "6",
-      key: "6",
-      name: "John Brown",
-      donee: "A",
-      status: ["loser"],
-      date: "20/12/2022",
-      amount: "11,234,678 ETH",
-    },
-  ];
+  const tableData = transactionsResp ? transactionsResp.rows.map((transaction: any) => ({
+    id: shortenTx(transaction.id),
+    key: shortenTx(transaction.id),
+    name: shortenAddress(transaction.from),
+    donee: shortenAddress(transaction.to),
+    date: moment(new Date(parseInt(transaction.donated_at_timestamp) * 1000)).format("MM-DD-YY"),
+    amount: transaction.amount,
+    status: ["loser"],
+  })): [];
 
   const pieData: ChartData<"pie", any, unknown> = {
     labels: ["Philantrophist", "Donee"],
@@ -232,7 +252,7 @@ const DashSystem = () => {
                 />
               </div>
             </div>
-            <Line data={data} className="chart-group__chart" />
+            <Line ref={ref => setChartRef(ref)} data={data} plugins={plugins as any} options={options} className="chart-group__chart" />
             <div className="chart-group__data-group">
               <h3 className="chart-group__data-group__title">Total salary</h3>
               <h1 className="chart-group__data-group__data">
@@ -258,7 +278,7 @@ const DashSystem = () => {
                 />
               </div>
             </div>
-            <Line data={data} className="chart-group__chart" />
+            <Line data={data} options={options} className="chart-group__chart" />
             <div className="chart-group__data-group">
               <h3 className="chart-group__data-group__title">
                 Total user action
@@ -298,7 +318,14 @@ const DashSystem = () => {
             <Table
               columns={tableColumns}
               dataSource={tableData}
-              // onChange={onCha}
+              pagination={{
+                defaultPageSize: transactionsResp ? transactionsResp.limit: 10,
+                pageSize: transactionsResp ? transactionsResp.limit: 10,
+                total: transactionsResp ? transactionsResp.count : 0,
+                current: currentPage
+              }}
+              onChange={((props: any) => setCurrentPage(props.current))}
+              loading={loading}
             />
           </div>
         </Col>

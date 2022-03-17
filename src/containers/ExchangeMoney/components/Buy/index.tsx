@@ -5,8 +5,8 @@ import TransactionDetails from '../TransactionDetails';
 import Verification from '../Verification';
 import TimeLine from '../TimeLine';
 import Message from "../../../../constants/message";
-import "./index.scss";
 import AppDialog from '../../../../components/AppDialog';
+import "./index.scss";
 
 const Buy: React.FC = () => {
     const [currentStep, setCurrentStep] = useState<number>(0);

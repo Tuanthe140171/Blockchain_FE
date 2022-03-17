@@ -20,11 +20,12 @@ function useFetch<T = unknown>(
   url?: string,
   useCustomUrl: boolean = false,
   dependencies: any[] = [],
-  options?: RequestInit
+  options?: RequestInit,
+  onSuccess?: () => void,
+  onError?: () => void
 ): State<T> {
-  const { account } = useWeb3React();
-
   const cache = useRef<Cache<T>>({});
+  const { account } = useWeb3React();
 
   // Used to prevent state update if the component is unmounted
   const cancelRequest = useRef<boolean>(false);
@@ -62,14 +63,19 @@ function useFetch<T = unknown>(
         const auth = localStorage.getItem("charity")
           ? JSON.parse(localStorage.getItem("charity") || "")
           : {};
-        // console.log(auth);
+        const headers = {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        } as any;
+
+        console.log(auth, account, useCustomUrl);
+
+        if (!useCustomUrl && account && auth && auth.auth[account]) {
+          headers.authorization = `Bearer ${auth.auth[account].token}`;
+        }
 
         const response = await fetch(useCustomUrl ? url : `${BASE_URL}${url}`, {
-          headers: {
-            // "Content-Type": "application/json",
-            // Accept: "application/json",
-            authorization: `Bearer ${auth.auth[account as any].token}`,
-          },
+          headers,
           ...options,
         });
         if (!response.ok) {
@@ -80,16 +86,16 @@ function useFetch<T = unknown>(
 
         dispatch({
           type: "fetched",
-          payload: useCustomUrl ? data : (data as any).data,
+          payload: useCustomUrl ? data : (data as any),
         });
+        onSuccess && onSuccess();
       } catch (error) {
         if (cancelRequest.current) return;
 
         dispatch({ type: "error", payload: error as Error });
+        onError && onError();
       }
     };
-
-    // console.log(account);
 
     dependencies.every((dependency) => dependency !== undefined) &&
       account &&
@@ -98,11 +104,10 @@ function useFetch<T = unknown>(
     // Use the cleanup function for avoiding a possibly...
     // ...state update after the component was unmounted
     return () => {
-      // console.log("HERE");
-      // cancelRequest.current = true
+      cancelRequest.current = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, ...dependencies, account]);
+  }, [url, account, ...dependencies]);
 
   return state;
 }

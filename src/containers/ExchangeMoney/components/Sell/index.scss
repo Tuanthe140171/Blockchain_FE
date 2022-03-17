@@ -1,0 +1,8 @@
+.sell {
+    text-align: center;
+    display: flex;
+
+    &__step {
+        flex-grow: 1;
+    }
+}
