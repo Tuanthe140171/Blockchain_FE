@@ -65,14 +65,15 @@ function useFetch<T = unknown>(
           ? JSON.parse(localStorage.getItem("charity") || "")
           : {};
 
-        if (!useCustomUrl && account && auth && auth.auth[account]) {
+        if (!useCustomUrl && account && auth && auth.auth && auth.auth[account]) {
           headers.authorization = `Bearer ${auth.auth[account].token}`;
         }
 
         const response = await fetch(useCustomUrl ? url : `${BASE_URL}${url}`, {
           headers,
-          ...options,
+          ...options
         });
+        
         if (!response.ok) {
           throw new Error(response.statusText);
         }
@@ -83,6 +84,7 @@ function useFetch<T = unknown>(
           type: "fetched",
           payload: useCustomUrl ? data : (data as any).data,
         });
+
         onSuccess && onSuccess();
       } catch (error) {
         if (cancelRequest.current) return;
@@ -92,6 +94,7 @@ function useFetch<T = unknown>(
       }
     };
 
+    console.log(dependencies, account);
     dependencies.every((dependency) => dependency !== undefined) &&
       account &&
       void fetchData();
@@ -99,7 +102,7 @@ function useFetch<T = unknown>(
     // Use the cleanup function for avoiding a possibly...
     // ...state update after the component was unmounted
     return () => {
-      cancelRequest.current = true;
+      // cancelRequest.current = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, account, ...dependencies]);
