@@ -71,7 +71,7 @@ function useFetch<T = unknown>(
 
         const response = await fetch(useCustomUrl ? url : `${BASE_URL}${url}`, {
           headers,
-          ...options
+          ...options,
         });
         
         if (!response.ok) {

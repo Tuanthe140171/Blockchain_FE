@@ -7,6 +7,17 @@ import "./index.scss";
 
 const Dashboard = () => {
   const [isSystem, setIsSystem] = useState(true);
+  const [pickedDate, setPickedDate] = useState<{
+    from: number,
+    to: number
+  } | undefined>(undefined)
+
+  const handleDatePickerChange = (dates: any, dateStrings: any) => {
+    setPickedDate({
+      from: parseInt(`${dates[0].toDate().getTime() / 1000}`),
+      to: parseInt(`${dates[1].toDate().getTime() / 1000}`),
+    });
+  }
 
   return (
     <div className="dashboard">
@@ -28,13 +39,13 @@ const Dashboard = () => {
             </button>
           </div>
           <div className="dashboard__header__date">
-            <DashDate />
+            <DashDate onChange={handleDatePickerChange} />
           </div>
         </div>
       </div>
       <Divider className="dashboard__divider" />
       <div className="dashboard__body">
-        {isSystem ? <DashSystem /> : <DashUser />}
+        {isSystem ? <DashSystem pickedDate={pickedDate} /> : <DashUser />}
       </div>
     </div>
   );

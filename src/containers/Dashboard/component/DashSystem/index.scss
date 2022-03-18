@@ -30,8 +30,13 @@
 
     &__data-group {
       &__title {
-        color: #a8b2c8;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        font-size: 12px !important;
+        line-height: 15px !important;
+        color: #5677BB !important;
         font-size: 12px;
+        margin-top: 12px;
       }
 
       &__data {
@@ -40,6 +45,18 @@
         &__rate {
           font-size: 12px;
           margin-left: 20px;
+
+          &--up {
+            color: #50EC83;
+          }
+
+          &--down {
+            color: red;
+          }
+
+          & > span {
+            margin-left: 6px;
+          }
         }
       }
     }
