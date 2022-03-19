@@ -1,44 +1,26 @@
 import React, { useState } from 'react';
 import { Typography, Button, Avatar, Image } from 'antd';
+import { SUPPORTED_METHODS } from '../Buy';
 import "./index.scss";
 
+
 type PaymentMethodProps = {
-    setCurrentStep: () => void
+    setCurrentStep: () => void,
+    supportedPaymentMethods: { [methodId in SUPPORTED_METHODS]: {
+        label: string,
+        title: string,
+        account: string,
+        accountNumber: string,
+        id: number
+    }},
+    setPaymentMethod: (method: number) => void,
+    chosenPaymentMethod: number
 }
 
-enum SUPPORTED_METHODS {
-    MOMO,
-    BIDV,
-    TECHCOMBANK
-}
+
 
 const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
-    const [selectedMethod, setSelectedMethod] = useState(SUPPORTED_METHODS.MOMO);
-    
-    const ALL_SUPPORTED_METHODS = [
-        {
-            label: "/icon/bidv.svg",
-            id: SUPPORTED_METHODS.BIDV,
-            title: "BIDV",
-            account: "Mai Thi Chuyen",
-            accountNumber: "42710000387624"
-        },
-        {
-            label: "/icon/momo.svg",
-            id: SUPPORTED_METHODS.MOMO,
-            title: "MOMO",
-            account: "Mai Thi Chuyen",
-            accountNumber: "42710000387624"
-        },
-        {
-            label: "/icon/techcombank.svg",
-            id: SUPPORTED_METHODS.TECHCOMBANK,
-            title: "TECHCOMBANK",
-            account: "Mai Thi Chuyen",
-            accountNumber: "42710000387624"
-        }
-    ]
-
+    const { chosenPaymentMethod, supportedPaymentMethods, setPaymentMethod } = props;
     return (
         <div className="payment">
             <Typography.Title level={4} className="payment__title">
@@ -46,19 +28,22 @@ const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
             </Typography.Title>
             <div className="payment__methods">
                 {
-                    ALL_SUPPORTED_METHODS.map(METHOD => (
-                        <div className={`payment__method ${selectedMethod === METHOD.id ? 'payment__method--active': ''}`} key={METHOD.id} onClick={() => setSelectedMethod(METHOD.id)}>
-                            <Avatar className="payment__method-avatar" src={METHOD.label} />
-                            <div className="payment__info">
-                                <p className="payment__banking">{METHOD.title}</p>
-                                <p className="payment__account">{METHOD.account}</p>
-                                <p className="payment__account-number">{METHOD.accountNumber}</p>
-                            </div>
-                            {
-                                selectedMethod === METHOD.id && <Image src="/icon/tick_1.svg" preview={false} className="payment__tick" />
-                            }
-                        </div>
-                    ))
+                    // Object.keys(supportedPaymentMethods).map((methodId: SUPPORTED_METHODS) => {
+                    //     const method = supportedPaymentMethods[methodId] as any; 
+                    //     return (
+                    //         <div className={`payment__method ${chosenPaymentMethod === method ? 'payment__method--active': ''}`} key={METHOD.id} onClick={() => setSelectedMethod(METHOD.id)}>
+                    //             <Avatar className="payment__method-avatar" src={method.label} />
+                    //             <div className="payment__info">
+                    //                 <p className="payment__banking">{method.title}</p>
+                    //                 <p className="payment__account">{method.account}</p>
+                    //                 <p className="payment__account-number">{method.accountNumber}</p>
+                    //             </div>
+                    //             {
+                    //                 chosenPaymentMethod === methodId && <Image src="/icon/tick_1.svg" preview={false} className="payment__tick" />
+                    //             }
+                    //         </div>
+                    //     )
+                    // })
                 }
             </div>
             <Button className="payment__btn" onClick={props.setCurrentStep}>Confirm</Button>

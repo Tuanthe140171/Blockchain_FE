@@ -8,7 +8,36 @@ import Message from "../../../../constants/message";
 import AppDialog from '../../../../components/AppDialog';
 import "./index.scss";
 
+export enum SUPPORTED_METHODS {
+    MOMO,
+    BIDV,
+    TECHCOMBANK
+}
+
+const ALL_SUPPORTED_METHODS = {
+    [SUPPORTED_METHODS.BIDV]: {
+        label: "/icon/bidv.svg",
+        title: "BIDV",
+        account: "Mai Thi Chuyen",
+        accountNumber: "42710000387624"
+    },
+    [SUPPORTED_METHODS.MOMO]: {
+        label: "/icon/momo.svg",
+        title: "MOMO",
+        account: "Mai Thi Chuyen",
+        accountNumber: "42710000387624"
+    },
+    [SUPPORTED_METHODS.TECHCOMBANK]: {
+        label: "/icon/techcombank.svg",
+        title: "TECHCOMBANK",
+        account: "Mai Thi Chuyen",
+        accountNumber: "42710000387624"
+    }
+}
+
 const Buy: React.FC = () => {
+    const [paymentMethod, setPaymentMethod] = useState(SUPPORTED_METHODS.MOMO);
+    const [inputAmount, setInputAmount] = useState<number>(0);
     const [currentStep, setCurrentStep] = useState<number>(0);
     const [openDialog, setOpenDialog] = useState(false);
 
@@ -22,14 +51,18 @@ const Buy: React.FC = () => {
         {
             title: "Enter amount",
             description: "",
-            component: <SelectBuyAmount
-                setCurrentStep={() => setCurrentStep(1)}
-            />
+            component: (
+                    <SelectBuyAmount
+                    setCurrentStep={() => setCurrentStep(1)}
+                    onChange={input => setInputAmount(input)}
+                    inputAmount={inputAmount}
+                />
+            )
         },
         {
             title: "Payment method",
             description: "",
-            component: <PaymentMethod setCurrentStep={() => setCurrentStep(2)} />
+            // component: <PaymentMethod setCurrentStep={() => setCurrentStep(2)} />
         },
         {
             title: "Verification",
@@ -56,7 +89,7 @@ const Buy: React.FC = () => {
                 />
                 {BUY_STEPS[currentStep].component}
             </div>
-            <TransactionDetails />
+            <TransactionDetails inputAmount={inputAmount} />
             {openDialog ? (
                 <AppDialog
                     type="infor"

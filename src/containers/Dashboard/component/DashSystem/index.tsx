@@ -23,7 +23,7 @@ import { Line, Pie } from "react-chartjs-2";
 import moment from "moment";
 import BigNumber from "bignumber.js";
 import useFetch from "../../../../hooks/useFetch";
-import { shortenAddress, shortenTx } from "../../../../utils";
+import { shortenTx } from "../../../../utils";
 import "./index.scss";
 
 enum CharityStatus {
@@ -327,7 +327,7 @@ const DashSystem: React.FC<{
                 />
               </div>
             </div>
-            <Line data={data} options={options} className="chart-group__chart" />
+            <Line data={data} options={options} plugins={plugins as any} className="chart-group__chart" />
             <div className="chart-group__data-group">
               <h3 className="chart-group__data-group__title">
                 Total user action
@@ -360,6 +360,7 @@ const DashSystem: React.FC<{
                   />
                   <DownloadOutlined
                     style={{ fontSize: "15px", color: "black" }}
+                    onClick={() => exportDataToCsv(transactionsResp.rows, "transactions")}
                   />
                 </div>
               </div>
