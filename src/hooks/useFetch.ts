@@ -25,8 +25,8 @@ function useFetch<T = unknown>(
   useCustomUrl: boolean = false,
   dependencies: any[] = [],
   options?: RequestInit,
-  onSuccess?: (e?: any) => void,
-  onError?: (e?: any) => void
+  onSuccess?: () => void,
+  onError?: () => void
 ): State<T> {
   const cache = useRef<Cache<T>>({});
   const { account } = useWeb3React();
@@ -68,13 +68,7 @@ function useFetch<T = unknown>(
           ? JSON.parse(localStorage.getItem("charity") || "")
           : {};
 
-        if (
-          !useCustomUrl &&
-          account &&
-          auth &&
-          auth.auth &&
-          auth.auth[account]
-        ) {
+        if (!useCustomUrl && account && auth && auth.auth && auth.auth[account]) {
           headers.authorization = `Bearer ${auth.auth[account].token}`;
         }
 
@@ -82,7 +76,7 @@ function useFetch<T = unknown>(
           headers,
           ...options,
         });
-
+        
         if (!response.ok) {
           throw new Error(response.statusText);
         }
@@ -94,7 +88,7 @@ function useFetch<T = unknown>(
           payload: useCustomUrl ? data : (data as any).data,
         });
 
-        onSuccess && onSuccess(data);
+        onSuccess && onSuccess();
       } catch (error) {
         if (cancelRequest.current) return;
 
@@ -103,6 +97,7 @@ function useFetch<T = unknown>(
       }
     };
 
+    console.log(dependencies, account);
     dependencies.every((dependency) => dependency !== undefined) &&
       account &&
       void fetchData();
