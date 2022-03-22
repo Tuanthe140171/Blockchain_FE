@@ -5,10 +5,10 @@ import "./index.scss";
 
 const DoneeSearchFilter: React.FC = () => {
     const CIRCUMSTANCES = ["Trẻ em mồ côi", "Người dân tộc thiểu số ", "Người dân tộc thiểu số", "Người cao tuổi", "Người khuyết tật"];
-    const { loading, data: provincesData } = useFetch<[{ code: number, name: string }]>("https://provinces.open-api.vn/api/", {
+    const { loading, data: provincesData } = useFetch<[{ code: number, name: string }]>("assets/province", {
         "Content-Type": "application/json",
         Accept: "application/json"
-    }, true);
+    });
 
     return (
         <div className="donee-filter">
@@ -23,7 +23,6 @@ const DoneeSearchFilter: React.FC = () => {
                 id: provinceData.code,
                 name: provinceData.name
             })) : []} />
-
         </div>
     )
 }

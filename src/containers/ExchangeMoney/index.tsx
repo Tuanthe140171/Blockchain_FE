@@ -19,7 +19,6 @@ const ExchangeMoney: React.FC = () => {
     const [activeTab, setActiveTab] = useState<TABS>(TABS.BUY);
 
     const renderTabComponents = () => {
-        // console.log(activeTab, renderComponents);
         return renderComponents[activeTab];
     }
 

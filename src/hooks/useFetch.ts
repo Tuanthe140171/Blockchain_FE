@@ -1,5 +1,8 @@
 import { useEffect, useReducer, useRef } from "react";
 import { useWeb3React } from "web3-react-core";
+import { isAddress } from "../utils";
+
+console.log(isAddress("849750add"))
 interface State<T> {
   data?: T;
   error?: Error;

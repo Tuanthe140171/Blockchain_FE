@@ -2,7 +2,12 @@ import React from 'react';
 import { Image, Avatar } from 'antd';
 import "./index.scss";
 
-const TransactionDetails: React.FC = () => {
+type TransactionDetailsProps = {
+    inputAmount: number
+}
+
+const TransactionDetails: React.FC<TransactionDetailsProps> = (props) => {
+    const { inputAmount } = props;
     return (
         <div className="transaction-details">
             <p className="transaction-details__title">Your transaction details</p>
@@ -12,25 +17,25 @@ const TransactionDetails: React.FC = () => {
                         Số coin mua
                     </span>
                     <span className="details-info__text">
-                        <strong>0</strong>
+                        <strong>{inputAmount}</strong>
                         <Image src="/icon/ethereum_2.svg" preview={false} />
                     </span>
                 </div>
-                <div className="details-info__block">
+                {/* <div className="details-info__block">
                     <span className="details-info__label">
                         Fee giao dịch
                     </span>
                     <span className="details-info__text">
-                        <strong>0</strong>
+                        <strong>{inputAmountFee}</strong>
                         <Image src="/icon/ethereum_2.svg" preview={false} />
                     </span>
-                </div>
+                </div> */}
                 <div className="details-info__block">
                     <span className="details-info__label">
                         Số tiền phải chuyển
                     </span>
                     <span className="details-info__text">
-                        <strong>0 VND</strong>
+                        <strong>{inputAmount} VND</strong>
                     </span>
                 </div>
             </div>
@@ -50,7 +55,7 @@ const TransactionDetails: React.FC = () => {
                     Tổng số coin nhận
                 </span>
                 <span className="details-receipt__text">
-                    <strong>0</strong>
+                    <strong>{inputAmount}</strong>
                     <Image src="/icon/ethereum_2.svg" preview={false} />
                 </span>
             </div>
