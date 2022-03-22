@@ -26,6 +26,7 @@ import { shortenTx } from "../../../../utils";
 import { exportDataToCsv } from '../../../../utils/csvGenerator';
 import { plugins } from "../../../../utils/chart";
 import { toPercent } from "../../../../utils/convert";
+import { options } from "../../../../constants/chart";
 import "./index.scss";
 
 const { Search } = Input;
@@ -69,7 +70,6 @@ const DashUser: React.FC<{
     "Content-Type": "application/json",
     Accept: "application/json"
   });
-  console.log(userStatsResp);
 
   const { data: dailyDonationResp } = useFetch<any>(
     !props.pickedDate ? `transactions/daily/user?userAddress=${account}`: `transactions/daily/user?userAddress=${account}&fromDate=${props.pickedDate.from}&toDate=${props.pickedDate.to}`, 
@@ -118,6 +118,8 @@ const DashUser: React.FC<{
     date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
     amount: transaction.amount,
     status: ["loser"],
+    doneeAvatar: transaction["toUser.UserMedia.link"],
+    avatar: transaction["fromUser.UserMedia.link"]
   })) : [];
 
   var gradientStroke = chartRef?.ctx?.createLinearGradient(0, 500, 0, 100);
@@ -159,30 +161,6 @@ const DashUser: React.FC<{
       },
     ],
   };
-  
-  var options: any = {
-    plugins: {
-      legend: {
-        display: false
-      }
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false
-        }
-      },
-      y: {
-        grid: {
-          display: false
-        }
-      },
-    },
-    interaction: {
-      intersect: false,
-      mode: 'index',
-    },
-  }
 
   const tableColumns: any = [
     {
@@ -195,7 +173,7 @@ const DashUser: React.FC<{
       title: "Philantrophist",
       dataIndex: "name",
       key: "name",
-      render: (name: any) => (
+      render: (name: any, others: any) => (
         <div
           style={{
             display: "flex",
@@ -203,7 +181,7 @@ const DashUser: React.FC<{
             alignItems: "center",
           }}
         >
-          <Avatar icon={<UserOutlined />} />
+          <Avatar src={others.avatar} />
           {name}
         </div>
       ),
@@ -212,18 +190,20 @@ const DashUser: React.FC<{
       title: "Donee",
       dataIndex: "donee",
       key: "donee",
-      render: (name: any) => (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-around",
-            alignItems: "center",
-          }}
-        >
-          <Avatar icon={<UserOutlined />} />
-          {name}
-        </div>
-      ),
+      render: (name: any, others: any) => {
+        return (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <Avatar src={others.doneeAvatar} />
+            {name}
+          </div>
+        )
+      }
     },
     // {
     //   title: "Status",

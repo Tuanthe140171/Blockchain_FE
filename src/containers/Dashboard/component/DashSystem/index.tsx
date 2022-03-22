@@ -27,6 +27,7 @@ import { shortenTx } from "../../../../utils";
 import { plugins } from "../../../../utils/chart";
 import { exportDataToCsv } from '../../../../utils/csvGenerator';
 import { toPercent } from '../../../../utils/convert';
+import { options } from "../../../../constants/chart";
 import "./index.scss";
 
 enum CharityStatus {
@@ -169,31 +170,6 @@ const DashSystem: React.FC<{
     ],
   };
 
-  var options: any = {
-    plugins: {
-      legend: {
-        display: false
-      }
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false
-        }
-      },
-      y: {
-        grid: {
-          display: false
-        }
-      },
-    },
-    interaction: {
-      intersect: false,
-      mode: 'index',
-    },
-  }
-
-
   const tableColumns: any = [
     {
       title: "ID",
@@ -205,7 +181,7 @@ const DashSystem: React.FC<{
       title: "Philantrophist",
       dataIndex: "name",
       key: "name",
-      render: (name: any) => (
+      render: (name: any, others: any) => (
         <div
           style={{
             display: "flex",
@@ -213,7 +189,7 @@ const DashSystem: React.FC<{
             alignItems: "center",
           }}
         >
-          <Avatar icon={<UserOutlined />} />
+          <Avatar src={others.avatar} />
           {name}
         </div>
       ),
@@ -222,18 +198,20 @@ const DashSystem: React.FC<{
       title: "Donee",
       dataIndex: "donee",
       key: "donee",
-      render: (name: any) => (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-around",
-            alignItems: "center",
-          }}
-        >
-          <Avatar icon={<UserOutlined />} />
-          {name}
-        </div>
-      ),
+      render: (name: any, others: any) => {
+        return (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <Avatar src={others.doneeAvatar} />
+            {name}
+          </div>
+        )
+      },
     },
     {
       title: "Date",
@@ -257,6 +235,8 @@ const DashSystem: React.FC<{
     date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
     amount: transaction.amount,
     status: ["loser"],
+    doneeAvatar: transaction["toUser.UserMedia.link"],
+    avatar: transaction["fromUser.UserMedia.link"]
   })) : [];
 
   const pieData: ChartData<"pie", any, unknown> = {
