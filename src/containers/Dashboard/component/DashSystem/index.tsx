@@ -26,6 +26,7 @@ import useDebounce from "../../../../hooks/useDebounce";
 import { shortenTx } from "../../../../utils";
 import { plugins } from "../../../../utils/chart";
 import { exportDataToCsv } from '../../../../utils/csvGenerator';
+import { toPercent } from '../../../../utils/convert';
 import "./index.scss";
 
 enum CharityStatus {
@@ -94,31 +95,35 @@ const DashSystem: React.FC<{
 
   const charityStatus = {
     status: CharityStatus.UP,
-    percentage: '0'
+    percentage: new BigNumber(0)
   }
 
   const userStatsStatus = {
     status: CharityStatus.UP,
-    percentage: '0',
-    totalUserActions: 0
+    percentage: new BigNumber(0),
+    totalUserActions: new BigNumber(0)
   }
 
   if (dailyDonationResp && dailyDonationResp.donationDayDatas.length >= 1) {
     const dayDatas = dailyDonationResp.donationDayDatas;
     if (dayDatas.length >= 2 && dayDatas[dayDatas.length - 2].dailyVolume > 0) {
-      charityStatus.percentage = new BigNumber((dayDatas[dayDatas.length - 1].dailyVolume / dayDatas[dayDatas.length - 2].dailyVolume)).multipliedBy(100).toFixed(4)
+      charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).minus(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume)).div(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume));
+    } else {
+      charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).minus(new BigNumber(0));
     }
     charityStatus.status = new BigNumber(charityStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
   }
 
   if (userActiveResp && userActiveResp.length >= 1) {
     if (userActiveResp.length >= 2 && userActiveResp[userActiveResp.length - 2].count > 0) {
-      userStatsStatus.percentage = new BigNumber((userActiveResp[userActiveResp.length - 1].count / userActiveResp[userActiveResp.length - 2].count)).multipliedBy(100).toFixed(4)
+      userStatsStatus.percentage = new BigNumber(userActiveResp[userActiveResp.length - 1].count).minus(new BigNumber(userActiveResp[userActiveResp.length - 2].count)).div(new BigNumber(userActiveResp[userActiveResp.length - 2].count));
+    } else {
+      userStatsStatus.percentage = new BigNumber(userActiveResp[userActiveResp.length - 1].count).minus(new BigNumber(0));
     }
     userStatsStatus.status = new BigNumber(userStatsStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
     
     for (let userStats of userActiveResp) {
-      userStatsStatus.totalUserActions += parseInt(userStats.count);
+      userStatsStatus.totalUserActions = userStatsStatus.totalUserActions.plus(new BigNumber(userStats.count));
     }
   }
 
@@ -286,10 +291,10 @@ const DashSystem: React.FC<{
             <div className="chart-group__data-group">
               <h3 className="chart-group__data-group__title">Total charity</h3>
               <h1 className="chart-group__data-group__data">
-                {donationResp ? new BigNumber(donationResp.donations[0].totalVolume).div(1e18).toFixed(2) : 0} CRV
+                {donationResp ? new BigNumber(donationResp.donations[0].totalVolume).div(1e18).toFixed(4) : 0} CRV
                 <span className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${charityStatus.status === CharityStatus.UP ? 'up' : 'down'}`}>
                   <Image preview={false} src="/icon/growth.svg" className={`chart-group__data-group__data__icon--${charityStatus.status === CharityStatus.UP ? 'up' : 'down'}`} />
-                  <span>{charityStatus.percentage}%</span>
+                  <span>{toPercent(charityStatus.percentage)}%</span>
                 </span>
               </h1>
             </div>
@@ -316,10 +321,10 @@ const DashSystem: React.FC<{
                 Total user action
               </h3>
               <h1 className="chart-group__data-group__data">
-                {userStatsStatus.totalUserActions}
-                <span className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${charityStatus.status === CharityStatus.UP ? 'up' : 'down'}`}>
-                  <Image preview={false} src="/icon/growth.svg" className={`chart-group__data-group__data__icon--${charityStatus.status === CharityStatus.UP ? 'up' : 'down'}`} />
-                  <span>{userStatsStatus.percentage}%</span>
+                {userStatsStatus.totalUserActions.toFixed()}
+                <span className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${userStatsStatus.status === CharityStatus.UP ? 'up' : 'down'}`}>
+                  <Image preview={false} src="/icon/growth.svg" className={`chart-group__data-group__data__icon--${userStatsStatus.status === CharityStatus.UP ? 'up' : 'down'}`} />
+                  <span>{toPercent(userStatsStatus.percentage)}%</span>
                 </span>
               </h1>
             </div>

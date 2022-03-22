@@ -25,6 +25,7 @@ import useDebounce from "../../../../hooks/useDebounce";
 import { shortenTx } from "../../../../utils";
 import { exportDataToCsv } from '../../../../utils/csvGenerator';
 import { plugins } from "../../../../utils/chart";
+import { toPercent } from "../../../../utils/convert";
 import "./index.scss";
 
 const { Search } = Input;
@@ -64,6 +65,12 @@ const DashUser: React.FC<{
     Accept: "application/json"
   });
 
+  const { data: userStatsResp } = useFetch<any>(`users/stats?userAddress=${account}`, {
+    "Content-Type": "application/json",
+    Accept: "application/json"
+  });
+  console.log(userStatsResp);
+
   const { data: dailyDonationResp } = useFetch<any>(
     !props.pickedDate ? `transactions/daily/user?userAddress=${account}`: `transactions/daily/user?userAddress=${account}&fromDate=${props.pickedDate.from}&toDate=${props.pickedDate.to}`, 
     {
@@ -73,14 +80,14 @@ const DashUser: React.FC<{
 
   const givingStatus = {
     status: CharityStatus.UP,
-    percentage: '0',
-    totalGiving: 0
+    percentage: new BigNumber(0),
+    totalGiving: new BigNumber(0)
   }
 
   const receivingStatus = {
     status: CharityStatus.UP,
-    percentage: '0',
-    totalReceiving: 0
+    percentage: new BigNumber(0),
+    totalReceiving: new BigNumber(0)
   }
 
   if (dailyDonationResp && dailyDonationResp.userDonationDayDatas.length >= 1) {
@@ -89,12 +96,16 @@ const DashUser: React.FC<{
     const totalGivings = dayDatas.map((data: any) =>  parseInt(data.totalDonation));
 
     if (totalReceives.length >= 2 && totalReceives[totalReceives.length - 2] > 0) {
-      receivingStatus.percentage = new BigNumber((totalReceives[totalReceives.length - 1] / totalReceives[totalReceives.length - 2])).multipliedBy(100).toFixed(4)
+      receivingStatus.percentage = new BigNumber(totalReceives[totalReceives.length - 1]).minus(new BigNumber(totalReceives[totalReceives.length - 2])).div(new BigNumber(totalReceives[totalReceives.length - 2]));
+    } else {
+      receivingStatus.percentage = new BigNumber(totalReceives[totalReceives.length - 1]).div(1e18).minus(new BigNumber(0));
     }
     receivingStatus.status = new BigNumber(receivingStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
 
     if (totalGivings.length >= 2 && totalGivings[totalGivings.length - 2] > 0) {
-      givingStatus.percentage = new BigNumber((totalGivings[totalGivings.length - 1] / totalGivings[totalGivings.length - 2])).multipliedBy(100).toFixed(4)
+      givingStatus.percentage = new BigNumber(totalGivings[totalGivings.length - 1]).minus(new BigNumber(totalGivings[totalGivings.length - 2])).div(new BigNumber(totalGivings[totalGivings.length - 2]));
+    } else {
+      givingStatus.percentage = new BigNumber(totalGivings[totalGivings.length - 1]).div(1e18).minus(new BigNumber(0));
     }
     givingStatus.status = new BigNumber(receivingStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
   }
@@ -271,10 +282,10 @@ const DashUser: React.FC<{
             <div className="chart-group__data-group">
               <h3 className="chart-group__data-group__title">Total Giving</h3>
               <h1 className="chart-group__data-group__data">
-                1,307,000 ETH
+                {userStatsResp ? new BigNumber(userStatsResp.userStatistic.totalDonation).div(1e18).toFixed(4): 0} CRV
                 <span className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${givingStatus.status === CharityStatus.UP ? 'up' : 'down'}`}>
                   <Image preview={false} src="/icon/growth.svg" className={`chart-group__data-group__data__icon--${givingStatus.status === CharityStatus.UP ? 'up' : 'down'}`} />
-                  <span>{givingStatus.percentage}%</span>
+                  <span>{toPercent(givingStatus.percentage)}%</span>
                 </span>
               </h1>
             </div>
@@ -301,10 +312,10 @@ const DashUser: React.FC<{
                 Total receiving
               </h3>
               <h1 className="chart-group__data-group__data">
-                1,234,643
+                {userStatsResp ? new BigNumber(userStatsResp.userStatistic.totalDonationReceive).div(1e18).toFixed(4): 0} CRV
                 <span className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${receivingStatus.status === CharityStatus.UP ? 'up' : 'down'}`}>
                   <Image preview={false} src="/icon/growth.svg" className={`chart-group__data-group__data__icon--${receivingStatus.status === CharityStatus.UP ? 'up' : 'down'}`} />
-                  <span>{receivingStatus.percentage}%</span>
+                  <span>{toPercent(receivingStatus.percentage)}%</span>
                 </span>
               </h1>
             </div>
