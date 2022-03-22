@@ -4,12 +4,12 @@ import { UploadOutlined } from "@ant-design/icons";
 import "./index.scss";
 
 type ProfileModalProps = {
-  index: number;
+  id: string;
   message: string;
 };
 
 const ProfileUpload: React.FC<ProfileModalProps> = (props) => {
-  const { index, message } = props;
+  const { id, message } = props;
 
   const fileList: any = [
     {

@@ -1,10 +1,10 @@
-import { ArrowLeftOutlined, StarOutlined } from "@ant-design/icons";
-import { Button, Cascader, Drawer, Tag, Upload } from "antd";
+import { Button, Cascader, Tag, Upload } from "antd";
 import React, { useState } from "react";
 import AppDialog from "../../../../components/AppDialog";
 import AppDrawer from "../../../../components/AppDrawer";
 import Circumstances from "../../../../constants/circumstances";
 import Message from "../../../../constants/message";
+import useFetch from "../../../../hooks/useFetch";
 import ProfileUpload from "./component/ProfileEditUpload";
 import "./index.scss";
 
@@ -15,10 +15,29 @@ type ProfileModalProps = {
 
 const ProfileModal: React.FC<ProfileModalProps> = (props) => {
   const { isVisible, closeModal } = props;
-
+  const [options, setOptions] = useState([]);
   //   const handleOk = () => {
   //     setIsModalVisible(false);
   //   };
+  const { data: userData } = useFetch<any>(
+    "bad-lucker/get-badlucker-situation",
+    {},
+    false,
+    [],
+    { method: "GET" },
+    (e) => {
+      const optionRes = e.data.map((opt: any, index: number) => {
+        return {
+          value: opt.name,
+          label: opt.name,
+          index: index,
+          message: opt.message,
+          id: opt.id,
+        };
+      });
+      setOptions(optionRes);
+    }
+  );
 
   const fileList: any = [
     {
@@ -27,45 +46,6 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
       url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
       thumbUrl:
         "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-  ];
-
-  const options = [
-    {
-      value: Circumstances.POOR,
-      label: Circumstances.POOR,
-      index: 0,
-      message: "hộ nghèo",
-    },
-    {
-      value: Circumstances.ORPHAN,
-      label: Circumstances.ORPHAN,
-      index: 1,
-      message: "trẻ mồ côi",
-    },
-    {
-      value: Circumstances.ETHNIC_MINORITY,
-      label: Circumstances.ETHNIC_MINORITY,
-      index: 2,
-      message: "dân tộc thiểu số",
-    },
-    {
-      value: Circumstances.MARTYR_FAMILY,
-      label: Circumstances.MARTYR_FAMILY,
-      index: 3,
-      message: "liệt sĩ",
-    },
-    {
-      value: Circumstances.AGENT_ORANGE,
-      label: Circumstances.AGENT_ORANGE,
-      index: 4,
-      message: "chất độc màu da cam",
-    },
-    {
-      value: Circumstances.ELDERLY,
-      label: Circumstances.ELDERLY,
-      index: 5,
-      message: " người già",
     },
   ];
 
@@ -83,13 +63,13 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
   };
 
   const renderProof = () => {
-    return options.map((option, index) => {
-      if (selectedList.some((data: any) => data[0] === option.value)) {
+    return options.map((option: any, index) => {
+      if (selectedList.some((data: any) => data[0] === option?.value)) {
         return (
           <ProfileUpload
-            index={index}
-            message={option.message}
-            key={option.index}
+            id={option.id}
+            message={option?.message}
+            key={option?.index}
           />
         );
       }
@@ -106,7 +86,7 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
           className="profile-drawer__tags__tag"
           color={randomColor()}
         >
-          {tag[0]}
+          <span>{tag[0]}</span>
         </Tag>
       );
     });

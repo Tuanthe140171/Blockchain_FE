@@ -1,9 +1,6 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Radio, Row, Upload } from "antd";
-import ImgCrop from "antd-img-crop";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useWeb3React } from "web3-react-core";
 import useFetch from "../../../../hooks/useFetch";
 import "./index.scss";
 
@@ -32,12 +29,21 @@ const ProfilePerson = () => {
     (e) => {
       setFileList([
         {
+          // uid: "-1",
           status: "done",
           url: e.data.UserMedia.find(
             (media: any) => media.type === "1" && media.active === 1
           ).link,
+          thumbUrl: e.data.UserMedia.find(
+            (media: any) => media.type === "1" && media.active === 1
+          ).link,
         },
       ]);
+      console.log(
+        e.data.UserMedia.find(
+          (media: any) => media.type === "1" && media.active === 1
+        ).link
+      );
     }
   );
 
@@ -46,7 +52,7 @@ const ProfilePerson = () => {
       form.setFieldsValue({
         name: userData.name,
         lastName: userData.lastName,
-        dob: userData.dob.split("T")[0],
+        dob: userData.dob?.split("T")[0],
         gender:
           userData.gender === 0
             ? "male"
@@ -82,7 +88,8 @@ const ProfilePerson = () => {
       const frm = formData;
       frm.image = [
         {
-          link: e.data,
+          link: e.data ? e.data[0] : "",
+          // link: "https://cdpt.in/MTc1MDI4MQ==",
           type: "1",
         },
       ];
@@ -388,6 +395,7 @@ const ProfilePerson = () => {
                 listType="picture-card"
                 maxCount={1}
                 fileList={fileList}
+                defaultFileList={fileList}
                 onChange={onChange}
                 onPreview={onPreview}
                 className="profile-person__container__avatar__wrapper"
