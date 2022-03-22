@@ -14,8 +14,8 @@ const Dashboard = () => {
 
   const handleDatePickerChange = (dates: any, dateStrings: any) => {
     setPickedDate({
-      from: parseInt(`${dates[0].toDate().getTime() / 1000}`),
-      to: parseInt(`${dates[1].toDate().getTime() / 1000}`),
+      from: parseInt(`${dates[0].toDate().getTime()}`),
+      to: parseInt(`${dates[1].toDate().getTime()}`),
     });
   }
 
@@ -45,7 +45,7 @@ const Dashboard = () => {
       </div>
       <Divider className="dashboard__divider" />
       <div className="dashboard__body">
-        {isSystem ? <DashSystem pickedDate={pickedDate} /> : <DashUser />}
+        {isSystem ? <DashSystem pickedDate={pickedDate} /> : <DashUser pickedDate={pickedDate} />}
       </div>
     </div>
   );

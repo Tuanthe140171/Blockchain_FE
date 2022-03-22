@@ -58,6 +58,13 @@
             margin-left: 6px;
           }
         }
+
+        &__icon {
+          &--down {
+            transform: rotateZ(75deg);
+            fill: red;
+          }
+        }
       }
     }
   }

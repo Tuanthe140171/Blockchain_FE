@@ -4,9 +4,12 @@ import "./index.scss";
 
 type SelectBuyAmountProps = {
     setCurrentStep: () => void,
+    onChange: (amount: number) => void,
+    inputAmount: number
 }
 
 const SelectBuyAmount: React.FC<SelectBuyAmountProps> = (props) => {
+    const { inputAmount, onChange } = props;
     return (
         <div className="select-buy-amount">
             <Typography.Title level={4} className="select-buy-amount__title">
@@ -22,11 +25,12 @@ const SelectBuyAmount: React.FC<SelectBuyAmountProps> = (props) => {
                         <p>CRV</p>
                     </div>
                 }
-                defaultValue={0}
+                onChange={onChange}
+                value={inputAmount}
                 controls={false}
                 className="select-buy-amount__input"
             />
-            <Button className="select-buy-amount__btn" onClick={props.setCurrentStep}>Confirm</Button>
+            <Button disabled={inputAmount <= 0} className="select-buy-amount__btn" onClick={props.setCurrentStep}>Confirm</Button>
         </div>
     )
 }

@@ -29,6 +29,7 @@ const ProfilePerson = () => {
     (e) => {
       setFileList([
         {
+          // uid: "-1",
           status: "done",
           url: e.data.UserMedia.find(
             (media: any) => media.type === "1" && media.active === 1
@@ -38,6 +39,11 @@ const ProfilePerson = () => {
           ).link,
         },
       ]);
+      console.log(
+        e.data.UserMedia.find(
+          (media: any) => media.type === "1" && media.active === 1
+        ).link
+      );
     }
   );
 
