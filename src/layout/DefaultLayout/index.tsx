@@ -1,13 +1,14 @@
 import { CaretDownOutlined } from "@ant-design/icons";
 import { Button, Image, Layout, Menu, Modal, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import React, { ReactElement, useState, useEffect, useCallback } from "react";
+import React, { ReactElement, useState, useEffect, useCallback, useContext } from "react";
 import { WarningOutlined } from "@ant-design/icons";
 import { useWeb3React } from "web3-react-core";
 import { injected } from "../../connectors";
 import useFetch from "../../hooks/useFetch";
 import useLocalStorage from "../../hooks/useLocalStorage";
-import useAuthorization, { AuthorizeErrorType } from "../../hooks/useAuthorization";
+import { AuthorizeErrorType } from "../../hooks/useAuthorization";
+import { AuthorizationContext } from "../../components/Web3ReactManager";
 import { signTypedMessage } from "../../blockchain/signMessage";
 import "./index.scss";
 
@@ -15,12 +16,12 @@ const DefaultLayout: React.FC = (props): ReactElement => {
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [signature, setSignature] = useState<string | undefined>();
 
-  const authorizeError = useAuthorization();
+  const { error: authorizeError } = useContext(AuthorizationContext);
   const navigate = useNavigate();
   const { activate, library, account } = useWeb3React();
   const [charityStorage, setCharityStorage] = useLocalStorage("charity", { auth: {} });
 
-  const { data: accessToken, loading, error } = useFetch<any>(
+  const { data: accessToken, loading } = useFetch<any>(
     "auth",
     {
       "Content-Type": "application/json",
@@ -121,7 +122,7 @@ const DefaultLayout: React.FC = (props): ReactElement => {
                       chainId: "0x7E2",
                       chainName: "CharityVerse",
                       rpcUrls: ["https://rpc.test.charityverse.info"],
-                      blockExplorerUrls: ["https://35.209.169.120:4000"],
+                      blockExplorerUrls: ["https://blockscout.charityverse.info/"],
                       nativeCurrency: {
                         name: "CharityVerse",
                         symbol: "CRV", // 2-6 characters long
