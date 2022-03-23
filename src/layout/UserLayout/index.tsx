@@ -13,7 +13,7 @@ import { shortenAddress } from "../../utils";
 import "./index.scss";
 
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 
 const UserLayout: React.FC = (props): ReactElement => {
@@ -86,7 +86,7 @@ const UserLayout: React.FC = (props): ReactElement => {
           </Popover>
         </>
       );
-    } else if (error) {
+    } else if (error instanceof UnsupportedChainIdError) {
       return (
         <>
           <Button
@@ -140,8 +140,6 @@ const UserLayout: React.FC = (props): ReactElement => {
           </div>
         </>
       );
-    } else {
-      navigate("/");
     }
   };
 
@@ -187,7 +185,9 @@ const UserLayout: React.FC = (props): ReactElement => {
             key="Donee"
             icon={<Image src="/icon/donee.svg" preview={false} />}
             className="main-layout__sider__menu__item"
-            onClick={() => navigate("/donee")}
+            onClick={() => {
+              navigate("/donee");
+            }}
           >
             Donee
           </Menu.Item>
