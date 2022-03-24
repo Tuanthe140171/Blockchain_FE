@@ -143,7 +143,7 @@ const DashSystem: React.FC<{
     datasets: [
       {
         fill: true,
-        data: dailyDonationResp ? dailyDonationResp.donationDayDatas.map((data: any) => new BigNumber(data.dailyVolume).div(1e18).toFixed()) : [],
+        data: dailyDonationResp ? dailyDonationResp.donationDayDatas.map((data: any) => new BigNumber(data.dailyVolume).div(1e18).toFixed(4)) : [],
         backgroundColor: gradientStroke,
         borderColor: '#EEC909',
         tension: 0.5,
@@ -233,7 +233,7 @@ const DashSystem: React.FC<{
     name: transaction["fromUser.name"],
     donee: transaction["toUser.name"],
     date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
-    amount: transaction.amount,
+    amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
     status: ["loser"],
     doneeAvatar: transaction["toUser.UserMedia.link"],
     avatar: transaction["fromUser.UserMedia.link"]

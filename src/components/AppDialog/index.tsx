@@ -12,11 +12,12 @@ type IDialogType = "warning" | "confirm" | "infor";
 type AppDialogProps = {
   type: IDialogType;
   title: string;
-  description: string;
+  description: any;
   cancelText?: string;
   confirmText?: string;
   onClose?: any;
   onConfirm?: any;
+  content?: any;
 };
 
 const AppDialog: React.FC<AppDialogProps> = (props) => {
@@ -28,6 +29,7 @@ const AppDialog: React.FC<AppDialogProps> = (props) => {
     confirmText,
     onClose,
     onConfirm,
+    content
   } = props;
 
   const renderIcon = () => {
@@ -89,7 +91,7 @@ const AppDialog: React.FC<AppDialogProps> = (props) => {
         {renderIcon()}
         <div className="app-dialog__title">{title}</div>
         <div className="app-dialog__description">{description}</div>
-        {renderButtons()}
+        {content ? content: renderButtons()}
       </div>
     </Modal>
   );

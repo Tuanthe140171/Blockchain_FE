@@ -107,7 +107,7 @@ const DashUser: React.FC<{
     } else {
       givingStatus.percentage = new BigNumber(totalGivings[totalGivings.length - 1]).div(1e18).minus(new BigNumber(0));
     }
-    givingStatus.status = new BigNumber(receivingStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
+    givingStatus.status = new BigNumber(givingStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
   }
 
   const transactionsTableData = transactionsResp ? transactionsResp.rows.map((transaction: any) => ({
@@ -135,7 +135,7 @@ const DashUser: React.FC<{
     datasets: [
       {
         fill: true,
-        data: dailyDonationResp ? dailyDonationResp.userDonationDayDatas.map((data: any) => data.totalDonation) : [],
+        data: dailyDonationResp ? dailyDonationResp.userDonationDayDatas.map((data: any) => new BigNumber(data.totalDonation).div(1e18).toFixed(4)) : [],
         backgroundColor: gradientStroke,
         borderColor: '#EEC909',
         tension: 0.5,
@@ -262,7 +262,7 @@ const DashUser: React.FC<{
             <div className="chart-group__data-group">
               <h3 className="chart-group__data-group__title">Total Giving</h3>
               <h1 className="chart-group__data-group__data">
-                {userStatsResp ? new BigNumber(userStatsResp.userStatistic.totalDonation).div(1e18).toFixed(4): 0} CRV
+                {(userStatsResp && userStatsResp.userStatistic) ? new BigNumber(userStatsResp.userStatistic.totalDonation).div(1e18).toFixed(4): 0} CRV
                 <span className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${givingStatus.status === CharityStatus.UP ? 'up' : 'down'}`}>
                   <Image preview={false} src="/icon/growth.svg" className={`chart-group__data-group__data__icon--${givingStatus.status === CharityStatus.UP ? 'up' : 'down'}`} />
                   <span>{toPercent(givingStatus.percentage)}%</span>
@@ -292,7 +292,7 @@ const DashUser: React.FC<{
                 Total receiving
               </h3>
               <h1 className="chart-group__data-group__data">
-                {userStatsResp ? new BigNumber(userStatsResp.userStatistic.totalDonationReceive).div(1e18).toFixed(4): 0} CRV
+                {(userStatsResp && userStatsResp.userStatistic) ? new BigNumber(userStatsResp.userStatistic.totalDonationReceive).div(1e18).toFixed(4): 0} CRV
                 <span className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${receivingStatus.status === CharityStatus.UP ? 'up' : 'down'}`}>
                   <Image preview={false} src="/icon/growth.svg" className={`chart-group__data-group__data__icon--${receivingStatus.status === CharityStatus.UP ? 'up' : 'down'}`} />
                   <span>{toPercent(receivingStatus.percentage)}%</span>

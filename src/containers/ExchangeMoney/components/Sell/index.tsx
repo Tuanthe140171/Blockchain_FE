@@ -9,6 +9,7 @@ import AppDialog from '../../../../components/AppDialog';
 import "./index.scss";
 
 const Sell: React.FC = () => {
+    const [paymentTxId, setPaymentTxId] = useState("");
     const [inputAmount, setInputAmount] = useState<number>(0);
     const [currentStep, setCurrentStep] = useState<number>(0);
     const [openDialog, setOpenDialog] = useState(false);
@@ -37,7 +38,7 @@ const Sell: React.FC = () => {
         {
             title: "Verification",
             description: "",
-            component: <Verification setCurrentStep={() => setCurrentStep(3)} />
+            component: <Verification paymentTxId={paymentTxId} setPaymentTxId={(text) => setPaymentTxId(text)} inputAmount={inputAmount} setCurrentStep={() => setCurrentStep(3)} />
         },
         {
             title: "Confirmation",
@@ -59,7 +60,7 @@ const Sell: React.FC = () => {
                 />
                 {BUY_STEPS[currentStep].component}
             </div>
-            <TransactionDetails inputAmount={inputAmount} />
+            {/* <TransactionDetails inputAmount={inputAmount} chosenPaymentMethod={SU} /> */}
             {openDialog ? (
                 <AppDialog
                     type="infor"

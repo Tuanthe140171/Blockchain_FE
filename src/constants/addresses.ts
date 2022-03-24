@@ -1,0 +1,1 @@
+export const CHARITY_CONTRACT = process.env.REACT_APP_SC_ADDRESS;
