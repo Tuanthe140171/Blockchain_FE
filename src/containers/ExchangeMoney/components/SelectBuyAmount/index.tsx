@@ -2,6 +2,8 @@ import { Typography, InputNumber, Image, Button } from 'antd';
 import React from 'react';
 import "./index.scss";
 
+const MINIMUM_THRESHOLD = 200000;
+
 type SelectBuyAmountProps = {
     setCurrentStep: () => void,
     onChange: (amount: number) => void,
@@ -30,7 +32,7 @@ const SelectBuyAmount: React.FC<SelectBuyAmountProps> = (props) => {
                 controls={false}
                 className="select-buy-amount__input"
             />
-            <Button disabled={inputAmount <= 0} className="select-buy-amount__btn" onClick={props.setCurrentStep}>Confirm</Button>
+            <Button disabled={inputAmount <= MINIMUM_THRESHOLD} className="select-buy-amount__btn" onClick={props.setCurrentStep}>Confirm</Button>
         </div>
     )
 }

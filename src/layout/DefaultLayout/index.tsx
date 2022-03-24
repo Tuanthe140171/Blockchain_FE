@@ -44,8 +44,6 @@ const DefaultLayout: React.FC = (props): ReactElement => {
     }
   );
   
-  console.log("ACCESS-TOKEN: " + accessToken);
-
   useEffect(() => {
     activate && activate(injected);
   }, [activate]);

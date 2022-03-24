@@ -36,6 +36,7 @@ const ALL_SUPPORTED_METHODS = {
 }
 
 const Buy: React.FC = () => {
+    const [paymentTxId, setPaymentTxId] = useState("");
     const [paymentMethod, setPaymentMethod] = useState(SUPPORTED_METHODS.MOMO);
     const [inputAmount, setInputAmount] = useState<number>(0);
     const [currentStep, setCurrentStep] = useState<number>(0);
@@ -62,12 +63,12 @@ const Buy: React.FC = () => {
         {
             title: "Payment method",
             description: "",
-            // component: <PaymentMethod setCurrentStep={() => setCurrentStep(2)} />
+            component: <PaymentMethod chosenPaymentMethod={paymentMethod} supportedPaymentMethods={ALL_SUPPORTED_METHODS} setPaymentMethod={setPaymentMethod} setCurrentStep={() => setCurrentStep(2)} />
         },
         {
             title: "Verification",
             description: "",
-            component: <Verification setCurrentStep={() => setCurrentStep(3)} />
+            component: <Verification paymentTxId={paymentTxId} setPaymentTxId={(text) => setPaymentTxId(text)} inputAmount={inputAmount} setCurrentStep={() => setCurrentStep(3)} />
         },
         {
             title: "Confirmation",
@@ -89,15 +90,16 @@ const Buy: React.FC = () => {
                 />
                 {BUY_STEPS[currentStep].component}
             </div>
-            <TransactionDetails inputAmount={inputAmount} />
+            <TransactionDetails inputAmount={inputAmount} chosenPaymentMethod={ALL_SUPPORTED_METHODS[paymentMethod]} />
             {openDialog ? (
                 <AppDialog
                     type="infor"
-                    title={"Bạn đã mua thành công thành công 100 coin từ nhà phát hành"}
-                    description={Message.INFOR_DC_01}
+                    title={`Bạn đã mua thành công thành công ${inputAmount} coin từ nhà phát hành`}
+                    description=""
                     confirmText={Message.INFOR_CF_01}
                     onConfirm={() => {
                         setOpenDialog(false);
+                        setInputAmount(0);
                         setCurrentStep(0);
                     }}
                 />
