@@ -1,4 +1,4 @@
-import { Input, Select } from 'antd';
+import { Input, Select, Skeleton } from 'antd';
 import React from "react";
 import AppPagination from '../../../../components/AppPagination';
 import DoneeCard from '../DoneeCard';
@@ -7,71 +7,29 @@ import "./index.scss";
 const { Search } = Input;
 const { Option } = Select;
 
-const mockData = [
-    {
-        image: "/icon/bad-lucker.svg",
-        name: "Nguyễn Minh Thảo",
-        desc: "Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với sức đối với",
-        circumstances: ["Người khuyết tật", "Trẻ mồ côi"],
-        more: 2,
-        tierOfCharity: 72,
-        trustScore: 86,
-        id: 1
-    },
-    {
-        image: "/icon/bad-lucker-2.svg",
-        name: "Nguyễn Minh Thảo",
-        desc: "Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với",
-        circumstances: ["Người khuyết tật", "Trẻ mồ côi"],
-        more: 1,
-        tierOfCharity: 76,
-        trustScore: 69,
-        id: 2
-    },
-    {
-        image: "/icon/bad-lucker.svg",
-        name: "Nguyễn Diên Vĩ",
-        desc: "Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với",
-        circumstances: ["Người khuyết tật", "Trẻ mồ côi"],
-        more: 2,
-        tierOfCharity: 76,
-        trustScore: 69,
-        id: 3
-    },
-    {
-        image: "/icon/bad-lucker.svg",
-        name: "Nguyễn Diên Vĩ",
-        desc: "Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với",
-        circumstances: ["Người khuyết tật", "Trẻ mồ côi"],
-        more: 2,
-        tierOfCharity: 76,
-        trustScore: 69,
-        id: 4
-    },
-    {
-        image: "/icon/bad-lucker.svg",
-        name: "Nguyễn Diên Vĩ",
-        desc: "Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với",
-        circumstances: ["Người khuyết tật", "Trẻ mồ côi"],
-        more: 2,
-        tierOfCharity: 76,
-        trustScore: 69,
-        id: 5
-    },
-    {
-        image: "/icon/bad-lucker.svg",
-        name: "Nguyễn Diên Vĩ",
-        desc: "Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với",
-        circumstances: ["Người khuyết tật", "Trẻ mồ côi"],
-        more: 2,
-        tierOfCharity: 76,
-        trustScore: 69,
-        id: 6
-    },
-];
+type Donee = {
+    avatar: string,
+    name: string,
+    desc: string,
+    circumstances: string[],
+    tierCharity: number | undefined,
+    trustScore: number | undefined,
+    id: string,
+    location: string
+}
 
+type DoneeListProps = {
+    donees: Donee[],
+    loading: boolean | undefined,
+    defaultPageSize: number,
+    pageSize: number,
+    current: number,
+    total: number,
+    setCurrentPage: (page: number) => void;
+}
 
-const DoneeList: React.FC = () => {
+const DoneeList: React.FC<DoneeListProps> = (props) => {
+    const { donees, loading } = props;
     return (
         <div className="donee-list">
             <header className="donee-list__header">
@@ -91,22 +49,47 @@ const DoneeList: React.FC = () => {
                     </Select>
                 </div>
             </header>
-            <div className="donee-list__content">
-                {mockData.map(data => (
-                    <DoneeCard
-                        image={data.image}
-                        name={data.name}
-                        desc={data.desc}
-                        circumstances={data.circumstances}
-                        more={data.more}
-                        tierOfCharity={data.tierOfCharity}
-                        trustScore={data.trustScore}
-                        key={data.id}
-                    />
-                ))}
-            </div>
+            {
+                loading ? (
+                    <>
+                        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: 30 }}>
+                            {
+                                Array.from(new Array(5)).map(_ => (
+                                    <Skeleton avatar={true} paragraph={true} />
+                                ))
+                            }
+                        </div>
+
+                    </>
+                ) : (
+                    <div className="donee-list__content">
+                        {
+
+                            donees.map(data => (
+                                <DoneeCard
+                                    image={data.avatar}
+                                    name={data.name}
+                                    desc={data.desc}
+                                    circumstances={data.circumstances}
+                                    more={data.circumstances.length > 2 ? data.circumstances.length - 2 : 0}
+                                    tierOfCharity={data.tierCharity || 0}
+                                    trustScore={data.trustScore || 0}
+                                    location={data.location}
+                                    key={data.id}
+                                />
+                            ))
+                        }
+                    </div>
+                )
+            }
             <div className="donee-list__pagination-wrapper">
-                <AppPagination />
+                <AppPagination 
+                    defaultPageSize={props.defaultPageSize}
+                    current={props.current}
+                    totalPage={props.total}
+                    pageSize={props.pageSize}
+                    onChange={(page: number) => props.setCurrentPage(page)}
+                />
             </div>
         </div>
     )
