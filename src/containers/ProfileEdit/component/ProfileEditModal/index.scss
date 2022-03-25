@@ -59,11 +59,13 @@
         }
 
         & .ant-upload-list-text {
-          height: 80px;
-          display: flex;
-          align-items: center;
+          min-height: 80px;
           border: 1px solid #e0e6f1;
-          padding: 0 20px;
+
+          & .ant-upload-list-text-container {
+            padding: 30px 20px;
+            border: 1px solid #E0E6F1;
+          }
         }
       }
     }
