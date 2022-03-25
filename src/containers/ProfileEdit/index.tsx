@@ -1,5 +1,6 @@
 import { Breadcrumb, Button, Divider } from "antd";
 import React, { useState } from "react";
+import useFetch from "../../hooks/useFetch";
 import ProfileModal from "./component/ProfileEditModal";
 import ProfilePayment from "./component/ProfileEditPayment";
 import ProfilePerson from "./component/ProfileEditPersonal";
@@ -11,8 +12,23 @@ const Dashboard = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [selectedTab, setSelectedTab] = useState(1);
 
+  const { data: userData } = useFetch<any>(
+    "users/type",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [],
+    {}
+  );
+
   const closeModal = () => {
     setIsModalVisible(false);
+  };
+
+  const dataSubmitted = () => {
+    setIsSubmit(true);
   };
 
   const renderTab = () => {
@@ -24,7 +40,7 @@ const Dashboard = () => {
   return (
     <div className="profile-edit">
       <div className="profile-edit__header">
-        {selectedTab === 1 ? (
+        {selectedTab === 1 && userData === 2 ? (
           <Button
             className="profile-edit__header__confirm"
             onClick={() => setIsModalVisible(true)}
@@ -63,21 +79,29 @@ const Dashboard = () => {
             >
               Payment Method
             </button>
-            <button
-              className={
-                selectedTab === 3 ? `profile-edit__header__buttons__button` : ""
-              }
-              onClick={() => setSelectedTab(3)}
-            >
-              Situation
-            </button>
+            {userData > 2 ? (
+              <button
+                className={
+                  selectedTab === 3
+                    ? `profile-edit__header__buttons__button`
+                    : ""
+                }
+                onClick={() => setSelectedTab(3)}
+              >
+                Situation
+              </button>
+            ) : null}
           </div>
           <div className="profile-edit__header__date"></div>
         </div>
         <Divider className="profile-edit__divider" />
       </div>
       <div className="profile-edit__body">{renderTab()}</div>
-      <ProfileModal isVisible={isModalVisible} closeModal={closeModal} />
+      <ProfileModal
+        isVisible={isModalVisible}
+        closeModal={closeModal}
+        submitted={dataSubmitted}
+      />
     </div>
   );
 };
