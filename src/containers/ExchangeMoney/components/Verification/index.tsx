@@ -62,6 +62,11 @@ const Verification: React.FC<VerificationProps> = (props) => {
             try {
                 setStartIssuing(true);
 
+                console.log( account,
+                    inputAmount,
+                    data?.nonce,
+                    data?.signature);
+
                 const tx = await charityContract.issueTokensByInvestor(
                     account,
                     inputAmount,

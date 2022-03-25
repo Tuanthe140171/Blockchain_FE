@@ -22,8 +22,8 @@ const AppLoading: React.FC<AppLoadingProps> = (props) => {
     return (
         <div className="app-loading">
             <Lottie options={defaultOptions}
-                height={500}
-                width={500}
+                height={450}
+                width={450}
             />
             {
                 props.showContent && (

@@ -2,6 +2,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Radio, Row, Select, Upload } from "antd";
 import React, { useEffect, useState } from "react";
 import AppDialog from "../../../../components/AppDialog";
+import AppLoading from "../../../../components/AppLoading";
 import useFetch from "../../../../hooks/useFetch";
 import "./index.scss";
 
@@ -155,7 +156,7 @@ const ProfilePerson = () => {
     }
   );
 
-  const { data: submitDataWithoutAva } = useFetch<any>(
+  const { data: submitDataWithoutAva, loading } = useFetch<any>(
     "users/update-user-profile",
     {
       "Content-Type": "application/json",
@@ -207,6 +208,9 @@ const ProfilePerson = () => {
           }}
         />
       ) : null}
+      {loading && (
+        <AppLoading loadingContent={<div></div>} showContent={false} />
+      )}
       <div className="profile-person">
         <div className="profile-person__title">Personal Information</div>
         <div className="profile-person__description">* Indicates required</div>
@@ -442,6 +446,7 @@ const ProfilePerson = () => {
                   type="primary"
                   className="profile-person__container__information__form__submit"
                   htmlType="submit"
+                  disabled={loading}
                 >
                   Save Information
                 </Button>

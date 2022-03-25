@@ -20,6 +20,7 @@ const DefaultLayout: React.FC = (props): ReactElement => {
   const navigate = useNavigate();
   const { activate, library, account } = useWeb3React();
   const [charityStorage, setCharityStorage] = useLocalStorage("charity", { auth: {} });
+  const [_, setSelectedKey] = useLocalStorage("activeTab", "Dashboard");
 
   const { data: accessToken, loading } = useFetch<any>(
     "auth",
@@ -110,6 +111,7 @@ const DefaultLayout: React.FC = (props): ReactElement => {
         <div className="header__right">
           <Button className="connect-btn" onClick={async () => {
             if (authorizeError === AuthorizeErrorType.NONE) {
+              setSelectedKey("Dashboard");
               navigate("/dashboard");
             } else if (authorizeError === AuthorizeErrorType.WRONG_NETWORK) {
               try {
