@@ -1,7 +1,10 @@
 import { useMemo } from "react";
+import { Contract } from '@ethersproject/contracts'
 import useActiveWeb3React from './useActiveWeb3React'
 import { getContract } from '../utils'
-import { Contract } from '@ethersproject/contracts'
+import { CHARITY_CONTRACT } from "../constants/addresses";
+
+import CHARITY_ABI from '../abis/CharityVerse.json';
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>(
@@ -24,5 +27,9 @@ export function useContract<T extends Contract = Contract>(
         return null
       }
     }, [addressOrAddressMap, ABI, library, chainId, withSignerIfPossible, account]) as T
-  }
+}
+
+export function useCharityVerseContract() {
+  return useContract<any>(CHARITY_CONTRACT, CHARITY_ABI, true)
+}
   

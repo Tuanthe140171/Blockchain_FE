@@ -4,6 +4,7 @@ import { useWeb3React } from 'web3-react-core'
 import { isMobile } from 'react-device-detect'
 
 import { injected } from '../connectors'
+import { useNavigate } from 'react-router-dom';
 
 export function useEagerConnect() {
     const { activate, active } = useWeb3React() // specifically using useWeb3ReactCore because of what this hook does
@@ -43,6 +44,7 @@ export function useEagerConnect() {
  */
 export function useInactiveListener(suppress = false) {
     const { active, error, activate } = useWeb3React()
+    const navigate = useNavigate();
 
     useEffect(() => {
         const ethereum = window.ethereum as EthereumProvider | undefined
@@ -56,17 +58,20 @@ export function useInactiveListener(suppress = false) {
             }
 
             const handleAccountsChanged = (accounts: string[]) => {
+                console.log(accounts);
                 if (accounts.length > 0) {
                     // eat errors
                     activate(injected, undefined, true).catch((error) => {
                         console.error('Failed to activate after accounts changed', error)
                     })
+                } else {
+                    navigate("/");
                 }
             }
 
             ethereum.on('chainChanged', handleChainChanged)
             ethereum.on('accountsChanged', handleAccountsChanged)
-
+            
             return () => {
                 if (ethereum.removeListener) {
                     ethereum.removeListener('chainChanged', handleChainChanged)

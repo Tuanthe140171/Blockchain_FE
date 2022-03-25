@@ -237,6 +237,10 @@
   }
 }
 
+.ant-message {
+  z-index: 99999999999999999999999999999999999999999999999;
+}
+
 @keyframes infinite-spinning-1 {
   from {
     height: 0;

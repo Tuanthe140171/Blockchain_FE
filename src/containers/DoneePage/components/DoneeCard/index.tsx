@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, Card, Typography } from "antd";
+import { Image, Card, Typography, Tooltip } from "antd";
 import Button from "../../../../components/Button";
 
 import "./index.scss";
@@ -14,11 +14,11 @@ type DoneeCardProps = {
     more: number,
     tierOfCharity: number,
     trustScore: number,
+    location: string
 }
 
 const DoneeCard: React.FC<DoneeCardProps> = (props: DoneeCardProps) => {
-    const { image, circumstances, name, desc, tierOfCharity, trustScore } = props;
-
+    const { image, location, more, circumstances, name, desc, tierOfCharity, trustScore } = props;
     return (
         <Card className="donee-card" id="donee-card">
             <Image src={image} preview={false} />
@@ -26,16 +26,19 @@ const DoneeCard: React.FC<DoneeCardProps> = (props: DoneeCardProps) => {
                 <Title level={3} className="donee-card__name">{name}</Title>
                 <div className="donee-card__location">
                     <Image src="/icon/location.svg" preview={false} className="donee-card__location-icon"/>    
-                    <span>Hà Nội, Việt Nam</span>
+                    <span>Hà Nội, {location}</span>
                 </div>
                 <div className="donee-card__circumstances">
                     {
-                        circumstances.map(circumstance => (
-                            <div className="donee-card__circumstance" key={circumstance}>{circumstance}</div>
+                        (more > 0 ? circumstances.slice(2): circumstances).map(circumstance => (
+                            <div className="donee-card__circumstance" key={circumstance}><Tooltip title={circumstance}>{circumstance}</Tooltip></div>
                         ))
                     }
+                    {
+                        more > 0 && <div className="donee-card__more">+{more} more</div>
+                    }
                 </div>
-                <p className="donee-card__desc">{desc}</p>
+                {/* <p className="donee-card__desc">{desc}</p> */}
                 <div className="donee-card__metrics">
                     <div className="donee-card__tier donee-card__metrics-block">
                         <span>{tierOfCharity}%</span>

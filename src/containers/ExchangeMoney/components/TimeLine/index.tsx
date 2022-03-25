@@ -34,7 +34,9 @@ const TimeLine: React.FC<TimeLineProps> = (props) => {
     return (
         <Steps progressDot={customDot} current={currentStep}>
             {
-                steps.map(step => <Step onClick={() => setCurStep(step.id)} title={step.title} description={step.description} />)
+                steps.map(step => <Step onClick={() => {
+                    // setCurStep(step.id);
+                }} title={step.title} description={step.description} />)
             }
         </Steps>
     )

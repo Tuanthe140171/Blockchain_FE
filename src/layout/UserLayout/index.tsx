@@ -9,14 +9,16 @@ import { CHAIN_INFO } from "../../constants/chainInfo";
 import { SupportedChainId } from "../../constants/chains";
 import ModalHeader from "../../containers/Modal";
 import { useNativeCurrencyBalances } from "../../hooks/useCurrencyBalance";
+import useLocalStorage from "../../hooks/useLocalStorage";
 import { shortenAddress } from "../../utils";
 import "./index.scss";
 
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 
 const UserLayout: React.FC = (props): ReactElement => {
+  const [selectedKey, setSelectedKey] = useLocalStorage("activeTab", "Dashboard");
   const [collapsed, setCollapsed] = useState(false);
 
   const navigate = useNavigate();
@@ -86,7 +88,7 @@ const UserLayout: React.FC = (props): ReactElement => {
           </Popover>
         </>
       );
-    } else if (error) {
+    } else if (error instanceof UnsupportedChainIdError) {
       return (
         <>
           <Button
@@ -140,8 +142,6 @@ const UserLayout: React.FC = (props): ReactElement => {
           </div>
         </>
       );
-    } else {
-      navigate("/");
     }
   };
 
@@ -170,7 +170,7 @@ const UserLayout: React.FC = (props): ReactElement => {
           <img src="../../icon/logo.svg" alt="" />
         </div>
         <Menu
-          defaultSelectedKeys={["Dashboard"]}
+          defaultSelectedKeys={[selectedKey]}
           mode="inline"
           theme="light"
           className="main-layout__sider__menu"
@@ -179,7 +179,10 @@ const UserLayout: React.FC = (props): ReactElement => {
             key="Dashboard"
             icon={<Image src="/icon/dashboard.svg" preview={false} />}
             className="main-layout__sider__menu__item"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => {
+              setSelectedKey("Dashboard")
+              navigate("/dashboard")
+            }}
           >
             Dashboard
           </Menu.Item>
@@ -187,7 +190,10 @@ const UserLayout: React.FC = (props): ReactElement => {
             key="Donee"
             icon={<Image src="/icon/donee.svg" preview={false} />}
             className="main-layout__sider__menu__item"
-            onClick={() => navigate("/donee")}
+            onClick={() => {
+              setSelectedKey("Donee")
+              navigate("/donee")
+            }}
           >
             Donee
           </Menu.Item>
@@ -195,7 +201,10 @@ const UserLayout: React.FC = (props): ReactElement => {
             key="Exchange"
             icon={<Image src="/icon/exchange.svg" preview={false} />}
             className="main-layout__sider__menu__item"
-            onClick={() => navigate("/exchange")}
+            onClick={() => {
+              setSelectedKey("Exchange")
+              navigate("/exchange")
+            }}
           >
             Exchange Money
           </Menu.Item>
@@ -210,7 +219,10 @@ const UserLayout: React.FC = (props): ReactElement => {
             key="Voting"
             icon={<Image src="/icon/voting.svg" preview={false} />}
             className="main-layout__sider__menu__item"
-            onClick={() => navigate("/voting")}
+            onClick={() => {
+              setSelectedKey("Voting")
+              navigate("/voting")
+            }}
           >
             Voting
           </Menu.Item>
