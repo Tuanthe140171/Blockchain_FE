@@ -6,20 +6,25 @@ import "./index.scss";
 type ProfileModalProps = {
   id: string;
   message: string;
+  dataUpload?: any;
+  setDataUpload?: any;
 };
 
 const ProfileUpload: React.FC<ProfileModalProps> = (props) => {
-  const { id, message } = props;
+  const { id, message, dataUpload, setDataUpload } = props;
 
   const fileList: any = [
     {
       name: `Upload giấy chứng nhận ${message}`,
       status: "done",
       url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-      thumbUrl:
-        "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
     },
   ];
+
+  const onSituationUpload = ({ fileList: newFileList }: any) => {
+    // setIsUploadAva(true);
+    console.log(newFileList);
+  };
 
   return (
     <div className="profile-upload">
@@ -33,6 +38,7 @@ const ProfileUpload: React.FC<ProfileModalProps> = (props) => {
           defaultFileList={fileList}
           className="profile-upload__wrapper__container"
           maxCount={1}
+          onChange={onSituationUpload}
         >
           <Button className="profile-upload__wrapper__container__button">
             Upload file
