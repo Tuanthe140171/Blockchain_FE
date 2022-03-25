@@ -203,7 +203,7 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
       const badLuckdata: any = situationFile.map((s: any, index: number) => {
         return {
           id: s.id,
-          link: e.data[index + 2],
+          link: [e.data[index + 2]],
         };
       });
       formatLink.badLuckType = badLuckdata;
@@ -213,12 +213,15 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
 
   const { data: confirmRes } = useFetch<any>(
     "bad-lucker/update-badlucker",
-    {},
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
     false,
     [responseLink],
     {
       method: "POST",
-      body: responseLink,
+      body: JSON.stringify(responseLink),
     },
     () => {
       setOpenDialog(true);

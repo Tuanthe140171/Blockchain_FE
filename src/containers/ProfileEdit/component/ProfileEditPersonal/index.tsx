@@ -22,7 +22,7 @@ const ProfilePerson = () => {
     },
   ]);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  
+
   const { data: userData } = useFetch<any>(
     "users/get-user-by-id",
     {
@@ -42,10 +42,14 @@ const ProfilePerson = () => {
           thumbUrl: e.data.UserMedia.find(
             (media: any) => media.type === "1" && media.active === 1
           ).link,
+          // url: "https://firebasestorage.googleapis.com/v0/b/blockchain-project-338706.appspot.com/o/images%2F59177950_337064907164459_3535419728614916096_n.jpg",
+          // url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
         },
       ]);
     }
   );
+
+  console.log(fileList);
 
   const { data: countryData } = useFetch<any>(
     "assets/country",
@@ -455,6 +459,7 @@ const ProfilePerson = () => {
                   onChange={onChange}
                   onPreview={onPreview}
                   className="profile-person__container__avatar__wrapper"
+                  isImageUrl={(file: any) => true}
                 >
                   <Button
                     type="ghost"
@@ -463,6 +468,7 @@ const ProfilePerson = () => {
                   />{" "}
                   Upload
                 </Upload>
+                {/* <input type={file} */}
               </Form.Item>
             </Form>
           </div>
