@@ -1,9 +1,8 @@
 import {
   DownloadOutlined,
-  UserOutlined,
   ZoomInOutlined,
 } from "@ant-design/icons";
-import { Avatar, Col, Input, Row, Table, Image } from "antd";
+import { Avatar, Col, Input, Row, Table, Image, Tooltip } from "antd";
 import {
   ArcElement,
   CategoryScale,
@@ -15,10 +14,12 @@ import {
   LineElement,
   PointElement,
   Title,
-  Tooltip,
+  Tooltip as ChartTooltip,
 } from "chart.js";
+import { ethers } from "ethers";
 import { useState } from "react";
 import { Line, Pie } from "react-chartjs-2";
+import { useWeb3React } from "web3-react-core";
 import moment from "moment";
 import BigNumber from "bignumber.js";
 import useFetch from "../../../../hooks/useFetch";
@@ -28,6 +29,8 @@ import { plugins } from "../../../../utils/chart";
 import { exportDataToCsv } from '../../../../utils/csvGenerator';
 import { toPercent } from '../../../../utils/convert';
 import { options } from "../../../../constants/chart";
+import { CHAIN_INFO } from "../../../../constants/chainInfo";
+import { SupportedChainId } from "../../../../constants/chains";
 import "./index.scss";
 
 enum CharityStatus {
@@ -44,7 +47,7 @@ ChartJS.register(
   PointElement,
   LineElement,
   Title,
-  Tooltip,
+  ChartTooltip,
   Legend,
   Filler,
   ArcElement
@@ -56,12 +59,19 @@ const DashSystem: React.FC<{
     to: number
   } | undefined
 }> = (props) => {
+  const { chainId, account } = useWeb3React();
   const [keyWord, setKeyWord] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [chartRef, setChartRef] = useState<any>();
   const [userChartRef, setUserChartRef] = useState<any>();
 
-  const debouncedKeyword = useDebounce<string>(keyWord, 500)
+  const debouncedKeyword = useDebounce<string>(keyWord, 500);
+
+  const {
+    explorer
+  } = CHAIN_INFO[
+    chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
+  ];
 
   const { data: transactionsResp, loading } = useFetch<any>(`transactions?page=${currentPage}&keyword=${debouncedKeyword}`, {
     "Content-Type": "application/json",
@@ -108,9 +118,9 @@ const DashSystem: React.FC<{
   if (dailyDonationResp && dailyDonationResp.donationDayDatas.length >= 1) {
     const dayDatas = dailyDonationResp.donationDayDatas;
     if (dayDatas.length >= 2 && dayDatas[dayDatas.length - 2].dailyVolume > 0) {
-      charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).minus(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume)).div(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume));
+      charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).minus(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume)).div(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume)).div(1e18);
     } else {
-      charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).minus(new BigNumber(0));
+      charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).div(1e18).minus(new BigNumber(0));
     }
     charityStatus.status = new BigNumber(charityStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
   }
@@ -176,6 +186,9 @@ const DashSystem: React.FC<{
       dataIndex: "id",
       key: "id",
       sorter: (a: any, b: any) => a.id - b.id,
+      render: (name: any, others: any) => (
+        <Tooltip title={name}><span style={{ cursor: 'pointer' }} onClick={() => window.open(`${explorer}/tx/${name}`, '_blank')}>{shortenTx(name)}</span></Tooltip>
+      )
     },
     {
       title: "Philantrophist",
@@ -185,11 +198,11 @@ const DashSystem: React.FC<{
         <div
           style={{
             display: "flex",
-            justifyContent: "space-around",
+            justifyContent: "flex-start",
             alignItems: "center",
           }}
         >
-          <Avatar src={others.avatar} />
+          <Avatar src={others.avatar} style={{ marginRight: 20 }} />
           {name}
         </div>
       ),
@@ -203,12 +216,12 @@ const DashSystem: React.FC<{
           <div
             style={{
               display: "flex",
-              justifyContent: "space-around",
+              justifyContent: "flex-start",
               alignItems: "center",
             }}
           >
-            <Avatar src={others.doneeAvatar} />
-            {name}
+            <Avatar src={others.doneeAvatar} style={{ marginRight: 20 }} />
+            <span>{name}</span>
           </div>
         )
       },
@@ -228,15 +241,21 @@ const DashSystem: React.FC<{
   ];
 
   const transactionsTableData = transactionsResp ? transactionsResp.rows.map((transaction: any) => ({
-    id: shortenTx(transaction.id),
+    id: transaction.id,
     key: shortenTx(transaction.id),
-    name: transaction["fromUser.name"],
-    donee: transaction["toUser.name"],
+    name: ethers.utils.getAddress(transaction.fromUser.walletAddress) === ethers.utils.getAddress(account || "") ? 'You': transaction.fromUser.name,
+    donee: ethers.utils.getAddress(transaction.toUser.walletAddress) === ethers.utils.getAddress(account || "") ? 'You': transaction.toUser.name,
     date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
     amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
     status: ["loser"],
-    doneeAvatar: transaction["toUser.UserMedia.link"],
-    avatar: transaction["fromUser.UserMedia.link"]
+    doneeAvatar:(function(){
+      const userAvatar = transaction.toUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(-1).pop();
+      return userAvatar ? userAvatar.link: null;
+    }()),
+    avatar: (function(){
+      const userAvatar = transaction.fromUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(-1).pop();
+      return userAvatar ? userAvatar.link: null;
+    }())
   })) : [];
 
   const pieData: ChartData<"pie", any, unknown> = {
@@ -337,6 +356,7 @@ const DashSystem: React.FC<{
               </div>
             </div>
             <Table
+              className="transaction-table"
               columns={tableColumns}
               dataSource={transactionsTableData}
               pagination={{

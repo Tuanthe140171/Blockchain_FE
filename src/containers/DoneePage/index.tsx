@@ -6,12 +6,17 @@ import useFetch from "../../hooks/useFetch";
 import "./index.scss";
 
 const DoneePage: React.FC = () => {
+    const [situations, setSituations] = useState<number[]>([]);  
+    const [provinces, setProvinces] = useState<number[]>([]); 
     const [currentPage, setCurrentPage] = useState(1);
+    const [inputSearch, setInputSearch] = useState("");
 
-    const { data, loading } = useFetch<any>(`users/donees?page=${currentPage}`, {
+    const { data, loading } = useFetch<any>(`users/donees?page=${currentPage}&limit=8&keyword=${inputSearch}`, {
         "Content-Type": "application/json",
         Accept: "application/json"
     });
+
+    console.log(situations);
 
     return (
         <div className="donee">
@@ -19,24 +24,29 @@ const DoneePage: React.FC = () => {
                 Donee
             </Typography.Title>
             <div className="donee__content">
-                <DoneeSearchFilter />
-                <DoneeList 
-                    defaultPageSize={ data ? data.limit : 10}
-                    pageSize={data ? data.limit: 10}
-                    total={data ? data.count: 0}
+                <DoneeSearchFilter setSituations={setSituations} setProvinces={setProvinces} />
+                <DoneeList
+                    defaultPageSize={data ? data.limit : 10}
+                    pageSize={data ? data.limit : 10}
+                    total={data ? data.count : 0}
                     current={currentPage}
-                    loading={loading} 
+                    loading={loading}
                     setCurrentPage={setCurrentPage}
+                    inputSearch={inputSearch}
+                    setInputSearch={(str: string) => setInputSearch(str)}
                     donees={(data && data.rows) ? data.rows.map((data: any) => ({
-                    avatar: "/icon/bad-lucker.svg",
-                    name: data.name,
-                    circumstances: data["BadLuckerSituations"].map((badLucker: any) => badLucker.name),
-                    tierCharity: data.tierCharity,
-                    trustScore: data.trustScore,
-                    desc: "Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với sức đối với",
-                    id: data.walletAddress,
-                    location: data.country
-                })) : []} />
+                        avatar: (function(){
+                            const userAvatar = data.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(-1).pop();
+                            return userAvatar ? userAvatar.link: "/icon/bad-lucker.svg";
+                        }()),
+                        name: data.name,
+                        circumstances: data["BadLuckerSituations"].map((badLucker: any) => badLucker.name),
+                        tierCharity: data.tierCharity,
+                        trustScore: data.trustScore,
+                        desc: "Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với sức đối với",
+                        id: data.walletAddress,
+                        location: data.country
+                    })) : []} />
             </div>
         </div>
     )

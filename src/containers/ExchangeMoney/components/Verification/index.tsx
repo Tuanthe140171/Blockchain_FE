@@ -30,7 +30,7 @@ const Verification: React.FC<VerificationProps> = (props) => {
         explorer
       } = CHAIN_INFO[
         chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
-      ];
+    ];
 
     const { data, loading } = useFetch<{
         signature: string,

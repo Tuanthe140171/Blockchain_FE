@@ -26,6 +26,8 @@ type DoneeListProps = {
     current: number,
     total: number,
     setCurrentPage: (page: number) => void;
+    inputSearch: string,
+    setInputSearch: (str: string) => void;
 }
 
 const DoneeList: React.FC<DoneeListProps> = (props) => {
@@ -33,7 +35,7 @@ const DoneeList: React.FC<DoneeListProps> = (props) => {
     return (
         <div className="donee-list">
             <header className="donee-list__header">
-                <Search className="donee-list__search" placeholder="Search donee, location..." />
+                <Search className="donee-list__search" placeholder="Search donee, location..." value={props.inputSearch} onChange={(e: any) => props.setInputSearch(e.target.value)} />
                 <div className="donee-list__orderBy">
                     <span>Sắp xếp theo</span>
                     <Select
