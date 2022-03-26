@@ -3,6 +3,7 @@ import { Typography } from "antd";
 import DoneeSearchFilter from "./components/DoneeSearchFilter";
 import DoneeList from "./components/DoneeList";
 import useFetch from "../../hooks/useFetch";
+import useDebounce from "../../hooks/useDebounce";
 import "./index.scss";
 
 const DoneePage: React.FC = () => {
@@ -11,12 +12,20 @@ const DoneePage: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [inputSearch, setInputSearch] = useState("");
 
-    const { data, loading } = useFetch<any>(`users/donees?page=${currentPage}&limit=8&keyword=${inputSearch}`, {
+    const debouncedKeyword = useDebounce<string>(inputSearch, 500);
+
+    let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}`;
+
+    if (situations.length > 0) {
+        situations.forEach((situation, key) => {
+            url += `&situation[]=${situation}`
+        })
+    }
+
+    const { data, loading } = useFetch<any>(url, {
         "Content-Type": "application/json",
         Accept: "application/json"
     });
-
-    console.log(situations);
 
     return (
         <div className="donee">

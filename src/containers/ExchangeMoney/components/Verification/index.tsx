@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Button, Input, message } from 'antd';
 import { useWeb3React } from 'web3-react-core';
-import { Link } from 'react-router-dom';
+import { BigNumber } from 'bignumber.js';
 import useFetch from '../../../../hooks/useFetch';
 import { useCharityVerseContract } from '../../../../hooks/useContract';
 import AppLoading from '../../../../components/AppLoading';
@@ -46,7 +46,7 @@ const Verification: React.FC<VerificationProps> = (props) => {
         {
             method: "POST",
             body: JSON.stringify({
-                amount: inputAmount
+                amount: new BigNumber(inputAmount).multipliedBy(1e18).toFixed()
             })
         }, 
         () => { setStartGettingSignature(undefined) },
@@ -62,14 +62,9 @@ const Verification: React.FC<VerificationProps> = (props) => {
             try {
                 setStartIssuing(true);
 
-                console.log( account,
-                    inputAmount,
-                    data?.nonce,
-                    data?.signature);
-
                 const tx = await charityContract.issueTokensByInvestor(
                     account,
-                    inputAmount,
+                    new BigNumber(inputAmount).multipliedBy(1e18).toFixed(),
                     data?.nonce,
                     data?.signature
                 )
