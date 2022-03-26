@@ -1,5 +1,7 @@
 import { useEffect, useReducer, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { useWeb3React } from "web3-react-core";
+import useLocalStorage from "./useLocalStorage";
 interface State<T> {
   data?: T;
   error?: Error;
@@ -27,6 +29,8 @@ function useFetch<T = unknown>(
 ): State<T> {
   const cache = useRef<Cache<T>>({});
   const { account } = useWeb3React();
+  const navigate = useNavigate();
+  const [charityStorage, setCharityStorage] = useLocalStorage("charity", { auth: {} });
 
   // Used to prevent state update if the component is unmounted
   const cancelRequest = useRef<boolean>(false);
@@ -81,6 +85,18 @@ function useFetch<T = unknown>(
         });
 
         if (!response.ok) {
+          if (response.status === 401 && account) {
+            const auth = charityStorage.auth;
+            delete (auth as any)[account];
+            setCharityStorage({
+              auth: {
+                ...charityStorage.auth,
+              }
+            });
+
+            navigate("/");
+            return;
+          }
           throw new Error(response.statusText);
         }
 
@@ -92,7 +108,7 @@ function useFetch<T = unknown>(
         });
 
         onSuccess && onSuccess(data);
-      } catch (error) {
+      } catch (error: any) {
         if (cancelRequest.current) return;
 
         dispatch({ type: "error", payload: error as Error });

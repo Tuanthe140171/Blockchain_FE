@@ -2,14 +2,15 @@ import { BellOutlined, SwapOutlined } from "@ant-design/icons";
 import { Badge, Button, Image, Input, Layout, Menu, Popover } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
 import { BigNumber } from "bignumber.js";
-import React, { ReactElement, useState } from "react";
+import { ethers } from "ethers";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { UnsupportedChainIdError, useWeb3React } from "web3-react-core";
 import { CHAIN_INFO } from "../../constants/chainInfo";
 import { SupportedChainId } from "../../constants/chains";
 import ModalHeader from "../../containers/Modal";
-import { useNativeCurrencyBalances } from "../../hooks/useCurrencyBalance";
+import { useCharityVerseContract } from "../../hooks/useContract";
 import useFetch from "../../hooks/useFetch";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { getUserById } from "../../stores/action/user-layout.action";
@@ -20,6 +21,7 @@ const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 
 const UserLayout: React.FC = (props): ReactElement => {
+  const [userBalance, setUserBalance] = useState<string>("0");
   const [selectedKey, setSelectedKey] = useLocalStorage(
     "activeTab",
     "Dashboard"
@@ -28,7 +30,6 @@ const UserLayout: React.FC = (props): ReactElement => {
 
   const navigate = useNavigate();
   const { account, chainId, error } = useWeb3React();
-  const userBalance = useNativeCurrencyBalances(account);
   const { userData } = useSelector((state: any) => state.userLayout);
   const dispatch = useDispatch();
 
@@ -46,6 +47,27 @@ const UserLayout: React.FC = (props): ReactElement => {
       dispatch(action);
     }
   );
+  const charityContract = useCharityVerseContract();
+
+  useEffect(() => {
+    let interval: any;
+
+    const getCRVBalance = async () => {
+      const balance = await charityContract.balanceOf(account);
+      setUserBalance(ethers.utils.formatEther(balance));
+
+      interval = setInterval(async () => {
+        const balance = await charityContract.balanceOf(account);
+        setUserBalance(ethers.utils.formatEther(balance));
+      }, 10000);
+    };
+
+    charityContract && account && getCRVBalance();
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [charityContract, account]);
 
   const {
     logoUrl,
