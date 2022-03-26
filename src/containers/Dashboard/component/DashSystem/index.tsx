@@ -249,11 +249,11 @@ const DashSystem: React.FC<{
     amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
     status: ["loser"],
     doneeAvatar:(function(){
-      const userAvatar = transaction.toUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(-1).pop();
+      const userAvatar = transaction.toUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(0, 1).pop();
       return userAvatar ? userAvatar.link: null;
     }()),
     avatar: (function(){
-      const userAvatar = transaction.fromUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(-1).pop();
+      const userAvatar = transaction.fromUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(0, 1).pop();
       return userAvatar ? userAvatar.link: null;
     }())
   })) : [];
