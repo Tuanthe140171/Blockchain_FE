@@ -7,8 +7,8 @@ import useDebounce from "../../hooks/useDebounce";
 import "./index.scss";
 
 const DoneePage: React.FC = () => {
-    const [situations, setSituations] = useState<number[]>([]);  
-    const [provinces, setProvinces] = useState<number[]>([]); 
+    const [situations, setSituations] = useState<number[]>([]);
+    const [provinces, setProvinces] = useState<number[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [inputSearch, setInputSearch] = useState("");
 
@@ -44,9 +44,9 @@ const DoneePage: React.FC = () => {
                     inputSearch={inputSearch}
                     setInputSearch={(str: string) => setInputSearch(str)}
                     donees={(data && data.rows) ? data.rows.map((data: any) => ({
-                        avatar: (function(){
+                        avatar: (function () {
                             const userAvatar = data.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(-1).pop();
-                            return userAvatar ? userAvatar.link: "/icon/bad-lucker.svg";
+                            return userAvatar ? userAvatar.link : "/icon/bad-lucker.svg";
                         }()),
                         name: data.name,
                         circumstances: data["BadLuckerSituations"].map((badLucker: any) => badLucker.name),
