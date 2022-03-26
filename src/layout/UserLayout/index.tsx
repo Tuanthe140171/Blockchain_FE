@@ -3,27 +3,49 @@ import { Badge, Button, Image, Input, Layout, Menu, Popover } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
 import { BigNumber } from "bignumber.js";
 import React, { ReactElement, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { UnsupportedChainIdError, useWeb3React } from "web3-react-core";
 import { CHAIN_INFO } from "../../constants/chainInfo";
 import { SupportedChainId } from "../../constants/chains";
 import ModalHeader from "../../containers/Modal";
 import { useNativeCurrencyBalances } from "../../hooks/useCurrencyBalance";
+import useFetch from "../../hooks/useFetch";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import { getUserById } from "../../stores/action/user-layout.action";
 import { shortenAddress } from "../../utils";
 import "./index.scss";
-
 
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 
 const UserLayout: React.FC = (props): ReactElement => {
-  const [selectedKey, setSelectedKey] = useLocalStorage("activeTab", "Dashboard");
+  const [selectedKey, setSelectedKey] = useLocalStorage(
+    "activeTab",
+    "Dashboard"
+  );
   const [collapsed, setCollapsed] = useState(false);
 
   const navigate = useNavigate();
   const { account, chainId, error } = useWeb3React();
   const userBalance = useNativeCurrencyBalances(account);
+  const { userData } = useSelector((state: any) => state.userLayout);
+  const dispatch = useDispatch();
+
+  const { data: user } = useFetch<any>(
+    "users/get-user-by-id",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [],
+    {},
+    (e) => {
+      const action = getUserById(e.data);
+      dispatch(action);
+    }
+  );
 
   const {
     logoUrl,
@@ -32,6 +54,15 @@ const UserLayout: React.FC = (props): ReactElement => {
   } = CHAIN_INFO[
     chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
   ];
+
+  const getDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = today.toLocaleString("default", { month: "short" });
+    const dd = today.getDate();
+    const day = today.toLocaleDateString("default", { weekday: "long" });
+    return `${day}, ${dd} ${mm} ${yyyy}`;
+  };
 
   const renderWeb3Account = () => {
     if (account && userBalance) {
@@ -57,7 +88,7 @@ const UserLayout: React.FC = (props): ReactElement => {
           </div>
 
           <p className="main-layout__site-layout__header__group-avatar__date">
-            Tue, 30 Dec 2022
+            {getDate()}
           </p>
           <Popover
             overlayClassName="main-layout__site-layout__header__group-avatar__noti"
@@ -82,7 +113,11 @@ const UserLayout: React.FC = (props): ReactElement => {
             trigger="click"
           >
             <Avatar
-              src="../../assets/ava.png"
+              src={
+                userData?.UserMedia.find(
+                  (media: any) => media.type === "1" && media.active === 1
+                ).link
+              }
               className="main-layout__site-layout__header__group-avatar__avatar"
             />
           </Popover>
@@ -180,8 +215,8 @@ const UserLayout: React.FC = (props): ReactElement => {
             icon={<Image src="/icon/dashboard.svg" preview={false} />}
             className="main-layout__sider__menu__item"
             onClick={() => {
-              setSelectedKey("Dashboard")
-              navigate("/dashboard")
+              setSelectedKey("Dashboard");
+              navigate("/dashboard");
             }}
           >
             Dashboard
@@ -191,8 +226,8 @@ const UserLayout: React.FC = (props): ReactElement => {
             icon={<Image src="/icon/donee.svg" preview={false} />}
             className="main-layout__sider__menu__item"
             onClick={() => {
-              setSelectedKey("Donee")
-              navigate("/donee")
+              setSelectedKey("Donee");
+              navigate("/donee");
             }}
           >
             Donee
@@ -202,8 +237,8 @@ const UserLayout: React.FC = (props): ReactElement => {
             icon={<Image src="/icon/exchange.svg" preview={false} />}
             className="main-layout__sider__menu__item"
             onClick={() => {
-              setSelectedKey("Exchange")
-              navigate("/exchange")
+              setSelectedKey("Exchange");
+              navigate("/exchange");
             }}
           >
             Exchange Money
@@ -220,8 +255,8 @@ const UserLayout: React.FC = (props): ReactElement => {
             icon={<Image src="/icon/voting.svg" preview={false} />}
             className="main-layout__sider__menu__item"
             onClick={() => {
-              setSelectedKey("Voting")
-              navigate("/voting")
+              setSelectedKey("Voting");
+              navigate("/voting");
             }}
           >
             Voting
@@ -239,9 +274,6 @@ const UserLayout: React.FC = (props): ReactElement => {
           </div>
         </Header>
         <Content>{props.children}</Content>
-        {/* <Footer style={{ textAlign: "center" }}>
-          Ant Design ©2018 Created by Ant UED
-        </Footer> */}
       </Layout>
     </Layout>
   );

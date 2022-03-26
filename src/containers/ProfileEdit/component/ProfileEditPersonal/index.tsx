@@ -1,6 +1,7 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Radio, Row, Select, Upload } from "antd";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import AppDialog from "../../../../components/AppDialog";
 import AppLoading from "../../../../components/AppLoading";
 import useFetch from "../../../../hooks/useFetch";
@@ -23,45 +24,7 @@ const ProfilePerson = () => {
     },
   ]);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-
-  const { data: userData } = useFetch<any>(
-    "users/get-user-by-id",
-    {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    false,
-    [],
-    {},
-    (e) => {
-      setFileList([
-        {
-          status: "done",
-          url: e.data.UserMedia.find(
-            (media: any) => media.type === "1" && media.active === 1
-          ).link,
-          thumbUrl: e.data.UserMedia.find(
-            (media: any) => media.type === "1" && media.active === 1
-          ).link,
-          // url: "https://firebasestorage.googleapis.com/v0/b/blockchain-project-338706.appspot.com/o/images%2F59177950_337064907164459_3535419728614916096_n.jpg",
-          // url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-        },
-      ]);
-    }
-  );
-
-  console.log(fileList);
-
-  const { data: countryData } = useFetch<any>(
-    "assets/country",
-    {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    false,
-    [],
-    {}
-  );
+  const { userData } = useSelector((state: any) => state.userLayout);
 
   useEffect(() => {
     if (userData) {
@@ -83,8 +46,30 @@ const ProfilePerson = () => {
         date: userData.identityDate,
         place: userData.identityPlace,
       });
+      setFileList([
+        {
+          status: "done",
+          url: userData.UserMedia.find(
+            (media: any) => media.type === "1" && media.active === 1
+          ).link,
+          thumbUrl: userData.UserMedia.find(
+            (media: any) => media.type === "1" && media.active === 1
+          ).link,
+        },
+      ]);
     }
   }, [userData]);
+
+  const { data: countryData } = useFetch<any>(
+    "assets/country",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [],
+    {}
+  );
 
   const onChange = ({ fileList: newFileList }: any) => {
     setFileList(newFileList);
