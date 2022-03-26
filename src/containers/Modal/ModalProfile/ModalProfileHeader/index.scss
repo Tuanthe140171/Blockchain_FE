@@ -12,6 +12,8 @@
       }
 
       &__name-group {
+        cursor: default;
+        
         &__name {
           font-size: 20px;
           color: #002169;
@@ -28,6 +30,7 @@
       font-size: 16px;
       color: #002169;
       margin: 20px 0 0;
+      cursor: pointer;
     }
   }
 }
