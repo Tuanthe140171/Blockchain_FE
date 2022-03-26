@@ -289,6 +289,10 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
             <Upload
               maxCount={2}
               onChange={onCMNDChange}
+              onRemove={(e) => {
+                console.log(cmndFile, e);
+                // setCmndFile(cmndFile.filter((cmnd: any) => ));
+              }}
               className="profile-drawer__cmnd__wrapper__container"
             >
               <Button>+ Add more file</Button>

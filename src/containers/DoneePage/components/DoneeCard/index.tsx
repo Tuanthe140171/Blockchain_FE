@@ -18,19 +18,22 @@ type DoneeCardProps = {
 }
 
 const DoneeCard: React.FC<DoneeCardProps> = (props: DoneeCardProps) => {
-    const { image, location, more, circumstances, name, desc, tierOfCharity, trustScore } = props;
+    const { image, location, more, circumstances, name, tierOfCharity, trustScore } = props;
     return (
         <Card className="donee-card" id="donee-card">
-            <Image src={image} preview={false} />
+            <div className="donee-card__images">
+                <Image src={image} preview={false} className="donee-card__avatar"/>
+                <Image src={image} preview={false} className="donee-card__thumbnail"/>
+            </div>
             <div className="donee-card__body">
                 <Title level={3} className="donee-card__name">{name}</Title>
                 <div className="donee-card__location">
-                    <Image src="/icon/location.svg" preview={false} className="donee-card__location-icon"/>    
+                    <Image src="/icon/location.svg" preview={false} className="donee-card__location-icon" />
                     <span>Hà Nội, {location}</span>
                 </div>
                 <div className="donee-card__circumstances">
                     {
-                        (more > 0 ? circumstances.slice(2): circumstances).map(circumstance => (
+                        (more > 0 ? circumstances.slice(2) : circumstances).map(circumstance => (
                             <div className="donee-card__circumstance" key={circumstance}><Tooltip title={circumstance}>{circumstance}</Tooltip></div>
                         ))
                     }

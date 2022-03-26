@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import {
   DownloadOutlined,
-  UserOutlined,
   ZoomInOutlined,
 } from "@ant-design/icons";
-import { Avatar, Col, Input, Row, Table, Image } from "antd";
+import { Avatar, Col, Input, Row, Table, Image, Tooltip } from "antd";
 import { BigNumber } from 'bignumber.js';
 import {
   CategoryScale,
@@ -15,8 +14,9 @@ import {
   LineElement,
   PointElement,
   Title,
-  Tooltip,
+  Tooltip as ChartTooltip,
 } from "chart.js";
+import { ethers } from "ethers";
 import { Line } from "react-chartjs-2";
 import { useWeb3React } from "web3-react-core";
 import moment from "moment";
@@ -27,6 +27,8 @@ import { exportDataToCsv } from '../../../../utils/csvGenerator';
 import { plugins } from "../../../../utils/chart";
 import { toPercent } from "../../../../utils/convert";
 import { options } from "../../../../constants/chart";
+import { CHAIN_INFO } from "../../../../constants/chainInfo";
+import { SupportedChainId } from "../../../../constants/chains";
 import "./index.scss";
 
 const { Search } = Input;
@@ -37,7 +39,7 @@ ChartJS.register(
   PointElement,
   LineElement,
   Title,
-  Tooltip,
+  ChartTooltip,
   Legend
 );
 
@@ -53,13 +55,19 @@ const DashUser: React.FC<{
     to: number
   } | undefined
 }> = (props) => {
-  const { account } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   const [keyWord, setKeyWord] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [chartRef, setChartRef] = useState<any>();
   const [secChartRef, setSecChartRef] = useState<any>();
 
-  const debouncedKeyword = useDebounce<string>(keyWord, 500)
+  const debouncedKeyword = useDebounce<string>(keyWord, 500);
+
+  const {
+    explorer
+  } = CHAIN_INFO[
+    chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
+  ];
 
   const { data: transactionsResp, loading } = useFetch<any>(`transactions?page=${currentPage}&userAddress=${account}&keyword=${debouncedKeyword}`, {
     "Content-Type": "application/json",
@@ -96,14 +104,14 @@ const DashUser: React.FC<{
     const totalGivings = dayDatas.map((data: any) =>  parseInt(data.totalDonation));
 
     if (totalReceives.length >= 2 && totalReceives[totalReceives.length - 2] > 0) {
-      receivingStatus.percentage = new BigNumber(totalReceives[totalReceives.length - 1]).minus(new BigNumber(totalReceives[totalReceives.length - 2])).div(new BigNumber(totalReceives[totalReceives.length - 2]));
+      receivingStatus.percentage = new BigNumber(totalReceives[totalReceives.length - 1]).minus(new BigNumber(totalReceives[totalReceives.length - 2])).div(new BigNumber(totalReceives[totalReceives.length - 2])).div(1e18);
     } else {
       receivingStatus.percentage = new BigNumber(totalReceives[totalReceives.length - 1]).div(1e18).minus(new BigNumber(0));
     }
     receivingStatus.status = new BigNumber(receivingStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
 
     if (totalGivings.length >= 2 && totalGivings[totalGivings.length - 2] > 0) {
-      givingStatus.percentage = new BigNumber(totalGivings[totalGivings.length - 1]).minus(new BigNumber(totalGivings[totalGivings.length - 2])).div(new BigNumber(totalGivings[totalGivings.length - 2]));
+      givingStatus.percentage = new BigNumber(totalGivings[totalGivings.length - 1]).minus(new BigNumber(totalGivings[totalGivings.length - 2])).div(new BigNumber(totalGivings[totalGivings.length - 2])).div(1e18);
     } else {
       givingStatus.percentage = new BigNumber(totalGivings[totalGivings.length - 1]).div(1e18).minus(new BigNumber(0));
     }
@@ -111,15 +119,21 @@ const DashUser: React.FC<{
   }
 
   const transactionsTableData = transactionsResp ? transactionsResp.rows.map((transaction: any) => ({
-    id: shortenTx(transaction.id),
+    id: transaction.id,
     key: shortenTx(transaction.id),
-    name: transaction["fromUser.name"],
-    donee: transaction["toUser.name"],
+    name: ethers.utils.getAddress(transaction.fromUser.walletAddress) === ethers.utils.getAddress(account || "") ? 'You': transaction.fromUser.name,
+    donee: ethers.utils.getAddress(transaction.toUser.walletAddress) === ethers.utils.getAddress(account || "") ? 'You': transaction.toUser.name,
     date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
-    amount: transaction.amount,
+    amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
     status: ["loser"],
-    doneeAvatar: transaction["toUser.UserMedia.link"],
-    avatar: transaction["fromUser.UserMedia.link"]
+    doneeAvatar:(function(){
+      const userAvatar = transaction.toUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(-1).pop();
+      return userAvatar ? userAvatar.link: null;
+    }()),
+    avatar: (function(){
+      const userAvatar = transaction.fromUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(-1).pop();
+      return userAvatar ? userAvatar.link: null;
+    }())
   })) : [];
 
   var gradientStroke = chartRef?.ctx?.createLinearGradient(0, 500, 0, 100);
@@ -168,6 +182,9 @@ const DashUser: React.FC<{
       dataIndex: "id",
       key: "id",
       sorter: (a: any, b: any) => a.id - b.id,
+      render: (name: any, others: any) => (
+        <Tooltip title={name}><span style={{ cursor: 'pointer' }} onClick={() => window.open(`${explorer}/tx/${name}`, '_blank')}>{shortenTx(name)}</span></Tooltip>
+      )
     },
     {
       title: "Philantrophist",
@@ -177,11 +194,11 @@ const DashUser: React.FC<{
         <div
           style={{
             display: "flex",
-            justifyContent: "space-around",
+            justifyContent: "flex-start",
             alignItems: "center",
           }}
         >
-          <Avatar src={others.avatar} />
+          <Avatar src={others.avatar} style={{ marginRight: 20 }}/>
           {name}
         </div>
       ),
@@ -195,11 +212,11 @@ const DashUser: React.FC<{
           <div
             style={{
               display: "flex",
-              justifyContent: "space-around",
+              justifyContent: "flex-start",
               alignItems: "center",
             }}
           >
-            <Avatar src={others.doneeAvatar} />
+            <Avatar src={others.doneeAvatar} style={{ marginRight: 20 }}/>
             {name}
           </div>
         )
@@ -327,6 +344,7 @@ const DashUser: React.FC<{
               </div>
             </div>
             <Table
+              className="transaction-table"
               columns={tableColumns}
               dataSource={transactionsTableData}
               pagination={{

@@ -11,13 +11,18 @@ type FieldType = {
 type DoneeFieldsSearchProps = {
     fields: FieldType[],
     title: string,
-    loading?: boolean
+    loading?: boolean,
+    propagateSelectedFields: React.Dispatch<React.SetStateAction<number[]>>
 }
 
 const DoneeFieldsSearch: React.FC<DoneeFieldsSearchProps> = (props) => {
-    const { fields, title, loading = false } = props;
+    const { fields, title, loading = false, propagateSelectedFields } = props;
     const [selectedFields, setSelectedFields] = useState<number[]>([]);
     const [displayedFields, setDisplayedFields] = useState<FieldType[]>([]);
+
+    useEffect(() => {
+        propagateSelectedFields && propagateSelectedFields(selectedFields);
+    }, [selectedFields, propagateSelectedFields]);
 
     useEffect(() => {
         fields.length > 5 ? setDisplayedFields(fields.slice(0, 5)) : setDisplayedFields(fields);
