@@ -8,12 +8,14 @@ export const options: any = {
         x: {
             grid: {
                 display: false
-            }
+            },
+            beginAtZero: true
         },
         y: {
             grid: {
                 display: false
-            }
+            },
+            beginAtZero: true
         },
     },
     interaction: {

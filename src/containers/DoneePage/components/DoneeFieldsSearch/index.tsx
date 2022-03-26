@@ -54,18 +54,18 @@ const DoneeFieldsSearch: React.FC<DoneeFieldsSearchProps> = (props) => {
                             {
                                 displayedFields.map(field => (
                                     <Checkbox
-                                        checked={selectedFields.indexOf(field.id) >= 0}
+                                        checked={selectedFields.indexOf(parseInt(`${field.id}`)) >= 0}
                                         disabled={false}
                                         onChange={(e) => {
                                             if (!e.target.checked) {
                                                 setSelectedFields([
-                                                    ...selectedFields.slice(0, selectedFields.indexOf(field.id)),
-                                                    ...selectedFields.slice(selectedFields.indexOf(field.id) + 1, selectedFields.length)
+                                                    ...selectedFields.slice(0, selectedFields.indexOf(parseInt(`${field.id}`))),
+                                                    ...selectedFields.slice(selectedFields.indexOf(parseInt(`${field.id}`)) + 1, selectedFields.length)
                                                 ]);
                                             } else {
                                                 setSelectedFields([
                                                     ...selectedFields,
-                                                    field.id
+                                                    parseInt(`${field.id}`)
                                                 ]);
                                             }
                                         }}

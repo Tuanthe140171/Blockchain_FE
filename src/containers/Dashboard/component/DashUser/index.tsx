@@ -108,14 +108,14 @@ const DashUser: React.FC<{
     } else {
       receivingStatus.percentage = new BigNumber(totalReceives[totalReceives.length - 1]).div(1e18).minus(new BigNumber(0));
     }
-    receivingStatus.status = new BigNumber(receivingStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
+    receivingStatus.status = new BigNumber(receivingStatus.percentage).lt(0) ? CharityStatus.DOWN : CharityStatus.UP;
 
     if (totalGivings.length >= 2 && totalGivings[totalGivings.length - 2] > 0) {
       givingStatus.percentage = new BigNumber(totalGivings[totalGivings.length - 1]).minus(new BigNumber(totalGivings[totalGivings.length - 2])).div(new BigNumber(totalGivings[totalGivings.length - 2])).div(1e18);
     } else {
       givingStatus.percentage = new BigNumber(totalGivings[totalGivings.length - 1]).div(1e18).minus(new BigNumber(0));
     }
-    givingStatus.status = new BigNumber(givingStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
+    givingStatus.status = new BigNumber(givingStatus.percentage).lt(0) ? CharityStatus.DOWN : CharityStatus.UP;
   }
 
   const transactionsTableData = transactionsResp ? transactionsResp.rows.map((transaction: any) => ({
@@ -127,11 +127,11 @@ const DashUser: React.FC<{
     amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
     status: ["loser"],
     doneeAvatar:(function(){
-      const userAvatar = transaction.toUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(-1).pop();
+      const userAvatar = transaction.toUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(0, 1).pop();
       return userAvatar ? userAvatar.link: null;
     }()),
     avatar: (function(){
-      const userAvatar = transaction.fromUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(-1).pop();
+      const userAvatar = transaction.fromUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(0, 1).pop();
       return userAvatar ? userAvatar.link: null;
     }())
   })) : [];
@@ -165,7 +165,7 @@ const DashUser: React.FC<{
     datasets: [
       {
         fill: true,
-        data: dailyDonationResp ? dailyDonationResp.userDonationDayDatas.map((data: any) => new BigNumber(data.totalReceive).div(1e18).toFixed()) : [],
+        data: dailyDonationResp ? dailyDonationResp.userDonationDayDatas.map((data: any) => new BigNumber(data.totalReceive).div(1e18).toFixed(4)) : [],
         backgroundColor: userGradientStroke,
         borderColor: '#52BFD6',
         tension: 0.5,

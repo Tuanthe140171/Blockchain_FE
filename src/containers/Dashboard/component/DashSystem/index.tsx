@@ -122,7 +122,7 @@ const DashSystem: React.FC<{
     } else {
       charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).div(1e18).minus(new BigNumber(0));
     }
-    charityStatus.status = new BigNumber(charityStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
+    charityStatus.status = new BigNumber(charityStatus.percentage).lt(0) ? CharityStatus.DOWN : CharityStatus.UP;
   }
 
   if (userActiveResp && userActiveResp.length >= 1) {
@@ -131,8 +131,8 @@ const DashSystem: React.FC<{
     } else {
       userStatsStatus.percentage = new BigNumber(userActiveResp[userActiveResp.length - 1].count).minus(new BigNumber(0));
     }
-    userStatsStatus.status = new BigNumber(userStatsStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
-    
+    userStatsStatus.status = new BigNumber(userStatsStatus.percentage).lt(0) ? CharityStatus.DOWN : CharityStatus.UP;
+
     for (let userStats of userActiveResp) {
       userStatsStatus.totalUserActions = userStatsStatus.totalUserActions.plus(new BigNumber(userStats.count));
     }
@@ -249,11 +249,11 @@ const DashSystem: React.FC<{
     amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
     status: ["loser"],
     doneeAvatar:(function(){
-      const userAvatar = transaction.toUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(-1).pop();
+      const userAvatar = transaction.toUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(0, 1).pop();
       return userAvatar ? userAvatar.link: null;
     }()),
     avatar: (function(){
-      const userAvatar = transaction.fromUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(-1).pop();
+      const userAvatar = transaction.fromUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(0, 1).pop();
       return userAvatar ? userAvatar.link: null;
     }())
   })) : [];

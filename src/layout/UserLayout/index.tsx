@@ -31,6 +31,9 @@ const UserLayout: React.FC = (props): ReactElement => {
     let interval: any;
 
     const getCRVBalance = async () => {
+      const balance = await charityContract.balanceOf(account);
+      setUserBalance(ethers.utils.formatEther(balance));
+
       interval = setInterval(async () => {
         const balance = await charityContract.balanceOf(account);
         setUserBalance(ethers.utils.formatEther(balance));
