@@ -122,7 +122,7 @@ const DashSystem: React.FC<{
     } else {
       charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).div(1e18).minus(new BigNumber(0));
     }
-    charityStatus.status = new BigNumber(charityStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
+    charityStatus.status = new BigNumber(charityStatus.percentage).lt(0) ? CharityStatus.DOWN : CharityStatus.UP;
   }
 
   if (userActiveResp && userActiveResp.length >= 1) {
@@ -131,8 +131,8 @@ const DashSystem: React.FC<{
     } else {
       userStatsStatus.percentage = new BigNumber(userActiveResp[userActiveResp.length - 1].count).minus(new BigNumber(0));
     }
-    userStatsStatus.status = new BigNumber(userStatsStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
-    
+    userStatsStatus.status = new BigNumber(userStatsStatus.percentage).lt(0) ? CharityStatus.DOWN : CharityStatus.UP;
+
     for (let userStats of userActiveResp) {
       userStatsStatus.totalUserActions = userStatsStatus.totalUserActions.plus(new BigNumber(userStats.count));
     }
