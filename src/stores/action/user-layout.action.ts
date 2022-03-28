@@ -4,3 +4,10 @@ export const getUserById = (data: any) => {
     payload: data,
   };
 };
+
+export const getBadluckerType = (data: any) => {
+  return {
+    type: "GET_BADLUCKER_TYPE",
+    payload: data,
+  };
+};
