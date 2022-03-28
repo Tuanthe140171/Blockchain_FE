@@ -1,13 +1,20 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Radio, Row, Select, Upload } from "antd";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import AppDialog from "../../../../components/AppDialog";
 import AppLoading from "../../../../components/AppLoading";
 import useFetch from "../../../../hooks/useFetch";
+import { getUserById } from "../../../../stores/action/user-layout.action";
 import "./index.scss";
 
 const { Option } = Select;
+
+const dummyRequest = ({ file, onSuccess }: any) => {
+  setTimeout(() => {
+    onSuccess("ok");
+  }, 0);
+};
 
 const ProfilePerson = () => {
   const [form] = Form.useForm();
@@ -25,6 +32,14 @@ const ProfilePerson = () => {
   ]);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const { userData } = useSelector((state: any) => state.userLayout);
+  const dispatch = useDispatch();
+  const avatarLink = userData?.UserMedia.find(
+    (media: any) => media.type === "1" && media.active === 1
+  )
+    ? userData?.UserMedia.find(
+        (media: any) => media.type === "1" && media.active === 1
+      ).link
+    : "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
 
   useEffect(() => {
     if (userData) {
@@ -49,12 +64,7 @@ const ProfilePerson = () => {
       setFileList([
         {
           status: "done",
-          url: userData.UserMedia.find(
-            (media: any) => media.type === "1" && media.active === 1
-          ).link,
-          thumbUrl: userData.UserMedia.find(
-            (media: any) => media.type === "1" && media.active === 1
-          ).link,
+          url: avatarLink,
         },
       ]);
     }
@@ -103,6 +113,7 @@ const ProfilePerson = () => {
   const onSubmit = (values: any) => {
     const dataSubmit = {
       name: values.name,
+      lastName: values.lastName,
       dob: values.dob,
       country: values.nation,
       baseAddress: values.nativeAddress,
@@ -136,6 +147,8 @@ const ProfilePerson = () => {
       body: JSON.stringify(formData),
     },
     (e) => {
+      const action = getUserById(e.data);
+      dispatch(action);
       setHasImg(undefined);
       setOpenDialog(true);
     }
@@ -153,6 +166,8 @@ const ProfilePerson = () => {
       body: JSON.stringify(formData),
     },
     (e) => {
+      const action = getUserById(e.data);
+      dispatch(action);
       setUpdateWithoutAva(undefined);
       setOpenDialog(true);
     }
@@ -450,6 +465,7 @@ const ProfilePerson = () => {
                   onPreview={onPreview}
                   className="profile-person__container__avatar__wrapper"
                   isImageUrl={(file: any) => true}
+                  customRequest={dummyRequest}
                 >
                   <Button
                     type="ghost"

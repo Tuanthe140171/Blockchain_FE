@@ -5,21 +5,26 @@ import "./index.scss";
 
 const ModalProfileHeader = () => {
   const { userData } = useSelector((state: any) => state.userLayout);
+  const avatarLink = userData?.UserMedia.find(
+    (media: any) => media.type === "1" && media.active === 1
+  )
+    ? userData?.UserMedia.find(
+        (media: any) => media.type === "1" && media.active === 1
+      ).link
+    : "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
 
   return (
     <div className="modal-profile__header">
       <div className="modal-profile__header__avatar-group">
         <Avatar
-          src={
-            userData?.UserMedia.find(
-              (media: any) => media.type === "1" && media.active === 1
-            ).link
-          }
+          src={avatarLink}
           className="modal-profile__header__avatar-group__avatar"
         />
         <div className="modal-profile__header__avatar-group__name-group">
           <div className="modal-profile__header__avatar-group__name-group__name">
-            Nguyễn Minh Trí
+            {`${userData.lastName ? userData.lastName : "Người"} ${
+              userData.name ? userData.name : "dùng"
+            }`}
           </div>
           <div className="modal-profile__header__avatar-group__name-group__description">
             Người khuyết tật

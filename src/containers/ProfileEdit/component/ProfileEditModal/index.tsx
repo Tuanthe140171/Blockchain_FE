@@ -4,6 +4,7 @@ import AppDialog from "../../../../components/AppDialog";
 import AppDrawer from "../../../../components/AppDrawer";
 import Message from "../../../../constants/message";
 import useFetch from "../../../../hooks/useFetch";
+import { useSelector } from "react-redux";
 import "./index.scss";
 
 type ProfileModalProps = {
@@ -18,6 +19,12 @@ type ISituation = {
   value: string;
 };
 
+const dummyRequest = ({ file, onSuccess }: any) => {
+  setTimeout(() => {
+    onSuccess("ok");
+  }, 0);
+};
+
 const ProfileModal: React.FC<ProfileModalProps> = (props) => {
   const { isVisible, closeModal, submitted } = props;
   const [options, setOptions] = useState([]);
@@ -26,6 +33,7 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
   const [submitFile, setSubmitFile] = useState<any>([]);
   const [isSubmit, setIsSubmit] = useState<any>(undefined);
   const [responseLink, setResponseLink] = useState<any>(undefined);
+  const { badluckerType } = useSelector((state: any) => state.userLayout);
 
   const randomColor = (() => {
     "use strict";
@@ -64,14 +72,28 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
     return;
   };
 
-  const { data: userData } = useFetch<any>(
-    "bad-lucker/get-badlucker-situation",
-    {},
-    false,
-    [],
-    { method: "GET" },
-    (e) => {
-      const optionRes = e.data.map((opt: any, index: number) => {
+  // const { data: userData } = useFetch<any>(
+  //   "bad-lucker/get-badlucker-situation",
+  //   {},
+  //   false,
+  //   [],
+  //   { method: "GET" },
+  //   (e) => {
+  //     const optionRes = e.data.map((opt: any, index: number) => {
+  //       return {
+  //         value: opt.name,
+  //         label: opt.name,
+  //         index: index,
+  //         message: opt.message,
+  //         id: opt.id,
+  //       };
+  //     });
+  //     setOptions(optionRes);
+  //   }
+  // );
+  useEffect(() => {
+    if (badluckerType) {
+      const optionRes = badluckerType?.map((opt: any, index: number) => {
         return {
           value: opt.name,
           label: opt.name,
@@ -82,7 +104,7 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
       });
       setOptions(optionRes);
     }
-  );
+  }, [badluckerType]);
 
   const renderTag = () => {
     return selectedList.map((tag: any, index: any) => {
@@ -138,6 +160,7 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
                 onChange={(e) =>
                   onSituationUpload(e, option?.id, option?.value)
                 }
+                customRequest={dummyRequest}
               >
                 <Button className="profile-upload__wrapper__container__button">
                   Upload file
@@ -275,7 +298,6 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
           }
           dropdownStyle={{ width: "100%" }}
         />
-        {/* {setSelectedList.length > 0 ? <div>adu</div> : <div>adu2</div>} */}
         <div className="profile-drawer__tags">{renderTag()}</div>
         <div className="profile-drawer__text">
           Bạn hãy điền và gửi các giấy tờ vào{" "}
@@ -289,11 +311,8 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
             <Upload
               maxCount={2}
               onChange={onCMNDChange}
-              onRemove={(e) => {
-                console.log(cmndFile, e);
-                // setCmndFile(cmndFile.filter((cmnd: any) => ));
-              }}
               className="profile-drawer__cmnd__wrapper__container"
+              customRequest={dummyRequest}
             >
               <Button>+ Add more file</Button>
             </Upload>

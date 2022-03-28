@@ -13,7 +13,10 @@ import ModalHeader from "../../containers/Modal";
 import { useCharityVerseContract } from "../../hooks/useContract";
 import useFetch from "../../hooks/useFetch";
 import useLocalStorage from "../../hooks/useLocalStorage";
-import { getUserById } from "../../stores/action/user-layout.action";
+import {
+  getBadluckerType,
+  getUserById,
+} from "../../stores/action/user-layout.action";
 import { shortenAddress } from "../../utils";
 import "./index.scss";
 
@@ -33,6 +36,20 @@ const UserLayout: React.FC = (props): ReactElement => {
   const { userData } = useSelector((state: any) => state.userLayout);
   const dispatch = useDispatch();
 
+  const avatarLink = userData?.UserMedia.find(
+    (media: any) => media.type === "1" && media.active === 1
+  )
+    ? userData?.UserMedia.find(
+        (media: any) => media.type === "1" && media.active === 1
+      ).link
+    : "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
+
+  // console.log();
+
+  // useEffect(() => {
+  //   console.log(userData);
+  // }, [userData.UserMedia]);
+
   const { data: user } = useFetch<any>(
     "users/get-user-by-id",
     {
@@ -47,6 +64,29 @@ const UserLayout: React.FC = (props): ReactElement => {
       dispatch(action);
     }
   );
+
+  const { data: blkSituation } = useFetch<any>(
+    "bad-lucker/get-badlucker-situation",
+    {},
+    false,
+    [],
+    { method: "GET" },
+    (e) => {
+      // const optionRes = e.data.map((opt: any, index: number) => {
+      //   return {
+      //     value: opt.name,
+      //     label: opt.name,
+      //     index: index,
+      //     message: opt.message,
+      //     id: opt.id,
+      //   };
+      // });
+      // setOptions(optionRes);d
+      const action = getBadluckerType(e.data);
+      dispatch(action);
+    }
+  );
+
   const charityContract = useCharityVerseContract();
 
   useEffect(() => {
@@ -135,11 +175,7 @@ const UserLayout: React.FC = (props): ReactElement => {
             trigger="click"
           >
             <Avatar
-              src={
-                userData?.UserMedia.find(
-                  (media: any) => media.type === "1" && media.active === 1
-                ).link
-              }
+              src={avatarLink}
               className="main-layout__site-layout__header__group-avatar__avatar"
             />
           </Popover>
