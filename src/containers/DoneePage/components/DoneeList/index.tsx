@@ -15,7 +15,8 @@ type Donee = {
     tierCharity: number | undefined,
     trustScore: number | undefined,
     id: string,
-    location: string
+    location: string,
+    walletAddress: string
 }
 
 type DoneeListProps = {
@@ -28,10 +29,11 @@ type DoneeListProps = {
     setCurrentPage: (page: number) => void;
     inputSearch: string,
     setInputSearch: (str: string) => void;
+    setSortBy: (str: string) => void;
 }
 
 const DoneeList: React.FC<DoneeListProps> = (props) => {
-    const { donees, loading } = props;
+    const { donees, loading, setSortBy } = props;
     return (
         <div className="donee-list">
             <header className="donee-list__header">
@@ -39,15 +41,15 @@ const DoneeList: React.FC<DoneeListProps> = (props) => {
                 <div className="donee-list__orderBy">
                     <span>Sắp xếp theo</span>
                     <Select
-                        defaultValue="TS"
+                        defaultValue="tierCharity"
                         style={{ width: 230 }}
-                        onChange={() => {
-
+                        onChange={(value: any) => {
+                            setSortBy(value);
                         }}
                         className="donee-list__selection"
                     >
-                        <Option value="TS">Trusted Score</Option>
-                        <Option value="TOS">Tier Of Charity</Option>
+                        <Option value="trustScore">Trusted Score</Option>
+                        <Option value="tierCharity">Tier Of Charity</Option>
                     </Select>
                 </div>
             </header>
@@ -78,6 +80,7 @@ const DoneeList: React.FC<DoneeListProps> = (props) => {
                                     trustScore={data.trustScore || 0}
                                     location={data.location}
                                     key={data.id}
+                                    walletAddress={data.id}
                                 />
                             ))
                         }

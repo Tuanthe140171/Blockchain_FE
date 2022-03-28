@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import DonationFieldsSearch from "../DoneeFieldsSearch"
 import useFetch from "../../../../hooks/useFetch";
 import "./index.scss";
@@ -13,6 +13,7 @@ const DoneeSearchFilter: React.FC<DoneeSearchFilterProps> = (props) => {
         "Content-Type": "application/json",
         Accept: "application/json"
     });
+
     const { data: situations, loading: situationsLoading } = useFetch<any>(
         "bad-lucker/get-badlucker-situation"
     );

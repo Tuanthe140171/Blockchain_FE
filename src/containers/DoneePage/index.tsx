@@ -7,6 +7,7 @@ import useDebounce from "../../hooks/useDebounce";
 import "./index.scss";
 
 const DoneePage: React.FC = () => {
+    const [sortBy, setSortBy] = useState<string>("tierCharity");
     const [situations, setSituations] = useState<number[]>([]);
     const [provinces, setProvinces] = useState<number[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -14,7 +15,7 @@ const DoneePage: React.FC = () => {
 
     const debouncedKeyword = useDebounce<string>(inputSearch, 500);
 
-    let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}`;
+    let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}&orderBy=${sortBy}`;
 
     if (situations.length > 0) {
         situations.forEach((situation, key) => {
@@ -33,7 +34,7 @@ const DoneePage: React.FC = () => {
                 Donee
             </Typography.Title>
             <div className="donee__content">
-                <DoneeSearchFilter setSituations={setSituations} setProvinces={setProvinces} />
+            <DoneeSearchFilter setSituations={setSituations} setProvinces={setProvinces} />
                 <DoneeList
                     defaultPageSize={data ? data.limit : 10}
                     pageSize={data ? data.limit : 10}
@@ -43,6 +44,7 @@ const DoneePage: React.FC = () => {
                     setCurrentPage={setCurrentPage}
                     inputSearch={inputSearch}
                     setInputSearch={(str: string) => setInputSearch(str)}
+                    setSortBy={(sortBy: string) => setSortBy(sortBy)}
                     donees={(data && data.rows) ? data.rows.map((data: any) => ({
                         avatar: (function () {
                             const userAvatar = data.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(-1).pop();

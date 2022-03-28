@@ -104,14 +104,14 @@ const DashUser: React.FC<{
     const totalGivings = dayDatas.map((data: any) =>  parseInt(data.totalDonation));
 
     if (totalReceives.length >= 2 && totalReceives[totalReceives.length - 2] > 0) {
-      receivingStatus.percentage = new BigNumber(totalReceives[totalReceives.length - 1]).minus(new BigNumber(totalReceives[totalReceives.length - 2])).div(new BigNumber(totalReceives[totalReceives.length - 2])).div(1e18);
+      receivingStatus.percentage = new BigNumber(totalReceives[totalReceives.length - 1]).div(1e18).minus(new BigNumber(totalReceives[totalReceives.length - 2]).div(1e18)).div(new BigNumber(totalReceives[totalReceives.length - 2]).div(1e18));
     } else {
       receivingStatus.percentage = new BigNumber(totalReceives[totalReceives.length - 1]).div(1e18).minus(new BigNumber(0));
     }
     receivingStatus.status = new BigNumber(receivingStatus.percentage).lt(0) ? CharityStatus.DOWN : CharityStatus.UP;
 
     if (totalGivings.length >= 2 && totalGivings[totalGivings.length - 2] > 0) {
-      givingStatus.percentage = new BigNumber(totalGivings[totalGivings.length - 1]).minus(new BigNumber(totalGivings[totalGivings.length - 2])).div(new BigNumber(totalGivings[totalGivings.length - 2])).div(1e18);
+      givingStatus.percentage = new BigNumber(totalGivings[totalGivings.length - 1]).div(1e18).minus(new BigNumber(totalGivings[totalGivings.length - 2]).div(1e18)).div(new BigNumber(totalGivings[totalGivings.length - 2]).div(1e18));
     } else {
       givingStatus.percentage = new BigNumber(totalGivings[totalGivings.length - 1]).div(1e18).minus(new BigNumber(0));
     }
