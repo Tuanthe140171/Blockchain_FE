@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Image, Card, Typography, Tooltip } from "antd";
 import Button from "../../../../components/Button";
+import AppDonate from "../../../../components/AppDonate";
 
 import "./index.scss";
 
@@ -14,11 +15,14 @@ type DoneeCardProps = {
     more: number,
     tierOfCharity: number,
     trustScore: number,
-    location: string
+    location: string,
+    walletAddress: string
 }
 
 const DoneeCard: React.FC<DoneeCardProps> = (props: DoneeCardProps) => {
-    const { image, location, more, circumstances, name, tierOfCharity, trustScore } = props;
+    const { image, location, more, circumstances, name, tierOfCharity, trustScore, walletAddress } = props;
+    const [visible, setVisible] = useState<boolean>(false);
+    
     return (
         <Card className="donee-card" id="donee-card">
             <div className="donee-card__images">
@@ -33,7 +37,7 @@ const DoneeCard: React.FC<DoneeCardProps> = (props: DoneeCardProps) => {
                 </div>
                 <div className="donee-card__circumstances">
                     {
-                        (more > 0 ? circumstances.slice(2) : circumstances).map(circumstance => (
+                        (more > 0 ? circumstances.slice(0, 2) : circumstances).map(circumstance => (
                             <div className="donee-card__circumstance" key={circumstance}><Tooltip title={circumstance}>{circumstance}</Tooltip></div>
                         ))
                     }
@@ -53,8 +57,11 @@ const DoneeCard: React.FC<DoneeCardProps> = (props: DoneeCardProps) => {
                         <p>Trust Score</p>
                     </div>
                 </div>
-                <Button width="100%" maxWidth="100%" content="Donate" bgColor="#F0CF27" className="donee-card__cta" />
+                <Button onClick={() => setVisible(true)} width="100%" maxWidth="100%" content="Donate" bgColor="#F0CF27" className="donee-card__cta" />
             </div>
+            {
+                visible && <AppDonate name={name} avatar={image} walletAddress={walletAddress} onClose={() => {setVisible(false)}} />
+            }
         </Card>
     )
 }

@@ -13,6 +13,7 @@
   }
 
   &__description {
+    font-family: 'Readex-Light';
     color: #a7b2c8;
     font-size: 15px;
   }
@@ -26,10 +27,14 @@
       height: 45px;
       width: 115px;
       color: #ffffff;
+      padding: 7px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     &__btn-cancel {
-      background-color: #e6e6e6;
+      background-color: #E0D9FB;
     }
 
     &__btn-confirm {
@@ -52,4 +57,8 @@
       background-color: #52bfd6;
     }
   }
+}
+
+.ant-modal-wrap {
+  z-index: 99999999999999999999999999999;
 }

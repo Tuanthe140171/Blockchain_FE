@@ -118,10 +118,11 @@ const DashSystem: React.FC<{
   if (dailyDonationResp && dailyDonationResp.donationDayDatas.length >= 1) {
     const dayDatas = dailyDonationResp.donationDayDatas;
     if (dayDatas.length >= 2 && dayDatas[dayDatas.length - 2].dailyVolume > 0) {
-      charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).minus(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume)).div(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume)).div(1e18);
+      charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).div(1e18).minus(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume).div(1e18)).div(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume).div(1e18));
     } else {
       charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).div(1e18).minus(new BigNumber(0));
     }
+    console.log(charityStatus.percentage);
     charityStatus.status = new BigNumber(charityStatus.percentage).lt(0) ? CharityStatus.DOWN : CharityStatus.UP;
   }
 
