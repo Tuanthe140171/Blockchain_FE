@@ -49,6 +49,12 @@ const ProfileSituation = () => {
   const [responseLink, setResponseLink] = useState<any>(undefined);
   // id of situation that user want to delete
   const [deleteId, setDeleteId] = useState<any>(undefined);
+  // set call api delete or not
+  const [isDelete, setIsDelete] = useState<any>(undefined);
+
+  // dialog infor data
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [dialogDescription, setDialogDescription] = useState("");
 
   useEffect(() => {
     if (userData) {
@@ -111,9 +117,7 @@ const ProfileSituation = () => {
     return situationMedia;
   };
 
-  const onSituationChange = () => {
-
-  };
+  const onSituationChange = () => {};
 
   // render initial Situation
   const renderSituation = () => {
@@ -135,10 +139,9 @@ const ProfileSituation = () => {
             </Button>
             <Button
               onClick={() => {
-                console.log(s);
+                setDeleteId(+s.id);
                 setHasButtons(true);
                 setOpenWarnDialog(true);
-                // setDeleteId(+s.id);
               }}
             >
               Xóa
@@ -177,7 +180,7 @@ const ProfileSituation = () => {
       Accept: "application/json",
     },
     false,
-    [deleteId],
+    [isDelete],
     {
       method: "DELETE",
       body: JSON.stringify({
@@ -185,8 +188,10 @@ const ProfileSituation = () => {
       }),
     },
     () => {
-      // setOpenDialog(true);
+      setDialogTitle("Xóa hoàn cảnh thành công!");
+      setOpenDialog(true);
       setDeleteId(undefined);
+      setIsDelete(undefined);
     }
   );
 
@@ -365,6 +370,8 @@ const ProfileSituation = () => {
       body: JSON.stringify(responseLink),
     },
     () => {
+      setDialogTitle("Bạn đã gửi đơn xác nhận hộ nghèo thành công");
+      setDialogDescription("Những người trong hệ thống sẽ xác nhận giúp bạn.");
       setOpenDialog(true);
     }
   );
@@ -374,15 +381,15 @@ const ProfileSituation = () => {
       {openDialog ? (
         <AppDialog
           type="infor"
-          title={Message.INFOR_01}
-          description={Message.INFOR_DC_01}
+          title={dialogTitle}
+          description={dialogDescription}
           confirmText={Message.INFOR_CF_01}
           onConfirm={() => {
             setOpenDialog(false);
           }}
         />
       ) : null}
-      {/* {openConfirmDialog ? (
+      {openConfirmDialog ? (
         <AppDialog
           type="warning"
           title={"Bạn chắc chắn muốn cập nhật các giấy tờ này chứ?"}
@@ -400,14 +407,22 @@ const ProfileSituation = () => {
       {openWarnDialog ? (
         <AppDialog
           type="warning"
-          title={"Bạn cần nộp đầy đủ các giấy tờ yêu cầu"}
+          title={
+            hasButtons
+              ? "Bạn chắc chắn muốn xóa hoàn cảnh này?"
+              : "Bạn cần nộp đầy đủ các giấy tờ yêu cầu!"
+          }
           confirmText={hasButtons ? "Xác nhận" : "Đóng"}
           cancelText={hasButtons ? "Đóng" : ""}
           onConfirm={() => {
+            setIsDelete(true);
+            setOpenWarnDialog(false);
+          }}
+          onClose={() => {
             setOpenWarnDialog(false);
           }}
         />
-      ) : null} */}
+      ) : null}
       <div className="profile-situation">
         <div className="profile-situation__container">
           <div className="profile-situation__container__list-situation">
