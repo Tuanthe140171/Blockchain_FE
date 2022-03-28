@@ -11,6 +11,7 @@ type ButtonProps = {
     padding?: string,
     fontSize?: string,
     onClick?: () => void;
+    disabled?: boolean
 };
 
 const Button: React.FC<ButtonProps> = (props) => {
@@ -22,10 +23,11 @@ const Button: React.FC<ButtonProps> = (props) => {
       padding = "30px 50px",
       maxWidth = "180px",
       fontSize = "22px",
-      onClick
+      onClick,
+      disabled = false
   } = props;
   return (
-    <AntdButton onClick={onClick} className={`override-btn ${className}`} style={{
+    <AntdButton disabled={disabled} onClick={onClick} className={`override-btn ${className}`} style={{
         backgroundColor: `${bgColor}`,
         border: 'none',
         color: 'white',

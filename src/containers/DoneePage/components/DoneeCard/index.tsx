@@ -15,11 +15,12 @@ type DoneeCardProps = {
     more: number,
     tierOfCharity: number,
     trustScore: number,
-    location: string
+    location: string,
+    walletAddress: string
 }
 
 const DoneeCard: React.FC<DoneeCardProps> = (props: DoneeCardProps) => {
-    const { image, location, more, circumstances, name, tierOfCharity, trustScore } = props;
+    const { image, location, more, circumstances, name, tierOfCharity, trustScore, walletAddress } = props;
     const [visible, setVisible] = useState<boolean>(false);
     
     return (
@@ -36,7 +37,7 @@ const DoneeCard: React.FC<DoneeCardProps> = (props: DoneeCardProps) => {
                 </div>
                 <div className="donee-card__circumstances">
                     {
-                        (more > 0 ? circumstances.slice(2) : circumstances).map(circumstance => (
+                        (more > 0 ? circumstances.slice(0, 2) : circumstances).map(circumstance => (
                             <div className="donee-card__circumstance" key={circumstance}><Tooltip title={circumstance}>{circumstance}</Tooltip></div>
                         ))
                     }
@@ -59,7 +60,7 @@ const DoneeCard: React.FC<DoneeCardProps> = (props: DoneeCardProps) => {
                 <Button onClick={() => setVisible(true)} width="100%" maxWidth="100%" content="Donate" bgColor="#F0CF27" className="donee-card__cta" />
             </div>
             {
-                visible && <AppDonate onClose={() => {setVisible(false)}} />
+                visible && <AppDonate name={name} avatar={image} walletAddress={walletAddress} onClose={() => {setVisible(false)}} />
             }
         </Card>
     )
