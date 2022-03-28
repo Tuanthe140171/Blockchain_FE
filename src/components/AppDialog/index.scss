@@ -1,5 +1,5 @@
 .app-dialog {
-  padding: 40px 96px;
+  padding: 40px 70px;
   height: 100%;
   display: flex;
   justify-content: space-between;
@@ -13,7 +13,7 @@
   }
 
   &__description {
-    font-family: 'Readex-Light';
+    font-family: "Readex-Light";
     color: #a7b2c8;
     font-size: 15px;
   }
@@ -22,7 +22,7 @@
     width: 70%;
     display: flex;
     justify-content: space-evenly;
-    
+
     & button {
       height: 45px;
       width: 115px;
@@ -34,7 +34,7 @@
     }
 
     &__btn-cancel {
-      background-color: #E0D9FB;
+      background-color: #e0d9fb;
     }
 
     &__btn-confirm {
@@ -55,6 +55,14 @@
 
     &__btn-infor {
       background-color: #52bfd6;
+    }
+
+    &__btn-confirm {
+      background-color: #7b61ff;
+    }
+
+    &__btn-warning {
+      background-color: #ea6a3f;
     }
   }
 }
