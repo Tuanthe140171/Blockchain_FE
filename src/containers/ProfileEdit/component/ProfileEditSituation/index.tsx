@@ -1,9 +1,10 @@
 import { Button, Cascader, Divider, Tag, Upload } from "antd";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import AppDialog from "../../../../components/AppDialog";
 import Message from "../../../../constants/message";
 import useFetch from "../../../../hooks/useFetch";
+import { getUserById } from "../../../../stores/action/user-layout.action";
 import "./index.scss";
 
 type ISituation = {
@@ -25,6 +26,7 @@ const ProfileSituation = () => {
   const { userData, badluckerType } = useSelector(
     (state: any) => state.userLayout
   );
+  const dispatch = useDispatch();
   // list initial cmnd
   const [cmndList, setCmndList] = useState<any>([]);
   // list initial situation
@@ -51,16 +53,24 @@ const ProfileSituation = () => {
   const [deleteId, setDeleteId] = useState<any>(undefined);
   // set call api delete or not
   const [isDelete, setIsDelete] = useState<any>(undefined);
+  // id of situation that user want to update
+  const [updateId, setUpdateId] = useState<any>(undefined);
+  // set call api update or not
+  const [isUpdate, setIsUpdate] = useState<any>(undefined);
+  // list of checkbox selected
+  const [selectedList, setSelectedList] = useState<any>([]);
 
   // dialog infor data
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogDescription, setDialogDescription] = useState("");
 
+  const [rerenderData, setRerenderData] = useState<any>(null);
+
   useEffect(() => {
     if (userData) {
-      const cmnd = userData?.UserMedia?.filter(
-        (data: any) => data.type === "3"
-      );
+      const cmnd = userData?.UserMedia.filter((data: any) => data.type === "3");
+      console.log(cmnd);
+
       setCmndList([
         {
           name: `CMND mặt 1`,
@@ -75,49 +85,69 @@ const ProfileSituation = () => {
       ]);
 
       const situation = userData?.BadLuckTypes;
-      setSituationList(situation);
+      setSituationList(userData.BadLuckTypes);
+      const formatSituation = userData.BadLuckTypes.map((blt: any) => ({
+        id: blt.id,
+        files: blt.BadLuckMedia.map((blm: any) => ({
+          id: blm.id,
+          link: blm.link,
+        })),
+      }));
+      console.log(formatSituation);
+
       if (badluckerType && badluckerType.length > 0) {
         const newArr = badluckerType.filter((blk: any) => {
           return !situation.some((s: any) => s.situationId === blk.id);
         });
-        const optionRes = newArr.map((opt: any, index: number) => {
-          return {
-            value: opt.name,
-            label: opt.name,
-            index: index,
-            message: opt.message,
-            id: opt.id,
-          };
-        });
+        const optionRes = newArr.map((opt: any, index: number) => ({
+          value: opt.name,
+          label: opt.name,
+          index: index,
+          message: opt.message,
+          id: opt.id,
+        }));
         setOptions(optionRes);
+        setSelectedList([]);
       }
     }
   }, [userData, badluckerType]);
 
-  const onChange = ({ fileList: newFileList }: any) => {
-    setCmndList(newFileList);
-  };
+  console.log(cmndList);
+
+  // const onChange = ({ fileList: newFileList }: any) => {
+  //   setCmndList(newFileList);
+  // };
 
   // get initial Situation text
   const getSituationText = (type: number, situationId: string) => {
     // 1: title - 2: message
-    const text = badluckerType.find((type: any) => type.id === situationId);
+    const text = badluckerType?.find((type: any) => type.id === situationId);
     return type === 1 ? text.name : text.message;
   };
 
   // get initial Situation media
   const getSituationMedia = (data: any, text: string) => {
-    const situationMedia = data.map((media: any, index: number) => {
-      return {
-        name: `Giấy xác nhận ${text}`,
-        status: "done",
-        url: media.link,
-      };
-    });
+    const situationMedia = data.map((media: any, index: number) => ({
+      name: `Giấy xác nhận ${text}`,
+      status: "done",
+      url: media.link,
+    }));
     return situationMedia;
   };
 
-  const onSituationChange = () => {};
+  const onCmndChange = ({ data: newFileList }: any) => {
+    // const cmndList
+    setCmndList(newFileList);
+  };
+
+  const onSituationChange = ({ fileLsit: newFileList }: any, data: any) => {
+    // console.log(situationList);
+    // console.log(newFileList);
+    // console.log(data);
+    // const param = {
+    //   badLuckerTypeId: data.id,
+    // };
+  };
 
   // render initial Situation
   const renderSituation = () => {
@@ -131,7 +161,7 @@ const ProfileSituation = () => {
             <div>{getSituationText(1, s.situationId)}</div>
             <Button
               onClick={() => {
-                console.log(s);
+                setUpdateId(+s.id);
                 setOpenConfirmDialog(true);
               }}
             >
@@ -161,7 +191,7 @@ const ProfileSituation = () => {
                 getSituationText(2, s.situationId)
               )}
               className="profile-situation__container__list-situation__situation__upload__component"
-              onChange={onSituationChange}
+              onChange={(e) => onSituationChange(e, s)}
               customRequest={dummyRequest}
               isImageUrl={(file: any) => true}
             >
@@ -187,19 +217,20 @@ const ProfileSituation = () => {
         badLuckerTypeId: deleteId,
       }),
     },
-    () => {
+    (e) => {
+      setIsDelete(undefined);
+      setDeleteId(undefined);
+      const action = getUserById(e.data);
+      dispatch(action);
       setDialogTitle("Xóa hoàn cảnh thành công!");
       setOpenDialog(true);
-      setDeleteId(undefined);
-      setIsDelete(undefined);
     }
   );
 
   {
     /* Add new situation */
   }
-  // list of checkbox selected
-  const [selectedList, setSelectedList] = useState<any>([]);
+
   const onNewSituationChange = (value: any) => {
     setSelectedList(value);
   };
@@ -209,6 +240,12 @@ const ProfileSituation = () => {
     const itemPos = selectedList.indexOf(e);
     const { [itemPos]: item, ...rest } = selectedList;
     setSelectedList(Object.values(rest));
+    setNewSituationFile(
+      newSituationFile.filter(
+        (s: any) =>
+          s.id !== badluckerType.find((blk: any) => blk.name === e[0]).id
+      )
+    );
     return;
   };
 
@@ -232,7 +269,7 @@ const ProfileSituation = () => {
           closable
           onClose={() => onTagClose(tag, index)}
           key={tag}
-          className="profile-cascader__tags__tag"
+          className="profile-situation__container__add-situation__cascader__tags__tag"
           color={randomColor()}
         >
           {tag[0]}
@@ -240,13 +277,6 @@ const ProfileSituation = () => {
       );
     });
   };
-
-  const fileDefault: any = [
-    {
-      name: `Chứng minh nhân dân acb mặt 1.jpg`,
-      status: "done",
-    },
-  ];
 
   // onChange - upload new file in new situation
   const onNewSituationUpload = (
@@ -256,15 +286,32 @@ const ProfileSituation = () => {
   ) => {
     const newObj: ISituation = {
       id: id,
-      file: newFileList[0].originFileObj,
+      file: newFileList[newFileList.length - 1]?.originFileObj,
       value: value,
     };
 
-    if (newSituationFile.some((s: any) => s.id === newObj.id)) {
-      const situationFile = newSituationFile.map((s1: any) => {
-        return s1.id === newObj.id ? newObj : s1;
-      });
-      setNewSituationFile(situationFile);
+    const fileInUploadList = newSituationFile.filter((f: any) => f.id === id);
+
+    if (fileInUploadList.length > newFileList.length) {
+      const newUid: any = [];
+      newFileList.forEach((f: any) => newUid.push(f.uid));
+      const newFiles = newSituationFile.filter((f: any) => f.id === id);
+      const deleteUid = newFiles.filter(
+        (f: any) => newUid.indexOf(f.file.uid) < 0
+      )[0].file.uid;
+
+      setNewSituationFile(
+        newSituationFile.filter((f: any) => f.file.uid !== deleteUid)
+      );
+      return;
+    }
+
+    if (
+      newSituationFile.some(
+        (s: any) => s.id === newObj.id && s.file.uid === newObj.file.uid
+      )
+    ) {
+      return;
     } else {
       setNewSituationFile((arr) => [...arr, newObj]);
     }
@@ -291,7 +338,6 @@ const ProfileSituation = () => {
               </Button>
               <Upload
                 listType="picture"
-                defaultFileList={fileDefault}
                 maxCount={5}
                 className="profile-situation__container__list-situation__situation__upload__component"
                 onChange={(e) =>
@@ -311,18 +357,17 @@ const ProfileSituation = () => {
 
   // check if user upload enough files or not
   const checkSituationUpload = () => {
-    if (newSituationFile.length < selectedList.length) {
-      setOpenWarnDialog(true);
-    } else {
-      setIsSubmit(true);
-    }
+    // if (newSituationFile.length < selectedList.length) {
+    //   setOpenWarnDialog(true);
+    // } else {
+    setIsSubmit(true);
+    // }
   };
 
   // format new situation files to upload
   useEffect(() => {
-    const tmpSituation = newSituationFile.map((s: any) => {
-      return s.file;
-    });
+    const tmpSituation: any = [];
+    newSituationFile.forEach((f: any) => tmpSituation.push(f.file));
 
     let data = new FormData();
     for (let i = 0; i < tmpSituation.length; i++) {
@@ -342,16 +387,34 @@ const ProfileSituation = () => {
       body: submitFile,
     },
     (e) => {
-      const formatLink = {
+      setIsSubmit(undefined);
+
+      const formatLink: any = {
         badLuckType: [],
       };
-      const badLuckdata: any = newSituationFile.map((s: any, index: number) => {
+
+      const linkArray = e.data;
+      const combineArray: any = [];
+      for (let i = 0; i < newSituationFile.length; i++) {
+        combineArray.push({ id: newSituationFile[i].id, link: linkArray[i] });
+      }
+
+      const listId = [];
+      for (let i = 0; i < newSituationFile.length; i++) {
+        listId.push(newSituationFile[i].id);
+      }
+      const uniqueId = [...(new Set(listId) as any)];
+
+      const finalData = uniqueId.map((e) => {
         return {
-          id: s.id,
-          link: [e.data[index]],
+          id: e,
+          link: combineArray
+            .filter((data: any) => data.id === e)
+            .map((data1: any) => data1.link),
         };
       });
-      formatLink.badLuckType = badLuckdata;
+
+      formatLink.badLuckType = finalData;
       setResponseLink(formatLink);
     }
   );
@@ -369,10 +432,53 @@ const ProfileSituation = () => {
       method: "POST",
       body: JSON.stringify(responseLink),
     },
-    () => {
+    (e) => {
       setDialogTitle("Bạn đã gửi đơn xác nhận hộ nghèo thành công");
       setDialogDescription("Những người trong hệ thống sẽ xác nhận giúp bạn.");
+      setRerenderData(e.data);
       setOpenDialog(true);
+    }
+  );
+
+  const { data: updateSituationLink } = useFetch<any>(
+    "image/upload-multiple-file",
+    {},
+    false,
+    [isUpdate],
+    {
+      method: "POST",
+      body: submitFile,
+    },
+    (e) => {
+      setIsUpdate(undefined);
+
+      const formatLink: any = {
+        badLuckType: [],
+      };
+
+      const linkArray = e.data;
+      const combineArray: any = [];
+      for (let i = 0; i < newSituationFile.length; i++) {
+        combineArray.push({ id: newSituationFile[i].id, link: linkArray[i] });
+      }
+
+      const listId = [];
+      for (let i = 0; i < newSituationFile.length; i++) {
+        listId.push(newSituationFile[i].id);
+      }
+      const uniqueId = [...(new Set(listId) as any)];
+
+      const finalData = uniqueId.map((e) => {
+        return {
+          id: e,
+          link: combineArray
+            .filter((data: any) => data.id === e)
+            .map((data1: any) => data1.link),
+        };
+      });
+
+      formatLink.badLuckType = finalData;
+      setResponseLink(formatLink);
     }
   );
 
@@ -386,18 +492,20 @@ const ProfileSituation = () => {
           confirmText={Message.INFOR_CF_01}
           onConfirm={() => {
             setOpenDialog(false);
+            const action = getUserById(rerenderData);
+            dispatch(action);
           }}
         />
       ) : null}
       {openConfirmDialog ? (
         <AppDialog
-          type="warning"
+          type="confirm"
           title={"Bạn chắc chắn muốn cập nhật các giấy tờ này chứ?"}
           confirmText={"Xác nhận"}
           cancelText={"Đóng"}
           onConfirm={() => {
-            // setUpdateId(+s.id);
-            setOpenWarnDialog(false);
+            setIsUpdate(true);
+            setOpenConfirmDialog(false);
           }}
           onClose={() => {
             setOpenConfirmDialog(false);
@@ -415,7 +523,9 @@ const ProfileSituation = () => {
           confirmText={hasButtons ? "Xác nhận" : "Đóng"}
           cancelText={hasButtons ? "Đóng" : ""}
           onConfirm={() => {
-            setIsDelete(true);
+            if (hasButtons) {
+              setIsDelete(true);
+            }
             setOpenWarnDialog(false);
           }}
           onClose={() => {
@@ -427,11 +537,12 @@ const ProfileSituation = () => {
         <div className="profile-situation__container">
           <div className="profile-situation__container__list-situation">
             <div className="profile-situation__container__list-situation__title">
-              Your situation
+              Your situation ({situationList.length})
             </div>
             <div className="profile-situation__container__list-situation__cmnd">
               <div className="profile-situation__container__list-situation__cmnd__title-wrapper">
                 <div>Chứng minh nhân dân</div>
+                <Button onClick={() => {}}>Cập nhật</Button>
               </div>
               <div className="profile-situation__container__list-situation__cmnd__upload">
                 <Button
@@ -443,9 +554,10 @@ const ProfileSituation = () => {
                 <Upload
                   listType="picture"
                   defaultFileList={cmndList}
-                  fileList={cmndList}
+                  // fileList={cmndList}
                   className="profile-situation__container__list-situation__cmnd__upload__component"
                   customRequest={dummyRequest}
+                  onChange={onCmndChange}
                   maxCount={2}
                   isImageUrl={(file: any) => true}
                 >
@@ -470,23 +582,27 @@ const ProfileSituation = () => {
                 Confirm
               </Button>
             </div>
-            <div className="profile-cascader">
-              <div className="profile-cascader__text">
+            <div className="profile-situation__container__add-situation__cascader">
+              <div className="profile-situation__container__add-situation__cascader__text">
                 Bạn hãy chọn những hoàn cảnh phù hợp với hoàn cảnh của bạn :
               </div>
               <Cascader
                 options={options}
+                dropdownClassName="profile-situation-dropdown"
                 onChange={onNewSituationChange}
                 value={selectedList}
                 style={{ width: "100%" }}
-                className="profile-cascader__cascader"
+                className="profile-situation__container__add-situation__cascader__cascader"
                 multiple
                 maxTagCount={0}
                 maxTagPlaceholder={
                   <div>
                     <Tag
                       closable
-                      onClose={() => setSelectedList([])}
+                      onClose={() => {
+                        setSelectedList([]);
+                        setNewSituationFile([]);
+                      }}
                       color="#108ee9"
                     >
                       {selectedList.length}
@@ -496,7 +612,9 @@ const ProfileSituation = () => {
                 }
                 dropdownStyle={{ width: "100%" }}
               />
-              <div className="profile-cascader__tags">{renderTag()}</div>
+              <div className="profile-situation__container__add-situation__cascader__tags">
+                {renderTag()}
+              </div>
               {renderProof()}
             </div>
           </div>
