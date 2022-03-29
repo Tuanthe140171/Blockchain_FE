@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from "react-router-dom";
 import SelectBuyAmount from '../SelectBuyAmount';
 import PaymentMethod from '../PaymentMethod';
 import TransactionDetails from '../TransactionDetails';
@@ -10,29 +11,29 @@ import "./index.scss";
 
 export enum SUPPORTED_METHODS {
     MOMO,
-    BIDV,
-    TECHCOMBANK
+    // BIDV,
+    // TECHCOMBANK
 }
 
 const ALL_SUPPORTED_METHODS = {
-    [SUPPORTED_METHODS.BIDV]: {
-        label: "/icon/bidv.svg",
-        title: "BIDV",
-        account: "Mai Thi Chuyen",
-        accountNumber: "42710000387624"
-    },
+    // [SUPPORTED_METHODS.BIDV]: {
+    //     label: "/icon/bidv.svg",
+    //     title: "BIDV",
+    //     account: "Mai Thi Chuyen",
+    //     accountNumber: "42710000387624"
+    // },
     [SUPPORTED_METHODS.MOMO]: {
         label: "/icon/momo.svg",
         title: "MOMO",
         account: "Mai Thi Chuyen",
         accountNumber: "42710000387624"
-    },
-    [SUPPORTED_METHODS.TECHCOMBANK]: {
-        label: "/icon/techcombank.svg",
-        title: "TECHCOMBANK",
-        account: "Mai Thi Chuyen",
-        accountNumber: "42710000387624"
     }
+    // [SUPPORTED_METHODS.TECHCOMBANK]: {
+    //     label: "/icon/techcombank.svg",
+    //     title: "TECHCOMBANK",
+    //     account: "Mai Thi Chuyen",
+    //     accountNumber: "42710000387624"
+    // }
 }
 
 const Buy: React.FC = () => {
@@ -41,12 +42,19 @@ const Buy: React.FC = () => {
     const [inputAmount, setInputAmount] = useState<number>(0);
     const [currentStep, setCurrentStep] = useState<number>(0);
     const [openDialog, setOpenDialog] = useState(false);
+    const navigate = useNavigate();
+    let [searchParams] = useSearchParams();
+    const tab = searchParams.get('tab');
 
     useEffect(() => {
-        if (currentStep === 3) {
-            setOpenDialog(true);
-        }
+        // if (currentStep === 3) {
+        //     setOpenDialog(true);
+        // }
     }, [currentStep]);
+
+    useEffect(() => {
+        tab && setCurrentStep &&  setCurrentStep(parseInt(tab));
+    }, [tab, setCurrentStep]);
 
     const BUY_STEPS = [
         {
@@ -54,7 +62,10 @@ const Buy: React.FC = () => {
             description: "",
             component: (
                     <SelectBuyAmount
-                    setCurrentStep={() => setCurrentStep(1)}
+                    setCurrentStep={() => {
+                        navigate(`/exchange?tab=1&amount=${inputAmount}`);
+                        setCurrentStep(1)
+                    }}
                     onChange={input => setInputAmount(input)}
                     inputAmount={inputAmount}
                 />
@@ -63,12 +74,18 @@ const Buy: React.FC = () => {
         {
             title: "Payment method",
             description: "",
-            component: <PaymentMethod chosenPaymentMethod={paymentMethod} supportedPaymentMethods={ALL_SUPPORTED_METHODS} setPaymentMethod={setPaymentMethod} setCurrentStep={() => setCurrentStep(2)} />
+            component: <PaymentMethod chosenPaymentMethod={paymentMethod} supportedPaymentMethods={ALL_SUPPORTED_METHODS} setPaymentMethod={setPaymentMethod} setCurrentStep={() => {
+                navigate('/exchange')
+                setCurrentStep(0);
+            }} />
         },
         {
             title: "Verification",
             description: "",
-            component: <Verification paymentTxId={paymentTxId} setPaymentTxId={(text) => setPaymentTxId(text)} inputAmount={inputAmount} setCurrentStep={() => setCurrentStep(3)} />
+            component: <Verification paymentTxId={paymentTxId} setPaymentTxId={(text) => setPaymentTxId(text)} inputAmount={inputAmount} setCurrentStep={() => {
+                // navigate('/exchange?tab=3')
+                // setCurrentStep(3)
+            }} />
         },
         {
             title: "Confirmation",

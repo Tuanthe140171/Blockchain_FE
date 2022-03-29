@@ -2,7 +2,7 @@ import { Typography, InputNumber, Image, Button } from 'antd';
 import React from 'react';
 import "./index.scss";
 
-const MINIMUM_THRESHOLD = 200000;
+const MINIMUM_THRESHOLD = 9000;
 
 type SelectBuyAmountProps = {
     setCurrentStep: () => void,

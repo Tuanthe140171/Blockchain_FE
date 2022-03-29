@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Button, Input, message } from 'antd';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useWeb3React } from 'web3-react-core';
 import { BigNumber } from 'bignumber.js';
 import useFetch from '../../../../hooks/useFetch';
@@ -25,6 +26,13 @@ const Verification: React.FC<VerificationProps> = (props) => {
 
     const { account, chainId } = useWeb3React();
     const charityContract = useCharityVerseContract();
+    const [searchParams] = useSearchParams();
+    // const navigate = useNavigate();
+
+    const orderId = searchParams.get("orderId");
+    const orderMessage = searchParams.get("message");
+    const orderAmount = searchParams.get("amount");
+    const orderResultCode = searchParams.get("resultCode");
 
     const {
         explorer
@@ -58,6 +66,17 @@ const Verification: React.FC<VerificationProps> = (props) => {
     }, [data]);
 
     useEffect(() => {
+        if (orderMessage && orderResultCode) {
+            if (orderMessage === "Successful.") {
+                message.success("Bạn đã chuyển tiền thành công", 4);
+            } else if (orderMessage === "Transaction denied by user.") {
+                message.error("Bạn đã hủy giao dịch chuyển tiền", 4);
+                // navigate("/exchange?tab=0");
+            }
+        }
+    }, [orderMessage, orderResultCode]);
+
+    useEffect(() => {
         const issueTokens = async () => {
             try {
                 setStartIssuing(true);
@@ -82,7 +101,7 @@ const Verification: React.FC<VerificationProps> = (props) => {
             }
         }
 
-        startIssuing && data && charityContract && account && issueTokens();
+        // startIssuing && data && charityContract && account && issueTokens();
     }, [startIssuing, data, charityContract, account, inputAmount, setCurrentStep]);
 
     return (
@@ -90,9 +109,14 @@ const Verification: React.FC<VerificationProps> = (props) => {
             <Typography.Title level={4} className="verification__title">
                 3. Security verification
             </Typography.Title>
-            <Typography.Paragraph className="verification__input-title">
-                Enter email verification code
-            </Typography.Paragraph>
+            <div>
+                <span>Order ID: </span>
+                <span>{orderId}</span>
+            </div>
+            <div>
+                <span>Amount: </span>
+                <span>{orderAmount}</span>
+            </div>
             <Input
                 className="verification__input"
                 value={paymentTxId}
