@@ -8,48 +8,37 @@ import TimeLine from '../TimeLine';
 import Message from "../../../../constants/message";
 import AppDialog from '../../../../components/AppDialog';
 import "./index.scss";
+import useFetch from '../../../../hooks/useFetch';
 
 export enum SUPPORTED_METHODS {
     MOMO,
-    // BIDV,
-    // TECHCOMBANK
 }
 
 const ALL_SUPPORTED_METHODS = {
-    // [SUPPORTED_METHODS.BIDV]: {
-    //     label: "/icon/bidv.svg",
-    //     title: "BIDV",
-    //     account: "Mai Thi Chuyen",
-    //     accountNumber: "42710000387624"
-    // },
     [SUPPORTED_METHODS.MOMO]: {
         label: "/icon/momo.svg",
         title: "MOMO",
         account: "Mai Thi Chuyen",
         accountNumber: "42710000387624"
     }
-    // [SUPPORTED_METHODS.TECHCOMBANK]: {
-    //     label: "/icon/techcombank.svg",
-    //     title: "TECHCOMBANK",
-    //     account: "Mai Thi Chuyen",
-    //     accountNumber: "42710000387624"
-    // }
 }
 
 const Buy: React.FC = () => {
     const [paymentTxId, setPaymentTxId] = useState("");
     const [paymentMethod, setPaymentMethod] = useState(SUPPORTED_METHODS.MOMO);
-    const [inputAmount, setInputAmount] = useState<number>(0);
+    const [inputAmount, setInputAmount] = useState<string>('0');
     const [currentStep, setCurrentStep] = useState<number>(0);
     const [openDialog, setOpenDialog] = useState(false);
     const navigate = useNavigate();
     let [searchParams] = useSearchParams();
     const tab = searchParams.get('tab');
 
+    const { data, loading } = useFetch<{ paymentName: string, paymentNumber: string }>("payment/get-payment-information");
+
     useEffect(() => {
-        // if (currentStep === 3) {
-        //     setOpenDialog(true);
-        // }
+        if (currentStep === 3) {
+            setOpenDialog(true);
+        }
     }, [currentStep]);
 
     useEffect(() => {
@@ -62,19 +51,21 @@ const Buy: React.FC = () => {
             description: "",
             component: (
                     <SelectBuyAmount
+                    isBuy
                     setCurrentStep={() => {
                         navigate(`/exchange?tab=1&amount=${inputAmount}`);
                         setCurrentStep(1)
                     }}
                     onChange={input => setInputAmount(input)}
                     inputAmount={inputAmount}
+                    setInputAmount={setInputAmount}
                 />
             )
         },
         {
             title: "Payment method",
             description: "",
-            component: <PaymentMethod chosenPaymentMethod={paymentMethod} supportedPaymentMethods={ALL_SUPPORTED_METHODS} setPaymentMethod={setPaymentMethod} setCurrentStep={() => {
+            component: <PaymentMethod account={data?.paymentName || ""} accountNumber={data?.paymentNumber || ""} chosenPaymentMethod={paymentMethod} supportedPaymentMethods={ALL_SUPPORTED_METHODS} setPaymentMethod={setPaymentMethod} setCurrentStep={() => {
                 navigate('/exchange')
                 setCurrentStep(0);
             }} />
@@ -82,9 +73,9 @@ const Buy: React.FC = () => {
         {
             title: "Verification",
             description: "",
-            component: <Verification paymentTxId={paymentTxId} setPaymentTxId={(text) => setPaymentTxId(text)} inputAmount={inputAmount} setCurrentStep={() => {
-                // navigate('/exchange?tab=3')
-                // setCurrentStep(3)
+            component: <Verification paymentTxId={paymentTxId} setInputAmount={setInputAmount} setPaymentTxId={(text) => setPaymentTxId(text)} inputAmount={inputAmount} setCurrentStep={() => {
+                navigate('/exchange?tab=3')
+                setCurrentStep(3)
             }} />
         },
         {
@@ -107,7 +98,14 @@ const Buy: React.FC = () => {
                 />
                 {BUY_STEPS[currentStep].component}
             </div>
-            <TransactionDetails inputAmount={inputAmount} chosenPaymentMethod={ALL_SUPPORTED_METHODS[paymentMethod]} />
+            <TransactionDetails 
+                isBuy
+                loading={loading} 
+                account={data?.paymentNumber || ""} 
+                accountNumber={data?.paymentName || ""} 
+                inputAmount={inputAmount} 
+                chosenPaymentMethod={ALL_SUPPORTED_METHODS[paymentMethod]} 
+            />
             {openDialog ? (
                 <AppDialog
                     type="infor"
@@ -116,8 +114,9 @@ const Buy: React.FC = () => {
                     confirmText={Message.INFOR_CF_01}
                     onConfirm={() => {
                         setOpenDialog(false);
-                        setInputAmount(0);
+                        setInputAmount("0");
                         setCurrentStep(0);
+                        navigate(`/exchange?tab=0`);
                     }}
                 />
             ) : null}

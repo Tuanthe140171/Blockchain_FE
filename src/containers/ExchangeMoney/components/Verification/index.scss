@@ -123,3 +123,27 @@
         cursor: pointer;
     }
 }
+
+.order-detail {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    max-width: 600px;
+
+    &__label {
+        color: #002169 !important;
+    }
+
+    &__value {
+        text-align: left;
+        font-weight: bold;
+        color: #3156DB;
+    }
+
+    &:not(:first-child) {
+        margin-top: 10px;
+    }
+
+    &:first-child {
+        margin-top: 20px;
+    }
+}

@@ -16,13 +16,15 @@ type PaymentMethodProps = {
         accountNumber: string,
     }},
     setPaymentMethod: (method: number) => void,
-    chosenPaymentMethod: number
+    chosenPaymentMethod: number,
+    accountNumber: string,
+    account: string
 }
 
 type ProperMethod = SUPPORTED_METHODS.MOMO;
 
 const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
-    const { chosenPaymentMethod, supportedPaymentMethods, setPaymentMethod } = props;
+    const { chosenPaymentMethod, supportedPaymentMethods, setPaymentMethod, account, accountNumber } = props;
     const [searchParams] = useSearchParams();
     const [paymentURI, setPaymentURI] = useState<undefined | string>(undefined);
 
@@ -58,8 +60,8 @@ const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
                                 <Avatar className="payment__method-avatar" src={method.label} />
                                 <div className="payment__info">
                                     <p className="payment__banking">{method.title}</p>
-                                    <p className="payment__account">{method.account}</p>
-                                    <p className="payment__account-number">{method.accountNumber}</p>
+                                    <p className="payment__account">{account}</p>
+                                    <p className="payment__account-number">{accountNumber}</p>
                                 </div>
                                 {
                                     chosenPaymentMethod === parseInt(methodId) && <Image src="/icon/tick_1.svg" preview={false} className="payment__tick" />

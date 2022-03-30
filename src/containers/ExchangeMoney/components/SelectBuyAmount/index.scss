@@ -60,7 +60,35 @@
         font-size: 18px;
         line-height: 20px;
         color: #F6FAFF;
-        margin-top: 50px;
+        margin-top: 30px;
+    }
+
+    &__rate {
+        margin-top: 10px;
+        font-family: 'Readex-Light';
+        font-weight: 400;
+        font-size: 14px;
+        letter-spacing: 0.01em;
+        color: #2F497F;
+    }
+
+    &__addOns {
+        display: flex;
+        align-items: center;
+    }
+
+    &__max {
+        padding: 5px 20px;
+        background-color: #002169;
+        color: white;
+        border-radius: 50px;
+        margin-left: 20px;
+        cursor: pointer;
+        transition: .2s all ease-in;
+
+        &:hover {
+            background-color: #3156DB;
+        }
     }
 }
 
