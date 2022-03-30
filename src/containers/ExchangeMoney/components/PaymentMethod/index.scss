@@ -4,6 +4,15 @@
     text-align: left;
     margin-top: 35px;
 
+    &__uri {
+        margin-top: 25px;
+        display: block;
+        white-space: nowrap;
+        text-decoration: underline;
+        color: #3156DB;
+        cursor: pointer;
+    }
+
     &__title {
         font-style: normal;
         font-weight: 500;
@@ -24,7 +33,7 @@
         font-size: 18px;
         line-height: 20px;
         color: #F6FAFF;
-        margin-top: 50px;
+        margin-top: 30px;
     }
 
     &__methods {

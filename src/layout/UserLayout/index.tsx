@@ -296,7 +296,7 @@ const UserLayout: React.FC = (props): ReactElement => {
             className="main-layout__sider__menu__item"
             onClick={() => {
               setSelectedKey("Exchange");
-              navigate("/exchange");
+              navigate("/exchange?tab=0");
             }}
           >
             Exchange Money

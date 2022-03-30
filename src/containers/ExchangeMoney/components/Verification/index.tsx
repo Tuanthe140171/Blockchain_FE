@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Button, Input, message } from 'antd';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useWeb3React } from 'web3-react-core';
 import { BigNumber } from 'bignumber.js';
 import useFetch from '../../../../hooks/useFetch';
@@ -11,13 +12,14 @@ import "./index.scss";
 
 type VerificationProps = {
     setCurrentStep: () => void,
-    inputAmount: number,
+    inputAmount: string,
     paymentTxId: string,
     setPaymentTxId: (text: string) => void;
+    setInputAmount: React.Dispatch<React.SetStateAction<string>>
 }
 
 const Verification: React.FC<VerificationProps> = (props) => {
-    const { inputAmount, paymentTxId, setPaymentTxId, setCurrentStep } = props;
+    const { inputAmount, setInputAmount, paymentTxId, setPaymentTxId, setCurrentStep } = props;
 
     const [txHash, setTxHash] = useState<undefined | string>(undefined);
     const [startIssuing, setStartIssuing] = useState<boolean | undefined>(undefined);
@@ -25,6 +27,20 @@ const Verification: React.FC<VerificationProps> = (props) => {
 
     const { account, chainId } = useWeb3React();
     const charityContract = useCharityVerseContract();
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+
+    const orderId = searchParams.get("orderId");
+    const orderMessage = searchParams.get("message");
+    const orderAmount = searchParams.get("amount");
+    const orderResultCode = searchParams.get("resultCode");
+    const payType = searchParams.get("payType");
+
+    let disableButton = true;
+
+    if (orderResultCode && orderMessage === "Successful." && parseInt(orderResultCode) === 0) {
+        disableButton = false;
+    }
 
     const {
         explorer
@@ -58,6 +74,17 @@ const Verification: React.FC<VerificationProps> = (props) => {
     }, [data]);
 
     useEffect(() => {
+        if (orderMessage && orderResultCode) {
+            if (orderMessage === "Successful." && parseInt(orderResultCode) === 0) {
+                message.success("Bạn đã chuyển tiền thành công", 4);
+            } else if (orderMessage === "Transaction denied by user." && parseInt(orderResultCode) === 1006) {
+                message.error("Bạn đã hủy giao dịch chuyển tiền", 4);
+                navigate("/exchange?tab=0");
+            }
+        }
+    }, [orderMessage, orderResultCode, navigate]);
+
+    useEffect(() => {
         const issueTokens = async () => {
             try {
                 setStartIssuing(true);
@@ -85,26 +112,37 @@ const Verification: React.FC<VerificationProps> = (props) => {
         startIssuing && data && charityContract && account && issueTokens();
     }, [startIssuing, data, charityContract, account, inputAmount, setCurrentStep]);
 
+    useEffect(() => {
+        orderAmount && setInputAmount && setInputAmount(orderAmount);
+    }, [orderAmount, setInputAmount]);
+
     return (
         <div className="verification">
             <Typography.Title level={4} className="verification__title">
                 3. Security verification
             </Typography.Title>
-            <Typography.Paragraph className="verification__input-title">
-                Enter email verification code
-            </Typography.Paragraph>
-            <Input
-                className="verification__input"
-                value={paymentTxId}
-                onChange={e => setPaymentTxId(e.target.value)}
-            />
+            <div className="verification__order-detail">
+                <div className="order-detail">
+                    <span className="order-detail__label">Order ID: </span>
+                    <span className="order-detail__value">{orderId}</span>
+                </div>
+                <div className="order-detail">
+                    <span className="order-detail__label">Amount: </span>
+                    <span className="order-detail__value">{orderAmount} VND</span>
+                </div>
+                <div className="order-detail">
+                    <span className="order-detail__label">Phương thức trả tiền: </span>
+                    <span className="order-detail__value">{payType?.toUpperCase()}</span>
+                </div>
+            </div>
             <Button className="verification__btn"
                 onClick={() => {
                     setStartGettingSignature(true);
                 }}
-                disabled={paymentTxId.length <= 0 || loading || startIssuing}
+                disabled={disableButton}
+                // disabled={paymentTxId.length <= 0 || loading || startIssuing}
             >
-                Confirm
+                Đã chuyển tiền
             </Button>
             {
                 (loading || startIssuing) && (
