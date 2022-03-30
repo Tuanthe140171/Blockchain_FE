@@ -15,7 +15,7 @@ const DoneePage: React.FC = () => {
 
     const debouncedKeyword = useDebounce<string>(inputSearch, 500);
 
-    let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}&orderBy=${sortBy}`;
+    let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}&orderBy=${sortBy}&userType=4`;
 
     if (situations.length > 0) {
         situations.forEach((situation, key) => {

@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import useFetch from '../../../../hooks/useFetch';
+import { useSearchParams } from "react-router-dom";
 import { Typography, Button, Avatar, Image } from 'antd';
 import { SUPPORTED_METHODS } from '../Buy';
 import "./index.scss";
+import AppLoading from '../../../../components/AppLoading';
 
 type PaymentMethodProps = {
     setCurrentStep: () => void,
@@ -12,13 +16,34 @@ type PaymentMethodProps = {
         accountNumber: string,
     }},
     setPaymentMethod: (method: number) => void,
-    chosenPaymentMethod: number
+    chosenPaymentMethod: number,
+    accountNumber: string,
+    account: string
 }
 
-type ProperMethod = SUPPORTED_METHODS.BIDV | SUPPORTED_METHODS.TECHCOMBANK | SUPPORTED_METHODS.MOMO;
+type ProperMethod = SUPPORTED_METHODS.MOMO;
 
 const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
-    const { chosenPaymentMethod, supportedPaymentMethods, setPaymentMethod } = props;
+    const { chosenPaymentMethod, supportedPaymentMethods, setPaymentMethod, account, accountNumber } = props;
+    const [searchParams] = useSearchParams();
+    const [paymentURI, setPaymentURI] = useState<undefined | string>(undefined);
+
+    const inputAmount = searchParams.get("amount");
+
+    const { data, loading } = useFetch<string>(`payment/get-pay-url?amount=${inputAmount}`, 
+        {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+        }, 
+        false, 
+        [inputAmount], 
+        {}
+    );
+
+    useEffect(() => {
+        data && setPaymentURI(data);
+    }, [data]);
+
     return (
         <div className="payment">
             <Typography.Title level={4} className="payment__title">
@@ -35,8 +60,8 @@ const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
                                 <Avatar className="payment__method-avatar" src={method.label} />
                                 <div className="payment__info">
                                     <p className="payment__banking">{method.title}</p>
-                                    <p className="payment__account">{method.account}</p>
-                                    <p className="payment__account-number">{method.accountNumber}</p>
+                                    <p className="payment__account">{account}</p>
+                                    <p className="payment__account-number">{accountNumber}</p>
                                 </div>
                                 {
                                     chosenPaymentMethod === parseInt(methodId) && <Image src="/icon/tick_1.svg" preview={false} className="payment__tick" />
@@ -46,7 +71,15 @@ const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
                     })
                 }
             </div>
-            <Button className="payment__btn" onClick={props.setCurrentStep}>Confirm</Button>
+            {
+                paymentURI && <p className="payment__uri"  onClick={() => window.open(paymentURI, "_self")}>{paymentURI}</p>
+            }
+            <Button disabled={loading} className="payment__btn" onClick={props.setCurrentStep}>Back</Button>
+            {
+                loading && (
+                    <AppLoading loadingContent={<div></div>} showContent={false} />
+                )
+            }
         </div>
     )
 }
