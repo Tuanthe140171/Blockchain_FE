@@ -125,12 +125,14 @@
         }
 
         &__noti {
+          position: fixed;
           .ant-popover-inner-content {
             padding: 0;
           }
         }
 
         &__profile {
+          position: fixed;
           .ant-popover-inner-content {
             padding: 0;
           }
