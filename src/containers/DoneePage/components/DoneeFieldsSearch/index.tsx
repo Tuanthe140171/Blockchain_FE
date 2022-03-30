@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tag, Checkbox, Skeleton } from 'antd';
 import { CaretDownOutlined } from "@ant-design/icons";
 import "./index.scss";
@@ -15,22 +15,18 @@ type DoneeFieldsSearchProps = {
     propagateSelectedFields: React.Dispatch<React.SetStateAction<number[]>>
 }
 
-const DoneeFieldsSearch: React.FC<DoneeFieldsSearchProps> = React.memo((props) => {
+const DoneeFieldsSearch: React.FC<DoneeFieldsSearchProps> = (props) => {
     const { fields, title, loading = false, propagateSelectedFields } = props;
     const [selectedFields, setSelectedFields] = useState<number[]>([]);
     const [displayedFields, setDisplayedFields] = useState<FieldType[]>([]);
-    const [seeMore, setSeeMore] = useState<boolean>(false);
-
-    const memoDisplayedFields = useMemo(() => displayedFields, [displayedFields]);
-    const memoFields = useMemo(() => fields, [fields]);
 
     useEffect(() => {
         propagateSelectedFields && propagateSelectedFields(selectedFields);
     }, [selectedFields, propagateSelectedFields]);
 
     useEffect(() => {
-        memoFields.length > 5 ? setDisplayedFields(memoFields.slice(0, 5)) : setDisplayedFields(memoFields);
-    }, [memoFields]);
+        fields.length > 5 ? setDisplayedFields(fields.slice(0, 5)) : setDisplayedFields(fields);
+    }, [fields]);
 
     return (
         <>
@@ -56,7 +52,7 @@ const DoneeFieldsSearch: React.FC<DoneeFieldsSearchProps> = React.memo((props) =
                         </header>
                         <div className="fields-filter__list">
                             {
-                                memoDisplayedFields.map(field => (
+                                displayedFields.map(field => (
                                     <Checkbox
                                         checked={selectedFields.indexOf(parseInt(`${field.id}`)) >= 0}
                                         disabled={false}
@@ -81,11 +77,8 @@ const DoneeFieldsSearch: React.FC<DoneeFieldsSearchProps> = React.memo((props) =
                             }
                         </div>
                         {
-                            !seeMore && (
-                                <div className="fields-filter__more" onClick={() => {
-                                    setDisplayedFields(fields);
-                                    setSeeMore(true);
-                                }}>
+                            displayedFields.length < fields.length && (
+                                <div className="fields-filter__more" onClick={() => setDisplayedFields(fields)}>
                                     <span>Thêm</span>
                                     <CaretDownOutlined className="fields-filter__more-icon" />
                                 </div>
@@ -96,6 +89,6 @@ const DoneeFieldsSearch: React.FC<DoneeFieldsSearchProps> = React.memo((props) =
             }
         </>
     )
-})
+}
 
 export default DoneeFieldsSearch;
