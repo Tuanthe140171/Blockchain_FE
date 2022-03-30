@@ -8,10 +8,21 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Image, Popover } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import "./index.scss";
 
 const ProfileSocialMedia = () => {
+  const { userData } = useSelector((state: any) => state.userLayout);
+
+  // console.log(userData?.UserMedia);
+
+  // useEffect(()=>{
+  //   if(userData){
+
+  //   }
+  // }, [userData])
+
   const listImage = [
     {
       id: 0,
