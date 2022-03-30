@@ -70,15 +70,18 @@ const ProfilePerson = () => {
     }
   }, [userData]);
 
-  const { data: countryData } = useFetch<any>(
-    "assets/country",
+  const { data: provinceData } = useFetch<any>(
+    "assets/province",
     {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
     false,
     [],
-    {}
+    {},
+    (e) => {
+      console.log(e);
+    }
   );
 
   const onChange = ({ fileList: newFileList }: any) => {
@@ -315,10 +318,13 @@ const ProfilePerson = () => {
                     >
                       {/* <Input placeholder="Quốc gia" /> */}
                       <Select placeholder="Quốc gia">
-                        {countryData?.map((country: any) => {
+                        {provinceData?.map((province: any) => {
                           return (
-                            <Option key={country} value={`${country}`}>
-                              {country}
+                            <Option
+                              key={province.phone_code}
+                              value={`${province.name}`}
+                            >
+                              {province.name}
                             </Option>
                           );
                         })}

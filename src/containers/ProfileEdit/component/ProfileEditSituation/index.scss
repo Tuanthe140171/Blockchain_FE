@@ -137,6 +137,46 @@
           height: 51px;
         }
       }
+
+      &__cascader {
+        &__text {
+          font-size: 16px !important;
+          color: #a7b2c8 !important;
+          margin: 15px 0 !important;
+        }
+
+        &__cascader {
+          .ant-select-selection-item {
+            background: #ffffff !important;
+            border: none !important;
+          }
+        }
+
+        .ant-tag {
+          border-radius: 25px !important;
+        }
+
+        &__tags {
+          min-height: 60px !important;
+          margin: 20px 0 !important;
+
+          &__tag {
+            margin-bottom: 10px !important;
+          }
+        }
+      }
     }
   }
+}
+
+.profile-situation-dropdown {
+  & .ant-cascader-menu {
+    width: 747px;
+    height: auto;
+    max-height: 118px;
+  }
+}
+
+.ant-upload-list-picture .ant-upload-list-item-thumbnail img {
+  object-fit: cover !important;
 }
