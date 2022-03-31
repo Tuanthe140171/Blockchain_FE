@@ -18,13 +18,14 @@ type PaymentMethodProps = {
     setPaymentMethod: (method: number) => void,
     chosenPaymentMethod: number,
     accountNumber: string,
-    account: string
+    account: string, 
+    isBuy?: boolean
 }
 
 type ProperMethod = SUPPORTED_METHODS.MOMO;
 
 const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
-    const { chosenPaymentMethod, supportedPaymentMethods, setPaymentMethod, account, accountNumber } = props;
+    const { isBuy = true, chosenPaymentMethod, supportedPaymentMethods, setPaymentMethod, account, accountNumber } = props;
     const [searchParams] = useSearchParams();
     const [paymentURI, setPaymentURI] = useState<undefined | string>(undefined);
 
@@ -36,7 +37,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
             Accept: "application/json"
         }, 
         false, 
-        [inputAmount], 
+        isBuy ? [inputAmount]: [undefined], 
         {}
     );
 

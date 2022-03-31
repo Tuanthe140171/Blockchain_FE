@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from "react-router-dom";
 import SelectBuyAmount from '../SelectBuyAmount';
 import PaymentMethod from '../PaymentMethod';
 import TransactionDetails from '../TransactionDetails';
@@ -43,6 +44,10 @@ const Sell: React.FC = () => {
     const [currentStep, setCurrentStep] = useState<number>(0);
     const [openDialog, setOpenDialog] = useState(false);
 
+    const navigate = useNavigate();
+    let [searchParams] = useSearchParams();
+    const tab = searchParams.get('tab');
+
     const { data, loading } = useFetch<{ paymentName: string, paymentNumber: string }>("payment/get-payment-information");
 
     useEffect(() => {
@@ -66,12 +71,18 @@ const Sell: React.FC = () => {
         {
             title: "Payment method",
             description: "",
-            // component: <PaymentMethod setCurrentStep={() => setCurrentStep(2)} />
+            component: <PaymentMethod isBuy={false} account={data?.paymentName || ""} accountNumber={data?.paymentNumber || ""} chosenPaymentMethod={paymentMethod} supportedPaymentMethods={ALL_SUPPORTED_METHODS} setPaymentMethod={setPaymentMethod} setCurrentStep={() => {
+                navigate('/exchange')
+                setCurrentStep(0);
+            }} />
         },
         {
             title: "Verification",
             description: "",
-            component: <Verification paymentTxId={paymentTxId} setInputAmount={setInputAmount} setPaymentTxId={(text) => setPaymentTxId(text)} inputAmount={inputAmount} setCurrentStep={() => setCurrentStep(3)} />
+            component: <Verification paymentTxId={paymentTxId} setInputAmount={setInputAmount} setPaymentTxId={(text) => setPaymentTxId(text)} inputAmount={inputAmount} setCurrentStep={() => {
+                navigate('/exchange?tab=3')
+                setCurrentStep(3)
+            }} />
         },
         {
             title: "Confirmation",
