@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SelectBuyAmount from '../SelectBuyAmount';
 import PaymentMethod from '../PaymentMethod';
 import TransactionDetails from '../TransactionDetails';
-import Verification from '../Verification';
+import SellVerification from '../SellVerification';
 import TimeLine from '../TimeLine';
 import Message from "../../../../constants/message";
 import AppDialog from '../../../../components/AppDialog';
@@ -11,29 +11,15 @@ import useFetch from '../../../../hooks/useFetch';
 
 export enum SUPPORTED_METHODS {
     MOMO,
-    // BIDV,
-    // TECHCOMBANK
 }
 
 const ALL_SUPPORTED_METHODS = {
-    // [SUPPORTED_METHODS.BIDV]: {
-    //     label: "/icon/bidv.svg",
-    //     title: "BIDV",
-    //     account: "Mai Thi Chuyen",
-    //     accountNumber: "42710000387624"
-    // },
     [SUPPORTED_METHODS.MOMO]: {
         label: "/icon/momo.svg",
         title: "MOMO",
         account: "Mai Thi Chuyen",
         accountNumber: "42710000387624"
     }
-    // [SUPPORTED_METHODS.TECHCOMBANK]: {
-    //     label: "/icon/techcombank.svg",
-    //     title: "TECHCOMBANK",
-    //     account: "Mai Thi Chuyen",
-    //     accountNumber: "42710000387624"
-    // }
 }
 
 const Sell: React.FC = () => {
@@ -66,12 +52,16 @@ const Sell: React.FC = () => {
         {
             title: "Payment method",
             description: "",
-            // component: <PaymentMethod setCurrentStep={() => setCurrentStep(2)} />
+            component: <PaymentMethod isBuy={false} account={data?.paymentName || ""} accountNumber={data?.paymentNumber || ""} chosenPaymentMethod={paymentMethod} supportedPaymentMethods={ALL_SUPPORTED_METHODS} setPaymentMethod={setPaymentMethod} setCurrentStep={() => {
+                setCurrentStep(0);
+            }} onNext={() => { setCurrentStep(2) }}/>
         },
         {
             title: "Verification",
             description: "",
-            component: <Verification paymentTxId={paymentTxId} setInputAmount={setInputAmount} setPaymentTxId={(text) => setPaymentTxId(text)} inputAmount={inputAmount} setCurrentStep={() => setCurrentStep(3)} />
+            component: <SellVerification paymentTxId={paymentTxId} setInputAmount={setInputAmount} setPaymentTxId={(text: any) => setPaymentTxId(text)} inputAmount={inputAmount} setCurrentStep={() => {
+                setCurrentStep(3)
+            }} />
         },
         {
             title: "Confirmation",
@@ -97,12 +87,13 @@ const Sell: React.FC = () => {
             {openDialog ? (
                 <AppDialog
                     type="infor"
-                    title={"Bạn đã mua thành công thành công 100 coin từ nhà phát hành"}
+                    title={`Bạn đã bán thành công thành công ${inputAmount} coin từ nhà phát hành`}
                     description={Message.INFOR_DC_01}
                     confirmText={Message.INFOR_CF_01}
                     onConfirm={() => {
                         setOpenDialog(false);
                         setCurrentStep(0);
+                        setInputAmount("0");
                     }}
                 />
             ) : null}

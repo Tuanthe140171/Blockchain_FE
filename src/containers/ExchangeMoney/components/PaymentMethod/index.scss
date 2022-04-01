@@ -21,6 +21,11 @@
         color: #002169 !important;
     }
 
+    &__btns {
+        display: flex;
+        align-items: center;
+    }
+
     &__btn {
         font-family: 'Readex-Light';
         padding: 20px 49px;
@@ -34,6 +39,10 @@
         line-height: 20px;
         color: #F6FAFF;
         margin-top: 30px;
+    }
+
+    &__next {
+        margin-left: 10px;
     }
 
     &__methods {

@@ -1,0 +1,36 @@
+.order-input {
+    &__content {
+        padding: 40px;
+        background-color: white;
+        text-align: left;
+        margin-top: 35px;
+    }
+
+    &__title {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 30px;
+        color: #002169 !important;
+    }
+
+    &__input {
+        padding: 20px;
+        max-width: 500px;
+    }
+
+    &__btn {
+        font-family: 'Readex-Light';
+        padding: 20px 49px;
+        background: #3156DB;
+        display: flex;
+        align-items: center;
+        justify-self: center;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 20px;
+        color: #F6FAFF;
+        margin-top: 20px;
+    }
+}

@@ -103,6 +103,8 @@ const DashUser: React.FC<{
     const totalReceives = dayDatas.map((data: any) => parseInt(data.totalReceive));
     const totalGivings = dayDatas.map((data: any) =>  parseInt(data.totalDonation));
 
+    console.log(totalReceives);
+
     if (totalReceives.length >= 2 && totalReceives[totalReceives.length - 2] > 0) {
       receivingStatus.percentage = new BigNumber(totalReceives[totalReceives.length - 1]).div(1e18).minus(new BigNumber(totalReceives[totalReceives.length - 2]).div(1e18)).div(new BigNumber(totalReceives[totalReceives.length - 2]).div(1e18));
     } else {
@@ -127,11 +129,11 @@ const DashUser: React.FC<{
     amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
     status: ["loser"],
     doneeAvatar:(function(){
-      const userAvatar = transaction.toUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(0, 1).pop();
+      const userAvatar = transaction.toUser.UserMedia.filter((userMedia: any) => userMedia.type === "1"  && userMedia.active === 1).slice(0, 1).pop();
       return userAvatar ? userAvatar.link: null;
     }()),
     avatar: (function(){
-      const userAvatar = transaction.fromUser.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(0, 1).pop();
+      const userAvatar = transaction.fromUser.UserMedia.filter((userMedia: any) => userMedia.type === "1"  && userMedia.active === 1).slice(0, 1).pop();
       return userAvatar ? userAvatar.link: null;
     }())
   })) : [];

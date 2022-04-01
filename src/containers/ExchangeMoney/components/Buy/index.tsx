@@ -53,7 +53,7 @@ const Buy: React.FC = () => {
                     <SelectBuyAmount
                     isBuy
                     setCurrentStep={() => {
-                        navigate(`/exchange?tab=1&amount=${inputAmount}`);
+                        navigate(`/exchange?type=buy&tab=1&amount=${inputAmount}`)
                         setCurrentStep(1)
                     }}
                     onChange={input => setInputAmount(input)}
@@ -66,7 +66,7 @@ const Buy: React.FC = () => {
             title: "Payment method",
             description: "",
             component: <PaymentMethod account={data?.paymentName || ""} accountNumber={data?.paymentNumber || ""} chosenPaymentMethod={paymentMethod} supportedPaymentMethods={ALL_SUPPORTED_METHODS} setPaymentMethod={setPaymentMethod} setCurrentStep={() => {
-                navigate('/exchange')
+                navigate('/exchange?type=buy&tab=0')
                 setCurrentStep(0);
             }} />
         },
@@ -74,7 +74,7 @@ const Buy: React.FC = () => {
             title: "Verification",
             description: "",
             component: <Verification paymentTxId={paymentTxId} setInputAmount={setInputAmount} setPaymentTxId={(text) => setPaymentTxId(text)} inputAmount={inputAmount} setCurrentStep={() => {
-                navigate('/exchange?tab=3')
+                navigate('/exchange?type=buy&tab=3')
                 setCurrentStep(3)
             }} />
         },

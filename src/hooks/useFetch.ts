@@ -96,11 +96,16 @@ function useFetch<T = unknown>(
 
             navigate("/");
             return;
+          } else if (response.status === 404) {
+            const errorData = (await response.json()) as any;
+            if (errorData.status === 404 && errorData.message) {
+              throw new Error(errorData.message);
+            } 
           }
           throw new Error(response.statusText);
         }
 
-        const data = (await response.json()) as T;
+        const data = (await response.json()) as any;
 
         dispatch({
           type: "fetched",
