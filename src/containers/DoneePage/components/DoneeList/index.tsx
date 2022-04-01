@@ -68,7 +68,6 @@ const DoneeList: React.FC<DoneeListProps> = (props) => {
                 ) : (
                     <div className="donee-list__content">
                         {
-
                             donees.map(data => (
                                 <DoneeCard
                                     image={data.avatar}

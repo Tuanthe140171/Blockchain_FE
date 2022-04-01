@@ -1,0 +1,149 @@
+.verification {
+    padding: 40px;
+    background-color: white;
+    text-align: left;
+    margin-top: 35px;
+
+    & .ant-input-number-wrapper {
+        border: 1px solid #C3D1ED;
+        border-radius: 3px;
+    }
+
+    &__input {
+        width: 100%;
+        border: none;
+        font-weight: 300;
+        font-size: 18px;
+        letter-spacing: 0.01em;
+        color: #C3D1ED;
+        padding: 22px;
+        border: 1px solid #C3D1ED;
+        border-radius: 3px;
+    }
+
+    &__title {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 30px;
+        color: #002169 !important;
+    }
+
+    &__input-title {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 24px;
+        letter-spacing: 0.01em;
+        color: #2F497F;
+        margin-top: 56px;
+    }
+
+    &__icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 45px;
+
+        & > p {
+            margin-bottom: 0;
+        }
+    }
+
+    &__btn {
+        font-family: 'Readex-Light';
+        padding: 20px 49px;
+        background: #3156DB;
+        display: flex;
+        align-items: center;
+        justify-self: center;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 20px;
+        color: #F6FAFF;
+        margin-top: 50px;
+    }
+}
+
+.ant-input-number-group .ant-input-number {
+    float: none;
+}
+
+.ant-input-number-input-wrap {
+    margin-top: 20px;
+    border: none;
+}
+
+.ant-input-number-group-addon {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    position: relative;
+
+    &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1px;
+        height: 50%;
+        background-color: #E0E6F1;
+    }
+}
+
+.tx-info {
+    text-align: center;
+    &__title {
+        margin-bottom: 0;
+        color: #618AFB;
+        text-align: center;
+
+        & > strong {
+            font-family: 'Readex-Light';
+            font-size: 17px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50px;
+            color: #002169;
+        }
+    }
+
+    &__view-more {
+        margin-top: 0px;
+        font-size: 15px;
+        font-family: 'Readex-Light';
+        text-align: center;
+        margin: 0 auto;
+        display: block;
+        margin-top: 15px;
+        color: #618AFB;
+        font-weight: 300;
+        cursor: pointer;
+    }
+}
+
+.order-detail {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    max-width: 600px;
+
+    &__label {
+        color: #002169 !important;
+    }
+
+    &__value {
+        text-align: left;
+        font-weight: bold;
+        color: #3156DB;
+    }
+
+    &:not(:first-child) {
+        margin-top: 10px;
+    }
+
+    &:first-child {
+        margin-top: 20px;
+    }
+}

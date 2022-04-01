@@ -1,13 +1,47 @@
 import React, { useState } from "react";
-import { Typography, Table, Button, Input } from "antd";
+import { Typography, Table, Button, Input, Avatar } from "antd";
+import moment from 'moment';
 import VotingConfirmation from "./components/VotingConfirmation";
-import AppPagination from "../../components/AppPagination";
+import { SelectedUser } from "./components/VotingConfirmation";
+import useDebounce from "../../hooks/useDebounce";
+import useFetch from "../../hooks/useFetch";
+
 import "./index.scss";
+
 
 const { Search } = Input;
 
 const VotingPage: React.FC = () => {
     const [confirmationVisible, setConfirmationVisible] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [inputSearch, setInputSearch] = useState("");
+    const [selectedUser, setSelectedUser] = useState<SelectedUser | undefined>();
+
+    const debouncedKeyword = useDebounce<string>(inputSearch, 500);
+    
+    let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}&userType=3`;
+
+    const { data, loading } = useFetch<any>(url, {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+    });
+
+    const doneeData = data ? data.rows.map((donee: any) => ({
+        donee: `${donee.lastName || ""} ${donee.name}`,
+        dob: moment(donee.dob).format("DD-MM-yy"),
+        createDate: moment(donee.createDate).format("DD-MM-yy"),
+        address: `${donee.country} ${donee.baseAddress} ${donee.currentAddress}`,
+        id: donee.identityId,
+        situations: donee.BadLuckerSituations,
+        avatar: (function(){
+            const userAvatar = donee.UserMedia.filter((userMedia: any) => userMedia.type === "1" && userMedia.active === 1).slice(0, 1).pop();
+            return userAvatar ? userAvatar.link: null;
+        }()),
+        identityPlace: donee.identityPlace,
+        identityDate: donee.identityDate,
+        status: "check"
+    })): [];
+
 
     const columns = [
         {
@@ -18,7 +52,15 @@ const VotingPage: React.FC = () => {
         {
             title: 'Donee',
             dataIndex: 'donee',
-            width: '10%'
+            width: '15%',
+            render: (text: any, row: any, index: any) => {
+                return (
+                    <div className="voting__donee">
+                        <Avatar src={row.avatar} />
+                        <span>{text}</span>
+                    </div>
+                )
+            }
         },
         {
             title: 'Address',
@@ -26,38 +68,43 @@ const VotingPage: React.FC = () => {
         },
         {
             title: 'Date of Birth',
-            dataIndex: 'date',
+            dataIndex: 'dob',
             width: '10%'
         },
         {
             title: 'Hoàn cảnh',
-            dataIndex: 'situation',
-            width: '20%',
+            dataIndex: 'situations',
+            width: '25%',
             render: (text: any, row: any, index: any) => {
                 return (
                     <div className="voting__situation">
-                        <span>{text}</span>
-                        {
-                            row.more % 2 === 0 && <span className="voting__situation-more">3 more</span>
-                        }
+                        <span>{row.situations[0].message}</span>
+                        <div>
+                            {
+                                row.situations.length >= 2 && <span className="voting__situation-more">{row.situations.length - 1} more</span>
+                            }
+                        </div>
                     </div>
                 )
             }
         },
         {
             title: 'Time summit',
-            dataIndex: 'time',
+            dataIndex: 'createDate',
             width: '10%'
         },
         {
             title: 'Status',
             dataIndex: 'status',
-            width: '20%',
+            width: '15%',
             render: (text: any, row: any, index: any) => {
                 return (
                     <Button
                         className={`voting__check-btn voting__check-btn--${text.toLowerCase()}`}
-                        onClick={() => text.toLowerCase() === "check" && setConfirmationVisible(true)}
+                        onClick={() => {
+                            setSelectedUser(row);
+                            setConfirmationVisible(true);
+                        }}
                     >
                         {text}
                     </Button>
@@ -67,20 +114,7 @@ const VotingPage: React.FC = () => {
     ];
 
     const { Title } = Typography;
-    const data = [];
-    for (let i = 0; i < 100; i++) {
-        data.push({
-            key: i,
-            id: i,
-            donee: `Edward King ${i}`,
-            address: `London, Park Lane no. ${i}`,
-            date: "10/01/2020",
-            situation: i % 2 === 0 ? "Người khuyết tật" : "Người nghèo",
-            time: "02/02/1990",
-            status: i % 2 === 0 ? "Claimed" : "Check",
-            more: i
-        });
-    }
+   
     return (
         <div className="voting">
             <Title level={3} className="voting__title">
@@ -91,13 +125,19 @@ const VotingPage: React.FC = () => {
                     <Title level={4} className="voting__list-title">
                         Pre-Donee list
                     </Title>
-                    <Search placeholder="Search donee, history..." onSearch={() => { }} style={{ width: 260 }} className="voting__list-input" />
+                    <Search 
+                        placeholder="Search donee, history..." 
+                        onChange={(e: any) => { setInputSearch(e.target.value) }} 
+                        style={{ width: 260 }} 
+                        className="voting__list-input" 
+                    />
                 </div>
-                <Table className="voting__table" bordered={false} columns={columns} dataSource={data} scroll={{ y: 400 }} />
+                <Table loading={loading} className="voting__table" bordered={false} columns={columns} dataSource={doneeData} scroll={{ y: 400 }} />
                 <VotingConfirmation 
                     visible={confirmationVisible} 
                     onClose={() => setConfirmationVisible(false)} 
                     setConfirmationVisible={setConfirmationVisible}
+                    selectedUser={selectedUser}
                 />
             </div>
         </div>

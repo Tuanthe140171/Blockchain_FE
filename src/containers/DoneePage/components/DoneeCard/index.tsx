@@ -45,7 +45,6 @@ const DoneeCard: React.FC<DoneeCardProps> = (props: DoneeCardProps) => {
                         more > 0 && <div className="donee-card__more">+{more} more</div>
                     }
                 </div>
-                {/* <p className="donee-card__desc">{desc}</p> */}
                 <div className="donee-card__metrics">
                     <div className="donee-card__tier donee-card__metrics-block">
                         <span>{tierOfCharity}%</span>

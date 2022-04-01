@@ -49,19 +49,13 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
     }, [charityContract]);
 
     useEffect(() => {
-        let interval: any;
-
         const getCRVBalance = async () => {
             const balance = await charityContract.balanceOf(account);
             setUserBalance(new BigNumber(ethers.utils.formatEther(balance)).toFixed(2));
         }
 
-        charityContract && account && getCRVBalance();
-
-        return () => {
-            clearInterval(interval);
-        }
-    }, [charityContract, account]);
+        charityContract && (account || txHash) && getCRVBalance();
+    }, [charityContract, account, txHash]);
 
     const handleUserDonation = async () => {
         try {
