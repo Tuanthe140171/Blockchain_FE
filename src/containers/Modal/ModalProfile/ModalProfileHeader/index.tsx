@@ -24,8 +24,8 @@ const ModalProfileHeader = () => {
         />
         <div className="modal-profile__header__avatar-group__name-group">
           <div className="modal-profile__header__avatar-group__name-group__name">
-            {`${userData.lastName ? userData.lastName : "Người"} ${
-              userData.name ? userData.name : "dùng"
+            {`${userData?.lastName ? userData?.lastName : "Người"} ${
+              userData?.name ? userData?.name : "dùng"
             }`}
           </div>
           <div className="modal-profile__header__avatar-group__name-group__description">

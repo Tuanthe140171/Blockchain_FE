@@ -1,9 +1,59 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import useFetch from "../../../../../../hooks/useFetch";
 import ProfileSocialPost from "../ProfileSocialPost";
 
 import "./index.scss";
 
 const ProfileSocialPosts: React.FC = (props) => {
+  const { userData, badluckerType } = useSelector(
+    (state: any) => state.userLayout
+  );
+  const [postList, setPostList] = useState([]);
+  const avatarLink = userData?.UserMedia.find(
+    (media: any) => media.type === "1" && media.active === 1
+  )
+    ? userData?.UserMedia.find(
+        (media: any) => media.type === "1" && media.active === 1
+      ).link
+    : "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
+
+  const getTimeDiff = (time: any) => {
+    var now = new Date();
+    var then = new Date(time);
+    return "20h";
+  };
+
+  const { data: userPost } = useFetch<any>(
+    "post/get-post-all-time?limit=10&offset=0",
+    {},
+    false,
+    [],
+    { method: "GET" },
+    (e) => {
+      const formatPosts = e.data.map((post: any) => {
+        return {
+          images: post.PostMedia?.map((p: any) => {
+            return p.link;
+          }),
+          poster: {
+            name: `${userData?.lastName ? userData?.lastName : "Người"} ${
+              userData?.name ? userData?.name : "dùng"
+            }`,
+            avatar: avatarLink,
+          },
+          timestamp: getTimeDiff(post.createDate),
+          content: post.content,
+          contentShortcut: post.content?.substring(0, 200),
+          likes: 100,
+          comments: 0,
+        };
+      });
+
+      setPostList(formatPosts);
+    }
+  );
+
   const posts = [
     {
       images: [],
@@ -38,7 +88,7 @@ const ProfileSocialPosts: React.FC = (props) => {
 
   return (
     <div className="profile-social__posts">
-      {posts.map((post, index) => {
+      {postList.map((post, index) => {
         const {
           images,
           poster,
@@ -58,7 +108,7 @@ const ProfileSocialPosts: React.FC = (props) => {
               contentShortcut={contentShortcut}
               likes={likes}
               comments={comments}
-              seeMore={contentShortcut.length > 0}
+              seeMore={contentShortcut}
             />
           </React.Fragment>
         );

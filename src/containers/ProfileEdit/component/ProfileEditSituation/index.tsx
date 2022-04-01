@@ -20,44 +20,46 @@ const dummyRequest = ({ file, onSuccess }: any) => {
   }, 0);
 };
 
-// them moi : id = 0.
-// update: truyen id cua can update
-
 const ProfileSituation = () => {
   const { userData, badluckerType } = useSelector(
     (state: any) => state.userLayout
   );
   const dispatch = useDispatch();
-  // list initial cmnd
-  const [cmndList, setCmndList] = useState<any>([]);
-  // list temp cmnd id
-  const [tempId, setTempId] = useState<any>([]);
-  const [fileCmndList, setFileCmndList] = useState<any>(null);
-  // list submit cmnd
-  const [submitCmndList, setSubmitCmndList] = useState<any>([]);
-  // list initial situation
-  const [situationList, setSituationList] = useState<any>([]);
-  const [isUpdateCmnd, setIsUpdateCmnd] = useState<any>(undefined);
-  const [isSubmitCmnd, setIsSubmitCmnd] = useState<any>(undefined);
-  const [canUpdateCmnd, setCanUpdateCmnd] = useState(false);
-  // list new situation
-  const [newSituationFile, setNewSituationFile] = useState<ISituation[]>([]);
-  // list option of situation checkbox
-  const [options, setOptions] = useState([]);
-  // open infor dialog or not
-  const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);
-  // open infor dialog or not
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
-  // open warning dialog when not enough form
-  const [openWarnDialog, setOpenWarnDialog] = useState(false);
-  // set warning dialog has 2 buttons or not
-  const [hasButtons, setHasButtons] = useState(false);
+
+  /** Right side **/
   // set call api or not
   const [isSubmit, setIsSubmit] = useState<any>(undefined);
   // list of file when call api upload-multiple-file
   const [submitFile, setSubmitFile] = useState<any>([]);
   // list of link response of api upload-multiple-file
   const [responseLink, setResponseLink] = useState<any>(undefined);
+  // list new situation
+  const [newSituationFile, setNewSituationFile] = useState<ISituation[]>([]);
+  // list option of situation checkbox
+  const [options, setOptions] = useState([]);
+
+  const [rerenderData, setRerenderData] = useState<any>(null);
+
+  /** Left side */
+  // CMND state
+  // list initial cmnd
+  const [cmndList, setCmndList] = useState<any>([]);
+  // list temp cmnd id
+  const [tempId, setTempId] = useState<any>([]);
+  // list of cmnd upload to get link
+  const [fileCmndList, setFileCmndList] = useState<any>(null);
+  // list submit cmnd
+  const [submitCmndList, setSubmitCmndList] = useState<any>([]);
+  // set update cmnd or not
+  const [isUpdateCmnd, setIsUpdateCmnd] = useState<any>(undefined);
+  // set can submit cmnd after get links
+  const [isSubmitCmnd, setIsSubmitCmnd] = useState<any>(undefined);
+  // set can update cmnd after changing files
+  const [canUpdateCmnd, setCanUpdateCmnd] = useState(false);
+
+  // Base situation list
+  // list initial situation
+  const [situationList, setSituationList] = useState<any>([]);
   // id of situation that user want to delete
   const [deleteId, setDeleteId] = useState<any>(undefined);
   // set call api delete or not
@@ -69,17 +71,24 @@ const ProfileSituation = () => {
   // list of checkbox selected
   const [selectedList, setSelectedList] = useState<any>([]);
 
+  /** Dialog */
   // dialog infor data
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogDescription, setDialogDescription] = useState("");
-
-  const [rerenderData, setRerenderData] = useState<any>(null);
+  // open infor dialog or not
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  // open confirm dialog or not
+  const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);
+  // open warning dialog when not enough form
+  const [openWarnDialog, setOpenWarnDialog] = useState(false);
+  // set warning dialog has 2 buttons or not
+  const [hasButtons, setHasButtons] = useState(false);
 
   useEffect(() => {
+    console.log("hello");
+
     if (userData) {
       const cmnd = userData?.UserMedia.filter((data: any) => data.type === "3");
-      console.log(cmnd);
-
       setCmndList([
         {
           name: `CMND mặt 1`,
@@ -139,9 +148,7 @@ const ProfileSituation = () => {
     }
   }, [userData, badluckerType]);
 
-  // const onChange = ({ fileList: newFileList }: any) => {
-  //   setCmndList(newFileList);
-  // };
+  /** Function about base situations */
 
   // get initial Situation text
   const getSituationText = (type: number, situationId: string) => {
@@ -158,91 +165,6 @@ const ProfileSituation = () => {
       url: media.link,
     }));
     return situationMedia;
-  };
-
-  const onCmndChange = ({ fileList: newFileList }: any) => {
-    // const cmndList
-    setCmndList(newFileList);
-    console.log(newFileList);
-
-    let data = new FormData();
-    const modifyCmnd = newFileList.map((f: any, index: number) => {
-      if (!f.lastModified) {
-        return { id: tempId[index], link: f.url };
-      } else {
-        data.append("files", f.originFileObj);
-        return { id: tempId[index], file: f.originFileObj };
-      }
-    });
-    setFileCmndList(data);
-    setSubmitCmndList(modifyCmnd);
-    setCanUpdateCmnd(true);
-  };
-
-  const onCmndUpdate = () => {
-    if (submitCmndList.length < 2) {
-      setOpenWarnDialog(true);
-    } else {
-      setIsUpdateCmnd(true);
-    }
-  };
-
-  const { data: linkCmnd, loading: loadingGetLinkCmnd } = useFetch<any>(
-    "image/upload-multiple-file",
-    {},
-    false,
-    [isUpdateCmnd],
-    {
-      method: "POST",
-      body: fileCmndList,
-    },
-    (e) => {
-      setIsUpdateCmnd(undefined);
-      let modifyList;
-      if (e.data.length === 1) {
-        modifyList = submitCmndList.map((cmnd: any) => {
-          return cmnd.file ? { id: cmnd.id, link: e.data[0] } : cmnd;
-        });
-      } else {
-        modifyList = submitCmndList.map((cmnd: any, index: number) => {
-          return { id: cmnd.id, link: e.data[index] };
-        });
-      }
-      setSubmitCmndList(modifyList);
-      console.log(modifyList);
-
-      setIsSubmitCmnd(true);
-    }
-  );
-
-  const { data: updateCmnd, loading: loadingUpdateCmnd } = useFetch<any>(
-    "users/update-identity-image",
-    {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    false,
-    [isSubmitCmnd],
-    {
-      method: "PUT",
-      body: JSON.stringify(submitCmndList),
-    },
-    (e) => {
-      setIsSubmitCmnd(undefined);
-      console.log(e);
-      setDialogTitle("Cập nhật CMND thành công!");
-      setOpenDialog(true);
-      // const action = getUserById(e);
-    }
-  );
-
-  const onSituationChange = ({ fileLsit: newFileList }: any, data: any) => {
-    // console.log(situationList);
-    // console.log(newFileList);
-    // console.log(data);
-    // const param = {
-    //   badLuckerTypeId: data.id,
-    // };
   };
 
   // render initial Situation
@@ -282,7 +204,11 @@ const ProfileSituation = () => {
             </Button>
             <Upload
               listType="picture"
-              defaultFileList={getSituationMedia(
+              // defaultFileList={getSituationMedia(
+              //   s.BadLuckMedia,
+              //   getSituationText(2, s.situationId)
+              // )}
+              fileList={getSituationMedia(
                 s.BadLuckMedia,
                 getSituationText(2, s.situationId)
               )}
@@ -297,6 +223,15 @@ const ProfileSituation = () => {
         </div>
       );
     });
+  };
+
+  const onSituationChange = ({ fileLsit: newFileList }: any, data: any) => {
+    // console.log(situationList);
+    // console.log(newFileList);
+    // console.log(data);
+    // const param = {
+    //   badLuckerTypeId: data.id,
+    // };
   };
 
   const { data: deletedSituation, loading: loadingDeleteSituation } =
@@ -315,19 +250,136 @@ const ProfileSituation = () => {
         }),
       },
       (e) => {
-        setIsDelete(undefined);
-        setDeleteId(undefined);
         const action = getUserById(e.data);
         dispatch(action);
+        // setSituationList(e.data.BadLuckTypes);
+        setIsDelete(undefined);
+        setDeleteId(undefined);
         setDialogTitle("Xóa hoàn cảnh thành công!");
         setOpenDialog(true);
       }
     );
 
-  {
-    /* Add new situation */
-  }
+  const { data: updateSituationLink, loading: loadingUpdateSituation } =
+    useFetch<any>(
+      "image/upload-multiple-file",
+      {},
+      false,
+      [isUpdate],
+      {
+        method: "POST",
+        body: submitFile,
+      },
+      (e) => {
+        setIsUpdate(undefined);
 
+        const formatLink: any = {
+          badLuckType: [],
+        };
+
+        const linkArray = e.data;
+        const combineArray: any = [];
+        for (let i = 0; i < newSituationFile.length; i++) {
+          combineArray.push({ id: newSituationFile[i].id, link: linkArray[i] });
+        }
+
+        const listId = [];
+        for (let i = 0; i < newSituationFile.length; i++) {
+          listId.push(newSituationFile[i].id);
+        }
+        const uniqueId = [...(new Set(listId) as any)];
+
+        const finalData = uniqueId.map((e) => {
+          return {
+            id: e,
+            link: combineArray
+              .filter((data: any) => data.id === e)
+              .map((data1: any) => data1.link),
+          };
+        });
+
+        formatLink.badLuckType = finalData;
+        setResponseLink(formatLink);
+      }
+    );
+
+  /** Functions about CMND */
+  // when user change cmnd files
+  const onCmndChange = ({ fileList: newFileList }: any) => {
+    // const cmndList
+    setCmndList(newFileList);
+    let data = new FormData();
+    const modifyCmnd = newFileList.map((f: any, index: number) => {
+      if (!f.lastModified) {
+        return { id: tempId[index], link: f.url };
+      } else {
+        data.append("files", f.originFileObj);
+        return { id: tempId[index], file: f.originFileObj };
+      }
+    });
+    setFileCmndList(data);
+    setSubmitCmndList(modifyCmnd);
+    setCanUpdateCmnd(true);
+  };
+
+  // when user update cmnd files
+  const onCmndUpdate = () => {
+    if (submitCmndList.length < 2) {
+      setOpenWarnDialog(true);
+    } else {
+      setIsUpdateCmnd(true);
+    }
+  };
+
+  const { data: linkCmnd, loading: loadingGetLinkCmnd } = useFetch<any>(
+    "image/upload-multiple-file",
+    {},
+    false,
+    [isUpdateCmnd],
+    {
+      method: "POST",
+      body: fileCmndList,
+    },
+    (e) => {
+      setIsUpdateCmnd(undefined);
+      let modifyList;
+      if (e.data.length === 1) {
+        modifyList = submitCmndList.map((cmnd: any) => {
+          return cmnd.file ? { id: cmnd.id, link: e.data[0] } : cmnd;
+        });
+      } else {
+        modifyList = submitCmndList.map((cmnd: any, index: number) => {
+          return { id: cmnd.id, link: e.data[index] };
+        });
+      }
+      setSubmitCmndList(modifyList);
+
+      setIsSubmitCmnd(true);
+    }
+  );
+
+  const { data: updateCmnd, loading: loadingUpdateCmnd } = useFetch<any>(
+    "users/update-identity-image",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [isSubmitCmnd],
+    {
+      method: "PUT",
+      body: JSON.stringify(submitCmndList),
+    },
+    (e) => {
+      setIsSubmitCmnd(undefined);
+      setDialogTitle("Cập nhật CMND thành công!");
+      setOpenDialog(true);
+      // const action = getUserById(e);
+    }
+  );
+
+  /**  Fucntion about new situation **/
+  // when user change new situation
   const onNewSituationChange = (value: any) => {
     setSelectedList(value);
   };
@@ -537,49 +589,6 @@ const ProfileSituation = () => {
     }
   );
 
-  const { data: updateSituationLink, loading: loadingUpdateSituation } =
-    useFetch<any>(
-      "image/upload-multiple-file",
-      {},
-      false,
-      [isUpdate],
-      {
-        method: "POST",
-        body: submitFile,
-      },
-      (e) => {
-        setIsUpdate(undefined);
-
-        const formatLink: any = {
-          badLuckType: [],
-        };
-
-        const linkArray = e.data;
-        const combineArray: any = [];
-        for (let i = 0; i < newSituationFile.length; i++) {
-          combineArray.push({ id: newSituationFile[i].id, link: linkArray[i] });
-        }
-
-        const listId = [];
-        for (let i = 0; i < newSituationFile.length; i++) {
-          listId.push(newSituationFile[i].id);
-        }
-        const uniqueId = [...(new Set(listId) as any)];
-
-        const finalData = uniqueId.map((e) => {
-          return {
-            id: e,
-            link: combineArray
-              .filter((data: any) => data.id === e)
-              .map((data1: any) => data1.link),
-          };
-        });
-
-        formatLink.badLuckType = finalData;
-        setResponseLink(formatLink);
-      }
-    );
-
   return (
     <>
       {openDialog ? (
@@ -589,9 +598,13 @@ const ProfileSituation = () => {
           description={dialogDescription}
           confirmText={Message.INFOR_CF_01}
           onConfirm={() => {
-            setOpenDialog(false);
-            const action = getUserById(rerenderData);
-            dispatch(action);
+            if (dialogTitle === "Bạn đã gửi đơn xác nhận hộ nghèo thành công") {
+              setOpenDialog(false);
+              const action = getUserById(rerenderData);
+              dispatch(action);
+            } else {
+              setOpenDialog(false);
+            }
           }}
         />
       ) : null}

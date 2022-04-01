@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Avatar, Image } from "antd";
-
 import "./index.scss";
 
 export type ProfileSocialPostProps = {
@@ -30,22 +29,133 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
     comments,
   } = props;
 
+  const customRenderImage = () => {
+    if (images.length === 1) {
+      return (
+        <div className="profile-post__images__one">
+          <Image
+            preview={true}
+            // width={200}
+            src={images[0]}
+            // onClick={() => setVisible(true)}
+          />
+        </div>
+      );
+    } else if (images.length === 2) {
+      return (
+        <div className="profile-post__images__two">
+          <Image
+            preview={true}
+            src={images[0]}
+            // onClick={() => setVisible(true)}
+          />
+          <Image
+            preview={true}
+            // width={200}
+            src={images[1]}
+            // onClick={() => setVisible(true)}
+          />
+        </div>
+      );
+    } else if (images.length === 3) {
+      return (
+        <div className="profile-post__images__three">
+          <Image
+            preview={true}
+            src={images[0]}
+            // onClick={() => setVisible(true)}
+          />{" "}
+          <div>
+            <Image
+              preview={true}
+              src={images[1]}
+              // onClick={() => setVisible(true)}
+            />
+            <Image
+              preview={true}
+              src={images[2]}
+              // onClick={() => setVisible(true)}
+            />{" "}
+          </div>
+        </div>
+      );
+    } else if (images.length === 4) {
+      return (
+        <div className="profile-post__images__four">
+          <div>
+            <Image
+              preview={true}
+              src={images[1]}
+              // onClick={() => setVisible(true)}
+            />{" "}
+            <Image
+              preview={true}
+              src={images[2]}
+              // onClick={() => setVisible(true)}
+            />{" "}
+          </div>
+          <div>
+            <Image
+              preview={true}
+              src={images[3]}
+              // onClick={() => setVisible(true)}
+            />{" "}
+            <Image
+              preview={true}
+              src={images[4]}
+              // onClick={() => setVisible(true)}
+            />{" "}
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="profile-post__images__five">
+          <div>
+            <Image
+              preview={true}
+              src={images[0]}
+              // onClick={() => setVisible(true)}
+            />{" "}
+            <Image
+              preview={true}
+              src={images[0]}
+              // onClick={() => setVisible(true)}
+            />{" "}
+          </div>
+          <div>
+            <Image
+              preview={true}
+              src={images[0]}
+              // onClick={() => setVisible(true)}
+            />{" "}
+            <Image
+              preview={true}
+              src={images[0]}
+              // onClick={() => setVisible(true)}
+            />{" "}
+          </div>
+        </div>
+      );
+    }
+  };
+
   return (
     <div className="profile-post" key={props.content}>
       <div className="profile-post__poster">
         <Avatar src={poster.avatar} className="poster__avatar" />
         <div className="poster__info">
           <p className="poster__name">{poster.name}</p>
-          <p className="poster__timestamp">
+          <div className="poster__timestamp">
             <span>{timestamp}</span>
             <Image src="/icon/globe.svg" className="poster__timestamp-icon" />
-          </p>
+          </div>
         </div>
       </div>
       <div className="profile-post__content">
-        {contentShortcut.length > 0 && !seeMore ? contentShortcut : content}
+        {contentShortcut?.length > 0 && !seeMore ? contentShortcut : content}
       </div>
-      {contentShortcut.length > 0 && (
+      {contentShortcut?.length < content?.length && (
         <div
           className="profile-post__see-more"
           onClick={() => setSeeMore(true)}
@@ -53,7 +163,9 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
           <span>... see more</span>
         </div>
       )}
-      {images.length > 0 && <div className="profile-post__images"></div>}
+      {images.length > 0 && (
+        <div className="profile-post__images">{customRenderImage()}</div>
+      )}
       <div className="profile-post__metrics">
         <div className="metrics__likes">
           <Image src="/icon/1.svg" preview={false} />
