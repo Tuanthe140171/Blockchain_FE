@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Image, Avatar } from 'antd';
-import moment from 'moment';
+import { useNavigate } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
+import moment from 'moment';
 // import { useNavigate } from "react-router-dom";
 import AppDrawer from "../../../../components/AppDrawer";
 import VotingSituationView from "../VotingSituationView";
@@ -14,10 +15,12 @@ export type SelectedUser = {
     address: string,
     id: string,
     situations: any,
+    situationsType: any,
     avatar: string | null,
     identityPlace: string,
     identityDate: string,
-    status: string
+    status: string,
+    userId: string
 }
 
 type VotingConfirmationProps = {
@@ -29,7 +32,35 @@ type VotingConfirmationProps = {
 
 const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
     const { selectedUser, visible, onClose, setConfirmationVisible } = props;
+    const [userSituations, setUserSituations] = useState([]);
+    const navigate = useNavigate();
 
+    useEffect(() => {
+        if (selectedUser) {
+            const { situations, situationsType } = selectedUser;
+            console.log(
+                situations, 
+                situationsType
+            )
+
+            const mappedSituationsType: any = {};
+
+            situationsType.forEach((situationType: any) => {
+                mappedSituationsType[situationType.situationId] = {
+                    medias: situationType.BadLuckMedia
+                }
+            })
+
+            setUserSituations(situations.map((situation: any) => {
+                return {
+                    ...situation,
+                    ...mappedSituationsType[parseInt(situation.id)]
+                }
+            }));
+
+        }
+    }, [selectedUser]);
+    
     return (
         <AppDrawer className="voting-confirmation" isVisible={visible} closeModal={onClose} content={
             <>
@@ -46,7 +77,7 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
                 <div className="profile-personal-wrapper">
                     <div className="profile-personal__view">
                         <Avatar src={selectedUser?.avatar} className="profile-personal__avatar" />
-                        <Button className="profile-personal__btn-link">View Profile</Button>
+                        <Button className="profile-personal__btn-link" onClick={() => navigate(`/profile/${selectedUser?.userId}`)}>View Profile</Button>
                     </div>
                     <div className="profile-personal">
                         <ul className="profile-personal__details">
@@ -104,18 +135,17 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
                 </div>
 
                 <div className="profile-situation-verification">
-                    <p className="profile-situation-verification__header">Situation (2)</p>
+                    <p className="profile-situation-verification__header">Situation ({userSituations.length})</p>
                     <div className="profile-situation-verification__content">
-                        <VotingSituationView
-                            title="Người nghèo"
-                            verificationType="Giấy chứng nhận hộ nghèo"
-                            images={["/icon/bad-lucker-2.svg", "/icon/bad-lucker-5.svg"]}
-                        />
-                        <VotingSituationView
-                            title="Thương binh"
-                            verificationType="Giấy chứng nhận thương binh"
-                            images={["/icon/bad-lucker-2.svg", "/icon/bad-lucker-4.svg"]}
-                        />
+                        {
+                            userSituations.map((userSituation: any) => (
+                                <VotingSituationView
+                                    title={userSituation.name}
+                                    verificationType={`Giấy chứng nhận ${userSituation.message}`}
+                                    images={userSituation.medias.map((media: any) => media.link)}
+                                />
+                            ))
+                        }
                     </div>
                 </div>
             </>

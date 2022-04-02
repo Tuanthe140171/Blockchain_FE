@@ -33,13 +33,15 @@ const VotingPage: React.FC = () => {
         address: `${donee.country} ${donee.baseAddress} ${donee.currentAddress}`,
         id: donee.identityId,
         situations: donee.BadLuckerSituations,
+        situationsType: donee.BadLuckTypes,
         avatar: (function(){
             const userAvatar = donee.UserMedia.filter((userMedia: any) => userMedia.type === "1" && userMedia.active === 1).slice(0, 1).pop();
             return userAvatar ? userAvatar.link: null;
         }()),
         identityPlace: donee.identityPlace,
         identityDate: donee.identityDate,
-        status: "check"
+        status: "check",
+        userId: donee.id
     })): [];
 
 
