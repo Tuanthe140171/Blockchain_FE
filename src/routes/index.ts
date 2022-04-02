@@ -13,8 +13,14 @@ const ProfileEditPage = lazy(() => import("../containers/ProfileEdit"));
 const VotingPage = lazy(() => import("../containers/VotingPage"));
 const DoneePage = lazy(() => import("../containers/DoneePage"));
 const ExchangeMoneyPage = lazy(() => import("../containers/ExchangeMoney"));
+const ContactUs = lazy(() => import("../containers/ContactUs"));
 
 const routes: CRVRoute[] = [
+  {
+    path: "/contact-us",
+    component: ContactUs,
+    exact: true,
+  },
   {
     path: "/exchange",
     component: ExchangeMoneyPage,
