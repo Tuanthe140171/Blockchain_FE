@@ -296,7 +296,7 @@ const UserLayout: React.FC = (props): ReactElement => {
             className="main-layout__sider__menu__item"
             onClick={() => {
               setSelectedKey("Exchange");
-              navigate("/exchange?tab=0");
+              navigate("/exchange?type=buy&tab=0");
             }}
           >
             Exchange Money
@@ -305,6 +305,10 @@ const UserLayout: React.FC = (props): ReactElement => {
             key="ContactF"
             icon={<Image src="/icon/contact-us.svg" preview={false} />}
             className="main-layout__sider__menu__item"
+            onClick={() => {
+              setSelectedKey("ContactUs");
+              navigate("/contact-us");
+            }}
           >
             Contact us
           </Menu.Item>

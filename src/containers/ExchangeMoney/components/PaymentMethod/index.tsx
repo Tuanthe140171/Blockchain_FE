@@ -18,13 +18,15 @@ type PaymentMethodProps = {
     setPaymentMethod: (method: number) => void,
     chosenPaymentMethod: number,
     accountNumber: string,
-    account: string
+    account: string, 
+    isBuy?: boolean,
+    onNext?: () => void
 }
 
 type ProperMethod = SUPPORTED_METHODS.MOMO;
 
 const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
-    const { chosenPaymentMethod, supportedPaymentMethods, setPaymentMethod, account, accountNumber } = props;
+    const { onNext, isBuy = true, chosenPaymentMethod, supportedPaymentMethods, setPaymentMethod, account, accountNumber } = props;
     const [searchParams] = useSearchParams();
     const [paymentURI, setPaymentURI] = useState<undefined | string>(undefined);
 
@@ -36,7 +38,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
             Accept: "application/json"
         }, 
         false, 
-        [inputAmount], 
+        isBuy ? [inputAmount]: [undefined], 
         {}
     );
 
@@ -74,7 +76,13 @@ const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
             {
                 paymentURI && <p className="payment__uri"  onClick={() => window.open(paymentURI, "_self")}>{paymentURI}</p>
             }
-            <Button disabled={loading} className="payment__btn" onClick={props.setCurrentStep}>Back</Button>
+            <div className="payment__btns">
+                <Button disabled={loading} className="payment__btn" onClick={props.setCurrentStep}>Back</Button>
+                {
+                    !isBuy && <Button disabled={loading} className="payment__btn payment__next" onClick={onNext}>Next</Button>
+
+                }
+            </div>
             {
                 loading && (
                     <AppLoading loadingContent={<div></div>} showContent={false} />

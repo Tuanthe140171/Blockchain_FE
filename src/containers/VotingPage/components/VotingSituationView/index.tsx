@@ -11,9 +11,9 @@ type VotingSituationViewProps = {
 };
 
 const VotingSituationView: React.FC<VotingSituationViewProps> = (props) => {
+  const { title, verificationType, images } = props;
   const [viewVerification, setViewVerification] = useState<boolean>(false);
 
-  const { title, verificationType, images } = props;
   return (
     <div className="voting-situation-view">
       <header className="voting-situation-view__header">
@@ -29,7 +29,7 @@ const VotingSituationView: React.FC<VotingSituationViewProps> = (props) => {
       </header>
       <div className="voting-situation-view__verification">
         <div className="voting-situation-view__verification-type">
-          <Image src="/icon/image.svg" preview={false} />
+          <Image src={images[0]} preview={false} style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 5 }} />
           <span>{verificationType}</span>
         </div>
         <Button

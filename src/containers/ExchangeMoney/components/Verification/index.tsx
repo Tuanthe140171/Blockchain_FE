@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Button, Input, message } from 'antd';
+import { Typography, Button, message } from 'antd';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useWeb3React } from 'web3-react-core';
-import { BigNumber } from 'bignumber.js';
 import useFetch from '../../../../hooks/useFetch';
 import { useCharityVerseContract } from '../../../../hooks/useContract';
 import AppLoading from '../../../../components/AppLoading';
@@ -50,7 +49,9 @@ const Verification: React.FC<VerificationProps> = (props) => {
 
     const { data, loading } = useFetch<{
         signature: string,
-        nonce: string
+        nonce: string,
+        paymentID:  string,
+        amount: string
     }>(
         `transactions/buy`, 
         {
@@ -62,7 +63,7 @@ const Verification: React.FC<VerificationProps> = (props) => {
         {
             method: "POST",
             body: JSON.stringify({
-                amount: new BigNumber(inputAmount).multipliedBy(1e18).toFixed()
+                paymentId: orderId
             })
         }, 
         () => { setStartGettingSignature(undefined) },
@@ -79,7 +80,7 @@ const Verification: React.FC<VerificationProps> = (props) => {
                 message.success("Bạn đã chuyển tiền thành công", 4);
             } else if (orderMessage === "Transaction denied by user." && parseInt(orderResultCode) === 1006) {
                 message.error("Bạn đã hủy giao dịch chuyển tiền", 4);
-                navigate("/exchange?tab=0");
+                navigate("/exchange?type=buy&tab=0");
             }
         }
     }, [orderMessage, orderResultCode, navigate]);
@@ -91,8 +92,9 @@ const Verification: React.FC<VerificationProps> = (props) => {
 
                 const tx = await charityContract.issueTokensByInvestor(
                     account,
-                    new BigNumber(inputAmount).multipliedBy(1e18).toFixed(),
+                    data?.amount,
                     data?.nonce,
+                    data?.paymentID,
                     data?.signature
                 )
 
@@ -140,7 +142,6 @@ const Verification: React.FC<VerificationProps> = (props) => {
                     setStartGettingSignature(true);
                 }}
                 disabled={disableButton}
-                // disabled={paymentTxId.length <= 0 || loading || startIssuing}
             >
                 Đã chuyển tiền
             </Button>
