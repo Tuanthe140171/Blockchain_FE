@@ -305,6 +305,10 @@ const UserLayout: React.FC = (props): ReactElement => {
             key="ContactF"
             icon={<Image src="/icon/contact-us.svg" preview={false} />}
             className="main-layout__sider__menu__item"
+            onClick={() => {
+              setSelectedKey("ContactUs");
+              navigate("/contact-us");
+            }}
           >
             Contact us
           </Menu.Item>
