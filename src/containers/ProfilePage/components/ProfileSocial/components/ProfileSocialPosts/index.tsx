@@ -34,7 +34,7 @@ const ProfileSocialPosts: React.FC = (props) => {
       const formatPosts = e.data.map((post: any) => {
         return {
           images: post.PostMedia?.map((p: any) => {
-            return p.link;
+            return { image: p.link, title: "", description: "" };
           }),
           poster: {
             name: `${userData?.lastName ? userData?.lastName : "Người"} ${

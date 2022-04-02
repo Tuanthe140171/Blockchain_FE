@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Avatar, Image } from "antd";
 import "./index.scss";
+import { ReactPictureGrid } from "react-picture-grid";
 
 export type ProfileSocialPostProps = {
-  images: string[];
+  images: [];
   poster: {
     name: string;
     avatar: string;
@@ -29,116 +30,117 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
     comments,
   } = props;
 
-  const customRenderImage = () => {
-    if (images.length === 1) {
-      return (
-        <div className="profile-post__images__one">
-          <Image
-            preview={true}
-            // width={200}
-            src={images[0]}
-            // onClick={() => setVisible(true)}
-          />
-        </div>
-      );
-    } else if (images.length === 2) {
-      return (
-        <div className="profile-post__images__two">
-          <Image
-            preview={true}
-            src={images[0]}
-            // onClick={() => setVisible(true)}
-          />
-          <Image
-            preview={true}
-            // width={200}
-            src={images[1]}
-            // onClick={() => setVisible(true)}
-          />
-        </div>
-      );
-    } else if (images.length === 3) {
-      return (
-        <div className="profile-post__images__three">
-          <Image
-            preview={true}
-            src={images[0]}
-            // onClick={() => setVisible(true)}
-          />{" "}
-          <div>
-            <Image
-              preview={true}
-              src={images[1]}
-              // onClick={() => setVisible(true)}
-            />
-            <Image
-              preview={true}
-              src={images[2]}
-              // onClick={() => setVisible(true)}
-            />{" "}
-          </div>
-        </div>
-      );
-    } else if (images.length === 4) {
-      return (
-        <div className="profile-post__images__four">
-          <div>
-            <Image
-              preview={true}
-              src={images[1]}
-              // onClick={() => setVisible(true)}
-            />{" "}
-            <Image
-              preview={true}
-              src={images[2]}
-              // onClick={() => setVisible(true)}
-            />{" "}
-          </div>
-          <div>
-            <Image
-              preview={true}
-              src={images[3]}
-              // onClick={() => setVisible(true)}
-            />{" "}
-            <Image
-              preview={true}
-              src={images[4]}
-              // onClick={() => setVisible(true)}
-            />{" "}
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <div className="profile-post__images__five">
-          <div>
-            <Image
-              preview={true}
-              src={images[0]}
-              // onClick={() => setVisible(true)}
-            />{" "}
-            <Image
-              preview={true}
-              src={images[0]}
-              // onClick={() => setVisible(true)}
-            />{" "}
-          </div>
-          <div>
-            <Image
-              preview={true}
-              src={images[0]}
-              // onClick={() => setVisible(true)}
-            />{" "}
-            <Image
-              preview={true}
-              src={images[0]}
-              // onClick={() => setVisible(true)}
-            />{" "}
-          </div>
-        </div>
-      );
-    }
-  };
+  // const customRenderImage = () => {
+  //   if (images.length === 1) {
+  //     return (
+  //       <div className="profile-post__images__one">
+  //         <Image
+  //           preview={true}
+  //           // width={200}
+  //           src={images[0]}
+  //           // onClick={() => setVisible(true)}
+  //         />
+  //       </div>
+  //     );
+  //   } else if (images.length === 2) {
+  //     return (
+  //       <div className="profile-post__images__two">
+  //         <Image
+  //           preview={true}
+  //           src={images[0]}
+  //           // onClick={() => setVisible(true)}
+  //         />
+  //         <Image
+  //           preview={true}
+  //           // width={200}
+  //           src={images[1]}
+  //           // onClick={() => setVisible(true)}
+  //         />
+  //       </div>
+  //     );
+  //   } else if (images.length === 3) {
+  //     return (
+  //       <div className="profile-post__images__three">
+  //         <Image
+  //           preview={true}
+  //           src={images[0]}
+  //           // onClick={() => setVisible(true)}
+  //         />{" "}
+  //         <div>
+  //           <Image
+  //             preview={true}
+  //             src={images[1]}
+  //             // onClick={() => setVisible(true)}
+  //           />
+  //           <Image
+  //             preview={true}
+  //             src={images[2]}
+  //             // onClick={() => setVisible(true)}
+  //           />{" "}
+  //         </div>
+  //       </div>
+  //     );
+  //   } else if (images.length === 4) {
+  //     return (
+  //       <div className="profile-post__images__four">
+  //         <div>
+  //           <Image
+  //             preview={true}
+  //             src={images[1]}
+  //             // onClick={() => setVisible(true)}
+  //           />{" "}
+  //           <Image
+  //             preview={true}
+  //             src={images[2]}
+  //             // onClick={() => setVisible(true)}
+  //           />{" "}
+  //         </div>
+  //         <div>
+  //           <Image
+  //             preview={true}
+  //             src={images[3]}
+  //             // onClick={() => setVisible(true)}
+  //           />{" "}
+  //           <Image
+  //             preview={true}
+  //             src={images[4]}
+  //             // onClick={() => setVisible(true)}
+  //           />{" "}
+  //         </div>
+  //       </div>
+  //     );
+  //   } else {
+  //     return (
+  //       <div className="profile-post__images__five">
+  //         <div>
+  //           <Image
+  //             preview={true}
+  //             src={images[0]}
+  //             // onClick={() => setVisible(true)}
+  //           />{" "}
+  //           <Image
+  //             preview={true}
+  //             src={images[0]}
+  //             // onClick={() => setVisible(true)}
+  //           />{" "}
+  //         </div>
+  //         <div>
+  //           <Image
+  //             preview={true}
+  //             src={images[0]}
+  //             // onClick={() => setVisible(true)}
+  //           />{" "}
+  //           <Image
+  //             preview={true}
+  //             src={images[0]}
+  //             // onClick={() => setVisible(true)}
+  //           />{" "}
+  //         </div>
+  //       </div>
+  //     );
+  //   }
+  // };
+  console.log(images);
 
   return (
     <div className="profile-post" key={props.content}>
@@ -164,7 +166,16 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
         </div>
       )}
       {images.length > 0 && (
-        <div className="profile-post__images">{customRenderImage()}</div>
+        <div className="profile-post__images">
+          {
+            <ReactPictureGrid
+              data={images}
+              showTitle
+              gap={10}
+            />
+          }
+        </div>
+        // <div className="profile-post__images">{customRenderImage()}</div>
       )}
       <div className="profile-post__metrics">
         <div className="metrics__likes">
