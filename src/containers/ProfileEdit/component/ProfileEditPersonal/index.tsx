@@ -80,7 +80,7 @@ const ProfilePerson = () => {
     [],
     {},
     (e) => {
-      console.log(e);
+      // console.log(e);
     }
   );
 
