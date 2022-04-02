@@ -1,5 +1,6 @@
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar } from "antd";
+import moment from 'moment';
 import React from "react";
 import "./index.scss";
 
@@ -22,10 +23,10 @@ const FollowNoti: React.FC<IFollowNotiProps> = (props) => {
         <div className="follow-noti__top__ava">
           <Avatar size={40} icon={<UserOutlined />} />
         </div>
-        <div className="follow-noti__top__message">{data.message}</div>
+        <div className="follow-noti__top__message">{data.content}</div>
       </div>
       <div className="follow-noti__bottom">
-        <div>{data.time}</div>
+        <div>{moment(data.time).format("DD-MM-YYYY")}</div>
       </div>
     </div>
   );

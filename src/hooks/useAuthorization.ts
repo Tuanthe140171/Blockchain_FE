@@ -26,7 +26,8 @@ const useAuthorization = (tried: boolean): AuthorizeErrorType => {
         auth: {
             [account: string]: {
                 token: string,
-                address: string
+                address: string,
+                socketData: string
             }
         }
     }>("charity", {

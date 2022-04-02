@@ -18,12 +18,27 @@ import {
   getUserById,
 } from "../../stores/action/user-layout.action";
 import { shortenAddress } from "../../utils";
+import io from 'socket.io-client';
 import "./index.scss";
 
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 
+export const NotificationContext = React.createContext<{
+  content: string,
+  type: number,
+  createDate: string
+}[] | undefined>(undefined);
+
 const UserLayout: React.FC = (props): ReactElement => {
+  const [notifications, setNotifications] = useState<
+    {
+        content: string,
+    type: number,
+    createDate: string
+    }[]
+  >([]);
+  const [socket, setSocket] = useState<any>(null);
   const [userBalance, setUserBalance] = useState<string>("0");
   const [selectedKey, setSelectedKey] = useLocalStorage(
     "activeTab",
@@ -33,8 +48,34 @@ const UserLayout: React.FC = (props): ReactElement => {
 
   const navigate = useNavigate();
   const { account, chainId, error } = useWeb3React();
+  const [charityStorage, setCharityStorage] = useLocalStorage("charity", { auth: {} });
   const { userData } = useSelector((state: any) => state.userLayout);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const newSocket = io(`https://socket.test.charityverse.info`);
+    setSocket(newSocket);
+    return () => {
+      newSocket.close();
+    }
+  }, [setSocket]);
+
+  useEffect(() => {
+    if (socket && account && charityStorage) {
+      console.log("LISTENING")
+      const socketData = (charityStorage as any).auth[account].socketData;
+
+      socket.on(`notification/${socketData}`, (data: any) => {
+        console.log(JSON.parse(data));
+        setNotifications([
+          ...notifications,
+          {
+            ...JSON.parse(data)
+          }
+        ])
+      });
+    }
+  }, [socket, charityStorage, account]);
 
   const avatarLink = userData?.UserMedia.find(
     (media: any) => media.type === "1" && media.active === 1
@@ -161,7 +202,7 @@ const UserLayout: React.FC = (props): ReactElement => {
             content={<ModalHeader type={0} />}
             trigger="click"
           >
-            <Badge count={0} size="small" showZero>
+            <Badge count={notifications.length} size="small" showZero>
               <BellOutlined style={{ fontSize: "20  px", color: "#ffffff" }} />
             </Badge>
           </Popover>
@@ -239,6 +280,7 @@ const UserLayout: React.FC = (props): ReactElement => {
   };
 
   return (
+    <NotificationContext.Provider value={notifications}>
     <Layout style={{ minHeight: "100vh" }} className="main-layout">
       <Sider
         collapsible
@@ -338,6 +380,7 @@ const UserLayout: React.FC = (props): ReactElement => {
         <Content>{props.children}</Content>
       </Layout>
     </Layout>
+    </NotificationContext.Provider>
   );
 };
 
