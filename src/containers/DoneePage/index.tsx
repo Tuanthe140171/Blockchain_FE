@@ -31,7 +31,7 @@ const DoneePage: React.FC = () => {
     return (
         <div className="donee">
             <Typography.Title level={3} className="donee__title">
-                Donee
+                Người cần từ thiện
             </Typography.Title>
             <div className="donee__content">
                 <DoneeSearchFilter setSituations={setSituations} setProvinces={setProvinces} />

@@ -37,7 +37,7 @@ const DoneeList: React.FC<DoneeListProps> = (props) => {
     return (
         <div className="donee-list">
             <header className="donee-list__header">
-                <Search className="donee-list__search" placeholder="Search donee, location..." value={props.inputSearch} onChange={(e: any) => props.setInputSearch(e.target.value)} />
+                <Search className="donee-list__search" placeholder="Tìm kiếm theo tên, vị trí ..." value={props.inputSearch} onChange={(e: any) => props.setInputSearch(e.target.value)} />
                 <div className="donee-list__orderBy">
                     <span>Sắp xếp theo</span>
                     <Select

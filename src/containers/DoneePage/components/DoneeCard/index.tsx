@@ -56,7 +56,7 @@ const DoneeCard: React.FC<DoneeCardProps> = (props: DoneeCardProps) => {
                         <p>Trust Score</p>
                     </div>
                 </div>
-                <Button onClick={() => setVisible(true)} width="100%" maxWidth="100%" content="Donate" bgColor="#F0CF27" className="donee-card__cta" />
+                <Button onClick={() => setVisible(true)} fontSize="17px" width="100%" maxWidth="100%" content="Ủng hộ" bgColor="#F0CF27" className="donee-card__cta" />
             </div>
             {
                 visible && <AppDonate name={name} avatar={image} walletAddress={walletAddress} onClose={() => {setVisible(false)}} />

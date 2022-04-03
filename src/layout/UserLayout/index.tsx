@@ -61,8 +61,7 @@ const UserLayout: React.FC = (props): ReactElement => {
   }, [setSocket]);
 
   useEffect(() => {
-    if (socket && account && charityStorage) {
-      console.log("LISTENING")
+    if (socket && account && charityStorage && (charityStorage as any).auth[account]) {
       const socketData = (charityStorage as any).auth[account].socketData;
 
       socket.on(`notification/${socketData}`, (data: any) => {
@@ -319,7 +318,7 @@ const UserLayout: React.FC = (props): ReactElement => {
               navigate("/dashboard");
             }}
           >
-            Dashboard
+            Bảng điểu khiển
           </Menu.Item>
           <Menu.Item
             key="Donee"
@@ -330,7 +329,7 @@ const UserLayout: React.FC = (props): ReactElement => {
               navigate("/donee");
             }}
           >
-            Donee
+            Người cần từ thiện
           </Menu.Item>
           <Menu.Item
             key="Exchange"
@@ -341,7 +340,7 @@ const UserLayout: React.FC = (props): ReactElement => {
               navigate("/exchange?type=buy&tab=0");
             }}
           >
-            Exchange Money
+            Đổi tiền
           </Menu.Item>
           <Menu.Item
             key="ContactF"
@@ -352,7 +351,7 @@ const UserLayout: React.FC = (props): ReactElement => {
               navigate("/contact-us");
             }}
           >
-            Contact us
+            Liên lạc
           </Menu.Item>
           <Menu.Item
             key="Voting"
@@ -363,7 +362,7 @@ const UserLayout: React.FC = (props): ReactElement => {
               navigate("/voting");
             }}
           >
-            Voting
+            Bỏ phiếu
           </Menu.Item>
         </Menu>
       </Sider>

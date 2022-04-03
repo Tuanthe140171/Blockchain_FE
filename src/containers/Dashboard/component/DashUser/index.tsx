@@ -189,7 +189,7 @@ const DashUser: React.FC<{
       )
     },
     {
-      title: "Philantrophist",
+      title: "Người từ thiện",
       dataIndex: "name",
       key: "name",
       render: (name: any, others: any) => (
@@ -206,7 +206,7 @@ const DashUser: React.FC<{
       ),
     },
     {
-      title: "Donee",
+      title: "Người nhận",
       dataIndex: "donee",
       key: "donee",
       render: (name: any, others: any) => {
@@ -246,13 +246,13 @@ const DashUser: React.FC<{
     //   sorter: (a: any, b: any) => a.status - b.status,
     // },
     {
-      title: "Date",
+      title: "Ngày",
       dataIndex: "date",
       key: "date",
       sorter: (a: any, b: any) => a.date - b.date,
     },
     {
-      title: "Amount",
+      title: "Số tiền",
       dataIndex: "amount",
       key: "amount",
       sorter: (a: any, b: any) => a.amount - b.amount,
@@ -265,7 +265,7 @@ const DashUser: React.FC<{
         <Col span={12} className="gutter-row">
           <div className="chart-group">
             <div className="chart-group__header">
-              <p className="chart-group__header__title">Your Giving</p>
+              <p className="chart-group__header__title">Bạn cho đi</p>
               <div className="chart-group__header__icons">
                 <ZoomInOutlined
                   style={{ fontSize: "17px", color: "black" }}
@@ -279,7 +279,7 @@ const DashUser: React.FC<{
             </div>
             <Line data={data} ref={ref => setChartRef(ref)} options={options} plugins={plugins() as any} className="chart-group__chart" />
             <div className="chart-group__data-group">
-              <h3 className="chart-group__data-group__title">Total Giving</h3>
+              <h3 className="chart-group__data-group__title">Tổng số cho đi</h3>
               <h1 className="chart-group__data-group__data">
                 {(userStatsResp && userStatsResp.userStatistic) ? new BigNumber(userStatsResp.userStatistic.totalDonation).div(1e18).toFixed(4): 0} CRV
                 <span className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${givingStatus.status === CharityStatus.UP ? 'up' : 'down'}`}>
@@ -293,7 +293,7 @@ const DashUser: React.FC<{
         <Col span={12} className="gutter-row">
           <div className="chart-group">
             <div className="chart-group__header">
-              <h1 className="chart-group__header__title">Your Receiving</h1>
+              <h1 className="chart-group__header__title">Bạn nhận về</h1>
               <div className="chart-group__header__icons">
                 <ZoomInOutlined
                   style={{ fontSize: "17px", color: "black" }}
@@ -308,7 +308,7 @@ const DashUser: React.FC<{
             <Line data={receivingData} options={options} ref={ref => setSecChartRef(ref)} plugins={plugins("#52BFD6") as any} className="chart-group__chart" />
             <div className="chart-group__data-group">
               <h3 className="chart-group__data-group__title">
-                Total receiving
+                Tổng số nhận về
               </h3>
               <h1 className="chart-group__data-group__data">
                 {(userStatsResp && userStatsResp.userStatistic) ? new BigNumber(userStatsResp.userStatistic.totalDonationReceive).div(1e18).toFixed(4): 0} CRV
@@ -321,14 +321,14 @@ const DashUser: React.FC<{
           </div>
         </Col>
       </Row>
-      <Row gutter={16} className="dash-system__row-table">
-        <Col span={18} className="gutter-row">
+      <Row gutter={24} className="dash-system__row-table">
+        <Col span={24} className="gutter-row">
           <div className="table-group">
             <div className="table-group__header">
-              <p className="table-group__header__title">History transaction</p>
+              <p className="table-group__header__title">Lịch sử từ thiện</p>
               <div className="table-group__header__right-group">
                 <Search
-                  placeholder="Search donee, history..."
+                  placeholder="Tên, số lượng..."
                   // onSearch={onSearch}
                   style={{ width: 230 }}
                   value={keyWord}
@@ -360,7 +360,7 @@ const DashUser: React.FC<{
             />
           </div>
         </Col>
-        <Col span={6} className="gutter-row">
+        {/* <Col span={6} className="gutter-row">
           <div className="chart-group">
             <div className="chart-group__header">
               <h1 className="chart-group__header__title">Your his</h1>
@@ -375,7 +375,7 @@ const DashUser: React.FC<{
               </div>
             </div>
           </div>
-        </Col>
+        </Col> */}
       </Row>
     </div>
   );
