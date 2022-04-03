@@ -103,8 +103,6 @@ const DashUser: React.FC<{
     const totalReceives = dayDatas.map((data: any) => parseInt(data.totalReceive));
     const totalGivings = dayDatas.map((data: any) =>  parseInt(data.totalDonation));
 
-    console.log(totalReceives);
-
     if (totalReceives.length >= 2 && totalReceives[totalReceives.length - 2] > 0) {
       receivingStatus.percentage = new BigNumber(totalReceives[totalReceives.length - 1]).div(1e18).minus(new BigNumber(totalReceives[totalReceives.length - 2]).div(1e18)).div(new BigNumber(totalReceives[totalReceives.length - 2]).div(1e18));
     } else {

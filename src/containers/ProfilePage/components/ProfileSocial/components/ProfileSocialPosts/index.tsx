@@ -1,11 +1,12 @@
 import {
   FileImageOutlined,
   SmileOutlined,
-  VideoCameraOutlined
+  VideoCameraOutlined,
 } from "@ant-design/icons";
 import { Avatar, Button, Form, Input, Upload } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import AppDialog from "../../../../../../components/AppDialog";
 import useFetch from "../../../../../../hooks/useFetch";
 import ProfileSocialPost from "../ProfileSocialPost";
@@ -39,6 +40,7 @@ const ProfileSocialPosts: React.FC = (props) => {
   const [fileList, setFileList] = useState<any>([]);
   const [hasImg, setHasImg] = useState<any>(undefined);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const { id } = useParams();
 
   const getTimeDiff = (time: any) => {
     var now = new Date();
@@ -152,7 +154,6 @@ const ProfileSocialPosts: React.FC = (props) => {
       body: JSON.stringify(formData),
     },
     (e) => {
-      console.log(e.data);
       // const action = getUserById(e.data);
       // dispatch(action);
       // setHasImg(undefined);
@@ -172,7 +173,6 @@ const ProfileSocialPosts: React.FC = (props) => {
       body: JSON.stringify(formData),
     },
     (e) => {
-      console.log(e.data);
     }
   );
 
@@ -190,82 +190,84 @@ const ProfileSocialPosts: React.FC = (props) => {
         />
       ) : null}
       <div className="profile-social__posts">
-        <div className="profile-social__posts__upload">
-          <Form
-            form={form}
-            className="profile-social__posts__upload__form"
-            onFinish={(e) => onSubmit(e)}
-          >
-            <div className="profile-social__posts__upload__form__wrapper">
-              <Avatar
-                src={avatarLink}
-                className="profile-social__posts__upload__form__wrapper__avatar"
-              />
-              <Form.Item
-                name={"status"}
-                className="profile-social__posts__upload__form__wrapper__status"
-              >
-                <Input
-                  placeholder="Hãy nhập gì đó..."
-                  onChange={(e) => setInputValue(e.target.value)}
-                />
-              </Form.Item>
-            </div>
-            <Form.Item
-              name="upload"
-              className={`profile-social__posts__upload__form__${
-                fileList.length === 0 ? "image-hidden" : "image"
-              }`}
+        {!id && (
+          <div className="profile-social__posts__upload">
+            <Form
+              form={form}
+              className="profile-social__posts__upload__form"
+              onFinish={(e) => onSubmit(e)}
             >
-              <Upload
-                name="logo"
-                listType="picture-card"
-                maxCount={3}
-                fileList={fileList}
-                onChange={onChange}
-                onPreview={onPreview}
-                className="profile-social__posts__upload__form__image__wrapper"
-                isImageUrl={(file: any) => true}
-                customRequest={dummyRequest}
+              <div className="profile-social__posts__upload__form__wrapper">
+                <Avatar
+                  src={avatarLink}
+                  className="profile-social__posts__upload__form__wrapper__avatar"
+                />
+                <Form.Item
+                  name={"status"}
+                  className="profile-social__posts__upload__form__wrapper__status"
+                >
+                  <Input
+                    placeholder="Hãy nhập gì đó..."
+                    onChange={(e) => setInputValue(e.target.value)}
+                  />
+                </Form.Item>
+              </div>
+              <Form.Item
+                name="upload"
+                className={`profile-social__posts__upload__form__${
+                  fileList.length === 0 ? "image-hidden" : "image"
+                }`}
               >
-                +
-              </Upload>
-            </Form.Item>
-            <hr className="profile-social__posts__upload__form__divider" />
-            <div className="profile-social__posts__upload__form__footer">
-              <div className="profile-social__posts__upload__form__footer__buttons">
-                <Button type="default" icon={<VideoCameraOutlined />}>
-                  Phát trực tiếp
-                </Button>
                 <Upload
                   name="logo"
+                  listType="picture-card"
                   maxCount={3}
-                  defaultFileList={[]}
                   fileList={fileList}
-                  onChange={onPictureChange}
-                  className="profile-social__posts__upload__form__footer__buttons__temp"
+                  onChange={onChange}
+                  onPreview={onPreview}
+                  className="profile-social__posts__upload__form__image__wrapper"
+                  isImageUrl={(file: any) => true}
                   customRequest={dummyRequest}
                 >
-                  <Button
-                    disabled={fileList.length > 0}
-                    icon={<FileImageOutlined />}
-                  >
-                    Ảnh
-                  </Button>
+                  +
                 </Upload>
-                <Button icon={<SmileOutlined />}>Trạng thái</Button>
+              </Form.Item>
+              <hr className="profile-social__posts__upload__form__divider" />
+              <div className="profile-social__posts__upload__form__footer">
+                <div className="profile-social__posts__upload__form__footer__buttons">
+                  <Button type="default" icon={<VideoCameraOutlined />}>
+                    Phát trực tiếp
+                  </Button>
+                  <Upload
+                    name="logo"
+                    maxCount={3}
+                    defaultFileList={[]}
+                    fileList={fileList}
+                    onChange={onPictureChange}
+                    className="profile-social__posts__upload__form__footer__buttons__temp"
+                    customRequest={dummyRequest}
+                  >
+                    <Button
+                      disabled={fileList.length > 0}
+                      icon={<FileImageOutlined />}
+                    >
+                      Ảnh
+                    </Button>
+                  </Upload>
+                  <Button icon={<SmileOutlined />}>Trạng thái</Button>
+                </div>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  disabled={!inputValue && fileList.length === 0}
+                  className="profile-social__posts__upload__form__footer__submit"
+                >
+                  Đăng bài
+                </Button>
               </div>
-              <Button
-                type="primary"
-                htmlType="submit"
-                disabled={!inputValue && fileList.length === 0}
-                className="profile-social__posts__upload__form__footer__submit"
-              >
-                Đăng bài
-              </Button>
-            </div>
-          </Form>
-        </div>
+            </Form>
+          </div>
+        )}
         {postList.map((post, index) => {
           const {
             images,

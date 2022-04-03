@@ -28,7 +28,6 @@ const ProfileUpload: React.FC<ProfileModalProps> = (props) => {
 
   const onSituationUpload = ({ fileList: newFileList }: any) => {
     // setIsUploadAva(true);
-    console.log(newFileList);
   };
 
   return (
