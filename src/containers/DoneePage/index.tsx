@@ -34,8 +34,8 @@ const DoneePage: React.FC = () => {
                 Donee
             </Typography.Title>
             <div className="donee__content">
-            <DoneeSearchFilter setSituations={setSituations} setProvinces={setProvinces} />
-                <DoneeList
+                <DoneeSearchFilter setSituations={setSituations} setProvinces={setProvinces} />
+                    <DoneeList
                     defaultPageSize={data ? data.limit : 10}
                     pageSize={data ? data.limit : 10}
                     total={data ? data.count : 0}
@@ -47,11 +47,11 @@ const DoneePage: React.FC = () => {
                     setSortBy={(sortBy: string) => setSortBy(sortBy)}
                     donees={(data && data.rows) ? data.rows.map((data: any) => ({
                         avatar: (function () {
-                            const userAvatar = data.UserMedia.filter((userMedia: any) => userMedia.type === "1").slice(-1).pop();
+                            const userAvatar = data.UserMedia.filter((userMedia: any) => userMedia.type === "1" && userMedia.active === 1).slice(-1).pop();
                             return userAvatar ? userAvatar.link : "/icon/bad-lucker.svg";
                         }()),
                         name: data.name,
-                        circumstances: data["BadLuckerSituations"].map((badLucker: any) => badLucker.name),
+                        circumstances: data.BadLuckTypes.map((badLuckType: any) => badLuckType.BadLuckerSituation.name),
                         tierCharity: data.tierCharity,
                         trustScore: data.trustScore,
                         desc: "Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với sức đối với",
