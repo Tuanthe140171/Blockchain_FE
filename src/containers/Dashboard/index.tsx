@@ -22,20 +22,20 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       <div className="dashboard__header">
-        <h1 className="dashboard__header__title">Dashboard</h1>
+        <h1 className="dashboard__header__title">Bảng điều khiển</h1>
         <div className="divide">
           <div className="dashboard__header__buttons">
             <button
               className={isSystem ? `dashboard__header__buttons__button` : ""}
               onClick={() => setIsSystem(true)}
             >
-              System
+              Hệ thống
             </button>
             <button
               className={isSystem ? "" : `dashboard__header__buttons__button`}
               onClick={() => setIsSystem(false)}
             >
-              User
+              Tôi
             </button>
           </div>
           <div className="dashboard__header__date">

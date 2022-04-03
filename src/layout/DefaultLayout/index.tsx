@@ -22,7 +22,7 @@ const DefaultLayout: React.FC = (props): ReactElement => {
   const [charityStorage, setCharityStorage] = useLocalStorage("charity", { auth: {} });
   const [_, setSelectedKey] = useLocalStorage("activeTab", "Dashboard");
 
-  const { data: accessToken, loading } = useFetch<any>(
+  const { data: authData, loading } = useFetch<any>(
     "auth",
     {
       "Content-Type": "application/json",
@@ -54,18 +54,19 @@ const DefaultLayout: React.FC = (props): ReactElement => {
   }, [authorizeError]);
 
   useEffect(() => {
-    if (accessToken && account) {
+    if (authData && account) {
       setCharityStorage({
         auth: {
           ...charityStorage.auth,
           [account]: {
-            token: accessToken,
-            address: account
+            token: authData.key,
+            address: account,
+            socketData: authData.socketData
           }
         }
       })
     }
-  }, [accessToken, account]);
+  }, [authData, account]);
 
   useEffect(() => {
     setSignature(undefined);

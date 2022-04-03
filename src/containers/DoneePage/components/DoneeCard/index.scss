@@ -4,6 +4,7 @@
     max-width: 304px;
     width: 304px;
     margin-top: 20px;
+    align-self: baseline;
     position: relative;
     transition: all 0.3s ease-out;
     top: 0;
@@ -30,6 +31,7 @@
 
     &__images {
         position: relative;
+        min-height: 155px;
 
         & > .ant-image:nth-child(1) {
             width: 100%;

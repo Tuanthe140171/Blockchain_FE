@@ -39,7 +39,7 @@ const Sell: React.FC = () => {
 
     const BUY_STEPS = [
         {
-            title: "Enter amount",
+            title: "Nhập số tiền",
             description: "",
             component: <SelectBuyAmount
                 isBuy={false}
@@ -50,21 +50,21 @@ const Sell: React.FC = () => {
             />
         },
         {
-            title: "Payment method",
+            title: "Chọn phương thức",
             description: "",
             component: <PaymentMethod isBuy={false} account={data?.paymentName || ""} accountNumber={data?.paymentNumber || ""} chosenPaymentMethod={paymentMethod} supportedPaymentMethods={ALL_SUPPORTED_METHODS} setPaymentMethod={setPaymentMethod} setCurrentStep={() => {
                 setCurrentStep(0);
             }} onNext={() => { setCurrentStep(2) }}/>
         },
         {
-            title: "Verification",
+            title: "Xác minh",
             description: "",
             component: <SellVerification paymentTxId={paymentTxId} setInputAmount={setInputAmount} setPaymentTxId={(text: any) => setPaymentTxId(text)} inputAmount={inputAmount} setCurrentStep={() => {
                 setCurrentStep(3)
             }} />
         },
         {
-            title: "Confirmation",
+            title: "Xác nhận",
             description: ""
         }
     ]

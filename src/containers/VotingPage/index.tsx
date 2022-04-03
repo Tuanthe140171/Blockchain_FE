@@ -1,30 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, Table, Button, Input, Avatar } from "antd";
 import moment from 'moment';
+import { useSelector } from 'react-redux';
 import VotingConfirmation from "./components/VotingConfirmation";
 import { SelectedUser } from "./components/VotingConfirmation";
 import useDebounce from "../../hooks/useDebounce";
 import useFetch from "../../hooks/useFetch";
-
 import "./index.scss";
-
 
 const { Search } = Input;
 
 const VotingPage: React.FC = () => {
+    const [reloadVotingData, setReloadVotingData] = useState<boolean | undefined>(true);
     const [confirmationVisible, setConfirmationVisible] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [inputSearch, setInputSearch] = useState("");
     const [selectedUser, setSelectedUser] = useState<SelectedUser | undefined>();
+    const userData = useSelector((state: any) => state.userLayout.userData);
 
     const debouncedKeyword = useDebounce<string>(inputSearch, 500);
-    
+
     let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}&userType=3`;
 
-    const { data, loading } = useFetch<any>(url, {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-    });
+    const { data, loading } = useFetch<any>(
+        url,
+        {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+        },
+        false,
+        [reloadVotingData],
+        {
+            method: "GET"
+        },
+        () => {
+            setReloadVotingData(undefined)
+        },
+        () => {
+            setReloadVotingData(undefined)
+        }
+    );
 
     const doneeData = data ? data.rows.map((donee: any) => ({
         donee: `${donee.lastName || ""} ${donee.name}`,
@@ -32,18 +47,46 @@ const VotingPage: React.FC = () => {
         createDate: moment(donee.createDate).format("DD-MM-yy"),
         address: `${donee.country} ${donee.baseAddress} ${donee.currentAddress}`,
         id: donee.identityId,
-        situations: donee.BadLuckerSituations,
-        situationsType: donee.BadLuckTypes,
-        avatar: (function(){
+        situations: donee.BadLuckTypes,
+        avatar: (function () {
             const userAvatar = donee.UserMedia.filter((userMedia: any) => userMedia.type === "1" && userMedia.active === 1).slice(0, 1).pop();
-            return userAvatar ? userAvatar.link: null;
+            return userAvatar ? userAvatar.link : null;
         }()),
         identityPlace: donee.identityPlace,
         identityDate: donee.identityDate,
         status: "check",
-        userId: donee.id
-    })): [];
+        userId: donee.id,
+        isVoted: (function () {
+            return userData ? donee.UserVotes.map((userVote: any) => userVote.userIdFrom).indexOf(userData.id) >= 0 : true;
+        }())
 
+    })) : [];
+
+    useEffect(() => {
+        if (selectedUser && data && userData && confirmationVisible) {
+            const donee = data.rows.filter((donee: any) => donee.id === selectedUser.userId)[0];
+            setSelectedUser({
+                donee: `${donee.lastName || ""} ${donee.name}`,
+                dob: moment(donee.dob).format("DD-MM-yy"),
+                createDate: moment(donee.createDate).format("DD-MM-yy"),
+                address: `${donee.country} ${donee.baseAddress} ${donee.currentAddress}`,
+                id: donee.identityId,
+                situations: donee.BadLuckTypes,
+                avatar: (function () {
+                    console.log(donee);
+                    const userAvatar = donee.UserMedia.filter((userMedia: any) => userMedia.type === "1" && userMedia.active === 1).slice(0, 1).pop();
+                    return userAvatar ? userAvatar.link : null;
+                }()),
+                identityPlace: donee.identityPlace,
+                identityDate: donee.identityDate,
+                status: "check",
+                userId: donee.id,
+                isVoted: (function () {
+                    return userData ? donee.UserVotes.map((userVote: any) => userVote.userIdFrom).indexOf(userData.id) >= 0 : true;
+                }())
+            })
+        }
+    }, [data, confirmationVisible, setSelectedUser, userData])
 
     const columns = [
         {
@@ -52,7 +95,7 @@ const VotingPage: React.FC = () => {
             width: '10%',
         },
         {
-            title: 'Donee',
+            title: 'Người dùng',
             dataIndex: 'donee',
             width: '15%',
             render: (text: any, row: any, index: any) => {
@@ -65,11 +108,11 @@ const VotingPage: React.FC = () => {
             }
         },
         {
-            title: 'Address',
+            title: 'Địa chỉ',
             dataIndex: 'address',
         },
         {
-            title: 'Date of Birth',
+            title: 'Ngày sinh',
             dataIndex: 'dob',
             width: '10%'
         },
@@ -80,10 +123,10 @@ const VotingPage: React.FC = () => {
             render: (text: any, row: any, index: any) => {
                 return (
                     <div className="voting__situation">
-                        <span>{row.situations[0].message}</span>
+                        <span>{row.situations[0].BadLuckerSituation.name}</span>
                         <div>
                             {
-                                row.situations.length >= 2 && <span className="voting__situation-more">{row.situations.length - 1} more</span>
+                                row.situations.length >= 2 && <span className="voting__situation-more">{row.situations.length - 1} hoàn cảnh</span>
                             }
                         </div>
                     </div>
@@ -91,24 +134,25 @@ const VotingPage: React.FC = () => {
             }
         },
         {
-            title: 'Time summit',
+            title: 'Thời gian nộp',
             dataIndex: 'createDate',
             width: '10%'
         },
         {
-            title: 'Status',
+            title: 'Trạng thái',
             dataIndex: 'status',
             width: '15%',
             render: (text: any, row: any, index: any) => {
                 return (
                     <Button
-                        className={`voting__check-btn voting__check-btn--${text.toLowerCase()}`}
+                        className={`voting__check-btn voting__check-btn--${row.isVoted ? 'checked' : ''}`}
                         onClick={() => {
                             setSelectedUser(row);
                             setConfirmationVisible(true);
                         }}
+                        disabled={row.isVoted}
                     >
-                        {text}
+                        {row.isVoted ? "Đã xác nhận" : "Xác nhận"}
                     </Button>
                 )
             }
@@ -116,30 +160,31 @@ const VotingPage: React.FC = () => {
     ];
 
     const { Title } = Typography;
-   
+
     return (
         <div className="voting">
             <Title level={3} className="voting__title">
-                Voting
+                Bình chọn hộ nghèo
             </Title>
             <div className="voting__list">
                 <div className="voting__list-header">
                     <Title level={4} className="voting__list-title">
-                        Pre-Donee list
+                        Danh sách người nộp đơn
                     </Title>
-                    <Search 
-                        placeholder="Search donee, history..." 
-                        onChange={(e: any) => { setInputSearch(e.target.value) }} 
-                        style={{ width: 260 }} 
-                        className="voting__list-input" 
+                    <Search
+                        placeholder="Tìm kiếm"
+                        onChange={(e: any) => { setInputSearch(e.target.value) }}
+                        style={{ width: 260 }}
+                        className="voting__list-input"
                     />
                 </div>
-                <Table loading={loading} className="voting__table" bordered={false} columns={columns} dataSource={doneeData} scroll={{ y: 400 }} />
-                <VotingConfirmation 
-                    visible={confirmationVisible} 
-                    onClose={() => setConfirmationVisible(false)} 
+                <Table rowKey="userId" loading={loading} className="voting__table" bordered={false} columns={columns} dataSource={doneeData} scroll={{ y: 400 }} />
+                <VotingConfirmation
+                    visible={confirmationVisible}
+                    onClose={() => setConfirmationVisible(false)}
                     setConfirmationVisible={setConfirmationVisible}
                     selectedUser={selectedUser}
+                    setReloadVotingData={setReloadVotingData}
                 />
             </div>
         </div>
