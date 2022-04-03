@@ -96,9 +96,9 @@ function useFetch<T = unknown>(
 
             navigate("/");
             return;
-          } else if (response.status === 404) {
+          } else {
             const errorData = (await response.json()) as any;
-            if (errorData.status === 404 && errorData.message) {
+            if (errorData.message) {
               throw new Error(errorData.message);
             } 
           }

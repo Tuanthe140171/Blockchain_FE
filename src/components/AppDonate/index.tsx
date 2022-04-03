@@ -10,7 +10,6 @@ import { useCharityVerseContract } from "../../hooks/useContract";
 import "./index.scss";
 import BigNumber from "bignumber.js";
 import AppDialog from "../AppDialog";
-import Message from "../../constants/message";
 import AppLoading from "../AppLoading";
 import { CHAIN_INFO } from "../../constants/chainInfo";
 import { SupportedChainId } from "../../constants/chains";
