@@ -19,7 +19,6 @@ export type SelectedUser = {
     address: string,
     id: string,
     situations: any,
-    situationsType: any,
     avatar: string | null,
     identityPlace: string,
     identityDate: string,
@@ -86,17 +85,17 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
                 <header className="voting-confirmation__header">
                     <div className="voting-confirmation__back" onClick={() => setConfirmationVisible(false)}>
                         <LeftOutlined />
-                        <span>Voting</span>
+                        <span>Bình chọn hộ nghèo</span>
                     </div>
-                    <Button className="voting-confirmation__btn-back" disabled={selectedUser?.isVoted || loading} onClick={handleUserConfirm}>Confirm</Button>
+                    <Button className="voting-confirmation__btn-back" disabled={selectedUser?.isVoted || loading} onClick={handleUserConfirm}>Xác nhận</Button>
                 </header>
                 <div className="profile-personal__header">
-                    <p className="personal-header__title">Personal Information</p>
+                    <p className="personal-header__title">Thông tin cá nhân</p>
                 </div>
                 <div className="profile-personal-wrapper">
                     <div className="profile-personal__view">
                         <Avatar src={selectedUser?.avatar} className="profile-personal__avatar" />
-                        <Button className="profile-personal__btn-link" onClick={() => navigate(`/profile/${selectedUser?.userId}`)}>View Profile</Button>
+                        <Button className="profile-personal__btn-link" onClick={() => navigate(`/profile/${selectedUser?.userId}`)}>Thông tin cá nhân</Button>
                     </div>
                     <div className="profile-personal">
                         <ul className="profile-personal__details">
@@ -154,18 +153,19 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
                 </div>
 
                 <div className="profile-situation-verification">
-                    <p className="profile-situation-verification__header">Situation ({selectedUser?.situations.length || 0})</p>
+                    <p className="profile-situation-verification__header">Hoàn cảnh ({selectedUser?.situations.length || 0})</p>
                     <div className="profile-situation-verification__content">
                         {
                             selectedUser && selectedUser.situations.map((userSituation: any) => (
                                 <VotingSituationView
+                                    key={userSituation.id}
                                     id={userSituation.id}
                                     title={userSituation.BadLuckerSituation.name}
                                     verificationType={`Giấy chứng nhận ${userSituation.BadLuckerSituation.message}`}
                                     images={userSituation.BadLuckMedia.map((media: any) => media.link)}
                                     setReloadVotingData={setReloadVotingData}
                                     userName={selectedUser?.donee}
-                                    isVoted={userData.id ? userSituation.UserSituationConfirms.map((userVote: any) => userVote.userIdFrom).indexOf(userData.id) >= 0 : true}
+                                    isVoted={userData ? userSituation.UserSituationConfirms.map((userVote: any) => userVote.userId).indexOf(userData.id) >= 0 : true}
                                 />
                             ))
                         }

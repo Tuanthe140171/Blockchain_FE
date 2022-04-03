@@ -30,21 +30,21 @@ const ExchangeMoney: React.FC = () => {
     return (
         <div className="exchange">
             <Typography.Title level={3} className="exchange__title">
-                Exchange Money
+                Đổi tiền
             </Typography.Title>
             <div className="exchange__actions">
                 <div className={`exchange__actions--buy ${activeTab === TABS.BUY ? 'exchange__actions--active': ''}`} onClick={() =>{
                      setActiveTab(TABS.BUY);
                      navigate('/exchange?type=buy&tab=0')
-                }}>Buy</div>
+                }}>Mua</div>
                 <div className={`exchange__actions--sell ${activeTab === TABS.SELL ? 'exchange__actions--active': ''}`} onClick={() => {
                     setActiveTab(TABS.SELL)
                     navigate('/exchange?type=sell&tab=0')
-                }}>Sell</div>
+                }}>Bán</div>
                 <div className={`exchange__actions--order-input ${activeTab === TABS.ORDER_INPUT ? 'exchange__actions--active': ''}`} onClick={() => {
                     setActiveTab(TABS.ORDER_INPUT)
                     navigate('/exchange?type=order&tab=0')
-                }}>Order</div>
+                }}>Mã giao dịch</div>
             </div>
             <div className="exchange__content">
                 {renderTabComponents()}

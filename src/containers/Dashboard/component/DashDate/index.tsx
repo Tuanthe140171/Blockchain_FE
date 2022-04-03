@@ -21,7 +21,7 @@ const DashDate: React.FC<DashDateProps> = (props) => {
               : "dash-date__group-hidden"
           }
         >
-          <button onClick={() => setDateOption("date")}>Date</button>
+          <button onClick={() => setDateOption("date")}>Ngày</button>
           <div className="divider"></div>
           <RangePicker onChange={props?.onChange} className="picker" clearIcon={true} />
         </div>
@@ -32,7 +32,7 @@ const DashDate: React.FC<DashDateProps> = (props) => {
               : "dash-date__group-hidden"
           }
         >
-          <button onClick={() => setDateOption("week")}>Week</button>
+          <button onClick={() => setDateOption("week")}>Tuần</button>
           <Divider type="vertical" className="divider" />
           <RangePicker onChange={props?.onChange} picker="week" className="picker" clearIcon={true} />
         </div>
@@ -43,7 +43,7 @@ const DashDate: React.FC<DashDateProps> = (props) => {
               : "dash-date__group-hidden"
           }
         >
-          <button onClick={() => setDateOption("month")}>Month</button>
+          <button onClick={() => setDateOption("month")}>Tháng</button>
           <Divider type="vertical" className="divider" />
           <RangePicker onChange={props?.onChange} picker="month" className="picker" clearIcon={true} />
         </div>
@@ -54,7 +54,7 @@ const DashDate: React.FC<DashDateProps> = (props) => {
               : "dash-date__group-hidden"
           }
         >
-          <button onClick={() => setDateOption("year")}>Year</button>
+          <button onClick={() => setDateOption("year")}>Năm</button>
           <Divider type="vertical" className="divider" />
           <RangePicker onChange={props?.onChange} picker="year" className="picker" clearIcon={true} />
         </div>

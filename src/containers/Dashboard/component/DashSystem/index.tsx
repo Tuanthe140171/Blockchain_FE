@@ -150,7 +150,7 @@ const DashSystem: React.FC<{
   
 
   const data: ChartData<"line", any, unknown> = {
-    labels: dailyDonationResp ? dailyDonationResp.donationDayDatas.map((data: any) => moment(parseInt(data.date) * 1000).format("DD-MM-yy")) : [],
+    labels: dailyDonationResp ? dailyDonationResp.donationDayDatas.map((data: any) => moment(parseInt(data.date) * 1000).format("DD-MM")) : [],
     datasets: [
       {
         fill: true,
@@ -166,7 +166,7 @@ const DashSystem: React.FC<{
   };
 
   const userStatsData: ChartData<"line", any, unknown> = {
-    labels: userActiveResp ? userActiveResp.map((stats: any) => moment(new Date(stats.date)).format("DD-MM-yy")) : [],
+    labels: userActiveResp ? userActiveResp.map((stats: any) => moment(new Date(stats.date)).format("DD-MM")) : [],
     datasets: [
       {
         fill: true,
@@ -192,7 +192,7 @@ const DashSystem: React.FC<{
       )
     },
     {
-      title: "Philantrophist",
+      title: "Người từ thiện",
       dataIndex: "name",
       key: "name",
       render: (name: any, others: any) => (
@@ -209,7 +209,7 @@ const DashSystem: React.FC<{
       ),
     },
     {
-      title: "Donee",
+      title: "Người nhận",
       dataIndex: "donee",
       key: "donee",
       render: (name: any, others: any) => {
@@ -228,13 +228,13 @@ const DashSystem: React.FC<{
       },
     },
     {
-      title: "Date",
+      title: "Ngày",
       dataIndex: "date",
       key: "date",
       sorter: (a: any, b: any) => a.date - b.date,
     },
     {
-      title: "Amount",
+      title: "Số tiền",
       dataIndex: "amount",
       key: "amount",
       sorter: (a: any, b: any) => a.amount - b.amount,
@@ -260,7 +260,7 @@ const DashSystem: React.FC<{
   })) : [];
 
   const pieData: ChartData<"pie", any, unknown> = {
-    labels: ["Philantrophist", "Donee"],
+    labels: ["Người đi từ thiện", "Người cần từ thiện"],
     datasets: [
       {
         data: userStatsResp ? [userStatsResp.totalNum - userStatsResp.doneeNum, userStatsResp.doneeNum] : [50, 50],
@@ -275,7 +275,7 @@ const DashSystem: React.FC<{
         <Col span={12} className="gutter-row">
           <div className="chart-group">
             <div className="chart-group__header">
-              <p className="chart-group__header__title">Charity</p>
+              <p className="chart-group__header__title">Tổng từ thiện</p>
               <div className="chart-group__header__icons">
                 <ZoomInOutlined
                   style={{ fontSize: "17px", color: "black" }}
@@ -289,7 +289,7 @@ const DashSystem: React.FC<{
             </div>
             <Line ref={ref => setChartRef(ref)} data={data} plugins={plugins() as any} options={options} className="chart-group__chart" />
             <div className="chart-group__data-group">
-              <h3 className="chart-group__data-group__title">Total charity</h3>
+              <h3 className="chart-group__data-group__title">Tổng tiền từ thiện</h3>
               <h1 className="chart-group__data-group__data">
                 {donationResp ? new BigNumber(donationResp.donations[0].totalVolume).div(1e18).toFixed(4) : 0} CRV
                 <span className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${charityStatus.status === CharityStatus.UP ? 'up' : 'down'}`}>
@@ -303,7 +303,7 @@ const DashSystem: React.FC<{
         <Col span={12} className="gutter-row">
           <div className="chart-group">
             <div className="chart-group__header">
-              <h1 className="chart-group__header__title">User Action</h1>
+              <h1 className="chart-group__header__title">Lượt truy cập</h1>
               <div className="chart-group__header__icons">
                 <ZoomInOutlined
                   style={{ fontSize: "17px", color: "black" }}
@@ -318,7 +318,7 @@ const DashSystem: React.FC<{
             <Line ref={ref => setUserChartRef(ref)} data={userStatsData} options={options} plugins={plugins("#52BFD6") as any} className="chart-group__chart" />
             <div className="chart-group__data-group">
               <h3 className="chart-group__data-group__title">
-                Total user action
+                Tổng lượt truy cập
               </h3>
               <h1 className="chart-group__data-group__data">
                 {userStatsStatus.totalUserActions.toFixed()}
@@ -335,10 +335,10 @@ const DashSystem: React.FC<{
         <Col span={18} className="gutter-row">
           <div className="table-group">
             <div className="table-group__header">
-              <p className="table-group__header__title">History transaction</p>
+              <p className="table-group__header__title">Lịch sử từ thiện</p>
               <div className="table-group__header__right-group">
                 <Search
-                  placeholder="Search donee, history..."
+                  placeholder="Tên, số lượng ..."
                   // onSearch={onSearch}
                   style={{ width: 230 }}
                   value={keyWord}
@@ -374,7 +374,7 @@ const DashSystem: React.FC<{
         <Col span={6} className="gutter-row">
           <div className="chart-group">
             <div className="chart-group__header">
-              <h1 className="chart-group__header__title">User</h1>
+              <h1 className="chart-group__header__title">Người dùng</h1>
               <div className="chart-group__header__icons">
                 <ZoomInOutlined
                   style={{ fontSize: "17px", color: "black" }}
