@@ -54,6 +54,9 @@
     }
 
     &__btn-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-style: normal;
         font-weight: normal;
         font-size: 11.8182px;
@@ -69,6 +72,7 @@
     &__avatar {
         width: 125px;
         height: 125px;
+        margin: 0 auto;
         display: block;
     }
 

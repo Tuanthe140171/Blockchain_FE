@@ -4,12 +4,26 @@
     text-align: left;
     margin-top: 35px;
 
+    &__uri {
+        margin-top: 25px;
+        display: block;
+        white-space: nowrap;
+        text-decoration: underline;
+        color: #3156DB;
+        cursor: pointer;
+    }
+
     &__title {
         font-style: normal;
         font-weight: 500;
         font-size: 24px;
         line-height: 30px;
         color: #002169 !important;
+    }
+
+    &__btns {
+        display: flex;
+        align-items: center;
     }
 
     &__btn {
@@ -24,7 +38,11 @@
         font-size: 18px;
         line-height: 20px;
         color: #F6FAFF;
-        margin-top: 50px;
+        margin-top: 30px;
+    }
+
+    &__next {
+        margin-left: 10px;
     }
 
     &__methods {
@@ -41,8 +59,8 @@
         border: 1px solid #C3D1ED;
         box-sizing: border-box;
         border-radius: 3px;
-        max-width: 500px;
-        width: 500px;
+        max-width: 49%;
+        width: 49%;
         margin-top: 16px;
         transition: .2s all ease-in;
         cursor: pointer;

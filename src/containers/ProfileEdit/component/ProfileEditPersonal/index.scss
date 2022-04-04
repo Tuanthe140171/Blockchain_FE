@@ -77,7 +77,9 @@
 
     &__information {
       &__form {
-        max-width: 600px;
+        display: flex;
+        flex-direction: row-reverse;
+
         &__form-item {
           & > div {
             display: flex;

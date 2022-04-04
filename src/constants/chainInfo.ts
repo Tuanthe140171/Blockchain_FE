@@ -18,7 +18,7 @@ export type ChainInfoMap = {
 export const CHAIN_INFO: ChainInfoMap = {
     [SupportedChainId.CHARITY]: {
         docs: 'https://docs.uniswap.org/',
-        explorer: 'https://etherscan.io/',
+        explorer: 'https://blockscout.charityverse.info',
         infoLink: 'https://info.uniswap.org/#/',
         label: 'Charity',
         logoUrl: "/icon/charity.svg",

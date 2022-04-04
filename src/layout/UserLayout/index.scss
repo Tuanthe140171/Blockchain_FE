@@ -1,7 +1,7 @@
 @import "../../styles/variables";
 
-.ant-layout {    
-  background: #F6FAFF; 
+.ant-layout {
+  background: #f6faff;
 }
 
 .ant-layout-sider-collapsed {
@@ -83,6 +83,7 @@
           background-color: #2f4980;
           height: 46px;
           width: 454px !important;
+          color: #A7B2C8;
         }
 
         & > span > span {
@@ -97,6 +98,11 @@
           border: none;
         }
 
+        & > span > span > button:hover {
+          background-color: #2f4980;
+          border: none;
+        }
+
         & > span > span > button > span {
           font-size: 20px;
         }
@@ -106,7 +112,6 @@
         float: right;
         height: 88px;
         right: 0;
-        // width: 240px;
         color: #ffffff;
         display: flex;
         justify-content: space-around;
@@ -116,15 +121,18 @@
         &__date {
           margin: 0 15px;
           padding: 0;
+          cursor: default;
         }
 
         &__noti {
+          position: fixed;
           .ant-popover-inner-content {
             padding: 0;
           }
         }
 
         &__profile {
+          position: fixed;
           .ant-popover-inner-content {
             padding: 0;
           }
@@ -235,6 +243,10 @@
     margin-bottom: 0;
     margin-left: 15px;
   }
+}
+
+.ant-message {
+  z-index: 99999999999999999999999999999999999999999999999;
 }
 
 @keyframes infinite-spinning-1 {

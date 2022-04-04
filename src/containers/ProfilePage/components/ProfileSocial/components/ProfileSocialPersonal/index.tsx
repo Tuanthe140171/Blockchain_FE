@@ -1,16 +1,24 @@
 import { Image } from "antd";
-import { Link } from "react-router-dom";
 import React from "react";
-
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import "./index.scss";
 
 const ProfileSocialPersonal: React.FC = () => {
+  const { userData } = useSelector((state: any) => state.userLayout);
+  const navigate = useNavigate();
+
   return (
     <div className="profile-personal-wrapper">
       <div className="profile-personal">
         <header className="profile-personal__header">
           <p className="personal-header__title">Personal Information</p>
-          <span className="personal-header__edit">Edit</span>
+          <span
+            className="personal-header__edit"
+            onClick={() => navigate("/profile/edit")}
+          >
+            Edit
+          </span>
         </header>
         <div className="profile-personal__divider" />
         <ul className="profile-personal__details">
@@ -24,7 +32,9 @@ const ProfileSocialPersonal: React.FC = () => {
               <span>Họ và Tên</span>
             </div>
             <span className="profile-personal__detail-content">
-              Mai Thị Mây
+              {`${userData.lastName ? userData.lastName : "Người"} ${
+                userData.name ? userData.name : "dùng"
+              }`}
             </span>
           </li>
           <li className="profile-personal__detail">
@@ -37,7 +47,7 @@ const ProfileSocialPersonal: React.FC = () => {
               <span>Ngày Sinh</span>
             </div>
             <span className="profile-personal__detail-content">
-              5/ 10/ 2000
+              {userData.dob?.split("T")[0]}
             </span>
           </li>
           <li className="profile-personal__detail">
@@ -50,7 +60,7 @@ const ProfileSocialPersonal: React.FC = () => {
               <span>Trú quán</span>
             </div>
             <span className="profile-personal__detail-content">
-              Hà Nội, Việt Nam
+              {userData.currentAddress}
             </span>
           </li>
           <li className="profile-personal__detail">
@@ -63,7 +73,7 @@ const ProfileSocialPersonal: React.FC = () => {
               <span>Nguyên quán</span>
             </div>
             <span className="profile-personal__detail-content">
-              Hà Giang, Việt Nam
+              {userData.baseAddress}
             </span>
           </li>
           <li className="profile-personal__detail">
@@ -76,7 +86,7 @@ const ProfileSocialPersonal: React.FC = () => {
               <span>Số CMND</span>
             </div>
             <span className="profile-personal__detail-content">
-              0312 0908 1123
+              {userData.identityId}
             </span>
           </li>
           <li className="profile-personal__detail">
@@ -88,7 +98,9 @@ const ProfileSocialPersonal: React.FC = () => {
               />
               <span>Ngày cấp CMND</span>
             </div>
-            <span className="profile-personal__detail-content">3/2/2019</span>
+            <span className="profile-personal__detail-content">
+              {userData.identityDate}
+            </span>
           </li>
           <li className="profile-personal__detail">
             <div className="profile-personal__detail-label">
@@ -100,7 +112,7 @@ const ProfileSocialPersonal: React.FC = () => {
               <span>Nơi cấp CMND</span>
             </div>
             <span className="profile-personal__detail-content">
-              Cục Cảnh Sát
+              {userData.identityPlace}
             </span>
           </li>
         </ul>

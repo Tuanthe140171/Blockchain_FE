@@ -12,11 +12,12 @@ type IDialogType = "warning" | "confirm" | "infor";
 type AppDialogProps = {
   type: IDialogType;
   title: string;
-  description: string;
+  description?: any;
   cancelText?: string;
   confirmText?: string;
   onClose?: any;
   onConfirm?: any;
+  content?: any;
 };
 
 const AppDialog: React.FC<AppDialogProps> = (props) => {
@@ -28,6 +29,7 @@ const AppDialog: React.FC<AppDialogProps> = (props) => {
     confirmText,
     onClose,
     onConfirm,
+    content,
   } = props;
 
   const renderIcon = () => {
@@ -50,30 +52,40 @@ const AppDialog: React.FC<AppDialogProps> = (props) => {
   };
 
   const renderButtons = () => {
-    if (type === "infor") {
+    if (confirmText && cancelText) {
+      return (
+        <div className="app-dialog__buttons">
+          <Button className="app-dialog__buttons__btn-cancel" onClick={onClose}>
+            {cancelText}
+          </Button>
+          <Button
+            className={`app-dialog__buttons__btn-${
+              type === "confirm" ? "confirm" : "warning"
+            }`}
+            onClick={onConfirm}
+          >
+            {confirmText}
+          </Button>
+        </div>
+      );
+    } else {
       return (
         <div className="app-dialog__button">
-          <Button className="app-dialog__button__btn-infor" onClick={onConfirm}>
+          <Button
+            className={`app-dialog__button__btn-${
+              type === "infor"
+                ? "infor"
+                : type === "confirm"
+                ? "confirm"
+                : "warning"
+            }`}
+            onClick={onConfirm}
+          >
             {confirmText}
           </Button>
         </div>
       );
     }
-    return (
-      <div className="app-dialog__buttons">
-        <Button className="app-dialog__buttons__btn-cancel" onClick={onClose}>
-          {cancelText}
-        </Button>
-        <Button
-          className={`app-dialog__buttons__btn-${
-            type === "confirm" ? "confirm" : "warning"
-          }`}
-          onClick={onConfirm}
-        >
-          {confirmText}
-        </Button>
-      </div>
-    );
   };
 
   return (
@@ -88,8 +100,10 @@ const AppDialog: React.FC<AppDialogProps> = (props) => {
       <div className="app-dialog">
         {renderIcon()}
         <div className="app-dialog__title">{title}</div>
-        <div className="app-dialog__description">{description}</div>
-        {renderButtons()}
+        {description ? (
+          <div className="app-dialog__description">{description}</div>
+        ) : null}
+        {content ? content : renderButtons()}
       </div>
     </Modal>
   );

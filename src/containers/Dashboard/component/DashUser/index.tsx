@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import {
   DownloadOutlined,
-  UserOutlined,
   ZoomInOutlined,
 } from "@ant-design/icons";
-import { Avatar, Col, Input, Row, Table, Image } from "antd";
+import { Avatar, Col, Input, Row, Table, Image, Tooltip } from "antd";
 import { BigNumber } from 'bignumber.js';
 import {
   CategoryScale,
@@ -15,8 +14,9 @@ import {
   LineElement,
   PointElement,
   Title,
-  Tooltip,
+  Tooltip as ChartTooltip,
 } from "chart.js";
+import { ethers } from "ethers";
 import { Line } from "react-chartjs-2";
 import { useWeb3React } from "web3-react-core";
 import moment from "moment";
@@ -27,6 +27,8 @@ import { exportDataToCsv } from '../../../../utils/csvGenerator';
 import { plugins } from "../../../../utils/chart";
 import { toPercent } from "../../../../utils/convert";
 import { options } from "../../../../constants/chart";
+import { CHAIN_INFO } from "../../../../constants/chainInfo";
+import { SupportedChainId } from "../../../../constants/chains";
 import "./index.scss";
 
 const { Search } = Input;
@@ -37,7 +39,7 @@ ChartJS.register(
   PointElement,
   LineElement,
   Title,
-  Tooltip,
+  ChartTooltip,
   Legend
 );
 
@@ -53,13 +55,19 @@ const DashUser: React.FC<{
     to: number
   } | undefined
 }> = (props) => {
-  const { account } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   const [keyWord, setKeyWord] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [chartRef, setChartRef] = useState<any>();
   const [secChartRef, setSecChartRef] = useState<any>();
 
-  const debouncedKeyword = useDebounce<string>(keyWord, 500)
+  const debouncedKeyword = useDebounce<string>(keyWord, 500);
+
+  const {
+    explorer
+  } = CHAIN_INFO[
+    chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
+  ];
 
   const { data: transactionsResp, loading } = useFetch<any>(`transactions?page=${currentPage}&userAddress=${account}&keyword=${debouncedKeyword}`, {
     "Content-Type": "application/json",
@@ -96,30 +104,36 @@ const DashUser: React.FC<{
     const totalGivings = dayDatas.map((data: any) =>  parseInt(data.totalDonation));
 
     if (totalReceives.length >= 2 && totalReceives[totalReceives.length - 2] > 0) {
-      receivingStatus.percentage = new BigNumber(totalReceives[totalReceives.length - 1]).minus(new BigNumber(totalReceives[totalReceives.length - 2])).div(new BigNumber(totalReceives[totalReceives.length - 2]));
+      receivingStatus.percentage = new BigNumber(totalReceives[totalReceives.length - 1]).div(1e18).minus(new BigNumber(totalReceives[totalReceives.length - 2]).div(1e18)).div(new BigNumber(totalReceives[totalReceives.length - 2]).div(1e18));
     } else {
       receivingStatus.percentage = new BigNumber(totalReceives[totalReceives.length - 1]).div(1e18).minus(new BigNumber(0));
     }
-    receivingStatus.status = new BigNumber(receivingStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
+    receivingStatus.status = new BigNumber(receivingStatus.percentage).lt(0) ? CharityStatus.DOWN : CharityStatus.UP;
 
     if (totalGivings.length >= 2 && totalGivings[totalGivings.length - 2] > 0) {
-      givingStatus.percentage = new BigNumber(totalGivings[totalGivings.length - 1]).minus(new BigNumber(totalGivings[totalGivings.length - 2])).div(new BigNumber(totalGivings[totalGivings.length - 2]));
+      givingStatus.percentage = new BigNumber(totalGivings[totalGivings.length - 1]).div(1e18).minus(new BigNumber(totalGivings[totalGivings.length - 2]).div(1e18)).div(new BigNumber(totalGivings[totalGivings.length - 2]).div(1e18));
     } else {
       givingStatus.percentage = new BigNumber(totalGivings[totalGivings.length - 1]).div(1e18).minus(new BigNumber(0));
     }
-    givingStatus.status = new BigNumber(receivingStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
+    givingStatus.status = new BigNumber(givingStatus.percentage).lt(0) ? CharityStatus.DOWN : CharityStatus.UP;
   }
 
   const transactionsTableData = transactionsResp ? transactionsResp.rows.map((transaction: any) => ({
-    id: shortenTx(transaction.id),
+    id: transaction.id,
     key: shortenTx(transaction.id),
-    name: transaction["fromUser.name"],
-    donee: transaction["toUser.name"],
+    name: ethers.utils.getAddress(transaction.fromUser.walletAddress) === ethers.utils.getAddress(account || "") ? 'You': transaction.fromUser.name,
+    donee: ethers.utils.getAddress(transaction.toUser.walletAddress) === ethers.utils.getAddress(account || "") ? 'You': transaction.toUser.name,
     date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
-    amount: transaction.amount,
+    amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
     status: ["loser"],
-    doneeAvatar: transaction["toUser.UserMedia.link"],
-    avatar: transaction["fromUser.UserMedia.link"]
+    doneeAvatar:(function(){
+      const userAvatar = transaction.toUser.UserMedia.filter((userMedia: any) => userMedia.type === "1"  && userMedia.active === 1).slice(0, 1).pop();
+      return userAvatar ? userAvatar.link: null;
+    }()),
+    avatar: (function(){
+      const userAvatar = transaction.fromUser.UserMedia.filter((userMedia: any) => userMedia.type === "1"  && userMedia.active === 1).slice(0, 1).pop();
+      return userAvatar ? userAvatar.link: null;
+    }())
   })) : [];
 
   var gradientStroke = chartRef?.ctx?.createLinearGradient(0, 500, 0, 100);
@@ -135,7 +149,7 @@ const DashUser: React.FC<{
     datasets: [
       {
         fill: true,
-        data: dailyDonationResp ? dailyDonationResp.userDonationDayDatas.map((data: any) => data.totalDonation) : [],
+        data: dailyDonationResp ? dailyDonationResp.userDonationDayDatas.map((data: any) => new BigNumber(data.totalDonation).div(1e18).toFixed(4)) : [],
         backgroundColor: gradientStroke,
         borderColor: '#EEC909',
         tension: 0.5,
@@ -151,7 +165,7 @@ const DashUser: React.FC<{
     datasets: [
       {
         fill: true,
-        data: dailyDonationResp ? dailyDonationResp.userDonationDayDatas.map((data: any) => new BigNumber(data.totalReceive).div(1e18).toFixed()) : [],
+        data: dailyDonationResp ? dailyDonationResp.userDonationDayDatas.map((data: any) => new BigNumber(data.totalReceive).div(1e18).toFixed(4)) : [],
         backgroundColor: userGradientStroke,
         borderColor: '#52BFD6',
         tension: 0.5,
@@ -168,26 +182,29 @@ const DashUser: React.FC<{
       dataIndex: "id",
       key: "id",
       sorter: (a: any, b: any) => a.id - b.id,
+      render: (name: any, others: any) => (
+        <Tooltip title={name}><span style={{ cursor: 'pointer' }} onClick={() => window.open(`${explorer}/tx/${name}`, '_blank')}>{shortenTx(name)}</span></Tooltip>
+      )
     },
     {
-      title: "Philantrophist",
+      title: "Người từ thiện",
       dataIndex: "name",
       key: "name",
       render: (name: any, others: any) => (
         <div
           style={{
             display: "flex",
-            justifyContent: "space-around",
+            justifyContent: "flex-start",
             alignItems: "center",
           }}
         >
-          <Avatar src={others.avatar} />
+          <Avatar src={others.avatar} style={{ marginRight: 20 }}/>
           {name}
         </div>
       ),
     },
     {
-      title: "Donee",
+      title: "Người nhận",
       dataIndex: "donee",
       key: "donee",
       render: (name: any, others: any) => {
@@ -195,11 +212,11 @@ const DashUser: React.FC<{
           <div
             style={{
               display: "flex",
-              justifyContent: "space-around",
+              justifyContent: "flex-start",
               alignItems: "center",
             }}
           >
-            <Avatar src={others.doneeAvatar} />
+            <Avatar src={others.doneeAvatar} style={{ marginRight: 20 }}/>
             {name}
           </div>
         )
@@ -227,13 +244,13 @@ const DashUser: React.FC<{
     //   sorter: (a: any, b: any) => a.status - b.status,
     // },
     {
-      title: "Date",
+      title: "Ngày",
       dataIndex: "date",
       key: "date",
       sorter: (a: any, b: any) => a.date - b.date,
     },
     {
-      title: "Amount",
+      title: "Số tiền",
       dataIndex: "amount",
       key: "amount",
       sorter: (a: any, b: any) => a.amount - b.amount,
@@ -246,7 +263,7 @@ const DashUser: React.FC<{
         <Col span={12} className="gutter-row">
           <div className="chart-group">
             <div className="chart-group__header">
-              <p className="chart-group__header__title">Your Giving</p>
+              <p className="chart-group__header__title">Bạn cho đi</p>
               <div className="chart-group__header__icons">
                 <ZoomInOutlined
                   style={{ fontSize: "17px", color: "black" }}
@@ -260,9 +277,9 @@ const DashUser: React.FC<{
             </div>
             <Line data={data} ref={ref => setChartRef(ref)} options={options} plugins={plugins() as any} className="chart-group__chart" />
             <div className="chart-group__data-group">
-              <h3 className="chart-group__data-group__title">Total Giving</h3>
+              <h3 className="chart-group__data-group__title">Tổng số cho đi</h3>
               <h1 className="chart-group__data-group__data">
-                {userStatsResp ? new BigNumber(userStatsResp.userStatistic.totalDonation).div(1e18).toFixed(4): 0} CRV
+                {(userStatsResp && userStatsResp.userStatistic) ? new BigNumber(userStatsResp.userStatistic.totalDonation).div(1e18).toFixed(4): 0} CRV
                 <span className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${givingStatus.status === CharityStatus.UP ? 'up' : 'down'}`}>
                   <Image preview={false} src="/icon/growth.svg" className={`chart-group__data-group__data__icon--${givingStatus.status === CharityStatus.UP ? 'up' : 'down'}`} />
                   <span>{toPercent(givingStatus.percentage)}%</span>
@@ -274,7 +291,7 @@ const DashUser: React.FC<{
         <Col span={12} className="gutter-row">
           <div className="chart-group">
             <div className="chart-group__header">
-              <h1 className="chart-group__header__title">Your Receiving</h1>
+              <h1 className="chart-group__header__title">Bạn nhận về</h1>
               <div className="chart-group__header__icons">
                 <ZoomInOutlined
                   style={{ fontSize: "17px", color: "black" }}
@@ -289,10 +306,10 @@ const DashUser: React.FC<{
             <Line data={receivingData} options={options} ref={ref => setSecChartRef(ref)} plugins={plugins("#52BFD6") as any} className="chart-group__chart" />
             <div className="chart-group__data-group">
               <h3 className="chart-group__data-group__title">
-                Total receiving
+                Tổng số nhận về
               </h3>
               <h1 className="chart-group__data-group__data">
-                {userStatsResp ? new BigNumber(userStatsResp.userStatistic.totalDonationReceive).div(1e18).toFixed(4): 0} CRV
+                {(userStatsResp && userStatsResp.userStatistic) ? new BigNumber(userStatsResp.userStatistic.totalDonationReceive).div(1e18).toFixed(4): 0} CRV
                 <span className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${receivingStatus.status === CharityStatus.UP ? 'up' : 'down'}`}>
                   <Image preview={false} src="/icon/growth.svg" className={`chart-group__data-group__data__icon--${receivingStatus.status === CharityStatus.UP ? 'up' : 'down'}`} />
                   <span>{toPercent(receivingStatus.percentage)}%</span>
@@ -302,14 +319,14 @@ const DashUser: React.FC<{
           </div>
         </Col>
       </Row>
-      <Row gutter={16} className="dash-system__row-table">
-        <Col span={18} className="gutter-row">
+      <Row gutter={24} className="dash-system__row-table">
+        <Col span={24} className="gutter-row">
           <div className="table-group">
             <div className="table-group__header">
-              <p className="table-group__header__title">History transaction</p>
+              <p className="table-group__header__title">Lịch sử từ thiện</p>
               <div className="table-group__header__right-group">
                 <Search
-                  placeholder="Search donee, history..."
+                  placeholder="Tên, số lượng..."
                   // onSearch={onSearch}
                   style={{ width: 230 }}
                   value={keyWord}
@@ -327,6 +344,7 @@ const DashUser: React.FC<{
               </div>
             </div>
             <Table
+              className="transaction-table"
               columns={tableColumns}
               dataSource={transactionsTableData}
               pagination={{
@@ -340,7 +358,7 @@ const DashUser: React.FC<{
             />
           </div>
         </Col>
-        <Col span={6} className="gutter-row">
+        {/* <Col span={6} className="gutter-row">
           <div className="chart-group">
             <div className="chart-group__header">
               <h1 className="chart-group__header__title">Your his</h1>
@@ -355,7 +373,7 @@ const DashUser: React.FC<{
               </div>
             </div>
           </div>
-        </Col>
+        </Col> */}
       </Row>
     </div>
   );

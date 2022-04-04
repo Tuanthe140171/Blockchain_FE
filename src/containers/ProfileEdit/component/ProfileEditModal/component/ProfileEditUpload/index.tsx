@@ -1,25 +1,34 @@
 import { Button, Upload } from "antd";
 import React from "react";
-import { UploadOutlined } from "@ant-design/icons";
 import "./index.scss";
 
 type ProfileModalProps = {
-  index: number;
+  id: string;
   message: string;
+  dataUpload?: any;
+  setDataUpload?: any;
+};
+
+const dummyRequest = ({ file, onSuccess }: any) => {
+  setTimeout(() => {
+    onSuccess("ok");
+  }, 0);
 };
 
 const ProfileUpload: React.FC<ProfileModalProps> = (props) => {
-  const { index, message } = props;
+  const { id, message, dataUpload, setDataUpload } = props;
 
   const fileList: any = [
     {
       name: `Upload giấy chứng nhận ${message}`,
       status: "done",
       url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-      thumbUrl:
-        "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
     },
   ];
+
+  const onSituationUpload = ({ fileList: newFileList }: any) => {
+    // setIsUploadAva(true);
+  };
 
   return (
     <div className="profile-upload">
@@ -28,11 +37,12 @@ const ProfileUpload: React.FC<ProfileModalProps> = (props) => {
       </Button>
       <div className="profile-upload__wrapper">
         <Upload
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
           listType="picture"
           defaultFileList={fileList}
           className="profile-upload__wrapper__container"
           maxCount={1}
+          onChange={onSituationUpload}
+          customRequest={dummyRequest}
         >
           <Button className="profile-upload__wrapper__container__button">
             Upload file

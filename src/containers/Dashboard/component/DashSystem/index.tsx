@@ -1,9 +1,8 @@
 import {
   DownloadOutlined,
-  UserOutlined,
   ZoomInOutlined,
 } from "@ant-design/icons";
-import { Avatar, Col, Input, Row, Table, Image } from "antd";
+import { Avatar, Col, Input, Row, Table, Image, Tooltip } from "antd";
 import {
   ArcElement,
   CategoryScale,
@@ -15,10 +14,12 @@ import {
   LineElement,
   PointElement,
   Title,
-  Tooltip,
+  Tooltip as ChartTooltip,
 } from "chart.js";
+import { ethers } from "ethers";
 import { useState } from "react";
 import { Line, Pie } from "react-chartjs-2";
+import { useWeb3React } from "web3-react-core";
 import moment from "moment";
 import BigNumber from "bignumber.js";
 import useFetch from "../../../../hooks/useFetch";
@@ -28,6 +29,8 @@ import { plugins } from "../../../../utils/chart";
 import { exportDataToCsv } from '../../../../utils/csvGenerator';
 import { toPercent } from '../../../../utils/convert';
 import { options } from "../../../../constants/chart";
+import { CHAIN_INFO } from "../../../../constants/chainInfo";
+import { SupportedChainId } from "../../../../constants/chains";
 import "./index.scss";
 
 enum CharityStatus {
@@ -44,7 +47,7 @@ ChartJS.register(
   PointElement,
   LineElement,
   Title,
-  Tooltip,
+  ChartTooltip,
   Legend,
   Filler,
   ArcElement
@@ -56,12 +59,19 @@ const DashSystem: React.FC<{
     to: number
   } | undefined
 }> = (props) => {
+  const { chainId, account } = useWeb3React();
   const [keyWord, setKeyWord] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [chartRef, setChartRef] = useState<any>();
   const [userChartRef, setUserChartRef] = useState<any>();
 
-  const debouncedKeyword = useDebounce<string>(keyWord, 500)
+  const debouncedKeyword = useDebounce<string>(keyWord, 500);
+
+  const {
+    explorer
+  } = CHAIN_INFO[
+    chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
+  ];
 
   const { data: transactionsResp, loading } = useFetch<any>(`transactions?page=${currentPage}&keyword=${debouncedKeyword}`, {
     "Content-Type": "application/json",
@@ -108,11 +118,12 @@ const DashSystem: React.FC<{
   if (dailyDonationResp && dailyDonationResp.donationDayDatas.length >= 1) {
     const dayDatas = dailyDonationResp.donationDayDatas;
     if (dayDatas.length >= 2 && dayDatas[dayDatas.length - 2].dailyVolume > 0) {
-      charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).minus(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume)).div(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume));
+      charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).div(1e18).minus(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume).div(1e18)).div(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume).div(1e18));
     } else {
-      charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).minus(new BigNumber(0));
+      charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).div(1e18).minus(new BigNumber(0));
     }
-    charityStatus.status = new BigNumber(charityStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
+    console.log(charityStatus.percentage);
+    charityStatus.status = new BigNumber(charityStatus.percentage).lt(0) ? CharityStatus.DOWN : CharityStatus.UP;
   }
 
   if (userActiveResp && userActiveResp.length >= 1) {
@@ -121,8 +132,8 @@ const DashSystem: React.FC<{
     } else {
       userStatsStatus.percentage = new BigNumber(userActiveResp[userActiveResp.length - 1].count).minus(new BigNumber(0));
     }
-    userStatsStatus.status = new BigNumber(userStatsStatus.percentage).lt(1) ? CharityStatus.DOWN : CharityStatus.UP;
-    
+    userStatsStatus.status = new BigNumber(userStatsStatus.percentage).lt(0) ? CharityStatus.DOWN : CharityStatus.UP;
+
     for (let userStats of userActiveResp) {
       userStatsStatus.totalUserActions = userStatsStatus.totalUserActions.plus(new BigNumber(userStats.count));
     }
@@ -139,11 +150,11 @@ const DashSystem: React.FC<{
   
 
   const data: ChartData<"line", any, unknown> = {
-    labels: dailyDonationResp ? dailyDonationResp.donationDayDatas.map((data: any) => moment(parseInt(data.date) * 1000).format("DD-MM-yy")) : [],
+    labels: dailyDonationResp ? dailyDonationResp.donationDayDatas.map((data: any) => moment(parseInt(data.date) * 1000).format("DD-MM")) : [],
     datasets: [
       {
         fill: true,
-        data: dailyDonationResp ? dailyDonationResp.donationDayDatas.map((data: any) => new BigNumber(data.dailyVolume).div(1e18).toFixed()) : [],
+        data: dailyDonationResp ? dailyDonationResp.donationDayDatas.map((data: any) => new BigNumber(data.dailyVolume).div(1e18).toFixed(4)) : [],
         backgroundColor: gradientStroke,
         borderColor: '#EEC909',
         tension: 0.5,
@@ -155,7 +166,7 @@ const DashSystem: React.FC<{
   };
 
   const userStatsData: ChartData<"line", any, unknown> = {
-    labels: userActiveResp ? userActiveResp.map((stats: any) => moment(new Date(stats.date)).format("DD-MM-yy")) : [],
+    labels: userActiveResp ? userActiveResp.map((stats: any) => moment(new Date(stats.date)).format("DD-MM")) : [],
     datasets: [
       {
         fill: true,
@@ -176,26 +187,29 @@ const DashSystem: React.FC<{
       dataIndex: "id",
       key: "id",
       sorter: (a: any, b: any) => a.id - b.id,
+      render: (name: any, others: any) => (
+        <Tooltip title={name}><span style={{ cursor: 'pointer' }} onClick={() => window.open(`${explorer}/tx/${name}`, '_blank')}>{shortenTx(name)}</span></Tooltip>
+      )
     },
     {
-      title: "Philantrophist",
+      title: "Người từ thiện",
       dataIndex: "name",
       key: "name",
       render: (name: any, others: any) => (
         <div
           style={{
             display: "flex",
-            justifyContent: "space-around",
+            justifyContent: "flex-start",
             alignItems: "center",
           }}
         >
-          <Avatar src={others.avatar} />
+          <Avatar src={others.avatar} style={{ marginRight: 20 }} />
           {name}
         </div>
       ),
     },
     {
-      title: "Donee",
+      title: "Người nhận",
       dataIndex: "donee",
       key: "donee",
       render: (name: any, others: any) => {
@@ -203,24 +217,24 @@ const DashSystem: React.FC<{
           <div
             style={{
               display: "flex",
-              justifyContent: "space-around",
+              justifyContent: "flex-start",
               alignItems: "center",
             }}
           >
-            <Avatar src={others.doneeAvatar} />
-            {name}
+            <Avatar src={others.doneeAvatar} style={{ marginRight: 20 }} />
+            <span>{name}</span>
           </div>
         )
       },
     },
     {
-      title: "Date",
+      title: "Ngày",
       dataIndex: "date",
       key: "date",
       sorter: (a: any, b: any) => a.date - b.date,
     },
     {
-      title: "Amount",
+      title: "Số tiền",
       dataIndex: "amount",
       key: "amount",
       sorter: (a: any, b: any) => a.amount - b.amount,
@@ -228,19 +242,25 @@ const DashSystem: React.FC<{
   ];
 
   const transactionsTableData = transactionsResp ? transactionsResp.rows.map((transaction: any) => ({
-    id: shortenTx(transaction.id),
+    id: transaction.id,
     key: shortenTx(transaction.id),
-    name: transaction["fromUser.name"],
-    donee: transaction["toUser.name"],
+    name: ethers.utils.getAddress(transaction.fromUser.walletAddress) === ethers.utils.getAddress(account || "") ? 'You': transaction.fromUser.name,
+    donee: ethers.utils.getAddress(transaction.toUser.walletAddress) === ethers.utils.getAddress(account || "") ? 'You': transaction.toUser.name,
     date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
-    amount: transaction.amount,
+    amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
     status: ["loser"],
-    doneeAvatar: transaction["toUser.UserMedia.link"],
-    avatar: transaction["fromUser.UserMedia.link"]
+    doneeAvatar:(function(){
+      const userAvatar = transaction.toUser.UserMedia.filter((userMedia: any) => userMedia.type === "1" && userMedia.active === 1).slice(0, 1).pop();
+      return userAvatar ? userAvatar.link: null;
+    }()),
+    avatar: (function(){
+      const userAvatar = transaction.fromUser.UserMedia.filter((userMedia: any) => userMedia.type === "1" && userMedia.active === 1).slice(0, 1).pop();
+      return userAvatar ? userAvatar.link: null;
+    }())
   })) : [];
 
   const pieData: ChartData<"pie", any, unknown> = {
-    labels: ["Philantrophist", "Donee"],
+    labels: ["Người đi từ thiện", "Người cần từ thiện"],
     datasets: [
       {
         data: userStatsResp ? [userStatsResp.totalNum - userStatsResp.doneeNum, userStatsResp.doneeNum] : [50, 50],
@@ -255,7 +275,7 @@ const DashSystem: React.FC<{
         <Col span={12} className="gutter-row">
           <div className="chart-group">
             <div className="chart-group__header">
-              <p className="chart-group__header__title">Charity</p>
+              <p className="chart-group__header__title">Tổng từ thiện</p>
               <div className="chart-group__header__icons">
                 <ZoomInOutlined
                   style={{ fontSize: "17px", color: "black" }}
@@ -269,7 +289,7 @@ const DashSystem: React.FC<{
             </div>
             <Line ref={ref => setChartRef(ref)} data={data} plugins={plugins() as any} options={options} className="chart-group__chart" />
             <div className="chart-group__data-group">
-              <h3 className="chart-group__data-group__title">Total charity</h3>
+              <h3 className="chart-group__data-group__title">Tổng tiền từ thiện</h3>
               <h1 className="chart-group__data-group__data">
                 {donationResp ? new BigNumber(donationResp.donations[0].totalVolume).div(1e18).toFixed(4) : 0} CRV
                 <span className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${charityStatus.status === CharityStatus.UP ? 'up' : 'down'}`}>
@@ -283,7 +303,7 @@ const DashSystem: React.FC<{
         <Col span={12} className="gutter-row">
           <div className="chart-group">
             <div className="chart-group__header">
-              <h1 className="chart-group__header__title">User Action</h1>
+              <h1 className="chart-group__header__title">Lượt truy cập</h1>
               <div className="chart-group__header__icons">
                 <ZoomInOutlined
                   style={{ fontSize: "17px", color: "black" }}
@@ -298,7 +318,7 @@ const DashSystem: React.FC<{
             <Line ref={ref => setUserChartRef(ref)} data={userStatsData} options={options} plugins={plugins("#52BFD6") as any} className="chart-group__chart" />
             <div className="chart-group__data-group">
               <h3 className="chart-group__data-group__title">
-                Total user action
+                Tổng lượt truy cập
               </h3>
               <h1 className="chart-group__data-group__data">
                 {userStatsStatus.totalUserActions.toFixed()}
@@ -315,10 +335,10 @@ const DashSystem: React.FC<{
         <Col span={18} className="gutter-row">
           <div className="table-group">
             <div className="table-group__header">
-              <p className="table-group__header__title">History transaction</p>
+              <p className="table-group__header__title">Lịch sử từ thiện</p>
               <div className="table-group__header__right-group">
                 <Search
-                  placeholder="Search donee, history..."
+                  placeholder="Tên, số lượng ..."
                   // onSearch={onSearch}
                   style={{ width: 230 }}
                   value={keyWord}
@@ -337,6 +357,7 @@ const DashSystem: React.FC<{
               </div>
             </div>
             <Table
+              className="transaction-table"
               columns={tableColumns}
               dataSource={transactionsTableData}
               pagination={{
@@ -353,7 +374,7 @@ const DashSystem: React.FC<{
         <Col span={6} className="gutter-row">
           <div className="chart-group">
             <div className="chart-group__header">
-              <h1 className="chart-group__header__title">User</h1>
+              <h1 className="chart-group__header__title">Người dùng</h1>
               <div className="chart-group__header__icons">
                 <ZoomInOutlined
                   style={{ fontSize: "17px", color: "black" }}

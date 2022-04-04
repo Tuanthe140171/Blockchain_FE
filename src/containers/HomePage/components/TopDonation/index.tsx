@@ -167,9 +167,8 @@ const TopDonation: React.FC = () => {
                     className="top-donation__carousel" 
                     pauseOnHover={true} 
                     // autoplay
-                    ref={(el: CarouselRef) => carouselRef.current = el}
+                    ref={(el: any) => carouselRef.current = el}
                     afterChange={(slide) => {
-                        // console.log(slide);
                         setCurrentSlide(slide);
                     }}    
                 >

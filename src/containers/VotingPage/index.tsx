@@ -1,107 +1,233 @@
-import React, { useState } from "react";
-import { Typography, Table, Button, Input } from "antd";
+import React, { useEffect, useState } from "react";
+import { Typography, Table, Button, Input, Avatar } from "antd";
+import moment from "moment";
+import { useSelector } from "react-redux";
 import VotingConfirmation from "./components/VotingConfirmation";
-import AppPagination from "../../components/AppPagination";
+import { SelectedUser } from "./components/VotingConfirmation";
+import useDebounce from "../../hooks/useDebounce";
+import useFetch from "../../hooks/useFetch";
+import { useNavigate } from "react-router-dom";
 import "./index.scss";
 
 const { Search } = Input;
 
 const VotingPage: React.FC = () => {
-    const [confirmationVisible, setConfirmationVisible] = useState(false);
+  const [reloadVotingData, setReloadVotingData] = useState<boolean | undefined>(
+    true
+  );
+  const [confirmationVisible, setConfirmationVisible] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [inputSearch, setInputSearch] = useState("");
+  const [selectedUser, setSelectedUser] = useState<SelectedUser | undefined>();
+  const userData = useSelector((state: any) => state.userLayout.userData);
 
-    const columns = [
-        {
-            title: 'ID',
-            dataIndex: 'id',
-            width: '10%',
-        },
-        {
-            title: 'Donee',
-            dataIndex: 'donee',
-            width: '10%'
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-        },
-        {
-            title: 'Date of Birth',
-            dataIndex: 'date',
-            width: '10%'
-        },
-        {
-            title: 'Hoàn cảnh',
-            dataIndex: 'situation',
-            width: '20%',
-            render: (text: any, row: any, index: any) => {
-                return (
-                    <div className="voting__situation">
-                        <span>{text}</span>
-                        {
-                            row.more % 2 === 0 && <span className="voting__situation-more">3 more</span>
-                        }
-                    </div>
-                )
-            }
-        },
-        {
-            title: 'Time summit',
-            dataIndex: 'time',
-            width: '10%'
-        },
-        {
-            title: 'Status',
-            dataIndex: 'status',
-            width: '20%',
-            render: (text: any, row: any, index: any) => {
-                return (
-                    <Button
-                        className={`voting__check-btn voting__check-btn--${text.toLowerCase()}`}
-                        onClick={() => text.toLowerCase() === "check" && setConfirmationVisible(true)}
-                    >
-                        {text}
-                    </Button>
-                )
-            }
-        },
-    ];
+  const debouncedKeyword = useDebounce<string>(inputSearch, 500);
+  const navigate = useNavigate();
 
-    const { Title } = Typography;
-    const data = [];
-    for (let i = 0; i < 100; i++) {
-        data.push({
-            key: i,
-            id: i,
-            donee: `Edward King ${i}`,
-            address: `London, Park Lane no. ${i}`,
-            date: "10/01/2020",
-            situation: i % 2 === 0 ? "Người khuyết tật" : "Người nghèo",
-            time: "02/02/1990",
-            status: i % 2 === 0 ? "Claimed" : "Check",
-            more: i
-        });
+  let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}&userType=3`;
+
+  const { data, loading } = useFetch<any>(
+    url,
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [reloadVotingData],
+    {
+      method: "GET",
+    },
+    () => {
+      setReloadVotingData(undefined);
+    },
+    () => {
+      setReloadVotingData(undefined);
     }
-    return (
-        <div className="voting">
-            <Title level={3} className="voting__title">
-                Voting
-            </Title>
-            <div className="voting__list">
-                <div className="voting__list-header">
-                    <Title level={4} className="voting__list-title">
-                        Pre-Donee list
-                    </Title>
-                    <Search placeholder="Search donee, history..." onSearch={() => { }} style={{ width: 260 }} className="voting__list-input" />
-                </div>
-                <Table className="voting__table" bordered={false} columns={columns} dataSource={data} scroll={{ y: 400 }} />
-                <VotingConfirmation 
-                    visible={confirmationVisible} 
-                    onClose={() => setConfirmationVisible(false)} 
-                    setConfirmationVisible={setConfirmationVisible}
-                />
+  );
+
+  const doneeData = data
+    ? data.rows.map((donee: any) => ({
+        donee: `${donee.lastName || ""} ${donee.name}`,
+        dob: moment(donee.dob).format("DD-MM-yy"),
+        createDate: moment(donee.createDate).format("DD-MM-yy"),
+        address: `${donee.country} ${donee.baseAddress} ${donee.currentAddress}`,
+        id: donee.identityId,
+        situations: donee.BadLuckTypes,
+        avatar: (function () {
+          const userAvatar = donee.UserMedia.filter(
+            (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+          )
+            .slice(0, 1)
+            .pop();
+          return userAvatar ? userAvatar.link : null;
+        })(),
+        identityPlace: donee.identityPlace,
+        identityDate: donee.identityDate,
+        status: "check",
+        userId: donee.id,
+        isVoted: (function () {
+          return userData
+            ? donee.UserVotes.map(
+                (userVote: any) => userVote.userIdFrom
+              ).indexOf(userData.id) >= 0
+            : true;
+        })(),
+      }))
+    : [];
+
+  useEffect(() => {
+    if (selectedUser && data && userData && confirmationVisible) {
+      const donee = data.rows.filter(
+        (donee: any) => donee.id === selectedUser.userId
+      )[0];
+      setSelectedUser({
+        donee: `${donee.lastName || ""} ${donee.name}`,
+        dob: moment(donee.dob).format("DD-MM-yy"),
+        createDate: moment(donee.createDate).format("DD-MM-yy"),
+        address: `${donee.country} ${donee.baseAddress} ${donee.currentAddress}`,
+        id: donee.identityId,
+        situations: donee.BadLuckTypes,
+        avatar: (function () {
+          const userAvatar = donee.UserMedia.filter(
+            (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+          )
+            .slice(0, 1)
+            .pop();
+          return userAvatar ? userAvatar.link : null;
+        })(),
+        identityPlace: donee.identityPlace,
+        identityDate: donee.identityDate,
+        status: "check",
+        userId: donee.id,
+        isVoted: (function () {
+          return userData
+            ? donee.UserVotes.map(
+                (userVote: any) => userVote.userIdFrom
+              ).indexOf(userData.id) >= 0
+            : true;
+        })(),
+      });
+    }
+  }, [data, confirmationVisible, setSelectedUser, userData]);
+
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      width: "10%",
+    },
+    {
+      title: "Người dùng",
+      dataIndex: "donee",
+      width: "15%",
+      render: (text: any, row: any, index: any) => {
+        return (
+          <div
+            className="voting__donee"
+            onClick={() => navigate(`/profile/${row.userId}`)}
+          >
+            <Avatar src={row.avatar} />
+            <span>{text}</span>
+          </div>
+        );
+      },
+    },
+    {
+      title: "Địa chỉ",
+      dataIndex: "address",
+    },
+    {
+      title: "Ngày sinh",
+      dataIndex: "dob",
+      width: "10%",
+    },
+    {
+      title: "Hoàn cảnh",
+      dataIndex: "situations",
+      width: "25%",
+      render: (text: any, row: any, index: any) => {
+        return (
+          <div className="voting__situation">
+            <span>{row.situations[0].BadLuckerSituation.name}</span>
+            <div>
+              {row.situations.length >= 2 && (
+                <span className="voting__situation-more">
+                  {row.situations.length - 1} hoàn cảnh
+                </span>
+              )}
             </div>
+          </div>
+        );
+      },
+    },
+    {
+      title: "Thời gian nộp",
+      dataIndex: "createDate",
+      width: "10%",
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "status",
+      width: "15%",
+      render: (text: any, row: any, index: any) => {
+        return (
+          <Button
+            className={`voting__check-btn voting__check-btn--${
+              row.isVoted ? "checked" : ""
+            }`}
+            onClick={() => {
+              setSelectedUser(row);
+              setConfirmationVisible(true);
+            }}
+            disabled={row.isVoted}
+          >
+            {row.isVoted ? "Đã xác nhận" : "Xác nhận"}
+          </Button>
+        );
+      },
+    },
+  ];
+
+  const { Title } = Typography;
+
+  return (
+    <div className="voting">
+      <Title level={3} className="voting__title">
+        Bình chọn hộ nghèo
+      </Title>
+      <div className="voting__list">
+        <div className="voting__list-header">
+          <Title level={4} className="voting__list-title">
+            Danh sách người nộp đơn
+          </Title>
+          <Search
+            placeholder="Tìm kiếm"
+            onChange={(e: any) => {
+              setInputSearch(e.target.value);
+            }}
+            style={{ width: 260 }}
+            className="voting__list-input"
+          />
         </div>
-    )
-}
+        <Table
+          rowKey="userId"
+          loading={loading}
+          className="voting__table"
+          bordered={false}
+          columns={columns}
+          dataSource={doneeData}
+          scroll={{ y: 400 }}
+        />
+        <VotingConfirmation
+          visible={confirmationVisible}
+          onClose={() => setConfirmationVisible(false)}
+          setConfirmationVisible={setConfirmationVisible}
+          selectedUser={selectedUser}
+          setReloadVotingData={setReloadVotingData}
+        />
+      </div>
+    </div>
+  );
+};
 
 export default VotingPage;

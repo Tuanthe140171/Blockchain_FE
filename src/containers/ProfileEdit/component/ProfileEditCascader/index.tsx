@@ -112,7 +112,7 @@ const ProfileCascader = (props: any) => {
       if (selectedList.some((data: any) => data[0] === option.value)) {
         return (
           <ProfileUpload
-            index={index}
+            id={option.label}
             message={option.message}
             key={option.index}
           />

@@ -1,8 +1,7 @@
 import { useEffect, useReducer, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { useWeb3React } from "web3-react-core";
-import { isAddress } from "../utils";
-
-console.log(isAddress("849750add"))
+import useLocalStorage from "./useLocalStorage";
 interface State<T> {
   data?: T;
   error?: Error;
@@ -25,11 +24,13 @@ function useFetch<T = unknown>(
   useCustomUrl: boolean = false,
   dependencies: any[] = [],
   options?: RequestInit,
-  onSuccess?: () => void,
-  onError?: () => void
+  onSuccess?: (e?: any) => void,
+  onError?: (e?: any) => void
 ): State<T> {
   const cache = useRef<Cache<T>>({});
   const { account } = useWeb3React();
+  const navigate = useNavigate();
+  const [charityStorage, setCharityStorage] = useLocalStorage("charity", { auth: {} });
 
   // Used to prevent state update if the component is unmounted
   const cancelRequest = useRef<boolean>(false);
@@ -68,7 +69,13 @@ function useFetch<T = unknown>(
           ? JSON.parse(localStorage.getItem("charity") || "")
           : {};
 
-        if (!useCustomUrl && account && auth && auth.auth && auth.auth[account]) {
+        if (
+          !useCustomUrl &&
+          account &&
+          auth &&
+          auth.auth &&
+          auth.auth[account]
+        ) {
           headers.authorization = `Bearer ${auth.auth[account].token}`;
         }
 
@@ -76,20 +83,37 @@ function useFetch<T = unknown>(
           headers,
           ...options,
         });
-        
+
         if (!response.ok) {
+          if (response.status === 401 && account) {
+            const auth = charityStorage.auth;
+            delete (auth as any)[account];
+            setCharityStorage({
+              auth: {
+                ...charityStorage.auth,
+              }
+            });
+
+            navigate("/");
+            return;
+          } else {
+            const errorData = (await response.json()) as any;
+            if (errorData.message) {
+              throw new Error(errorData.message);
+            } 
+          }
           throw new Error(response.statusText);
         }
 
-        const data = (await response.json()) as T;
+        const data = (await response.json()) as any;
 
         dispatch({
           type: "fetched",
           payload: useCustomUrl ? data : (data as any).data,
         });
 
-        onSuccess && onSuccess();
-      } catch (error) {
+        onSuccess && onSuccess(data);
+      } catch (error: any) {
         if (cancelRequest.current) return;
 
         dispatch({ type: "error", payload: error as Error });
@@ -97,7 +121,6 @@ function useFetch<T = unknown>(
       }
     };
 
-    console.log(dependencies, account);
     dependencies.every((dependency) => dependency !== undefined) &&
       account &&
       void fetchData();

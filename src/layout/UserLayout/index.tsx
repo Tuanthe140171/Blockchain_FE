@@ -2,26 +2,151 @@ import { BellOutlined, SwapOutlined } from "@ant-design/icons";
 import { Badge, Button, Image, Input, Layout, Menu, Popover } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
 import { BigNumber } from "bignumber.js";
-import React, { ReactElement, useState } from "react";
+import { ethers } from "ethers";
+import React, { ReactElement, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { UnsupportedChainIdError, useWeb3React } from "web3-react-core";
 import { CHAIN_INFO } from "../../constants/chainInfo";
 import { SupportedChainId } from "../../constants/chains";
 import ModalHeader from "../../containers/Modal";
-import { useNativeCurrencyBalances } from "../../hooks/useCurrencyBalance";
+import { useCharityVerseContract } from "../../hooks/useContract";
+import useFetch from "../../hooks/useFetch";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import {
+  getBadluckerType,
+  getUserById,
+} from "../../stores/action/user-layout.action";
 import { shortenAddress } from "../../utils";
+import io from 'socket.io-client';
 import "./index.scss";
 
-
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 
+export const NotificationContext = React.createContext<{
+  content: string,
+  type: number,
+  createDate: string
+}[] | undefined>(undefined);
+
 const UserLayout: React.FC = (props): ReactElement => {
+  const [notifications, setNotifications] = useState<
+    {
+        content: string,
+    type: number,
+    createDate: string
+    }[]
+  >([]);
+  const [socket, setSocket] = useState<any>(null);
+  const [userBalance, setUserBalance] = useState<string>("0");
+  const [selectedKey, setSelectedKey] = useLocalStorage(
+    "activeTab",
+    "Dashboard"
+  );
   const [collapsed, setCollapsed] = useState(false);
 
   const navigate = useNavigate();
   const { account, chainId, error } = useWeb3React();
-  const userBalance = useNativeCurrencyBalances(account);
+  const [charityStorage, setCharityStorage] = useLocalStorage("charity", { auth: {} });
+  const { userData } = useSelector((state: any) => state.userLayout);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const newSocket = io(`https://socket.test.charityverse.info`);
+    setSocket(newSocket);
+    return () => {
+      newSocket.close();
+    }
+  }, [setSocket]);
+
+  useEffect(() => {
+    if (socket && account && charityStorage && (charityStorage as any).auth[account]) {
+      const socketData = (charityStorage as any).auth[account].socketData;
+
+      socket.on(`notification/${socketData}`, (data: any) => {
+        setNotifications([
+          ...notifications,
+          {
+            ...JSON.parse(data)
+          }
+        ])
+      });
+    }
+  }, [socket, charityStorage, account]);
+
+  const avatarLink = userData?.UserMedia.find(
+    (media: any) => media.type === "1" && media.active === 1
+  )
+    ? userData?.UserMedia.find(
+        (media: any) => media.type === "1" && media.active === 1
+      ).link
+    : "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
+
+  // console.log();
+
+  // useEffect(() => {
+  //   console.log(userData);
+  // }, [userData.UserMedia]);
+
+  const { data: user } = useFetch<any>(
+    "users/get-user-by-id",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [],
+    {},
+    (e) => {
+      const action = getUserById(e.data);
+      dispatch(action);
+    }
+  );
+
+  const { data: blkSituation } = useFetch<any>(
+    "bad-lucker/get-badlucker-situation",
+    {},
+    false,
+    [],
+    { method: "GET" },
+    (e) => {
+      // const optionRes = e.data.map((opt: any, index: number) => {
+      //   return {
+      //     value: opt.name,
+      //     label: opt.name,
+      //     index: index,
+      //     message: opt.message,
+      //     id: opt.id,
+      //   };
+      // });
+      // setOptions(optionRes);d
+      const action = getBadluckerType(e.data);
+      dispatch(action);
+    }
+  );
+
+  const charityContract = useCharityVerseContract();
+
+  useEffect(() => {
+    let interval: any;
+
+    const getCRVBalance = async () => {
+      const balance = await charityContract.balanceOf(account);
+      setUserBalance(ethers.utils.formatEther(balance));
+
+      interval = setInterval(async () => {
+        const balance = await charityContract.balanceOf(account);
+        setUserBalance(ethers.utils.formatEther(balance));
+      }, 10000);
+    };
+
+    charityContract && account && getCRVBalance();
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [charityContract, account]);
 
   const {
     logoUrl,
@@ -30,6 +155,15 @@ const UserLayout: React.FC = (props): ReactElement => {
   } = CHAIN_INFO[
     chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
   ];
+
+  const getDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = today.toLocaleString("default", { month: "short" });
+    const dd = today.getDate();
+    const day = today.toLocaleDateString("default", { weekday: "long" });
+    return `${day}, ${dd} ${mm} ${yyyy}`;
+  };
 
   const renderWeb3Account = () => {
     if (account && userBalance) {
@@ -55,7 +189,7 @@ const UserLayout: React.FC = (props): ReactElement => {
           </div>
 
           <p className="main-layout__site-layout__header__group-avatar__date">
-            Tue, 30 Dec 2022
+            {getDate()}
           </p>
           <Popover
             overlayClassName="main-layout__site-layout__header__group-avatar__noti"
@@ -66,7 +200,7 @@ const UserLayout: React.FC = (props): ReactElement => {
             content={<ModalHeader type={0} />}
             trigger="click"
           >
-            <Badge count={0} size="small" showZero>
+            <Badge count={notifications.length} size="small" showZero>
               <BellOutlined style={{ fontSize: "20  px", color: "#ffffff" }} />
             </Badge>
           </Popover>
@@ -80,13 +214,13 @@ const UserLayout: React.FC = (props): ReactElement => {
             trigger="click"
           >
             <Avatar
-              src="../../assets/ava.png"
+              src={avatarLink}
               className="main-layout__site-layout__header__group-avatar__avatar"
             />
           </Popover>
         </>
       );
-    } else if (error) {
+    } else if (error instanceof UnsupportedChainIdError) {
       return (
         <>
           <Button
@@ -140,12 +274,11 @@ const UserLayout: React.FC = (props): ReactElement => {
           </div>
         </>
       );
-    } else {
-      navigate("/");
     }
   };
 
   return (
+    <NotificationContext.Provider value={notifications}>
     <Layout style={{ minHeight: "100vh" }} className="main-layout">
       <Sider
         collapsible
@@ -170,7 +303,7 @@ const UserLayout: React.FC = (props): ReactElement => {
           <img src="../../icon/logo.svg" alt="" />
         </div>
         <Menu
-          defaultSelectedKeys={["Dashboard"]}
+          defaultSelectedKeys={[selectedKey]}
           mode="inline"
           theme="light"
           className="main-layout__sider__menu"
@@ -179,40 +312,56 @@ const UserLayout: React.FC = (props): ReactElement => {
             key="Dashboard"
             icon={<Image src="/icon/dashboard.svg" preview={false} />}
             className="main-layout__sider__menu__item"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => {
+              setSelectedKey("Dashboard");
+              navigate("/dashboard");
+            }}
           >
-            Dashboard
+            Bảng điểu khiển
           </Menu.Item>
           <Menu.Item
             key="Donee"
             icon={<Image src="/icon/donee.svg" preview={false} />}
             className="main-layout__sider__menu__item"
-            onClick={() => navigate("/donee")}
+            onClick={() => {
+              setSelectedKey("Donee");
+              navigate("/donee");
+            }}
           >
-            Donee
+            Người cần từ thiện
           </Menu.Item>
           <Menu.Item
             key="Exchange"
             icon={<Image src="/icon/exchange.svg" preview={false} />}
             className="main-layout__sider__menu__item"
-            onClick={() => navigate("/exchange")}
+            onClick={() => {
+              setSelectedKey("Exchange");
+              navigate("/exchange?type=buy&tab=0");
+            }}
           >
-            Exchange Money
+            Đổi tiền
           </Menu.Item>
           <Menu.Item
             key="ContactF"
             icon={<Image src="/icon/contact-us.svg" preview={false} />}
             className="main-layout__sider__menu__item"
+            onClick={() => {
+              setSelectedKey("ContactUs");
+              navigate("/contact-us");
+            }}
           >
-            Contact us
+            Liên lạc
           </Menu.Item>
           <Menu.Item
             key="Voting"
             icon={<Image src="/icon/voting.svg" preview={false} />}
             className="main-layout__sider__menu__item"
-            onClick={() => navigate("/voting")}
+            onClick={() => {
+              setSelectedKey("Voting");
+              navigate("/voting");
+            }}
           >
-            Voting
+            Bỏ phiếu
           </Menu.Item>
         </Menu>
       </Sider>
@@ -227,11 +376,9 @@ const UserLayout: React.FC = (props): ReactElement => {
           </div>
         </Header>
         <Content>{props.children}</Content>
-        {/* <Footer style={{ textAlign: "center" }}>
-          Ant Design ©2018 Created by Ant UED
-        </Footer> */}
       </Layout>
     </Layout>
+    </NotificationContext.Provider>
   );
 };
 

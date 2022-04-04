@@ -1,28 +1,61 @@
 import { Typography, InputNumber, Image, Button } from 'antd';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useWeb3React } from "web3-react-core";
+import { ethers } from "ethers";
+import { BigNumber } from "bignumber.js";
+import { useCharityVerseContract } from "../../../../hooks/useContract";
 import "./index.scss";
+
+const MINIMUM_THRESHOLD = 9000;
 
 type SelectBuyAmountProps = {
     setCurrentStep: () => void,
-    onChange: (amount: number) => void,
-    inputAmount: number
+    onChange: (amount: string) => void,
+    inputAmount: string,
+    setInputAmount: React.Dispatch<React.SetStateAction<string>>,
+    isBuy: boolean
 }
 
 const SelectBuyAmount: React.FC<SelectBuyAmountProps> = (props) => {
-    const { inputAmount, onChange } = props;
+    const { inputAmount, onChange, isBuy, setInputAmount } = props;
+    const [userBalance, setUserBalance] = useState<string>("0");
+    const charityContract = useCharityVerseContract();
+    const { account } = useWeb3React();
+
+    useEffect(() => {
+        const getCRVBalance = async () => {
+            const balance = await charityContract.balanceOf(account);
+            setUserBalance(ethers.utils.formatEther(balance));
+        };
+
+        charityContract && account && !isBuy && getCRVBalance();
+    }, [charityContract, account, isBuy]);
+
+
     return (
         <div className="select-buy-amount">
             <Typography.Title level={4} className="select-buy-amount__title">
-                1. Select an amount you want to buy
+                1. Select an amount you want to {isBuy ? 'buy' : 'sell'}
             </Typography.Title>
             <Typography.Paragraph className="select-buy-amount__input-title">
                 Amount
             </Typography.Paragraph>
             <InputNumber
                 addonAfter={
-                    <div className="select-buy-amount__icon">
-                        <Image src="/icon/ethereum_1.svg" preview={false} />
-                        <p>CRV</p>
+                    <div className="select-buy-amount__addOns">
+                        {
+                            !isBuy &&
+                            (
+                                <div className="select-buy-amount__max" onClick={() => {setInputAmount(new BigNumber(userBalance).toFixed())}}>
+                                    Max
+                                </div>
+                            )
+                        }
+
+                        <div className="select-buy-amount__icon">
+                            <Image src="/icon/ethereum_1.svg" preview={false} />
+                            <p>{isBuy ? `VND` : `CRV`}</p>
+                        </div>
                     </div>
                 }
                 onChange={onChange}
@@ -30,7 +63,21 @@ const SelectBuyAmount: React.FC<SelectBuyAmountProps> = (props) => {
                 controls={false}
                 className="select-buy-amount__input"
             />
-            <Button disabled={inputAmount <= 0} className="select-buy-amount__btn" onClick={props.setCurrentStep}>Confirm</Button>
+            <p className="select-buy-amount__rate">1 CRV ~ <strong>1000</strong> VND</p>
+            <Button
+                disabled={(function() {
+                    if (!isBuy) {
+                        console.log(new BigNumber(inputAmount).gt(userBalance), inputAmount, userBalance);
+                        return new BigNumber(inputAmount).lte(0) || new BigNumber(inputAmount).gt(userBalance);
+                    }
+
+                    return new BigNumber(inputAmount).lte(MINIMUM_THRESHOLD);
+                }())}
+                className="select-buy-amount__btn"
+                onClick={props.setCurrentStep}
+            >
+                Confirm
+            </Button>
         </div>
     )
 }

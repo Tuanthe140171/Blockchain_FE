@@ -1,8 +1,12 @@
+import React from 'react';
 import { useWeb3React } from 'web3-react-core'
 import { useEffect } from 'react'
 import { useEagerConnect, useInactiveListener } from '../../hooks/web3'
+import useAuthorization, { AuthorizeErrorType } from '../../hooks/useAuthorization';
 import { network } from '../../connectors';
 import { NetworkContextName } from '../../constants/misc';
+
+export const AuthorizationContext = React.createContext<{ error: AuthorizeErrorType }>({ error: AuthorizeErrorType.NONE });
 
 export default function Web3ReactManager({ children }: { children: JSX.Element }) {
     const { active } = useWeb3React()
@@ -10,6 +14,7 @@ export default function Web3ReactManager({ children }: { children: JSX.Element }
 
     // try to eagerly connect to an injected provider, if it exists and has granted access already
     const triedEager = useEagerConnect()
+    const error = useAuthorization(triedEager);
 
     // after eagerly trying injected, if the network connect ever isn't active or in an error state, activate itd
     useEffect(() => {
@@ -30,5 +35,5 @@ export default function Web3ReactManager({ children }: { children: JSX.Element }
         )
     }
 
-    return children
+    return <AuthorizationContext.Provider value={{error}}>{children}</AuthorizationContext.Provider>
 }
