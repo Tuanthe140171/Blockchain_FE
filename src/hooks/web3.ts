@@ -58,7 +58,6 @@ export function useInactiveListener(suppress = false) {
             }
 
             const handleAccountsChanged = (accounts: string[]) => {
-                console.log(accounts);
                 if (accounts.length > 0) {
                     // eat errors
                     activate(injected, undefined, true).catch((error) => {

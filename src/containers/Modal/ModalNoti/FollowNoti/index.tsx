@@ -10,7 +10,6 @@ type IFollowNotiProps = {
 
 const FollowNoti: React.FC<IFollowNotiProps> = (props) => {
   const { data } = props;
-  console.log(data);
 
   return (
     <div

@@ -12,7 +12,6 @@ const ProfileSocialSituation = () => {
   );
   const [myPageSituationList, setMyPageSituationList] = useState([]);
   const navigate = useNavigate();
-  console.log(userData, badluckerType);
 
   useEffect(() => {
     if (userData) {

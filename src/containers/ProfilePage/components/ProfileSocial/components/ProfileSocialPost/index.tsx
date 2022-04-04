@@ -140,7 +140,6 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
   //     );
   //   }
   // };
-  console.log(images);
 
   return (
     <div className="profile-post" key={props.content}>

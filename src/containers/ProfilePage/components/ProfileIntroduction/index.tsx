@@ -34,6 +34,7 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
   //   },
   //   (e) => {}
   // );
+
   const getDate = () => {
     const today = new Date(userData?.createDate);
     const yyyy = today.getFullYear();
@@ -119,19 +120,19 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
         </div>
         <div className="intro-images__gallery">
           <Image
-            src="/icon/bad-lucker-2.svg"
+            src={userData?.UserMedia[0]?.link}
             className="intro-images__gallery-item"
           />
           <Image
-            src="/icon/bad-lucker-6.svg"
+            src={userData?.UserMedia[1]?.link}
             className="intro-images__gallery-item"
           />
           <Image
-            src="/icon/bad-lucker-4.svg"
+            src={userData?.UserMedia[2]?.link}
             className="intro-images__gallery-item"
           />
           <Image
-            src="/icon/bad-lucker-5.svg"
+            src={userData?.UserMedia[3]?.link}
             className="intro-images__gallery-item"
           />
         </div>

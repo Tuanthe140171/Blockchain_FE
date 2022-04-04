@@ -52,7 +52,6 @@ const useAuthorization = (tried: boolean): AuthorizeErrorType => {
                     setAuthorizeError(AuthorizeErrorType.NONE);
                 }
             } catch (err: any) {
-                console.log("Error: ", err);
                 setAuthorizeError(AuthorizeErrorType.OTHER_ERRORS);
             }
         }

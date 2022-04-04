@@ -85,42 +85,41 @@ const ProfileSituation = () => {
   const [hasButtons, setHasButtons] = useState(false);
 
   useEffect(() => {
-    console.log("hello");
-
     if (userData) {
       const cmnd = userData?.UserMedia.filter((data: any) => data.type === "3");
-      setCmndList([
-        {
-          name: `CMND mặt 1`,
-          status: "done",
-          url: cmnd[0].link,
-          id: cmnd[0].id,
-        },
-        {
-          name: `CMND mặt 2`,
-          status: "done",
-          url: cmnd[1].link,
-          id: cmnd[1].id,
-        },
-      ]);
+      if (cmnd && cmnd.length === 2) {
+        setCmndList([
+          {
+            name: `CMND mặt 1`,
+            status: "done",
+            url: cmnd[0].link,
+            id: cmnd[0].id,
+          },
+          {
+            name: `CMND mặt 2`,
+            status: "done",
+            url: cmnd[1].link,
+            id: cmnd[1].id,
+          },
+        ]);
 
-      setSubmitCmndList([
-        {
-          name: `CMND mặt 1`,
-          status: "done",
-          url: cmnd[0].link,
-          id: cmnd[0].id,
-        },
-        {
-          name: `CMND mặt 2`,
-          status: "done",
-          url: cmnd[1].link,
-          id: cmnd[1].id,
-        },
-      ]);
+        setSubmitCmndList([
+          {
+            name: `CMND mặt 1`,
+            status: "done",
+            url: cmnd[0].link,
+            id: cmnd[0].id,
+          },
+          {
+            name: `CMND mặt 2`,
+            status: "done",
+            url: cmnd[1].link,
+            id: cmnd[1].id,
+          },
+        ]);
 
-      setTempId([cmnd[0].id, cmnd[1].id]);
-
+        setTempId([cmnd[0].id, cmnd[1].id]);
+      }
       const situation = userData?.BadLuckTypes;
       setSituationList(userData.BadLuckTypes);
       const formatSituation = userData.BadLuckTypes.map((blt: any) => ({
