@@ -363,6 +363,28 @@ const UserLayout: React.FC = (props): ReactElement => {
           >
             Bỏ phiếu
           </Menu.Item>
+          <Menu.Item
+            key="Admin"
+            icon={<Image src="/icon/admin.png" preview={false} style={{ width:25, height: 25 }} />}
+            className="main-layout__sider__menu__item"
+            onClick={() => {
+              setSelectedKey("Admin");
+              navigate("/admin");
+            }}
+          >
+            Quản trị
+          </Menu.Item>
+          <Menu.Item
+            key="Claim"
+            icon={<Image src="/icon/refund.png" preview={false} style={{ width:25, height: 25 }} />}
+            className="main-layout__sider__menu__item"
+            onClick={() => {
+              setSelectedKey("Claim");
+              navigate("/claim");
+            }}
+          >
+            Tiền thưởng
+          </Menu.Item>
         </Menu>
       </Sider>
       <Layout className="main-layout__site-layout">

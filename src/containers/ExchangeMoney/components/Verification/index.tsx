@@ -81,6 +81,9 @@ const Verification: React.FC<VerificationProps> = (props) => {
             } else if (orderMessage === "Transaction denied by user." && parseInt(orderResultCode) === 1006) {
                 message.error("Bạn đã hủy giao dịch chuyển tiền", 4);
                 navigate("/exchange?type=buy&tab=0");
+            } else if (orderMessage === "Transaction+expired.") {
+                message.error("Giao dịch của bạn đã hết hạn", 4);
+                navigate("/exchange?type=buy&tab=0");
             }
         }
     }, [orderMessage, orderResultCode, navigate]);

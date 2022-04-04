@@ -217,6 +217,7 @@ const VotingPage: React.FC = () => {
           columns={columns}
           dataSource={doneeData}
           scroll={{ y: 400 }}
+          onChange={((props: any) => setCurrentPage(props.current))}
         />
         <VotingConfirmation
           visible={confirmationVisible}

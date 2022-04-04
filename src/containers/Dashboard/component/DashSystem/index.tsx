@@ -97,7 +97,7 @@ const DashSystem: React.FC<{
   });
 
   const { data: userActiveResp } = useFetch<any>(
-    !props.pickedDate ? `active/stats`: `active/stats?fromDate=${props.pickedDate.from}&toDate=${props.pickedDate.to}`,
+    !props.pickedDate ? `active/stats`: `active/stats?fromDate=${props.pickedDate.from}&toDate=${props.pickedDate.to}&sortBy=date`,
     {
       "Content-Type": "application/json",
       Accept: "application/json"
@@ -291,7 +291,7 @@ const DashSystem: React.FC<{
             <div className="chart-group__data-group">
               <h3 className="chart-group__data-group__title">Tổng tiền từ thiện</h3>
               <h1 className="chart-group__data-group__data">
-                {donationResp ? new BigNumber(donationResp.donations[0].totalVolume).div(1e18).toFixed(4) : 0} CRV
+                {(donationResp && donationResp.donations.length !== 0) ? new BigNumber(donationResp.donations[0].totalVolume).div(1e18).toFixed(4) : 0} CRV
                 <span className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${charityStatus.status === CharityStatus.UP ? 'up' : 'down'}`}>
                   <Image preview={false} src="/icon/growth.svg" className={`chart-group__data-group__data__icon--${charityStatus.status === CharityStatus.UP ? 'up' : 'down'}`} />
                   <span>{toPercent(charityStatus.percentage)}%</span>
