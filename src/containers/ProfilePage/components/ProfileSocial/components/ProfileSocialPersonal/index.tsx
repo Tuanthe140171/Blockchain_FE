@@ -1,24 +1,43 @@
 import { Image } from "antd";
 import React from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./index.scss";
 
 const ProfileSocialPersonal: React.FC = () => {
-  const { userData } = useSelector((state: any) => state.userLayout);
+  const { id } = useParams();
+  const { userPostData: userData } = useSelector(
+    (state: any) => state.userPostData
+  );
   const navigate = useNavigate();
+  const getUserName = () => {
+    let name = userData?.name;
+    let lastName = userData?.lastName;
+    if (!userData?.lastName && !userData?.name) {
+      return "Người dùng";
+    }
+    if (!userData?.lastName) {
+      lastName = "";
+    }
+    if (!userData?.name) {
+      name = "";
+    }
+    return `${lastName} ${name}`;
+  };
 
   return (
     <div className="profile-personal-wrapper">
       <div className="profile-personal">
         <header className="profile-personal__header">
           <p className="personal-header__title">Personal Information</p>
-          <span
-            className="personal-header__edit"
-            onClick={() => navigate("/profile/edit")}
-          >
-            Edit
-          </span>
+          {id ? null : (
+            <span
+              className="personal-header__edit"
+              onClick={() => navigate("/profile/edit")}
+            >
+              Edit
+            </span>
+          )}
         </header>
         <div className="profile-personal__divider" />
         <ul className="profile-personal__details">
@@ -32,9 +51,7 @@ const ProfileSocialPersonal: React.FC = () => {
               <span>Họ và Tên</span>
             </div>
             <span className="profile-personal__detail-content">
-              {`${userData.lastName ? userData.lastName : "Người"} ${
-                userData.name ? userData.name : "dùng"
-              }`}
+              {getUserName()}
             </span>
           </li>
           <li className="profile-personal__detail">

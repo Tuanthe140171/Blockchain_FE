@@ -1,10 +1,8 @@
 import { Avatar, Button, Image } from "antd";
-import { Link } from "react-router-dom";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import "./index.scss";
-import useFetch from "../../../../hooks/useFetch";
 
 type ProfileIntroductionProps = {
   isOwner: boolean;
@@ -12,7 +10,9 @@ type ProfileIntroductionProps = {
 
 const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
   const { isOwner } = props;
-  const { userData } = useSelector((state: any) => state.userLayout);
+  const { userPostData: userData } = useSelector(
+    (state: any) => state.userPostData
+  );
   const navigate = useNavigate();
   const avatarLink = userData?.UserMedia.find(
     (media: any) => media.type === "1" && media.active === 1
@@ -20,20 +20,22 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
     ? userData?.UserMedia.find(
         (media: any) => media.type === "1" && media.active === 1
       ).link
-    : "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
+    : "/icon/AvatarTmp.png";
 
-  // const { data: userPostData, loading } = useFetch<any>(
-  //   "post/get-post-by-id/:id",
-  //   {
-  //     "Content-Type": "application/json",
-  //   },
-  //   false,
-  //   [],
-  //   {
-  //     method: "GET",
-  //   },
-  //   (e) => {}
-  // );
+  const getUserName = () => {
+    let name = userData?.name;
+    let lastName = userData?.lastName;
+    if (!userData?.lastName && !userData?.name) {
+      return "Người dùng";
+    }
+    if (!userData?.lastName) {
+      lastName = "";
+    }
+    if (!userData?.name) {
+      name = "";
+    }
+    return `${lastName} ${name}`;
+  };
 
   const getDate = () => {
     const today = new Date(userData?.createDate);
@@ -42,13 +44,19 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
     return `${mm}, ${yyyy}`;
   };
 
+  const renderSideImage = () => {
+    console.log(userData?.UserMedia);
+
+    return userData?.UserMedia.map((dt: any, index: number) => {
+      <Image src={dt[index]?.link} className="intro-images__gallery-item" />;
+    });
+  };
+
   return (
     <div className="profile-intro">
       <div className="profile-intro__details">
         <Avatar src={avatarLink} className="profile-intro__avatar" />
-        <p className="profile-intro__name">{`${
-          userData?.lastName ? userData.lastName : "Người"
-        } ${userData?.name ? userData.name : "dùng"}`}</p>
+        <p className="profile-intro__name">{getUserName()}</p>
         <span className="profile-intro__status">Người khuyết tật</span>
         <div className="profile-intro__location">
           <Image src="/icon/map.svg" className="profile-intro__location-icon" />
@@ -119,22 +127,31 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
           <Link to="/">See all images</Link>
         </div>
         <div className="intro-images__gallery">
-          <Image
-            src={userData?.UserMedia[0]?.link}
-            className="intro-images__gallery-item"
-          />
-          <Image
-            src={userData?.UserMedia[1]?.link}
-            className="intro-images__gallery-item"
-          />
-          <Image
-            src={userData?.UserMedia[2]?.link}
-            className="intro-images__gallery-item"
-          />
-          <Image
-            src={userData?.UserMedia[3]?.link}
-            className="intro-images__gallery-item"
-          />
+          {userData?.UserMedia[0]?.link ? (
+            <Image
+              src={userData?.UserMedia[0]?.link}
+              className="intro-images__gallery-item"
+            />
+          ) : null}
+          {userData?.UserMedia[1]?.link ? (
+            <Image
+              src={userData?.UserMedia[1]?.link}
+              className="intro-images__gallery-item"
+            />
+          ) : null}
+          {userData?.UserMedia[2]?.link ? (
+            <Image
+              src={userData?.UserMedia[2]?.link}
+              className="intro-images__gallery-item"
+            />
+          ) : null}
+
+          {userData?.UserMedia[3]?.link ? (
+            <Image
+              src={userData?.UserMedia[3]?.link}
+              className="intro-images__gallery-item"
+            />
+          ) : null}
         </div>
       </div>
     </div>

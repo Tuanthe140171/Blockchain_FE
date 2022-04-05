@@ -39,7 +39,7 @@ const ProfilePerson = () => {
     ? userData?.UserMedia.find(
         (media: any) => media.type === "1" && media.active === 1
       ).link
-    : "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
+    : "/icon/AvatarTmp.png";
 
   useEffect(() => {
     if (userData) {

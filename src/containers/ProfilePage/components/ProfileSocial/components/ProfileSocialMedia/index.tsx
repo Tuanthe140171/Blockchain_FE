@@ -13,16 +13,19 @@ import { getUserById } from "../../../../../../stores/action/user-layout.action"
 import "./index.scss";
 import AppDialog from "../../../../../../components/AppDialog";
 import AppLoading from "../../../../../../components/AppLoading";
+import { useParams } from "react-router-dom";
 
 const ProfileSocialMedia = () => {
-  const { userData } = useSelector((state: any) => state.userLayout);
+  const { userPostData: userData } = useSelector(
+    (state: any) => state.userPostData
+  );
   const [listImage, setListImage] = useState([]);
   const [dataUpdateAva, setDataUpdateAva] = useState<any>(undefined);
-  const dispatch = useDispatch();
+  const { id } = useParams();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(userData.UserMedia);
     const formatList = userData?.UserMedia?.map((data: any) => ({
       id: data.id,
       url: data.link,
@@ -101,39 +104,41 @@ const ProfileSocialMedia = () => {
             className="profile-media__images__image__pic"
             preview
           />
-          <div
-            className={`profile-media__images__image__mask ${
-              activeImage === index ? "" : "hidden"
-            }`}
-          >
-            <Popover
-              placement="bottomRight"
-              title={null}
-              content={renderOptions(image)}
-              trigger="click"
-              overlayClassName="profile-media__popup-option"
-              onVisibleChange={(e) => {
-                setActiveImage(e);
-                setIsFocusItem(e);
-              }}
+          {id ? null : (
+            <div
+              className={`profile-media__images__image__mask ${
+                activeImage === index ? "" : "hidden"
+              }`}
             >
-              <div onClick={() => setIsFocusItem(index)}>...</div>
-            </Popover>
-            <div className="profile-media__images__image__mask__info">
-              <div>
-                <HeartOutlined className="icon" />
-                <div>{image.like}</div>
-              </div>
-              {/* <div>
+              <Popover
+                placement="bottomRight"
+                title={null}
+                content={renderOptions(image)}
+                trigger="click"
+                overlayClassName="profile-media__popup-option"
+                onVisibleChange={(e) => {
+                  setActiveImage(e);
+                  setIsFocusItem(e);
+                }}
+              >
+                <div onClick={() => setIsFocusItem(index)}>...</div>
+              </Popover>
+              <div className="profile-media__images__image__mask__info">
+                <div>
+                  <HeartOutlined className="icon" />
+                  <div>{image.like}</div>
+                </div>
+                {/* <div>
                 <CommentOutlined className="icon" />
                 <div>{image.comment}</div>
-              </div>
-              <div>
+                </div>
+                <div>
                 <ShareAltOutlined className="icon" />
                 <div>{image.share}</div>
               </div> */}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       );
     });

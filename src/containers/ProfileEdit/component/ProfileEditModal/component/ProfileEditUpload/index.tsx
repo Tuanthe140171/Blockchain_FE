@@ -22,7 +22,7 @@ const ProfileUpload: React.FC<ProfileModalProps> = (props) => {
     {
       name: `Upload giấy chứng nhận ${message}`,
       status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+      url: "/icon/AvatarTmp.png",
     },
   ];
 
