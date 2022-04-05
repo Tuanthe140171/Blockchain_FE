@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   DownloadOutlined,
-  ZoomInOutlined,
 } from "@ant-design/icons";
 import { Avatar, Col, Input, Row, Table, Image, Tooltip } from "antd";
 import { BigNumber } from 'bignumber.js';
@@ -121,8 +120,8 @@ const DashUser: React.FC<{
   const transactionsTableData = transactionsResp ? transactionsResp.rows.map((transaction: any) => ({
     id: transaction.id,
     key: shortenTx(transaction.id),
-    name: ethers.utils.getAddress(transaction.fromUser.walletAddress) === ethers.utils.getAddress(account || "") ? 'You': transaction.fromUser.name,
-    donee: ethers.utils.getAddress(transaction.toUser.walletAddress) === ethers.utils.getAddress(account || "") ? 'You': transaction.toUser.name,
+    name: ethers.utils.getAddress(transaction.fromUser.walletAddress) === ethers.utils.getAddress(account || "") ? 'Bạn': transaction.fromUser.name,
+    donee: ethers.utils.getAddress(transaction.toUser.walletAddress) === ethers.utils.getAddress(account || "") ? 'Bạn': transaction.toUser.name,
     date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
     amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
     status: ["loser"],
@@ -265,10 +264,6 @@ const DashUser: React.FC<{
             <div className="chart-group__header">
               <p className="chart-group__header__title">Bạn cho đi</p>
               <div className="chart-group__header__icons">
-                <ZoomInOutlined
-                  style={{ fontSize: "17px", color: "black" }}
-                  className="chart-group__header__icons__zoom"
-                />
                 <DownloadOutlined
                   style={{ fontSize: "15px", color: "black" }}
                   onClick={() => exportDataToCsv(dailyDonationResp ? dailyDonationResp.userDonationDayDatas : [], 'daily-donation')}
@@ -293,10 +288,6 @@ const DashUser: React.FC<{
             <div className="chart-group__header">
               <h1 className="chart-group__header__title">Bạn nhận về</h1>
               <div className="chart-group__header__icons">
-                <ZoomInOutlined
-                  style={{ fontSize: "17px", color: "black" }}
-                  className="chart-group__header__icons__zoom"
-                />
                 <DownloadOutlined
                   style={{ fontSize: "15px", color: "black" }}
                   onClick={() => exportDataToCsv(dailyDonationResp ? dailyDonationResp.userDonationDayDatas : [], 'daily-donation')}
@@ -333,10 +324,6 @@ const DashUser: React.FC<{
                   onChange={e => setKeyWord(e.target.value)}
                 />
                 <div className="table-group__header__right-group__icons">
-                  <ZoomInOutlined
-                    style={{ fontSize: "17px", color: "black" }}
-                    className="table-group__header__right-group__icons__zoom"
-                  />
                   <DownloadOutlined
                     style={{ fontSize: "15px", color: "black" }}
                   />
