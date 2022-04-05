@@ -33,7 +33,7 @@ const VotingPage: React.FC = () => {
       Accept: "application/json",
     },
     false,
-    [reloadVotingData],
+    [confirmationVisible ?  reloadVotingData: true],
     {
       method: "GET",
     },
@@ -72,6 +72,7 @@ const VotingPage: React.FC = () => {
               ).indexOf(userData.id) >= 0
             : true;
         })(),
+        numberOfConfirmations: `${donee.UserVotes.filter((userVote: any) => userVote.isAgree === 1).length} / 10`
       }))
     : [];
 
@@ -135,6 +136,7 @@ const VotingPage: React.FC = () => {
     {
       title: "Địa chỉ",
       dataIndex: "address",
+      width: "10%",
     },
     {
       title: "Ngày sinh",
@@ -144,7 +146,7 @@ const VotingPage: React.FC = () => {
     {
       title: "Hoàn cảnh",
       dataIndex: "situations",
-      width: "25%",
+      width: "20%",
       render: (text: any, row: any, index: any) => {
         return (
           <div className="voting__situation">
@@ -152,7 +154,7 @@ const VotingPage: React.FC = () => {
             <div>
               {row.situations.length >= 2 && (
                 <span className="voting__situation-more">
-                  {row.situations.length - 1} hoàn cảnh
+                  +{row.situations.length - 1} hoàn cảnh
                 </span>
               )}
             </div>
@@ -166,20 +168,22 @@ const VotingPage: React.FC = () => {
       width: "10%",
     },
     {
+      title: "Số xác nhận",
+      dataIndex: "numberOfConfirmations",
+      width: "10%",
+    },
+    {
       title: "Trạng thái",
       dataIndex: "status",
       width: "15%",
       render: (text: any, row: any, index: any) => {
         return (
           <Button
-            className={`voting__check-btn voting__check-btn--${
-              row.isVoted ? "checked" : ""
-            }`}
+            className={`voting__check-btn`}
             onClick={() => {
               setSelectedUser(row);
               setConfirmationVisible(true);
             }}
-            disabled={row.isVoted}
           >
             {row.isVoted ? "Đã xác nhận" : "Xác nhận"}
           </Button>

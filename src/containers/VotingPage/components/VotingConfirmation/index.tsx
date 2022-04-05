@@ -165,7 +165,7 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
                                     images={userSituation.BadLuckMedia.map((media: any) => media.link)}
                                     setReloadVotingData={setReloadVotingData}
                                     userName={selectedUser?.donee}
-                                    isVoted={userData ? userSituation.UserSituationConfirms.map((userVote: any) => userVote.userId).indexOf(userData.id) >= 0 : true}
+                                    isVoted={selectedUser?.isVoted ? true : userData ? userSituation.UserSituationConfirms.map((userVote: any) => userVote.userId).indexOf(userData.id) >= 0 : true}
                                 />
                             ))
                         }
