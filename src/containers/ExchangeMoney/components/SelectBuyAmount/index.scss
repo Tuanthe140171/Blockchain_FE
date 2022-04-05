@@ -90,31 +90,31 @@
             background-color: #3156DB;
         }
     }
-}
 
-.ant-input-number-group .ant-input-number {
-    float: none;
-}
-
-.ant-input-number-input-wrap {
-    margin-top: 20px;
-    border: none;
-}
-
-.ant-input-number-group-addon {
-    border: none;
-    background-color: transparent;
-    padding: 0;
-    position: relative;
-
-    &::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 1px;
-        height: 50%;
-        background-color: #E0E6F1;
+    .ant-input-number-group .ant-input-number {
+        float: none;
+    }
+    
+    .ant-input-number-input-wrap {
+        margin-top: 20px;
+        border: none;
+    }
+    
+    .ant-input-number-group-addon {
+        border: none;
+        background-color: transparent;
+        padding: 0;
+        position: relative;
+    
+        &::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 50%;
+            background-color: #E0E6F1;
+        }
     }
 }

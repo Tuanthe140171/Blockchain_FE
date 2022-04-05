@@ -1,7 +1,9 @@
 import React from 'react';
 import { Image, Avatar, Skeleton, Tooltip } from 'antd';
-import "./index.scss";
 import { BigNumber } from 'bignumber.js';
+//@ts-ignore
+import currencyFormatter from 'currency-formatter';
+import "./index.scss";
 
 type TransactionDetailsProps = {
     inputAmount: string,
@@ -58,8 +60,7 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = (props) => {
                                     Số tiền {isBuy ? 'phải chuyển': 'nhận được'}
                                 </span>
                                 <span className="details-info__text">
-                                    <Tooltip title={inputAmount ? (isBuy ? new BigNumber(inputAmount).toFixed(3): new BigNumber(inputAmount).multipliedBy(1000).toFixed(3)): 0}><strong>{inputAmount ? (isBuy ? new BigNumber(inputAmount).toFixed(3): new BigNumber(inputAmount).multipliedBy(1000).toFixed(3)): 0}</strong></Tooltip>
-                                    <span>VND</span>
+                                    <Tooltip title={inputAmount ? (isBuy ? new BigNumber(inputAmount).toFixed(3): new BigNumber(inputAmount).multipliedBy(1000).toFixed(3)): 0}><strong>{currencyFormatter.format(inputAmount ? (isBuy ? new BigNumber(inputAmount).toFixed(3): new BigNumber(inputAmount).multipliedBy(1000).toFixed(3)): 0, { code: 'VND' })}</strong></Tooltip>
                                 </span>
                             </div>
                         </div>
@@ -79,8 +80,8 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = (props) => {
                                 Tổng số {isBuy ? 'coin bán': 'tiền nhận'}
                             </span>
                             <span className="details-receipt__text">
-                                <Tooltip title={inputAmount ? (isBuy ? new BigNumber(inputAmount).div(1000).toFixed(3): new BigNumber(inputAmount).multipliedBy(1000).toFixed(3)): 0}><strong>{inputAmount ? (isBuy ? new BigNumber(inputAmount).div(1000).toFixed(3): new BigNumber(inputAmount).multipliedBy(1000).toFixed(3)): 0}</strong></Tooltip>
-                                {isBuy ? <Image src="/icon/ethereum_2.svg" preview={false} />: <span style={{ marginLeft: 5 }}>VND</span>}
+                                <Tooltip title={inputAmount ? (isBuy ? new BigNumber(inputAmount).div(1000).toFixed(3): currencyFormatter.format(new BigNumber(inputAmount).multipliedBy(1000).toFixed(3), { code: 'VND' })): 0}><strong>{inputAmount ? (isBuy ? new BigNumber(inputAmount).div(1000).toFixed(3): currencyFormatter.format(new BigNumber(inputAmount).multipliedBy(1000).toFixed(3), { code: 'VND' })): 0}</strong></Tooltip>
+                                {isBuy && <Image src="/icon/ethereum_2.svg" preview={false} />}
                             </span>
                         </div>
                     </>

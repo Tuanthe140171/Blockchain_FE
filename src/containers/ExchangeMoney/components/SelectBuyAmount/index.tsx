@@ -78,7 +78,6 @@ const SelectBuyAmount: React.FC<SelectBuyAmountProps> = (props) => {
             <Button
                 disabled={(function () {
                     if (!isBuy) {
-                        console.log(new BigNumber(inputAmount).gt(userBalance), inputAmount, userBalance);
                         return new BigNumber(inputAmount).lte(0) || new BigNumber(inputAmount).gt(userBalance);
                     }
 

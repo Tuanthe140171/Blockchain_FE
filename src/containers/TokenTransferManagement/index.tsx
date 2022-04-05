@@ -1,5 +1,7 @@
 import { Table, Typography, Input, Avatar, Tooltip, Checkbox, message } from 'antd';
 import moment from 'moment';
+//@ts-ignore
+import currencyFormatter from 'currency-formatter';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWeb3React } from 'web3-react-core';
@@ -124,7 +126,7 @@ const TokenTransferManagement: React.FC = () => {
             title: "Số tiền nhận",
             dataIndex: "amount",
             render: (text: any, row: any, index: any) => {
-                return `${text} VND`
+                return `${currencyFormatter.format(text, { code: 'VND' })}`
             }
         },
         {

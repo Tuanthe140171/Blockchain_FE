@@ -8,8 +8,7 @@ const AppTimer = ({ targetDate }: any) => {
   if (days + hours + minutes + seconds <= 0) {
     return (
         <div className="expired-notice">
-            <span>Expired!!!</span>
-            <p>Please select a future date and time.</p>
+            <span>Qúa hạn!</span>
         </div>
     );
   } else {
