@@ -5,29 +5,51 @@ import ProfileIntroduction from "./components/ProfileIntroduction";
 import ProfileSocial from "./components/ProfileSocial";
 import ProfileDonation from "./components/ProfileDonation";
 import ProfileFollowing from "./components/ProfileFollowing";
-
-import "./index.scss";
 import useFetch from "../../hooks/useFetch";
-
-// const IS_ADMIN =
+import { getUserPostData } from "../../stores/action/user-post.action";
+import { useDispatch } from "react-redux";
+import "./index.scss";
 
 const ProfilePage: React.FC = () => {
   const { id } = useParams();
-  const [authenUser, setAuthenUser] = useState<any>(undefined);
+  const [callWithParam, setCallWithParam] = useState<any>(undefined);
+  const [callWithoutParam, setCallWithoutParam] = useState<any>(undefined);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (id) {
-      setAuthenUser(false);
+      setCallWithParam(true);
+    } else {
+      setCallWithoutParam(true);
     }
-  }, [id]);
+  }, []);
 
-  const { data: userPost } = useFetch<any>(
-    "post/test",
+  const { data: userWithParam } = useFetch<any>(
+    `users/get-user-by-id-with-params/${id}`,
     {},
     false,
-    [authenUser],
+    [callWithParam],
     { method: "GET" },
     (e) => {
+      setCallWithParam(undefined);
+      const action = getUserPostData(e.data);
+      dispatch(action);
+    }
+  );
+
+  const { data: userWithoutParam } = useFetch<any>(
+    "users/get-user-by-id",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [callWithoutParam],
+    { method: "GET" },
+    (e) => {
+      setCallWithoutParam(undefined);
+      const action = getUserPostData(e.data);
+      dispatch(action);
     }
   );
 

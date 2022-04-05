@@ -1,7 +1,13 @@
-.profile-situation {
+.profile-social-situation {
   padding: 32px;
   background-color: white;
   margin-top: 12px;
+
+  &__text {
+    margin-top: 50px;
+    font-size: 16px;
+    color: #5677bb;
+  }
 
   &__details {
     padding-left: 0;
@@ -17,8 +23,7 @@
       text-align: left;
       display: flex;
       align-items: center;
-
-      & > span {
+      w & > span {
         font-style: normal;
         font-weight: 300;
         font-size: 16px;
@@ -52,6 +57,17 @@
         color: #5677bb;
         margin-left: 8px;
       }
+    }
+  }
+
+  &__detail-label {
+    & > div {
+      margin-right: 20px;
+    }
+
+    & > span {
+      font-size: 18px;
+      color: #a7b2c8;
     }
   }
 

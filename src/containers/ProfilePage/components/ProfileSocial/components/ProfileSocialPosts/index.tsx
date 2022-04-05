@@ -19,8 +19,8 @@ const dummyRequest = ({ file, onSuccess }: any) => {
 };
 
 const ProfileSocialPosts: React.FC = (props) => {
-  const { userData, badluckerType } = useSelector(
-    (state: any) => state.userLayout
+  const { userPostData: userData } = useSelector(
+    (state: any) => state.userPostData
   );
   const [postList, setPostList] = useState([]);
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ const ProfileSocialPosts: React.FC = (props) => {
     ? userData?.UserMedia.find(
         (media: any) => media.type === "1" && media.active === 1
       ).link
-    : "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
+    : "/icon/AvatarTmp.png";
   const [form] = Form.useForm();
   const [inputValue, setInputValue] = useState("");
   const [formData, setFormData] = useState<any>({});
@@ -48,6 +48,21 @@ const ProfileSocialPosts: React.FC = (props) => {
     return "20h";
   };
 
+  const getUserName = () => {
+    let name = userData?.name;
+    let lastName = userData?.lastName;
+    if (!userData?.lastName && !userData?.name) {
+      return "Người dùng";
+    }
+    if (!userData?.lastName) {
+      lastName = "";
+    }
+    if (!userData?.name) {
+      name = "";
+    }
+    return `${lastName} ${name}`;
+  };
+
   const { data: userPost } = useFetch<any>(
     "post/get-post-all-time?limit=10&offset=0",
     {},
@@ -61,9 +76,7 @@ const ProfileSocialPosts: React.FC = (props) => {
             return { image: p.link, title: "", description: "" };
           }),
           poster: {
-            name: `${userData?.lastName ? userData?.lastName : "Người"} ${
-              userData?.name ? userData?.name : "dùng"
-            }`,
+            name: getUserName(),
             avatar: avatarLink,
           },
           timestamp: getTimeDiff(post.createDate),
@@ -73,7 +86,6 @@ const ProfileSocialPosts: React.FC = (props) => {
           comments: 0,
         };
       });
-
       setPostList(formatPosts);
     }
   );
@@ -172,8 +184,7 @@ const ProfileSocialPosts: React.FC = (props) => {
       method: "POST",
       body: JSON.stringify(formData),
     },
-    (e) => {
-    }
+    (e) => {}
   );
 
   return (

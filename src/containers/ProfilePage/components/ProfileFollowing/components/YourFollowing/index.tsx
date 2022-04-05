@@ -1,5 +1,5 @@
 import React from "react";
-
+import useFetch from "../../../../../../hooks/useFetch";
 import YourFollowingCard from "../YourFollowingCard";
 import "./index.scss";
 
@@ -27,6 +27,20 @@ const followings = [
 ];
 
 const YourFollowing: React.FC = () => {
+  const { data: followingData } = useFetch<any>(
+    "users/get-peole-followed-by-user",
+    {},
+    false,
+    [],
+    { method: "GET" },
+    (e) => {
+      // setCallWithParam(undefined);
+      // const action = getUserPostData(e.data);
+      // dispatch(action);
+      console.log(e);
+    }
+  );
+
   return (
     <div className="your-following">
       <header className="your-following__header">
