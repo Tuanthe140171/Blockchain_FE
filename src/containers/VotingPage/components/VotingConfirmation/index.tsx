@@ -111,7 +111,7 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
                                     <Image src="/icon/calendar.svg" className="profile-personal__detail-icon" preview={false} />
                                     <span>Ngày Sinh</span>
                                 </div>
-                                <span className="profile-personal__detail-content">{moment(selectedUser?.dob).format("DD-MM-yy")}</span>
+                                <span className="profile-personal__detail-content">{selectedUser?.dob}</span>
                             </li>
                             <li className="profile-personal__detail">
                                 <div className="profile-personal__detail-label">
