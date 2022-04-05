@@ -87,16 +87,16 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
                 <Fade bottom>
                     <div className="app-donate__wrapper">
                         <CloseOutlined className="app-donate__close" onClick={props.onClose} />
-                        <Typography.Title level={4} className="app-donate__title">Donate</Typography.Title>
+                        <Typography.Title level={4} className="app-donate__title">Ủng hộ</Typography.Title>
                         <div className="app-donate__content">
                             <div className="app-donate__donation">
                                 <div className="app-donate__amount">
                                     <header className="app-donate__header">
                                         <Typography.Title level={4} className="app-donate__amount-title">
-                                            Enter the amount
+                                            Số tiền ủng hộ
                                         </Typography.Title>
                                         <Typography.Paragraph className="app-donate__balance">
-                                            Your balance: {userBalance}
+                                            Số dư: {userBalance}
                                         </Typography.Paragraph>
                                     </header>
                                     <InputNumber
@@ -111,20 +111,31 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
                                         onChange={(e: any) => {
                                             !e ? setInputAmount("0") : setInputAmount(e)
                                         }}
+                                        onKeyDown={(e: any) => {
+                                            if ((e.code === 'ArrowLeft') || (e.code === 'ArrowRight') ||
+                                                (e.code === 'ArrowUp') || (e.code === 'ArrowDown') ||
+                                                (e.code === 'Delete') || (e.code === 'Backspace')) {
+                                                return;
+                                            } else if (e.key.search(/\d/) === -1) {
+                                                e.preventDefault();
+                                            } else if ((e.target.value.length >= 8)) {
+                                                e.preventDefault();
+                                            }
+                                        }}
                                         controls={false}
                                         className="app-donate__input"
                                     />
-                                    <Button onClick={() => { setOpenDialog(true) }} disabled={loadingDonate || new BigNumber(inputAmount).gt(new BigNumber(userBalance)) || new BigNumber(inputAmount).lte(0)} width="215px" maxWidth="100%" content="Donate now" bgColor="#F0CF27" className="app-donate__cta" />
+                                    <Button onClick={() => { setOpenDialog(true) }} disabled={loadingDonate || new BigNumber(inputAmount).gt(new BigNumber(userBalance)) || new BigNumber(inputAmount).lte(0)} width="215px" maxWidth="100%" content="Ủng hộ ngay" bgColor="#F0CF27" className="app-donate__cta" />
                                     <span className="app-donate__policy">By continuing, you agree with Cverse terms and privacy policy</span>
                                 </div>
                             </div>
                             <div className="app-donate__transaction">
                                 <div className="app-donate-details">
-                                    <p className="app-donate-details__title">Your transaction details</p>
+                                    <p className="app-donate-details__title">Chi tiết giao dịch</p>
                                     <div className="app-donate-details__info">
                                         <div className="app-details-info__block">
                                             <span className="app-details-info__label">
-                                                Your donation
+                                                Ủng hộ
                                             </span>
                                             <span className="app-details-info__text">
                                                 <strong style={{ maxWidth: 100, wordBreak: "break-word" }}>{inputAmount ? inputAmount : "0"}</strong>
@@ -133,7 +144,7 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
                                         </div>
                                         <div className="app-details-info__block">
                                             <span className="app-details-info__label">
-                                                Fee giao dịch
+                                                Phí giao dịch
                                             </span>
                                             <span className="app-details-info__text">
                                                 <strong style={{ maxWidth: 100, wordBreak: "break-word" }}>{new BigNumber(inputAmount || "0").multipliedBy(donateFee).toFixed(2)}</strong>
@@ -143,10 +154,10 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
                                         <div className="app-details-info__divider"></div>
                                         <div className="app-details-info__block">
                                             <span className="details-info__label">
-                                                Total due today
+                                                Ủng hộ
                                             </span>
                                             <span className="app-details-info__text">
-                                                <strong style={{ maxWidth: 100, wordBreak: "break-word" }}>{new BigNumber(inputAmount || "0").multipliedBy(donateFee + 1).toFixed(2)}</strong>
+                                                <strong style={{ maxWidth: 100, wordBreak: "break-word" }}>{new BigNumber(inputAmount || "0").multipliedBy(1 - donateFee).toFixed(2)}</strong>
                                                 <Image src="/icon/ethereum_2.svg" preview={false} />
                                             </span>
                                         </div>
@@ -155,7 +166,7 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
                                         <Avatar src={avatar} className="app-details-receipt__label">
                                         </Avatar>
                                         <span className="app-details-receipt__text">
-                                            <p>You're supporting</p>
+                                            <p>Bạn ủng hộ cho</p>
                                             <strong>{name}</strong>
                                         </span>
                                     </div>
