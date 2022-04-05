@@ -4,13 +4,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "./index.scss";
+import ProfileSituationVoting from "./component/ProfileSocialSituationVoting";
 
 const ProfileSocialSituation = () => {
   const { id } = useParams();
   const { userData, badluckerType } = useSelector(
     (state: any) => state.userLayout
   );
+  const { userPostData } = useSelector((state: any) => state.userPostData);
   const [myPageSituationList, setMyPageSituationList] = useState([]);
+  const [yourSituationList, setYourSituationList] = useState([]);
+  const [yourSituationCfList, setYourSituationCfList] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,23 +27,54 @@ const ProfileSocialSituation = () => {
     }
   }, [userData]);
 
+  function compare(a: any, b: any) {
+    if (a.trustScore < b.trustScore) {
+      return 1;
+    }
+    if (a.trustScore > b.trustScore) {
+      return -1;
+    }
+    return 0;
+  }
+
+  useEffect(() => {
+    if (userPostData) {
+      // const listSituation = userPostData.BadLuckTypes;
+      // listSituation.sort(compare);
+      // setYourPageSituationList(listSituation);
+      const listConfirmed = userPostData.BadLuckTypes.filter(
+        (situation: any) => situation.trustScore > 50
+      ).map((data: any) => {
+        return badluckerType.find((type: any) => type.id === data.situationId);
+      });
+      setYourSituationCfList(listConfirmed);
+
+      const listNeedConfirm = userPostData.BadLuckTypes.filter(
+        (situation: any) => situation.trustScore <= 50
+      );
+      console.log(listNeedConfirm);
+
+      setYourSituationList(listNeedConfirm);
+    }
+  }, [userPostData]);
+
   const myPageSituation = () => {
     return (
-      <ul className="profile-situation__details">
+      <ul className="profile-social-situation__details">
         {myPageSituationList.map((situation: any, index: number) => {
           return (
-            <li className="profile-situation__detail" key={situation}>
-              <div className="profile-situation__detail-label">
+            <li className="profile-social-situation__detail" key={situation}>
+              <div className="profile-social-situation__detail-label">
                 <Image
                   src="/icon/identification.svg"
-                  className="profile-situation__detail-icon"
+                  className="profile-social-situation__detail-icon"
                   preview={false}
                 />
                 <span>Hoàn Cảnh {index + 1}</span>
               </div>
-              <div className="profile-situation__detail-content">
+              <div className="profile-social-situation__detail-content">
                 <span>{situation.name}</span>
-                <div className="profile-situation__detail-view-more">
+                <div className="profile-social-situation__detail-view-more">
                   <span>Giấy chứng nhận {situation.message} có công chứng</span>
                   <Link to="/">View</Link>
                 </div>
@@ -49,93 +84,61 @@ const ProfileSocialSituation = () => {
         })}
       </ul>
     );
-
-    // <li className="profile-situation__detail">
-    //   <div className="profile-situation__detail-label">
-    //     <Image
-    //       src="/icon/identification.svg"
-    //       className="profile-situation__detail-icon"
-    //       preview={false}
-    //     />
-    //     <span>Hoàn Cảnh 2</span>
-    //   </div>
-    //   <div className="profile-situation__detail-content">
-    //     <span>Thương binh liệt sĩ</span>
-    //     <div className="profile-situation__detail-view-more">
-    //       <span>Giấy chứng nhận hộ nghèo có công chứng</span>
-    //       <Link to="/">View</Link>
-    //     </div>
-    //   </div>
-    // </li>
   };
 
   const yourPageSituation = () => {
     return (
-      <div className="profile-situation">
-        <header className="profile-personal__header">
-          <p className="personal-header__title">Situation</p>
-          {/* <span className="personal-header__edit">Edit</span> */}
-        </header>
-        <div className="profile-personal__divider" />
-        <ul className="profile-situation__details">
-          <li className="profile-situation__detail">
-            <div className="profile-situation__detail-label">
-              <Image
-                src="/icon/identification.svg"
-                className="profile-situation__detail-icon"
-                preview={false}
-              />
-              <span>Hoàn Cảnh 1</span>
-            </div>
-            <div className="profile-situation__detail-content">
-              <span>Người nghèo</span>
-              <div className="profile-situation__detail-view-more">
-                <span>Giấy chứng nhận hộ nghèo có công chứng</span>
-                <Link to="/">View</Link>
+      <ul className="profile-social-situation__details">
+        {yourSituationCfList.map((situation: any, index: number) => {
+          return (
+            <li
+              className="profile-social-situation__detail"
+              key={situation.trustScore + index}
+            >
+              <div className="profile-social-situation__detail-label">
+                <Image
+                  src="/icon/identification.svg"
+                  className="profile-social-situation__detail-icon"
+                  preview={false}
+                />
+                <span>Hoàn Cảnh {index + 1}</span>
               </div>
-            </div>
-          </li>
+              <div className="profile-social-situation__detail-content">
+                <span>{situation.name}</span>
+                <div className="profile-social-situation__detail-view-more">
+                  <span>Giấy chứng nhận {situation.message} có công chứng</span>
+                  <Link to="/">View</Link>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+        <p className="profile-social-situation__text">
+          Hoàn cảnh cần xác nhận ({yourSituationList.length || 0})
+        </p>
 
-          <li className="profile-situation__detail">
-            <div className="profile-situation__detail-label">
-              <Image
-                src="/icon/identification.svg"
-                className="profile-situation__detail-icon"
-                preview={false}
-              />
-              <span>Hoàn Cảnh 2</span>
-            </div>
-            <div className="profile-situation__detail-content">
-              <span>Thương binh liệt sĩ</span>
-              <div className="profile-situation__detail-view-more">
-                <span>Giấy chứng nhận hộ nghèo có công chứng</span>
-                <Link to="/">View</Link>
-              </div>
-            </div>
-          </li>
-        </ul>
-        {/* <div className="profile-situation__add-info">
-        <Image
-          src="/icon/edit.svg"
-          preview={false}
-          className="profile-situation__add-info-icon"
-        />
-        <span>Add Situation</span>
-      </div> */}
-      </div>
+        {yourSituationList.map((userSituation: any) => (
+          <ProfileSituationVoting
+            data={userSituation}
+            images={userSituation.BadLuckMedia.map((media: any) => media.link)}
+          />
+        ))}
+      </ul>
     );
   };
 
   return (
-    <div className="profile-situation">
+    <div className="profile-social-situation">
       <header className="profile-personal__header">
         <p className="personal-header__title">Situation</p>
-        <span
-          className="personal-header__edit"
-          onClick={() => navigate("/profile/edit")}
-        >
-          Edit
-        </span>
+        {id ? null : (
+          <span
+            className="personal-header__edit"
+            onClick={() => navigate("/profile/edit")}
+          >
+            Edit
+          </span>
+        )}
       </header>
       <div className="profile-personal__divider" />
       {id ? yourPageSituation() : myPageSituation()}

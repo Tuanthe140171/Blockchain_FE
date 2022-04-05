@@ -81,13 +81,7 @@ const UserLayout: React.FC = (props): ReactElement => {
     ? userData?.UserMedia.find(
         (media: any) => media.type === "1" && media.active === 1
       ).link
-    : "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
-
-  // console.log();
-
-  // useEffect(() => {
-  //   console.log(userData);
-  // }, [userData.UserMedia]);
+    : "/icon/AvatarTmp.png";
 
   const { data: user } = useFetch<any>(
     "users/get-user-by-id",
@@ -111,16 +105,6 @@ const UserLayout: React.FC = (props): ReactElement => {
     [],
     { method: "GET" },
     (e) => {
-      // const optionRes = e.data.map((opt: any, index: number) => {
-      //   return {
-      //     value: opt.name,
-      //     label: opt.name,
-      //     index: index,
-      //     message: opt.message,
-      //     id: opt.id,
-      //   };
-      // });
-      // setOptions(optionRes);d
       const action = getBadluckerType(e.data);
       dispatch(action);
     }

@@ -12,8 +12,23 @@ const ModalProfileHeader = () => {
     ? userData?.UserMedia.find(
         (media: any) => media.type === "1" && media.active === 1
       ).link
-    : "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
+    : "/icon/AvatarTmp.png";
   const navigate = useNavigate();
+
+  const getUserName = () => {
+    let name = userData?.name;
+    let lastName = userData?.lastName;
+    if (!userData?.lastName && !userData?.name) {
+      return "Người dùng";
+    }
+    if (!userData?.lastName) {
+      lastName = "";
+    }
+    if (!userData?.name) {
+      name = "";
+    }
+    return `${lastName} ${name}`;
+  };
 
   return (
     <div className="modal-profile__header">
@@ -24,9 +39,7 @@ const ModalProfileHeader = () => {
         />
         <div className="modal-profile__header__avatar-group__name-group">
           <div className="modal-profile__header__avatar-group__name-group__name">
-            {`${userData?.lastName ? userData?.lastName : "Người"} ${
-              userData?.name ? userData?.name : "dùng"
-            }`}
+            {getUserName()}
           </div>
           <div className="modal-profile__header__avatar-group__name-group__description">
             Người khuyết tật
