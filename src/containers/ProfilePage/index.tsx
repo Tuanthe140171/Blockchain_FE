@@ -35,19 +35,20 @@ const ProfilePage: React.FC = () => {
       const action = getUserPostData(e.data);
       dispatch(action);
     }
-  );
-
-  const { data: userWithoutParam } = useFetch<any>(
-    "users/get-user-by-id",
-    {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    false,
-    [callWithoutParam],
-    { method: "GET" },
-    (e) => {
-      setCallWithoutParam(undefined);
+    );
+    
+    const { data: userWithoutParam } = useFetch<any>(
+      "users/get-user-by-id",
+      {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      false,
+      [callWithoutParam],
+      { method: "GET" },
+      (e) => {
+        console.log(e.data);
+        setCallWithoutParam(undefined);
       const action = getUserPostData(e.data);
       dispatch(action);
     }

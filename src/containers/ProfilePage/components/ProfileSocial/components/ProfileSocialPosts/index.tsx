@@ -4,7 +4,7 @@ import {
   VideoCameraOutlined,
 } from "@ant-design/icons";
 import { Avatar, Button, Form, Input, Upload } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import AppDialog from "../../../../../../components/AppDialog";
@@ -18,12 +18,23 @@ const dummyRequest = ({ file, onSuccess }: any) => {
   }, 0);
 };
 
+type IPost = {
+  images: [];
+  timestamp: string;
+  content: string;
+  contentShortcut: string;
+  likes: number;
+  comments: number;
+};
+
 const ProfileSocialPosts: React.FC = (props) => {
+  const { id } = useParams();
   const { userPostData: userData } = useSelector(
     (state: any) => state.userPostData
   );
-  const [postList, setPostList] = useState([]);
   const dispatch = useDispatch();
+  const [newPost, setNewPost] = useState<IPost | undefined>(undefined);
+  const [postList, setPostList] = useState<IPost[]>([]);
   const avatarLink = userData?.UserMedia.find(
     (media: any) => media.type === "1" && media.active === 1
   )
@@ -40,7 +51,16 @@ const ProfileSocialPosts: React.FC = (props) => {
   const [fileList, setFileList] = useState<any>([]);
   const [hasImg, setHasImg] = useState<any>(undefined);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const { id } = useParams();
+  const [callWithParam, setCallWithParam] = useState<any>(undefined);
+  const [callWithoutParam, setCallWithoutParam] = useState<any>(undefined);
+
+  useEffect(() => {
+    if (id) {
+      setCallWithParam(true);
+    } else {
+      setCallWithoutParam(true);
+    }
+  }, []);
 
   const getTimeDiff = (time: any) => {
     var now = new Date();
@@ -67,7 +87,7 @@ const ProfileSocialPosts: React.FC = (props) => {
     "post/get-post-all-time?limit=10&offset=0",
     {},
     false,
-    [],
+    [callWithoutParam],
     { method: "GET" },
     (e) => {
       const formatPosts = e.data.map((post: any) => {
@@ -75,10 +95,29 @@ const ProfileSocialPosts: React.FC = (props) => {
           images: post.PostMedia?.map((p: any) => {
             return { image: p.link, title: "", description: "" };
           }),
-          poster: {
-            name: getUserName(),
-            avatar: avatarLink,
-          },
+          timestamp: getTimeDiff(post.createDate),
+          content: post.content,
+          contentShortcut: post.content?.substring(0, 200),
+          likes: 100,
+          comments: 0,
+        };
+      });
+      setPostList(formatPosts);
+    }
+  );
+
+  const { data: userPostWithId } = useFetch<any>(
+    `post/get-post-by-id/${id}?limit=10&offset=0`,
+    {},
+    false,
+    [callWithParam],
+    { method: "GET" },
+    (e) => {
+      const formatPosts = e.data.map((post: any) => {
+        return {
+          images: post.PostMedia?.map((p: any) => {
+            return { image: p.link, title: "", description: "" };
+          }),
           timestamp: getTimeDiff(post.createDate),
           content: post.content,
           contentShortcut: post.content?.substring(0, 200),
@@ -92,7 +131,7 @@ const ProfileSocialPosts: React.FC = (props) => {
 
   const onSubmit = (values: any) => {
     const dataSubmit = {
-      userId: 1,
+      userId: userData.id,
       title: "",
       content: values.status,
       image: [],
@@ -166,10 +205,7 @@ const ProfileSocialPosts: React.FC = (props) => {
       body: JSON.stringify(formData),
     },
     (e) => {
-      // const action = getUserById(e.data);
-      // dispatch(action);
-      // setHasImg(undefined);
-      // setOpenDialog(true);
+      setHasImg(undefined);
     }
   );
 
@@ -184,8 +220,35 @@ const ProfileSocialPosts: React.FC = (props) => {
       method: "POST",
       body: JSON.stringify(formData),
     },
-    (e) => {}
+    (e) => {
+      setUpdateWithoutAva(undefined);
+      const data = e.data;
+      const list = postList;
+      const newPost: IPost = {
+        // images: data.PostMedia?.map((p: any) => {
+        //   return { image: p.link, title: "", description: "" };
+        // }),
+        images: [],
+        timestamp: getTimeDiff(data.createDate),
+        content: data.content,
+        contentShortcut: data.content?.substring(0, 200),
+        likes: 100,
+        comments: 0,
+      };
+      list.unshift(newPost);
+      setNewPost(newPost);
+    }
   );
+
+  useEffect(() => {
+    if (newPost) {
+      form.resetFields();
+      setFileList([]);
+      const list = postList;
+      list.unshift(newPost);
+      setPostList(list);
+    }
+  }, [newPost]);
 
   return (
     <>
@@ -282,7 +345,6 @@ const ProfileSocialPosts: React.FC = (props) => {
         {postList.map((post, index) => {
           const {
             images,
-            poster,
             timestamp,
             content,
             contentShortcut,
@@ -293,13 +355,12 @@ const ProfileSocialPosts: React.FC = (props) => {
             <React.Fragment key={content + index}>
               <ProfileSocialPost
                 images={images}
-                poster={poster}
                 timestamp={timestamp}
                 content={content}
                 contentShortcut={contentShortcut}
                 likes={likes}
                 comments={comments}
-                seeMore={contentShortcut}
+                seeMore={!!contentShortcut}
               />
             </React.Fragment>
           );
