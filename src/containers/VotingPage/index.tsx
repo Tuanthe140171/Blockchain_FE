@@ -117,7 +117,7 @@ const VotingPage: React.FC = () => {
     {
       title: "ID",
       dataIndex: "id",
-      width: "10%",
+      width: "8%",
     },
     {
       title: "Người dùng",

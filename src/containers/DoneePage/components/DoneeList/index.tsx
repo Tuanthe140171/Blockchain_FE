@@ -70,8 +70,8 @@ const DoneeList: React.FC<DoneeListProps> = (props) => {
               marginTop: 30,
             }}
           >
-            {Array.from(new Array(5)).map((_) => (
-              <Skeleton avatar={true} paragraph={true} />
+            {Array.from(new Array(5)).map((_, index) => (
+              <Skeleton avatar={true} paragraph={true} key={index} />
             ))}
           </div>
         </>
