@@ -1,6 +1,7 @@
 import { Avatar, Image } from "antd";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import AppDialog from "../../../../../../components/AppDialog";
 import useFetch from "../../../../../../hooks/useFetch";
 
@@ -22,6 +23,7 @@ const YourFollowerCard: React.FC<YourFollowerCardProps> = (props) => {
   const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);
   const [unfollow, setUnfollow] = useState<any>(undefined);
   const [follow, setFollow] = useState<any>(undefined);
+  const navigate = useNavigate();
 
   const { data: unfollowData } = useFetch<any>(
     "users/follow-people",
@@ -97,7 +99,12 @@ const YourFollowerCard: React.FC<YourFollowerCardProps> = (props) => {
         <div className="your-follower-card__details">
           <Avatar src={props.avatar} className="your-follower-card__avatar" />
           <div className="your-follower-card__info">
-            <p>{props.name}</p>
+            <p
+              onClick={() => navigate(`/profile/${props.id}`)}
+              style={{ cursor: "pointer" }}
+            >
+              {props.name}
+            </p>
             <span>{props.status}</span>
           </div>
         </div>

@@ -22,7 +22,7 @@ const ProfilePage: React.FC = () => {
     } else {
       setCallWithoutParam(true);
     }
-  }, []);
+  }, [id]);
 
   const { data: userWithParam } = useFetch<any>(
     `users/get-user-by-id-with-params/${id}`,
@@ -47,7 +47,6 @@ const ProfilePage: React.FC = () => {
       [callWithoutParam],
       { method: "GET" },
       (e) => {
-        console.log(e.data);
         setCallWithoutParam(undefined);
       const action = getUserPostData(e.data);
       dispatch(action);

@@ -52,7 +52,6 @@ const ProfileSocialSituation = () => {
       const listNeedConfirm = userPostData.BadLuckTypes.filter(
         (situation: any) => situation.trustScore <= 50
       );
-      console.log(listNeedConfirm);
 
       setYourSituationList(listNeedConfirm);
     }

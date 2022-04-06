@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import AppDialog from "../../../../../../components/AppDialog";
+import AppLoading from "../../../../../../components/AppLoading";
 import useFetch from "../../../../../../hooks/useFetch";
 import ProfileSocialPost from "../ProfileSocialPost";
 import "./index.scss";
@@ -60,7 +61,7 @@ const ProfileSocialPosts: React.FC = (props) => {
     } else {
       setCallWithoutParam(true);
     }
-  }, []);
+  }, [id]);
 
   const getTimeDiff = (time: any) => {
     var now = new Date();
@@ -68,28 +69,29 @@ const ProfileSocialPosts: React.FC = (props) => {
     return "20h";
   };
 
-  const getUserName = () => {
-    let name = userData?.name;
-    let lastName = userData?.lastName;
-    if (!userData?.lastName && !userData?.name) {
-      return "Người dùng";
-    }
-    if (!userData?.lastName) {
-      lastName = "";
-    }
-    if (!userData?.name) {
-      name = "";
-    }
-    return `${lastName} ${name}`;
-  };
+  // const getUserName = () => {
+  //   let name = userData?.name;
+  //   let lastName = userData?.lastName;
+  //   if (!userData?.lastName && !userData?.name) {
+  //     return "Người dùng";
+  //   }
+  //   if (!userData?.lastName) {
+  //     lastName = "";
+  //   }
+  //   if (!userData?.name) {
+  //     name = "";
+  //   }
+  //   return `${lastName} ${name}`;
+  // };
 
-  const { data: userPost } = useFetch<any>(
+  const { data: userPost, loading: loadingGetPostAllTime } = useFetch<any>(
     "post/get-post-all-time?limit=10&offset=0",
     {},
     false,
     [callWithoutParam],
     { method: "GET" },
     (e) => {
+      setCallWithoutParam(undefined);
       const formatPosts = e.data.map((post: any) => {
         return {
           images: post.PostMedia?.map((p: any) => {
@@ -106,13 +108,14 @@ const ProfileSocialPosts: React.FC = (props) => {
     }
   );
 
-  const { data: userPostWithId } = useFetch<any>(
+  const { data: userPostWithId, loading: loadingGetPostById } = useFetch<any>(
     `post/get-post-by-id/${id}?limit=10&offset=0`,
     {},
     false,
     [callWithParam],
     { method: "GET" },
     (e) => {
+      setCallWithParam(undefined);
       const formatPosts = e.data.map((post: any) => {
         return {
           images: post.PostMedia?.map((p: any) => {
@@ -137,13 +140,20 @@ const ProfileSocialPosts: React.FC = (props) => {
       image: [],
     };
     setFormData(dataSubmit);
+
     if (isUploadImg) {
       setIsUploadImg(false);
-      let data = new FormData();
-      for (let i = 0; i < values.upload.fileList.length; i++) {
-        data.append("files", values.upload.fileList[i].originFileObj);
+      if (values.upload) {
+        let data = new FormData();
+        for (let i = 0; i < values.upload.fileList.length; i++) {
+          data.append("files", values.upload.fileList[i].originFileObj);
+        }
+        setImgData(data);
+      } else {
+        let data = new FormData();
+        data.append("files", fileList[0].originFileObj);
+        setImgData(data);
       }
-      setImgData(data);
     } else {
       setUpdateWithoutAva(true);
     }
@@ -159,6 +169,11 @@ const ProfileSocialPosts: React.FC = (props) => {
   };
 
   const onPictureChange = ({ fileList: newFileList }: any) => {
+    if (newFileList.length > 0) {
+      setIsUploadImg(true);
+    } else {
+      setIsUploadImg(false);
+    }
     setFileList(newFileList);
   };
 
@@ -177,7 +192,7 @@ const ProfileSocialPosts: React.FC = (props) => {
     imgWindow && imgWindow.document.write(image.outerHTML);
   };
 
-  const { data: submitNewPostImg } = useFetch<any>(
+  const { data: submitNewPostImg, loading: loadingSubmitImg } = useFetch<any>(
     "image/upload-multiple-file",
     {},
     false,
@@ -193,7 +208,7 @@ const ProfileSocialPosts: React.FC = (props) => {
     }
   );
 
-  const { data: submitNewPost } = useFetch<any>(
+  const { data: submitNewPost, loading: loadingSubmitPost } = useFetch<any>(
     "post/create-post",
     {
       "Content-Type": "application/json",
@@ -206,10 +221,27 @@ const ProfileSocialPosts: React.FC = (props) => {
     },
     (e) => {
       setHasImg(undefined);
+      const data = e.data;
+      const list = postList;
+      const newPost: IPost = {
+        images: formData.image.map((img: any) => {
+          return { image: img.link, title: "", description: "" };
+        }),
+        timestamp: getTimeDiff(data.createDate),
+        content: data.content,
+        contentShortcut: data.content?.substring(0, 200),
+        likes: 100,
+        comments: 0,
+      };
+      list.unshift(newPost);
+      setNewPost(newPost);
     }
   );
 
-  const { data: submitNewPostWithoutImg, loading } = useFetch<any>(
+  const {
+    data: submitNewPostWithoutImg,
+    loading: loadingSubmitPostWithoutImg,
+  } = useFetch<any>(
     "post/create-post",
     {
       "Content-Type": "application/json",
@@ -263,6 +295,13 @@ const ProfileSocialPosts: React.FC = (props) => {
           }}
         />
       ) : null}
+      {(loadingSubmitImg ||
+        loadingGetPostById ||
+        loadingGetPostAllTime ||
+        loadingSubmitPost ||
+        loadingSubmitPostWithoutImg) && (
+        <AppLoading loadingContent={<div></div>} showContent={false} />
+      )}
       <div className="profile-social__posts">
         {!id && (
           <div className="profile-social__posts__upload">
