@@ -1,5 +1,5 @@
 import { Typography, Image, InputNumber, Avatar, message } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { ethers } from 'ethers';
 import { CloseOutlined } from '@ant-design/icons';
 import { useWeb3React } from "web3-react-core";
@@ -7,12 +7,13 @@ import { useWeb3React } from "web3-react-core";
 import Fade from 'react-reveal/Fade';
 import Button from "../Button";
 import { useCharityVerseContract } from "../../hooks/useContract";
-import "./index.scss";
+import useComponentVisible from "../../hooks/useOnClickOutside";
 import BigNumber from "bignumber.js";
 import AppDialog from "../AppDialog";
 import AppLoading from "../AppLoading";
 import { CHAIN_INFO } from "../../constants/chainInfo";
 import { SupportedChainId } from "../../constants/chains";
+import "./index.scss";
 
 type AppDonateProps = {
     onClose: () => void;
@@ -22,7 +23,7 @@ type AppDonateProps = {
 }
 
 const AppDonate: React.FC<AppDonateProps> = (props) => {
-    const { name, avatar, walletAddress } = props;
+    const { name, avatar, walletAddress, onClose } = props;
     const [txHash, setTxHash] = useState<undefined | string>(undefined);
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [loadingDonate, setLoadingDonate] = useState<boolean>(false);
@@ -32,11 +33,18 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
     const { account, chainId } = useWeb3React();
     const charityContract = useCharityVerseContract();
 
+    const { ref, isComponentVisible } = useComponentVisible(true);
+
     const {
         explorer
       } = CHAIN_INFO[
         chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
     ];
+
+    useEffect(() => {
+        console.log(isComponentVisible);
+        !isComponentVisible && onClose && onClose();
+    }, [isComponentVisible, onClose]);
 
     useEffect(() => {
         const queryDonateFee = async () => {
@@ -82,10 +90,9 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
     return (
         <>
             <div className="app-donate">
-
                 <div className="app-donate__backdrop"></div>
                 <Fade bottom>
-                    <div className="app-donate__wrapper">
+                    <div className="app-donate__wrapper" ref={(ele: any) => { ref.current = ele }}>
                         <CloseOutlined className="app-donate__close" onClick={props.onClose} />
                         <Typography.Title level={4} className="app-donate__title">Ủng hộ</Typography.Title>
                         <div className="app-donate__content">
