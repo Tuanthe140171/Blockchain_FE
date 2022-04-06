@@ -26,7 +26,7 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
     : "/icon/AvatarTmp.png";
 
   const [listId, setListId] = useState<any[]>([]);
-  const [isFollowing, setIsFollowing] = useState<boolean>(listId.includes(id));
+  const [isFollowing, setIsFollowing] = useState<boolean>(listId?.includes(id));
   const [unfollow, setUnfollow] = useState<any>(undefined);
   const [follow, setFollow] = useState<any>(undefined);
   const [openDialog, setOpenDialog] = useState<boolean>(false);

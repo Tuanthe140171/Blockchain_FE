@@ -16,7 +16,7 @@ type YourFollowerCardProps = {
 const YourFollowerCard: React.FC<YourFollowerCardProps> = (props) => {
   const { userFollowingData } = useSelector((state: any) => state.userPostData);
   const [isFollowing, setIsFollowing] = useState<boolean>(
-    userFollowingData.includes(props.id)
+    userFollowingData?.includes(props.id)
   );
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);
