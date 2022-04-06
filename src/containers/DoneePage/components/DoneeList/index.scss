@@ -69,6 +69,7 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         min-height: 850px;
+        max-width: 1300px;
     }
 
     &__pagination-wrapper {
