@@ -15,8 +15,6 @@ const YourFollowers: React.FC = () => {
     (e) => {}
   );
 
-  console.log(followerData);
-
   const getUserName = (nameData: any, lastNameData: any) => {
     let name = nameData;
     let lastName = lastNameData;

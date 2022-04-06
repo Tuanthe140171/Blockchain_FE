@@ -38,7 +38,6 @@ const ProfileSituationVoting: React.FC<VotingSituationViewProps> = (props) => {
   const verificationType = `Giấy chứng nhận ${
     badluckerType.find((type: any) => type.id === data.situationId).message
   }`;
-  console.log(data);
 
   const {
     data: situationVoting,
