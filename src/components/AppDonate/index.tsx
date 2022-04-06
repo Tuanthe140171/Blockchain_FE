@@ -41,10 +41,9 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
         chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
     ];
 
-    useEffect(() => {
-        console.log(isComponentVisible);
-        !isComponentVisible && onClose && onClose();
-    }, [isComponentVisible, onClose]);
+    // useEffect(() => {
+    //     !isComponentVisible && onClose && onClose();
+    // }, [isComponentVisible, onClose]);
 
     useEffect(() => {
         const queryDonateFee = async () => {
