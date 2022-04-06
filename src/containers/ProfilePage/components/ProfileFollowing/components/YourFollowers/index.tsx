@@ -5,33 +5,6 @@ import useFetch from "../../../../../../hooks/useFetch";
 import YourFollowerCard from "../YourFollowerCard";
 import "./index.scss";
 
-const followings = [
-  {
-    name: "Bùi Văn Quyết",
-    status: "Người khuyết tật",
-    avatar: "/icon/bad-lucker-7.svg",
-    following: true,
-  },
-  {
-    name: "Bùi Văn Quyết",
-    status: "Người khuyết tật",
-    avatar: "/icon/bad-lucker-7.svg",
-    following: false,
-  },
-  {
-    name: "Bùi Văn Quyết",
-    status: "Người khuyết tật",
-    avatar: "/icon/bad-lucker-7.svg",
-    following: true,
-  },
-  {
-    name: "Bùi Văn Quyết",
-    status: "Người khuyết tật",
-    avatar: "/icon/bad-lucker-7.svg",
-    following: false,
-  },
-];
-
 const YourFollowers: React.FC = () => {
   const { data: followerData } = useFetch<any>(
     "users/get-people-followed-by-user",
