@@ -34,7 +34,7 @@ const ProfileDonation: React.FC = () => {
         <p className="direct-donation__quick-select">Quick select</p>
         <div className="direct-donation__amounts">
           {DONATE_AMOUNT_QUICK_SELECTS.map((QUICK_SELECT) => (
-            <DonationAmountBox amount={QUICK_SELECT} />
+            <DonationAmountBox amount={QUICK_SELECT} key={QUICK_SELECT}/>
           ))}
         </div>
         <p className="direct-donation__input-title">
