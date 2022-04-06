@@ -14,8 +14,20 @@ const VotingPage = lazy(() => import("../containers/VotingPage"));
 const DoneePage = lazy(() => import("../containers/DoneePage"));
 const ExchangeMoneyPage = lazy(() => import("../containers/ExchangeMoney"));
 const ContactUs = lazy(() => import("../containers/ContactUs"));
+const TokenTransferManagement = lazy(() => import("../containers/TokenTransferManagement"));
+const Claim = lazy(() => import("../containers/Claim"));
 
 const routes: CRVRoute[] = [
+  {
+    path: "/claim",
+    component: Claim,
+    exact: true,
+  },
+  {
+    path: "/admin",
+    component: TokenTransferManagement,
+    exact: true,
+  },
   {
     path: "/contact-us",
     component: ContactUs,

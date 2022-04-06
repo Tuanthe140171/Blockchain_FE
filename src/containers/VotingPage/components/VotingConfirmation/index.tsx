@@ -111,7 +111,7 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
                                     <Image src="/icon/calendar.svg" className="profile-personal__detail-icon" preview={false} />
                                     <span>Ngày Sinh</span>
                                 </div>
-                                <span className="profile-personal__detail-content">{moment(selectedUser?.dob).format("DD-MM-yy")}</span>
+                                <span className="profile-personal__detail-content">{selectedUser?.dob}</span>
                             </li>
                             <li className="profile-personal__detail">
                                 <div className="profile-personal__detail-label">
@@ -165,7 +165,7 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
                                     images={userSituation.BadLuckMedia.map((media: any) => media.link)}
                                     setReloadVotingData={setReloadVotingData}
                                     userName={selectedUser?.donee}
-                                    isVoted={userData ? userSituation.UserSituationConfirms.map((userVote: any) => userVote.userId).indexOf(userData.id) >= 0 : true}
+                                    isVoted={selectedUser?.isVoted ? true : userData ? userSituation.UserSituationConfirms.map((userVote: any) => userVote.userId).indexOf(userData.id) >= 0 : true}
                                 />
                             ))
                         }

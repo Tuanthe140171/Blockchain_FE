@@ -8,7 +8,7 @@
     justify-content: flex-start;
     cursor: pointer;
 
-    & > span {
+    & > span:nth-child(2) {
       margin-left: 10px;
     }
   }

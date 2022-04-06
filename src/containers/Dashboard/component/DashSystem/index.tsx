@@ -1,4 +1,4 @@
-import { DownloadOutlined, ZoomInOutlined } from "@ant-design/icons";
+import { DownloadOutlined } from "@ant-design/icons";
 import { Avatar, Col, Input, Row, Table, Image, Tooltip } from "antd";
 import {
   ArcElement,
@@ -104,7 +104,7 @@ const DashSystem: React.FC<{
   const { data: userActiveResp } = useFetch<any>(
     !props.pickedDate
       ? `active/stats`
-      : `active/stats?fromDate=${props.pickedDate.from}&toDate=${props.pickedDate.to}`,
+      : `active/stats?fromDate=${props.pickedDate.from}&toDate=${props.pickedDate.to}&sortBy=date`,
     {
       "Content-Type": "application/json",
       Accept: "application/json",
@@ -312,8 +312,6 @@ const DashSystem: React.FC<{
     },
   ];
 
-  console.log(transactionsResp);
-
   const transactionsTableData = transactionsResp
     ? transactionsResp.rows.map((transaction: any) => ({
         id: transaction.id,
@@ -321,12 +319,12 @@ const DashSystem: React.FC<{
         name:
           ethers.utils.getAddress(transaction.fromUser.walletAddress) ===
           ethers.utils.getAddress(account || "")
-            ? "You"
+            ? "Bạn"
             : transaction.fromUser.name,
         donee:
           ethers.utils.getAddress(transaction.toUser.walletAddress) ===
           ethers.utils.getAddress(account || "")
-            ? "You"
+            ? "Bạn"
             : transaction.toUser.name,
         date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
         amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
@@ -349,7 +347,6 @@ const DashSystem: React.FC<{
         })(),
         philanthropistId: transaction.fromUser.id,
         doneeId: transaction.toUser.id,
-        // userId:
       }))
     : [];
 
@@ -376,10 +373,6 @@ const DashSystem: React.FC<{
             <div className="chart-group__header">
               <p className="chart-group__header__title">Tổng từ thiện</p>
               <div className="chart-group__header__icons">
-                <ZoomInOutlined
-                  style={{ fontSize: "17px", color: "black" }}
-                  className="chart-group__header__icons__zoom"
-                />
                 <DownloadOutlined
                   style={{ fontSize: "15px", color: "black" }}
                   onClick={() =>
@@ -405,7 +398,7 @@ const DashSystem: React.FC<{
                 Tổng tiền từ thiện
               </h3>
               <h1 className="chart-group__data-group__data">
-                {donationResp
+                {donationResp && donationResp.donations.length !== 0
                   ? new BigNumber(donationResp.donations[0].totalVolume)
                       .div(1e18)
                       .toFixed(4)
@@ -434,10 +427,6 @@ const DashSystem: React.FC<{
             <div className="chart-group__header">
               <h1 className="chart-group__header__title">Lượt truy cập</h1>
               <div className="chart-group__header__icons">
-                <ZoomInOutlined
-                  style={{ fontSize: "17px", color: "black" }}
-                  className="chart-group__header__icons__zoom"
-                />
                 <DownloadOutlined
                   style={{ fontSize: "15px", color: "black" }}
                   onClick={() =>
@@ -497,10 +486,6 @@ const DashSystem: React.FC<{
                   onChange={(e) => setKeyWord(e.target.value)}
                 />
                 <div className="table-group__header__right-group__icons">
-                  <ZoomInOutlined
-                    style={{ fontSize: "17px", color: "black" }}
-                    className="table-group__header__right-group__icons__zoom"
-                  />
                   <DownloadOutlined
                     style={{ fontSize: "15px", color: "black" }}
                     onClick={() =>
@@ -530,10 +515,6 @@ const DashSystem: React.FC<{
             <div className="chart-group__header">
               <h1 className="chart-group__header__title">Người dùng</h1>
               <div className="chart-group__header__icons">
-                <ZoomInOutlined
-                  style={{ fontSize: "17px", color: "black" }}
-                  className="chart-group__header__icons__zoom"
-                />
                 <DownloadOutlined
                   style={{ fontSize: "15px", color: "black" }}
                 />

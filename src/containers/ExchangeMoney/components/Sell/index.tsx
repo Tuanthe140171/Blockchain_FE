@@ -39,7 +39,7 @@ const Sell: React.FC = () => {
 
     const BUY_STEPS = [
         {
-            title: "Nhập số tiền",
+            title: "Nhập số tokens",
             description: "",
             component: <SelectBuyAmount
                 isBuy={false}

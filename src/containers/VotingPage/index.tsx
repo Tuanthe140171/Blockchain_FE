@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Typography, Table, Button, Input, Avatar } from "antd";
 import moment from "moment";
 import { useSelector } from "react-redux";
+import AppTimer from "../../components/AppTimer";
 import VotingConfirmation from "./components/VotingConfirmation";
 import { SelectedUser } from "./components/VotingConfirmation";
 import useDebounce from "../../hooks/useDebounce";
@@ -33,7 +34,7 @@ const VotingPage: React.FC = () => {
       Accept: "application/json",
     },
     false,
-    [reloadVotingData],
+    [confirmationVisible ?  reloadVotingData: true],
     {
       method: "GET",
     },
@@ -72,6 +73,8 @@ const VotingPage: React.FC = () => {
               ).indexOf(userData.id) >= 0
             : true;
         })(),
+        numberOfConfirmations: `${donee.UserVotes.filter((userVote: any) => userVote.isAgree === 1).length} / 10`,
+        expireDate: donee.expireDate
       }))
     : [];
 
@@ -135,6 +138,7 @@ const VotingPage: React.FC = () => {
     {
       title: "Địa chỉ",
       dataIndex: "address",
+      width: "10%",
     },
     {
       title: "Ngày sinh",
@@ -144,7 +148,7 @@ const VotingPage: React.FC = () => {
     {
       title: "Hoàn cảnh",
       dataIndex: "situations",
-      width: "25%",
+      width: "22%",
       render: (text: any, row: any, index: any) => {
         return (
           <div className="voting__situation">
@@ -152,7 +156,7 @@ const VotingPage: React.FC = () => {
             <div>
               {row.situations.length >= 2 && (
                 <span className="voting__situation-more">
-                  {row.situations.length - 1} hoàn cảnh
+                  +{row.situations.length - 1} hoàn cảnh
                 </span>
               )}
             </div>
@@ -166,20 +170,30 @@ const VotingPage: React.FC = () => {
       width: "10%",
     },
     {
+      title: "Xác nhận",
+      dataIndex: "numberOfConfirmations",
+      width: "10%",
+    },
+    {
+      title: "Thời gian bình chọn",
+      dataIndex: "expireDate",
+      width: "10%",
+      render: (text: any, row: any, index: any) => {
+        return <AppTimer targetDate={text} />
+      },
+    },
+    {
       title: "Trạng thái",
       dataIndex: "status",
       width: "15%",
       render: (text: any, row: any, index: any) => {
         return (
           <Button
-            className={`voting__check-btn voting__check-btn--${
-              row.isVoted ? "checked" : ""
-            }`}
+            className={`voting__check-btn`}
             onClick={() => {
               setSelectedUser(row);
               setConfirmationVisible(true);
             }}
-            disabled={row.isVoted}
           >
             {row.isVoted ? "Đã xác nhận" : "Xác nhận"}
           </Button>
@@ -217,6 +231,7 @@ const VotingPage: React.FC = () => {
           columns={columns}
           dataSource={doneeData}
           scroll={{ y: 400 }}
+          onChange={((props: any) => setCurrentPage(props.current))}
         />
         <VotingConfirmation
           visible={confirmationVisible}

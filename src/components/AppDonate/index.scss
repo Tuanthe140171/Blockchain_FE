@@ -28,7 +28,7 @@
         position: fixed;
         padding: 64px 60px;
         background-color: white;
-        z-index: 99999999999999999999999999;
+        z-index: 99999999999999;
     }
 
     & .ant-input-number-wrapper {
@@ -126,32 +126,32 @@
         // overflow: hidden;
         // text-overflow: ellipsis;
     }
-}
 
-.ant-input-number-group .ant-input-number {
-    float: none;
-}
-
-.ant-input-number-input-wrap {
-    margin-top: 15px;
-    border: none;
-}
-
-.ant-input-number-group-addon {
-    border: none;
-    background-color: transparent;
-    padding: 0;
-    position: relative;
-
-    &::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 1px;
-        height: 50%;
-        background-color: #E0E6F1;
+    .ant-input-number-group .ant-input-number {
+        float: none;
+    }
+    
+    .ant-input-number-input-wrap {
+        margin-top: 15px;
+        border: none;
+    }
+    
+    .ant-input-number-group-addon {
+        border: none;
+        background-color: transparent;
+        padding: 0;
+        position: relative;
+    
+        &::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 50%;
+            background-color: #E0E6F1;
+        }
     }
 }
 

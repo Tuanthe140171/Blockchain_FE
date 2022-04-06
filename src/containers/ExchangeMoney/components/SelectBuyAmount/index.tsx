@@ -35,10 +35,10 @@ const SelectBuyAmount: React.FC<SelectBuyAmountProps> = (props) => {
     return (
         <div className="select-buy-amount">
             <Typography.Title level={4} className="select-buy-amount__title">
-                1. Select an amount you want to {isBuy ? 'buy' : 'sell'}
+                1. {isBuy ? 'Nhập số tiền mà bạn muốn mua' : 'Nhập số tokens mà bạn muốn bán'}
             </Typography.Title>
             <Typography.Paragraph className="select-buy-amount__input-title">
-                Amount
+                Số lượng
             </Typography.Paragraph>
             <InputNumber
                 addonAfter={
@@ -46,8 +46,8 @@ const SelectBuyAmount: React.FC<SelectBuyAmountProps> = (props) => {
                         {
                             !isBuy &&
                             (
-                                <div className="select-buy-amount__max" onClick={() => {setInputAmount(new BigNumber(userBalance).toFixed())}}>
-                                    Max
+                                <div className="select-buy-amount__max" onClick={() => { setInputAmount(new BigNumber(userBalance).toFixed()) }}>
+                                    Tối đa
                                 </div>
                             )
                         }
@@ -59,15 +59,25 @@ const SelectBuyAmount: React.FC<SelectBuyAmountProps> = (props) => {
                     </div>
                 }
                 onChange={onChange}
+                onKeyDown={(e: any) => {
+                    if ((e.code === 'ArrowLeft') || (e.code === 'ArrowRight') ||
+                        (e.code === 'ArrowUp') || (e.code === 'ArrowDown') ||
+                        (e.code === 'Delete') || (e.code === 'Backspace')) {
+                        return;
+                    } else if (e.key.search(/\d/) === -1) {
+                        e.preventDefault();
+                    } else if ((isBuy && e.target.value.length >= 14) || e.target.value.length >= 20) {
+                        e.preventDefault();
+                    }
+                }}
                 value={inputAmount}
                 controls={false}
                 className="select-buy-amount__input"
             />
             <p className="select-buy-amount__rate">1 CRV ~ <strong>1000</strong> VND</p>
             <Button
-                disabled={(function() {
+                disabled={(function () {
                     if (!isBuy) {
-                        console.log(new BigNumber(inputAmount).gt(userBalance), inputAmount, userBalance);
                         return new BigNumber(inputAmount).lte(0) || new BigNumber(inputAmount).gt(userBalance);
                     }
 

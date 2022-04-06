@@ -1,0 +1,160 @@
+.transfer-management {
+    margin-top: 40px;
+    padding: 0px 66px;
+
+    &__filter {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-top: 40px;
+    }
+
+    &__checkbox {
+        & > span {
+            font-style: normal !important;
+            font-weight: 400 !important;
+            font-size: 15px !important;
+            color: #002169 !important;
+            margin-bottom: 0 !important;
+        }
+    }
+
+    &__title {
+        font-style: normal !important;
+        font-weight: normal !important;
+        font-size: 32px !important;
+        line-height: 40px !important;
+        color: #000000 !important;
+    }
+
+    &__list {
+        margin-top: 40px;
+        padding: 0px 30px;
+        padding-top: 40px;
+        background-color: white;
+    
+        &-title {
+          font-style: normal !important;
+          font-weight: 500 !important;
+          font-size: 20px !important;
+          line-height: 25px !important;
+          color: #002169 !important;
+          margin-bottom: 0 !important;
+        }
+    
+        &-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+    }
+    
+    &__table {
+        margin-top: 20px;
+        padding-bottom: 30px;
+    
+        .ant-table-tbody > tr > td {
+          color: #002169;
+          font-style: normal;
+          font-weight: 300;
+          font-size: 14px;
+        }
+    
+        .ant-table-thead > tr > th {
+          font-style: normal;
+          font-weight: normal;
+          font-size: 15.9234px;
+          line-height: 27px;
+          color: #a7b2c8;
+          background-color: transparent;
+          border-bottom: 2px solid #f0f0f0;
+        }
+    
+        .ant-table-thead
+          > tr
+          > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+          height: 0;
+          width: 0;
+        }
+    
+        .ant-table-row:hover > td {
+          background: #f6faff !important;
+        }
+    
+        .ant-table-row:hover > td > .voting__check-btn {
+          background: #3156db;
+          color: white;
+        }
+    
+        .ant-table-row:hover > td > .voting__check-btn--checked {
+          color: rgba(0, 0, 0, 0.25);
+          border-color: #d9d9d9;
+          background: #f5f5f5;
+        }
+    
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    
+        & .ant-pagination-options {
+          display: none;
+        }
+    
+        & .ant-pagination-item-link {
+          background-color: transparent;
+          border-radius: 50%;
+        }
+    
+        & .ant-pagination-item-active {
+          & > a {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 13.2188px;
+            line-height: 17px;
+            color: #3156db !important;
+          }
+        }
+    
+        & .ant-pagination-prev,
+        & .ant-pagination-next,
+        & .ant-pagination-jump-next {
+            min-width: 42px;
+            height: 42px;
+        
+            & > button {
+                &:disabled {
+                border-color: #a7b2c8;
+        
+                & svg {
+                    fill: #a7b2c8;
+                }
+                }
+        
+                border-color: #3156db;
+        
+                & svg {
+                fill: #3156db;
+                }
+            }
+        }
+    
+        & .ant-pagination-item {
+            min-width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: none;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        
+        & > a {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 13.2188px;
+        line-height: 17px;
+        color: #a7b2c8;
+        }
+    }
+    }
+}
