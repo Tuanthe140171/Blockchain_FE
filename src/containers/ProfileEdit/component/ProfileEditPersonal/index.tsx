@@ -79,8 +79,19 @@ const ProfilePerson = () => {
     false,
     [],
     {},
-    (e) => {
-    }
+    (e) => {}
+  );
+
+  const { data: countryData } = useFetch<any>(
+    "assets/country",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [],
+    {},
+    (e) => {}
   );
 
   const onChange = ({ fileList: newFileList }: any) => {
@@ -315,15 +326,11 @@ const ProfilePerson = () => {
                         },
                       ]}
                     >
-                      {/* <Input placeholder="Quốc gia" /> */}
                       <Select placeholder="Quốc gia">
-                        {provinceData?.map((province: any) => {
+                        {countryData?.map((country: any) => {
                           return (
-                            <Option
-                              key={province.phone_code}
-                              value={`${province.name}`}
-                            >
-                              {province.name}
+                            <Option key={country} value={`${country}`}>
+                              {country}
                             </Option>
                           );
                         })}
@@ -387,7 +394,19 @@ const ProfilePerson = () => {
                         },
                       ]}
                     >
-                      <Input placeholder="Nơi ở hiện tại" />
+                      {/* <Input placeholder="Nơi ở hiện tại" /> */}
+                      <Select placeholder="Nơi ở hiện tại">
+                        {provinceData?.map((province: any) => {
+                          return (
+                            <Option
+                              key={province.phone_code}
+                              value={`${province.name}`}
+                            >
+                              {province.name}
+                            </Option>
+                          );
+                        })}
+                      </Select>
                     </Form.Item>
                   </Col>
                 </Row>

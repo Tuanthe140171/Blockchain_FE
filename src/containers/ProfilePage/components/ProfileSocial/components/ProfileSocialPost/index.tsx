@@ -2,13 +2,10 @@ import React, { useState } from "react";
 import { Avatar, Image } from "antd";
 import "./index.scss";
 import { ReactPictureGrid } from "react-picture-grid";
+import { useSelector } from "react-redux";
 
 export type ProfileSocialPostProps = {
   images: [];
-  poster: {
-    name: string;
-    avatar: string;
-  };
   timestamp: string;
   content: string;
   contentShortcut: string;
@@ -19,23 +16,42 @@ export type ProfileSocialPostProps = {
 
 const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
   const [seeMore, setSeeMore] = useState(false);
+  const { userPostData: userData } = useSelector(
+    (state: any) => state.userPostData
+  );
 
-  const {
-    images,
-    poster,
-    timestamp,
-    content,
-    contentShortcut,
-    likes,
-    comments,
-  } = props;
+  const { images, timestamp, content, contentShortcut, likes, comments } =
+    props;
+
+  const avatarLink = userData?.UserMedia.find(
+    (media: any) => media.type === "1" && media.active === 1
+  )
+    ? userData?.UserMedia.find(
+        (media: any) => media.type === "1" && media.active === 1
+      ).link
+    : "/icon/AvatarTmp.png";
+
+  const getUserName = () => {
+    let name = userData?.name;
+    let lastName = userData?.lastName;
+    if (!userData?.lastName && !userData?.name) {
+      return "Người dùng";
+    }
+    if (!userData?.lastName) {
+      lastName = "";
+    }
+    if (!userData?.name) {
+      name = "";
+    }
+    return `${lastName} ${name}`;
+  };
 
   return (
     <div className="profile-post" key={props.content}>
       <div className="profile-post__poster">
-        <Avatar src={poster.avatar} className="poster__avatar" />
+        <Avatar src={avatarLink} className="poster__avatar" />
         <div className="poster__info">
-          <p className="poster__name">{poster.name}</p>
+          <p className="poster__name">{getUserName()}</p>
           <div className="poster__timestamp">
             <span>{timestamp}</span>
             <Image src="/icon/globe.svg" className="poster__timestamp-icon" />
@@ -55,13 +71,7 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
       )}
       {images.length > 0 && (
         <div className="profile-post__images">
-          {
-            <ReactPictureGrid
-              data={images}
-              showTitle
-              gap={10}
-            />
-          }
+          {<ReactPictureGrid data={images} showTitle gap={10} />}
         </div>
       )}
       <div className="profile-post__metrics">

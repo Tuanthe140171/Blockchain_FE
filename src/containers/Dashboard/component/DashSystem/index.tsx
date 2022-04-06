@@ -1,7 +1,4 @@
-import {
-  DownloadOutlined,
-  ZoomInOutlined,
-} from "@ant-design/icons";
+import { DownloadOutlined, ZoomInOutlined } from "@ant-design/icons";
 import { Avatar, Col, Input, Row, Table, Image, Tooltip } from "antd";
 import {
   ArcElement,
@@ -26,17 +23,18 @@ import useFetch from "../../../../hooks/useFetch";
 import useDebounce from "../../../../hooks/useDebounce";
 import { shortenTx } from "../../../../utils";
 import { plugins } from "../../../../utils/chart";
-import { exportDataToCsv } from '../../../../utils/csvGenerator';
-import { toPercent } from '../../../../utils/convert';
+import { exportDataToCsv } from "../../../../utils/csvGenerator";
+import { toPercent } from "../../../../utils/convert";
 import { options } from "../../../../constants/chart";
 import { CHAIN_INFO } from "../../../../constants/chainInfo";
 import { SupportedChainId } from "../../../../constants/chains";
 import "./index.scss";
+import { useNavigate } from "react-router-dom";
 
 enum CharityStatus {
   UP,
   DOWN,
-  UNDECIDED
+  UNDECIDED,
 }
 
 const { Search } = Input;
@@ -54,10 +52,12 @@ ChartJS.register(
 );
 
 const DashSystem: React.FC<{
-  pickedDate: {
-    from: number,
-    to: number
-  } | undefined
+  pickedDate:
+    | {
+        from: number;
+        to: number;
+      }
+    | undefined;
 }> = (props) => {
   const { chainId, account } = useWeb3React();
   const [keyWord, setKeyWord] = useState("");
@@ -66,117 +66,169 @@ const DashSystem: React.FC<{
   const [userChartRef, setUserChartRef] = useState<any>();
 
   const debouncedKeyword = useDebounce<string>(keyWord, 500);
+  const navigate = useNavigate();
 
-  const {
-    explorer
-  } = CHAIN_INFO[
-    chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
-  ];
+  const { explorer } =
+    CHAIN_INFO[
+      chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
+    ];
 
-  const { data: transactionsResp, loading } = useFetch<any>(`transactions?page=${currentPage}&keyword=${debouncedKeyword}`, {
-    "Content-Type": "application/json",
-    Accept: "application/json"
-  });
+  const { data: transactionsResp, loading } = useFetch<any>(
+    `transactions?page=${currentPage}&keyword=${debouncedKeyword}`,
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    }
+  );
 
   const { data: userStatsResp } = useFetch<any>(`users/stats/number`, {
     "Content-Type": "application/json",
-    Accept: "application/json"
+    Accept: "application/json",
   });
 
   const { data: dailyDonationResp } = useFetch<any>(
-    !props.pickedDate ? `transactions/daily`: `transactions/daily?fromDate=${props.pickedDate.from}&toDate=${props.pickedDate.to}`, 
+    !props.pickedDate
+      ? `transactions/daily`
+      : `transactions/daily?fromDate=${props.pickedDate.from}&toDate=${props.pickedDate.to}`,
     {
-    "Content-Type": "application/json",
-    Accept: "application/json"
+      "Content-Type": "application/json",
+      Accept: "application/json",
     }
   );
 
   const { data: donationResp } = useFetch<any>(`landing-page/stats`, {
     "Content-Type": "application/json",
-    Accept: "application/json"
+    Accept: "application/json",
   });
 
   const { data: userActiveResp } = useFetch<any>(
-    !props.pickedDate ? `active/stats`: `active/stats?fromDate=${props.pickedDate.from}&toDate=${props.pickedDate.to}`,
+    !props.pickedDate
+      ? `active/stats`
+      : `active/stats?fromDate=${props.pickedDate.from}&toDate=${props.pickedDate.to}`,
     {
       "Content-Type": "application/json",
-      Accept: "application/json"
+      Accept: "application/json",
     }
   );
 
   const charityStatus = {
     status: CharityStatus.UP,
-    percentage: new BigNumber(0)
-  }
+    percentage: new BigNumber(0),
+  };
 
   const userStatsStatus = {
     status: CharityStatus.UP,
     percentage: new BigNumber(0),
-    totalUserActions: new BigNumber(0)
-  }
+    totalUserActions: new BigNumber(0),
+  };
 
   if (dailyDonationResp && dailyDonationResp.donationDayDatas.length >= 1) {
     const dayDatas = dailyDonationResp.donationDayDatas;
     if (dayDatas.length >= 2 && dayDatas[dayDatas.length - 2].dailyVolume > 0) {
-      charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).div(1e18).minus(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume).div(1e18)).div(new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume).div(1e18));
+      charityStatus.percentage = new BigNumber(
+        dayDatas[dayDatas.length - 1].dailyVolume
+      )
+        .div(1e18)
+        .minus(
+          new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume).div(1e18)
+        )
+        .div(
+          new BigNumber(dayDatas[dayDatas.length - 2].dailyVolume).div(1e18)
+        );
     } else {
-      charityStatus.percentage = new BigNumber(dayDatas[dayDatas.length - 1].dailyVolume).div(1e18).minus(new BigNumber(0));
+      charityStatus.percentage = new BigNumber(
+        dayDatas[dayDatas.length - 1].dailyVolume
+      )
+        .div(1e18)
+        .minus(new BigNumber(0));
     }
     console.log(charityStatus.percentage);
-    charityStatus.status = new BigNumber(charityStatus.percentage).lt(0) ? CharityStatus.DOWN : CharityStatus.UP;
+    charityStatus.status = new BigNumber(charityStatus.percentage).lt(0)
+      ? CharityStatus.DOWN
+      : CharityStatus.UP;
   }
 
   if (userActiveResp && userActiveResp.length >= 1) {
-    if (userActiveResp.length >= 2 && userActiveResp[userActiveResp.length - 2].count > 0) {
-      userStatsStatus.percentage = new BigNumber(userActiveResp[userActiveResp.length - 1].count).minus(new BigNumber(userActiveResp[userActiveResp.length - 2].count)).div(new BigNumber(userActiveResp[userActiveResp.length - 2].count));
+    if (
+      userActiveResp.length >= 2 &&
+      userActiveResp[userActiveResp.length - 2].count > 0
+    ) {
+      userStatsStatus.percentage = new BigNumber(
+        userActiveResp[userActiveResp.length - 1].count
+      )
+        .minus(new BigNumber(userActiveResp[userActiveResp.length - 2].count))
+        .div(new BigNumber(userActiveResp[userActiveResp.length - 2].count));
     } else {
-      userStatsStatus.percentage = new BigNumber(userActiveResp[userActiveResp.length - 1].count).minus(new BigNumber(0));
+      userStatsStatus.percentage = new BigNumber(
+        userActiveResp[userActiveResp.length - 1].count
+      ).minus(new BigNumber(0));
     }
-    userStatsStatus.status = new BigNumber(userStatsStatus.percentage).lt(0) ? CharityStatus.DOWN : CharityStatus.UP;
+    userStatsStatus.status = new BigNumber(userStatsStatus.percentage).lt(0)
+      ? CharityStatus.DOWN
+      : CharityStatus.UP;
 
     for (let userStats of userActiveResp) {
-      userStatsStatus.totalUserActions = userStatsStatus.totalUserActions.plus(new BigNumber(userStats.count));
+      userStatsStatus.totalUserActions = userStatsStatus.totalUserActions.plus(
+        new BigNumber(userStats.count)
+      );
     }
   }
-
 
   var gradientStroke = chartRef?.ctx?.createLinearGradient(0, 500, 0, 100);
   gradientStroke?.addColorStop(1, "rgba(238, 201, 9, 0.27)");
   gradientStroke?.addColorStop(0.3, "rgba(255, 255, 255, 0)");
 
-  var userGradientStroke = userChartRef?.ctx?.createLinearGradient(0, 500, 0, 100);
+  var userGradientStroke = userChartRef?.ctx?.createLinearGradient(
+    0,
+    500,
+    0,
+    100
+  );
   userGradientStroke?.addColorStop(1, "rgba(82, 191, 214, 0.3)");
   userGradientStroke?.addColorStop(0.3, "rgba(255, 255, 255, 0)");
-  
 
   const data: ChartData<"line", any, unknown> = {
-    labels: dailyDonationResp ? dailyDonationResp.donationDayDatas.map((data: any) => moment(parseInt(data.date) * 1000).format("DD-MM")) : [],
+    labels: dailyDonationResp
+      ? dailyDonationResp.donationDayDatas.map((data: any) =>
+          moment(parseInt(data.date) * 1000).format("DD-MM")
+        )
+      : [],
     datasets: [
       {
         fill: true,
-        data: dailyDonationResp ? dailyDonationResp.donationDayDatas.map((data: any) => new BigNumber(data.dailyVolume).div(1e18).toFixed(4)) : [],
+        data: dailyDonationResp
+          ? dailyDonationResp.donationDayDatas.map((data: any) =>
+              new BigNumber(data.dailyVolume).div(1e18).toFixed(4)
+            )
+          : [],
         backgroundColor: gradientStroke,
-        borderColor: '#EEC909',
+        borderColor: "#EEC909",
         tension: 0.5,
         pointBorderWidth: 0,
         pointHoverBorderWidth: 2,
-        pointHoverBackgroundColor: "white"
+        pointHoverBackgroundColor: "white",
       },
     ],
   };
 
   const userStatsData: ChartData<"line", any, unknown> = {
-    labels: userActiveResp ? userActiveResp.map((stats: any) => moment(new Date(stats.date)).format("DD-MM")) : [],
+    labels: userActiveResp
+      ? userActiveResp.map((stats: any) =>
+          moment(new Date(stats.date)).format("DD-MM")
+        )
+      : [],
     datasets: [
       {
         fill: true,
-        data: userActiveResp ? userActiveResp.map((stats: any) => stats.count) : [],
+        data: userActiveResp
+          ? userActiveResp.map((stats: any) => stats.count)
+          : [],
         backgroundColor: userGradientStroke,
-        borderColor: '#52BFD6',
+        borderColor: "#52BFD6",
         tension: 0.5,
         pointBorderWidth: 0,
         pointHoverBorderWidth: 2,
-        pointHoverBackgroundColor: "white"
+        pointHoverBackgroundColor: "white",
       },
     ],
   };
@@ -188,8 +240,15 @@ const DashSystem: React.FC<{
       key: "id",
       sorter: (a: any, b: any) => a.id - b.id,
       render: (name: any, others: any) => (
-        <Tooltip title={name}><span style={{ cursor: 'pointer' }} onClick={() => window.open(`${explorer}/tx/${name}`, '_blank')}>{shortenTx(name)}</span></Tooltip>
-      )
+        <Tooltip title={name}>
+          <span
+            style={{ cursor: "pointer" }}
+            onClick={() => window.open(`${explorer}/tx/${name}`, "_blank")}
+          >
+            {shortenTx(name)}
+          </span>
+        </Tooltip>
+      ),
     },
     {
       title: "Người từ thiện",
@@ -202,9 +261,15 @@ const DashSystem: React.FC<{
             justifyContent: "flex-start",
             alignItems: "center",
           }}
+          className="transaction-table__philanthropist"
         >
           <Avatar src={others.avatar} style={{ marginRight: 20 }} />
-          {name}
+          <p
+            onClick={() => navigate(`/profile/${others.philanthropistId}`)}
+            style={{ cursor: "pointer", marginBottom: 0 }}
+          >
+            {name}
+          </p>
         </div>
       ),
     },
@@ -220,11 +285,17 @@ const DashSystem: React.FC<{
               justifyContent: "flex-start",
               alignItems: "center",
             }}
+            className="transaction-table__donee"
           >
             <Avatar src={others.doneeAvatar} style={{ marginRight: 20 }} />
-            <span>{name}</span>
+            <p
+              onClick={() => navigate(`/profile/${others.doneeId}`)}
+              style={{ cursor: "pointer", marginBottom: 0 }}
+            >
+              {name}
+            </p>
           </div>
-        )
+        );
       },
     },
     {
@@ -241,29 +312,57 @@ const DashSystem: React.FC<{
     },
   ];
 
-  const transactionsTableData = transactionsResp ? transactionsResp.rows.map((transaction: any) => ({
-    id: transaction.id,
-    key: shortenTx(transaction.id),
-    name: ethers.utils.getAddress(transaction.fromUser.walletAddress) === ethers.utils.getAddress(account || "") ? 'You': transaction.fromUser.name,
-    donee: ethers.utils.getAddress(transaction.toUser.walletAddress) === ethers.utils.getAddress(account || "") ? 'You': transaction.toUser.name,
-    date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
-    amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
-    status: ["loser"],
-    doneeAvatar:(function(){
-      const userAvatar = transaction.toUser.UserMedia.filter((userMedia: any) => userMedia.type === "1" && userMedia.active === 1).slice(0, 1).pop();
-      return userAvatar ? userAvatar.link: null;
-    }()),
-    avatar: (function(){
-      const userAvatar = transaction.fromUser.UserMedia.filter((userMedia: any) => userMedia.type === "1" && userMedia.active === 1).slice(0, 1).pop();
-      return userAvatar ? userAvatar.link: null;
-    }())
-  })) : [];
+  console.log(transactionsResp);
+
+  const transactionsTableData = transactionsResp
+    ? transactionsResp.rows.map((transaction: any) => ({
+        id: transaction.id,
+        key: shortenTx(transaction.id),
+        name:
+          ethers.utils.getAddress(transaction.fromUser.walletAddress) ===
+          ethers.utils.getAddress(account || "")
+            ? "You"
+            : transaction.fromUser.name,
+        donee:
+          ethers.utils.getAddress(transaction.toUser.walletAddress) ===
+          ethers.utils.getAddress(account || "")
+            ? "You"
+            : transaction.toUser.name,
+        date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
+        amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
+        status: ["loser"],
+        doneeAvatar: (function () {
+          const userAvatar = transaction.toUser.UserMedia.filter(
+            (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+          )
+            .slice(0, 1)
+            .pop();
+          return userAvatar ? userAvatar.link : null;
+        })(),
+        avatar: (function () {
+          const userAvatar = transaction.fromUser.UserMedia.filter(
+            (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+          )
+            .slice(0, 1)
+            .pop();
+          return userAvatar ? userAvatar.link : null;
+        })(),
+        philanthropistId: transaction.fromUser.id,
+        doneeId: transaction.toUser.id,
+        // userId:
+      }))
+    : [];
 
   const pieData: ChartData<"pie", any, unknown> = {
     labels: ["Người đi từ thiện", "Người cần từ thiện"],
     datasets: [
       {
-        data: userStatsResp ? [userStatsResp.totalNum - userStatsResp.doneeNum, userStatsResp.doneeNum] : [50, 50],
+        data: userStatsResp
+          ? [
+              userStatsResp.totalNum - userStatsResp.doneeNum,
+              userStatsResp.doneeNum,
+            ]
+          : [50, 50],
         backgroundColor: ["#52BFD6", "#EA6A3F"],
       },
     ],
@@ -283,17 +382,47 @@ const DashSystem: React.FC<{
                 />
                 <DownloadOutlined
                   style={{ fontSize: "15px", color: "black" }}
-                  onClick={() => exportDataToCsv(dailyDonationResp ? dailyDonationResp.donationDayDatas : [], 'daily-donation')}
+                  onClick={() =>
+                    exportDataToCsv(
+                      dailyDonationResp
+                        ? dailyDonationResp.donationDayDatas
+                        : [],
+                      "daily-donation"
+                    )
+                  }
                 />
               </div>
             </div>
-            <Line ref={ref => setChartRef(ref)} data={data} plugins={plugins() as any} options={options} className="chart-group__chart" />
+            <Line
+              ref={(ref) => setChartRef(ref)}
+              data={data}
+              plugins={plugins() as any}
+              options={options}
+              className="chart-group__chart"
+            />
             <div className="chart-group__data-group">
-              <h3 className="chart-group__data-group__title">Tổng tiền từ thiện</h3>
+              <h3 className="chart-group__data-group__title">
+                Tổng tiền từ thiện
+              </h3>
               <h1 className="chart-group__data-group__data">
-                {donationResp ? new BigNumber(donationResp.donations[0].totalVolume).div(1e18).toFixed(4) : 0} CRV
-                <span className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${charityStatus.status === CharityStatus.UP ? 'up' : 'down'}`}>
-                  <Image preview={false} src="/icon/growth.svg" className={`chart-group__data-group__data__icon--${charityStatus.status === CharityStatus.UP ? 'up' : 'down'}`} />
+                {donationResp
+                  ? new BigNumber(donationResp.donations[0].totalVolume)
+                      .div(1e18)
+                      .toFixed(4)
+                  : 0}{" "}
+                CRV
+                <span
+                  className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${
+                    charityStatus.status === CharityStatus.UP ? "up" : "down"
+                  }`}
+                >
+                  <Image
+                    preview={false}
+                    src="/icon/growth.svg"
+                    className={`chart-group__data-group__data__icon--${
+                      charityStatus.status === CharityStatus.UP ? "up" : "down"
+                    }`}
+                  />
                   <span>{toPercent(charityStatus.percentage)}%</span>
                 </span>
               </h1>
@@ -311,19 +440,42 @@ const DashSystem: React.FC<{
                 />
                 <DownloadOutlined
                   style={{ fontSize: "15px", color: "black" }}
-                  onClick={() => exportDataToCsv(userActiveResp ? userActiveResp : [], 'user-active')}
+                  onClick={() =>
+                    exportDataToCsv(
+                      userActiveResp ? userActiveResp : [],
+                      "user-active"
+                    )
+                  }
                 />
               </div>
             </div>
-            <Line ref={ref => setUserChartRef(ref)} data={userStatsData} options={options} plugins={plugins("#52BFD6") as any} className="chart-group__chart" />
+            <Line
+              ref={(ref) => setUserChartRef(ref)}
+              data={userStatsData}
+              options={options}
+              plugins={plugins("#52BFD6") as any}
+              className="chart-group__chart"
+            />
             <div className="chart-group__data-group">
               <h3 className="chart-group__data-group__title">
                 Tổng lượt truy cập
               </h3>
               <h1 className="chart-group__data-group__data">
                 {userStatsStatus.totalUserActions.toFixed()}
-                <span className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${userStatsStatus.status === CharityStatus.UP ? 'up' : 'down'}`}>
-                  <Image preview={false} src="/icon/growth.svg" className={`chart-group__data-group__data__icon--${userStatsStatus.status === CharityStatus.UP ? 'up' : 'down'}`} />
+                <span
+                  className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${
+                    userStatsStatus.status === CharityStatus.UP ? "up" : "down"
+                  }`}
+                >
+                  <Image
+                    preview={false}
+                    src="/icon/growth.svg"
+                    className={`chart-group__data-group__data__icon--${
+                      userStatsStatus.status === CharityStatus.UP
+                        ? "up"
+                        : "down"
+                    }`}
+                  />
                   <span>{toPercent(userStatsStatus.percentage)}%</span>
                 </span>
               </h1>
@@ -342,7 +494,7 @@ const DashSystem: React.FC<{
                   // onSearch={onSearch}
                   style={{ width: 230 }}
                   value={keyWord}
-                  onChange={e => setKeyWord(e.target.value)}
+                  onChange={(e) => setKeyWord(e.target.value)}
                 />
                 <div className="table-group__header__right-group__icons">
                   <ZoomInOutlined
@@ -351,7 +503,9 @@ const DashSystem: React.FC<{
                   />
                   <DownloadOutlined
                     style={{ fontSize: "15px", color: "black" }}
-                    onClick={() => exportDataToCsv(transactionsResp.rows, "transactions")}
+                    onClick={() =>
+                      exportDataToCsv(transactionsResp.rows, "transactions")
+                    }
                   />
                 </div>
               </div>
@@ -364,9 +518,9 @@ const DashSystem: React.FC<{
                 defaultPageSize: transactionsResp ? transactionsResp.limit : 10,
                 pageSize: transactionsResp ? transactionsResp.limit : 10,
                 total: transactionsResp ? transactionsResp.count : 0,
-                current: currentPage
+                current: currentPage,
               }}
-              onChange={((props: any) => setCurrentPage(props.current))}
+              onChange={(props: any) => setCurrentPage(props.current)}
               loading={loading}
             />
           </div>
