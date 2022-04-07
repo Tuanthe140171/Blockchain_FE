@@ -207,6 +207,7 @@ const TokenTransferManagement: React.FC = () => {
                     columns={columns}
                     dataSource={redeemData}
                     scroll={{ y: 400 }}
+                    pagination={{ pageSize: 8, current: currentPage, total: data?.count }}
                     onChange={((props: any) => setCurrentPage(props.current))}
                 />
                 {openDialog ? (
