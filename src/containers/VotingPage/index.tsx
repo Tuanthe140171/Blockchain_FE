@@ -117,7 +117,7 @@ const VotingPage: React.FC = () => {
     {
       title: "ID",
       dataIndex: "id",
-      width: "8%",
+      width: "10%",
     },
     {
       title: "Người dùng",
@@ -135,20 +135,20 @@ const VotingPage: React.FC = () => {
         );
       },
     },
-    {
-      title: "Địa chỉ",
-      dataIndex: "address",
-      width: "10%",
-    },
-    {
-      title: "Ngày sinh",
-      dataIndex: "dob",
-      width: "10%",
-    },
+    // {
+    //   title: "Địa chỉ",
+    //   dataIndex: "address",
+    //   width: "10%",
+    // },
+    // {
+    //   title: "Ngày sinh",
+    //   dataIndex: "dob",
+    //   width: "10%",
+    // },
     {
       title: "Hoàn cảnh",
       dataIndex: "situations",
-      width: "22%",
+      width: "25%",
       render: (text: any, row: any, index: any) => {
         return (
           <div className="voting__situation">
@@ -177,7 +177,7 @@ const VotingPage: React.FC = () => {
     {
       title: "Thời gian bình chọn",
       dataIndex: "expireDate",
-      width: "10%",
+      width: "15%",
       render: (text: any, row: any, index: any) => {
         return <AppTimer targetDate={text} />
       },
@@ -231,6 +231,7 @@ const VotingPage: React.FC = () => {
           columns={columns}
           dataSource={doneeData}
           scroll={{ y: 400 }}
+          pagination={{ pageSize: 8, current: currentPage, total: data?.count }}
           onChange={((props: any) => setCurrentPage(props.current))}
         />
         <VotingConfirmation
