@@ -2,6 +2,10 @@
     margin-top: 40px;
     padding: 0px 66px;
 
+    &__main {
+        width: 600px;
+    }
+
     &__title {
         font-style: normal !important;
         font-weight: normal !important;
@@ -37,6 +41,7 @@
 
     &__block {
         width: 600px;
+        margin-top: 30px;
     }
 
     &__divider {
@@ -59,5 +64,18 @@
 
     &__main {
         margin-bottom: 40px;
+    }
+
+    &__cta {
+        margin-top: 20px;
+    }
+
+    &__amount {
+        display: flex;
+        align-items: center;
+    }
+
+    &__icon {
+        margin-left: 10px;
     }
 }
