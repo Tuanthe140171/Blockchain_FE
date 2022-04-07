@@ -70,7 +70,7 @@ const ProfilePerson = () => {
     }
   }, [userData]);
 
-  const { data: provinceData } = useFetch<any>(
+  const { data: provinceData, loading: loadingProvince } = useFetch<any>(
     "assets/province",
     {
       "Content-Type": "application/json",
@@ -82,7 +82,7 @@ const ProfilePerson = () => {
     (e) => {}
   );
 
-  const { data: countryData } = useFetch<any>(
+  const { data: countryData, loading: loadingCountry } = useFetch<any>(
     "assets/country",
     {
       "Content-Type": "application/json",
@@ -101,7 +101,7 @@ const ProfilePerson = () => {
 
   const [hasImg, setHasImg] = useState<any>(undefined);
 
-  const { data: submitImg } = useFetch<any>(
+  const { data: submitImg, loading: loadingSubmitImg } = useFetch<any>(
     "image/upload-multiple-file",
     {},
     false,
@@ -148,7 +148,7 @@ const ProfilePerson = () => {
     }
   };
 
-  const { data: submitData } = useFetch<any>(
+  const { data: submitData, loading: loadingSubmitData } = useFetch<any>(
     "users/update-user-profile",
     {
       "Content-Type": "application/json",
@@ -167,24 +167,25 @@ const ProfilePerson = () => {
     }
   );
 
-  const { data: submitDataWithoutAva, loading } = useFetch<any>(
-    "users/update-user-profile",
-    {
-      "Content-Type": "application/json",
-    },
-    false,
-    [updateWithoutAva],
-    {
-      method: "POST",
-      body: JSON.stringify(formData),
-    },
-    (e) => {
-      const action = getUserById(e.data);
-      dispatch(action);
-      setUpdateWithoutAva(undefined);
-      setOpenDialog(true);
-    }
-  );
+  const { data: submitDataWithoutAva, loading: loadingSubmitWithoutAva } =
+    useFetch<any>(
+      "users/update-user-profile",
+      {
+        "Content-Type": "application/json",
+      },
+      false,
+      [updateWithoutAva],
+      {
+        method: "POST",
+        body: JSON.stringify(formData),
+      },
+      (e) => {
+        const action = getUserById(e.data);
+        dispatch(action);
+        setUpdateWithoutAva(undefined);
+        setOpenDialog(true);
+      }
+    );
 
   const onPreview = async (file: any) => {
     let src = file.url;
@@ -201,13 +202,6 @@ const ProfilePerson = () => {
     imgWindow && imgWindow.document.write(image.outerHTML);
   };
 
-  const normFile = (e: any) => {
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
-  };
-
   return (
     <>
       {openDialog ? (
@@ -221,7 +215,11 @@ const ProfilePerson = () => {
           }}
         />
       ) : null}
-      {loading && (
+      {(loadingCountry ||
+        loadingProvince ||
+        loadingSubmitData ||
+        loadingSubmitImg ||
+        loadingSubmitWithoutAva) && (
         <AppLoading loadingContent={<div></div>} showContent={false} />
       )}
       <div className="profile-person">
@@ -470,7 +468,7 @@ const ProfilePerson = () => {
                   type="primary"
                   className="profile-person__container__information__form__submit"
                   htmlType="submit"
-                  disabled={loading}
+                  disabled={loadingSubmitData}
                 >
                   Save Information
                 </Button>

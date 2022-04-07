@@ -1,6 +1,7 @@
 import { Breadcrumb, Button, Divider } from "antd";
 import React, { useState } from "react";
 import useFetch from "../../hooks/useFetch";
+import { useSelector, useDispatch } from "react-redux";
 import ProfileModal from "./component/ProfileEditModal";
 import ProfilePayment from "./component/ProfileEditPayment";
 import ProfilePerson from "./component/ProfileEditPersonal";
@@ -11,17 +12,18 @@ const Dashboard = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [selectedTab, setSelectedTab] = useState(1);
+  const { userData } = useSelector((state: any) => state.userLayout);
 
-  const { data: userData } = useFetch<any>(
-    "users/type",
-    {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    false,
-    [],
-    {}
-  );
+  // const { data: userData } = useFetch<any>(
+  //   "users/type",
+  //   {
+  //     "Content-Type": "application/json",
+  //     Accept: "application/json",
+  //   },
+  //   false,
+  //   [],
+  //   {}
+  // );
 
   const closeModal = () => {
     setIsModalVisible(false);
@@ -40,11 +42,11 @@ const Dashboard = () => {
   return (
     <div className="profile-edit">
       <div className="profile-edit__header">
-        {selectedTab === 1 && userData === 2 ? (
+        {selectedTab === 1 && userData?.type === 2 && !isSubmit ? (
           <Button
             className="profile-edit__header__confirm"
             onClick={() => setIsModalVisible(true)}
-            disabled={isSubmit}
+            // disabled={isSubmit}
           >
             Xác nhận hộ nghèo
           </Button>
@@ -79,7 +81,7 @@ const Dashboard = () => {
             >
               Payment Method
             </button>
-            {userData > 2 ? (
+            {userData?.type > 2 || isSubmit ? (
               <button
                 className={
                   selectedTab === 3
