@@ -16,17 +16,17 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
   const { userPostData: userData } = useSelector(
     (state: any) => state.userPostData
   );
+  const { badluckerType } = useSelector((state: any) => state.userLayout);
   const navigate = useNavigate();
-  const avatarLink = userData?.UserMedia.find(
+  const avatarLink = userData?.UserMedia?.find(
     (media: any) => media.type === "1" && media.active === 1
   )
-    ? userData?.UserMedia.find(
+    ? userData?.UserMedia?.find(
         (media: any) => media.type === "1" && media.active === 1
       ).link
     : "/icon/AvatarTmp.png";
 
-  const [listId, setListId] = useState<any[]>([]);
-  const [isFollowing, setIsFollowing] = useState<boolean>(listId?.includes(id));
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [unfollow, setUnfollow] = useState<any>(undefined);
   const [follow, setFollow] = useState<any>(undefined);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -40,7 +40,7 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
     { method: "GET" },
     (e) => {
       const list = e.data.rows.map((row: any) => row.userIdTo);
-      setListId(list);
+      setIsFollowing(list.includes(id));
     }
   );
 
@@ -117,6 +117,16 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
     }
   };
 
+  const getSituation = () => {
+    if (userData?.BadLuckTypes.length === 0) {
+      return "";
+    } else {
+      return badluckerType?.find(
+        (type: any) => type.id === userData?.BadLuckTypes[0].situationId
+      )?.name;
+    }
+  };
+
   return (
     <>
       {openConfirmDialog ? (
@@ -148,13 +158,13 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
         <div className="profile-intro__details">
           <Avatar src={avatarLink} className="profile-intro__avatar" />
           <p className="profile-intro__name">{getUserName()}</p>
-          <span className="profile-intro__status">Người khuyết tật</span>
+          <span className="profile-intro__status">{getSituation()}</span>
           <div className="profile-intro__location">
             <Image
               src="/icon/map.svg"
               className="profile-intro__location-icon"
             />
-            <span>Hà Nội Việt Nam</span>
+            <span>{userData?.currentAddress}</span>
           </div>
           <Button
             className="follow-btn"

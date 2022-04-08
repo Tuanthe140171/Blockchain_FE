@@ -7,23 +7,30 @@ import ProfilePayment from "./component/ProfileEditPayment";
 import ProfilePerson from "./component/ProfileEditPersonal";
 import ProfileSituation from "./component/ProfileEditSituation";
 import "./index.scss";
+import { getUserById } from "../../stores/action/user-layout.action";
 
 const Dashboard = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isSubmit, setIsSubmit] = useState(false);
+  const [isSubmit, setIsSubmit] = useState<any>(undefined);
   const [selectedTab, setSelectedTab] = useState(1);
   const { userData } = useSelector((state: any) => state.userLayout);
+  const dispatch = useDispatch();
 
-  // const { data: userData } = useFetch<any>(
-  //   "users/type",
-  //   {
-  //     "Content-Type": "application/json",
-  //     Accept: "application/json",
-  //   },
-  //   false,
-  //   [],
-  //   {}
-  // );
+  const { data: userOriginData } = useFetch<any>(
+    "users/type",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [isSubmit],
+    {},
+    (e) => {
+      setIsSubmit(undefined);
+      const action = getUserById(e.data);
+      dispatch(action);
+    }
+  );
 
   const closeModal = () => {
     setIsModalVisible(false);

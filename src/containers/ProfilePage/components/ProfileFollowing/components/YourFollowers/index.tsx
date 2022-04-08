@@ -44,7 +44,7 @@ const YourFollowers: React.FC = () => {
               name={getUserName(follower.User.name, follower.User.lastName)}
               status={follower.status}
               avatar={
-                follower.User.UserMedia.find(
+                follower.User.UserMedia?.find(
                   (media: any) => media.active === 1 && media.type === "1"
                 )?.link
               }

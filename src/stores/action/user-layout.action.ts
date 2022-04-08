@@ -11,3 +11,10 @@ export const getBadluckerType = (data: any) => {
     payload: data,
   };
 };
+
+export const getUserBlkType = (data: any) => {
+  return {
+    type: "GET_USER_BLK_TYPE",
+    payload: data,
+  };
+};

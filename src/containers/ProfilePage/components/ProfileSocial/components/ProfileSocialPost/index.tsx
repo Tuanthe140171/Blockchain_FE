@@ -11,7 +11,6 @@ export type ProfileSocialPostProps = {
   contentShortcut: string;
   seeMore: boolean;
   likes: number;
-  comments: number;
 };
 
 const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
@@ -20,13 +19,12 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
     (state: any) => state.userPostData
   );
 
-  const { images, timestamp, content, contentShortcut, likes, comments } =
-    props;
+  const { images, timestamp, content, contentShortcut, likes } = props;
 
-  const avatarLink = userData?.UserMedia.find(
+  const avatarLink = userData?.UserMedia?.find(
     (media: any) => media.type === "1" && media.active === 1
   )
-    ? userData?.UserMedia.find(
+    ? userData?.UserMedia?.find(
         (media: any) => media.type === "1" && media.active === 1
       ).link
     : "/icon/AvatarTmp.png";
@@ -71,7 +69,15 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
       )}
       {images.length > 0 && (
         <div className="profile-post__images">
-          {<ReactPictureGrid data={images} showTitle gap={10} />}
+          {
+            <ReactPictureGrid
+              data={images}
+              showTitle={false}
+              gap={10}
+              showPreview
+              closeOnClick
+            />
+          }
         </div>
       )}
       <div className="profile-post__metrics">
@@ -81,7 +87,6 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
           <Image src="/icon/3.svg" preview={false} />
           <span>{likes}</span>
         </div>
-        <span className="metrics__comments">{comments} comments</span>
       </div>
       <div className="profile-post__divider"></div>
       <div className="profile-post__cta">

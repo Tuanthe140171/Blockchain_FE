@@ -75,10 +75,10 @@ const UserLayout: React.FC = (props): ReactElement => {
     }
   }, [socket, charityStorage, account]);
 
-  const avatarLink = userData?.UserMedia.find(
+  const avatarLink = userData?.UserMedia?.find(
     (media: any) => media.type === "1" && media.active === 1
   )
-    ? userData?.UserMedia.find(
+    ? userData?.UserMedia?.find(
         (media: any) => media.type === "1" && media.active === 1
       ).link
     : "/icon/AvatarTmp.png";

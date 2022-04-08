@@ -6,7 +6,6 @@ import { combineReducers } from "redux";
 export interface IObject {
   [key: string]: any;
 }
-// const reducer: IObject = {};
 
 const rootReducer = combineReducers({
   profileEditPerson: profileEditPersonReducer,

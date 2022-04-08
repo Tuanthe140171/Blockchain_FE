@@ -50,7 +50,7 @@ const YourFollowing: React.FC = () => {
               name={getUserName(following.User.name, following.User.lastName)}
               status={following.status}
               avatar={
-                following.User.UserMedia.find(
+                following.User.UserMedia?.find(
                   (media: any) => media.active === 1 && media.type === "1"
                 )?.link
               }

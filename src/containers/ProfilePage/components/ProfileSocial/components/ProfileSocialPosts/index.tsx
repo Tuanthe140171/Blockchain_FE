@@ -4,6 +4,7 @@ import {
   VideoCameraOutlined,
 } from "@ant-design/icons";
 import { Avatar, Button, Form, Input, Upload } from "antd";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -25,7 +26,6 @@ type IPost = {
   content: string;
   contentShortcut: string;
   likes: number;
-  comments: number;
 };
 
 const ProfileSocialPosts: React.FC = (props) => {
@@ -36,10 +36,10 @@ const ProfileSocialPosts: React.FC = (props) => {
   const dispatch = useDispatch();
   const [newPost, setNewPost] = useState<IPost | undefined>(undefined);
   const [postList, setPostList] = useState<IPost[]>([]);
-  const avatarLink = userData?.UserMedia.find(
+  const avatarLink = userData?.UserMedia?.find(
     (media: any) => media.type === "1" && media.active === 1
   )
-    ? userData?.UserMedia.find(
+    ? userData?.UserMedia?.find(
         (media: any) => media.type === "1" && media.active === 1
       ).link
     : "/icon/AvatarTmp.png";
@@ -64,28 +64,12 @@ const ProfileSocialPosts: React.FC = (props) => {
   }, [id]);
 
   const getTimeDiff = (time: any) => {
-    var now = new Date();
-    var then = new Date(time);
-    return "20h";
+    const timestamp = moment(time).fromNow(true);
+    return timestamp;
   };
 
-  // const getUserName = () => {
-  //   let name = userData?.name;
-  //   let lastName = userData?.lastName;
-  //   if (!userData?.lastName && !userData?.name) {
-  //     return "Người dùng";
-  //   }
-  //   if (!userData?.lastName) {
-  //     lastName = "";
-  //   }
-  //   if (!userData?.name) {
-  //     name = "";
-  //   }
-  //   return `${lastName} ${name}`;
-  // };
-
   const { data: userPost, loading: loadingGetPostAllTime } = useFetch<any>(
-    "post/get-post-all-time?limit=10&offset=0",
+    "post/get-post-by-current-user?limit=10&offset=0",
     {},
     false,
     [callWithoutParam],
@@ -101,7 +85,6 @@ const ProfileSocialPosts: React.FC = (props) => {
           content: post.content,
           contentShortcut: post.content?.substring(0, 200),
           likes: 100,
-          comments: 0,
         };
       });
       setPostList(formatPosts);
@@ -125,7 +108,6 @@ const ProfileSocialPosts: React.FC = (props) => {
           content: post.content,
           contentShortcut: post.content?.substring(0, 200),
           likes: 100,
-          comments: 0,
         };
       });
       setPostList(formatPosts);
@@ -222,7 +204,7 @@ const ProfileSocialPosts: React.FC = (props) => {
     (e) => {
       setHasImg(undefined);
       const data = e.data;
-      const list = postList;
+      // const list = postList;
       const newPost: IPost = {
         images: formData.image.map((img: any) => {
           return { image: img.link, title: "", description: "" };
@@ -231,9 +213,7 @@ const ProfileSocialPosts: React.FC = (props) => {
         content: data.content,
         contentShortcut: data.content?.substring(0, 200),
         likes: 100,
-        comments: 0,
       };
-      list.unshift(newPost);
       setNewPost(newPost);
     }
   );
@@ -255,19 +235,13 @@ const ProfileSocialPosts: React.FC = (props) => {
     (e) => {
       setUpdateWithoutAva(undefined);
       const data = e.data;
-      const list = postList;
       const newPost: IPost = {
-        // images: data.PostMedia?.map((p: any) => {
-        //   return { image: p.link, title: "", description: "" };
-        // }),
         images: [],
         timestamp: getTimeDiff(data.createDate),
         content: data.content,
         contentShortcut: data.content?.substring(0, 200),
         likes: 100,
-        comments: 0,
       };
-      list.unshift(newPost);
       setNewPost(newPost);
     }
   );
@@ -382,14 +356,7 @@ const ProfileSocialPosts: React.FC = (props) => {
           </div>
         )}
         {postList.map((post, index) => {
-          const {
-            images,
-            timestamp,
-            content,
-            contentShortcut,
-            likes,
-            comments,
-          } = post;
+          const { images, timestamp, content, contentShortcut, likes } = post;
           return (
             <React.Fragment key={content + index}>
               <ProfileSocialPost
@@ -398,7 +365,6 @@ const ProfileSocialPosts: React.FC = (props) => {
                 content={content}
                 contentShortcut={contentShortcut}
                 likes={likes}
-                comments={comments}
                 seeMore={!!contentShortcut}
               />
             </React.Fragment>

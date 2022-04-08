@@ -14,7 +14,7 @@
   &__avatar {
     width: 120px;
     height: 120px;
-    border: 1px solid #EDEDED;
+    border: 1px solid #ededed;
   }
 
   &__name {
@@ -45,6 +45,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 20px;
 
     & > span {
       margin-left: 5px;
