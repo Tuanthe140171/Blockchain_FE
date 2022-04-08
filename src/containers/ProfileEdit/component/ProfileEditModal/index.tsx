@@ -6,6 +6,7 @@ import Message from "../../../../constants/message";
 import useFetch from "../../../../hooks/useFetch";
 import { useSelector } from "react-redux";
 import "./index.scss";
+import AppLoading from "../../../../components/AppLoading";
 
 type ProfileModalProps = {
   isVisible: boolean;
@@ -200,7 +201,7 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
     setSubmitFile(data);
   }, [cmndFile, situationFile]);
 
-  const { data: linkImg } = useFetch<any>(
+  const { data: linkImg, loading: loadingGetLinkImg } = useFetch<any>(
     "image/upload-multiple-file",
     {},
     false,
@@ -234,7 +235,7 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
     }
   );
 
-  const { data: confirmRes } = useFetch<any>(
+  const { data: confirmRes, loading: loadingConfirmRes } = useFetch<any>(
     "bad-lucker/update-badlucker",
     {
       "Content-Type": "application/json",
@@ -262,6 +263,9 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
   const drawerContent = () => {
     return (
       <>
+        {(loadingConfirmRes || loadingGetLinkImg) && (
+          <AppLoading loadingContent={<div></div>} showContent={false} />
+        )}
         <Button
           disabled={!selectedList.length}
           className="profile-drawer__btn-submit"

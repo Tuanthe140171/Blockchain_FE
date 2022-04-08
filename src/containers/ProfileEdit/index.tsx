@@ -1,26 +1,35 @@
 import { Breadcrumb, Button, Divider } from "antd";
 import React, { useState } from "react";
 import useFetch from "../../hooks/useFetch";
+import { useSelector, useDispatch } from "react-redux";
 import ProfileModal from "./component/ProfileEditModal";
 import ProfilePayment from "./component/ProfileEditPayment";
 import ProfilePerson from "./component/ProfileEditPersonal";
 import ProfileSituation from "./component/ProfileEditSituation";
 import "./index.scss";
+import { getUserById } from "../../stores/action/user-layout.action";
 
 const Dashboard = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isSubmit, setIsSubmit] = useState(false);
+  const [isSubmit, setIsSubmit] = useState<any>(undefined);
   const [selectedTab, setSelectedTab] = useState(1);
+  const { userData } = useSelector((state: any) => state.userLayout);
+  const dispatch = useDispatch();
 
-  const { data: userData } = useFetch<any>(
+  const { data: userOriginData } = useFetch<any>(
     "users/type",
     {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
     false,
-    [],
-    {}
+    [isSubmit],
+    {},
+    (e) => {
+      setIsSubmit(undefined);
+      const action = getUserById(e.data);
+      dispatch(action);
+    }
   );
 
   const closeModal = () => {
@@ -40,11 +49,11 @@ const Dashboard = () => {
   return (
     <div className="profile-edit">
       <div className="profile-edit__header">
-        {selectedTab === 1 && userData === 2 ? (
+        {selectedTab === 1 && userData?.type === 2 && !isSubmit ? (
           <Button
             className="profile-edit__header__confirm"
             onClick={() => setIsModalVisible(true)}
-            disabled={isSubmit}
+            // disabled={isSubmit}
           >
             Xác nhận hộ nghèo
           </Button>
@@ -79,7 +88,7 @@ const Dashboard = () => {
             >
               Payment Method
             </button>
-            {userData > 2 ? (
+            {userData?.type > 2 || isSubmit ? (
               <button
                 className={
                   selectedTab === 3

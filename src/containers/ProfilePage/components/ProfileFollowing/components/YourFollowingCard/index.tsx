@@ -111,7 +111,7 @@ const YourFollowingCard: React.FC<YourFollowingCardProps> = (props) => {
           }}
         >
           <Image src={isFollowing ? "/icon/tick.svg" : "/icon/plus.svg"} />
-          <span>{isFollowing ? "Following" : "Follow"}</span>
+          <span>{isFollowing ? "Đang theo dõi" : "Theo dõi"}</span>
         </div>
       </div>
     </>

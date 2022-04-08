@@ -4,14 +4,17 @@ import {
   VideoCameraOutlined,
 } from "@ant-design/icons";
 import { Avatar, Button, Form, Input, Upload } from "antd";
-import React, { useEffect, useState } from "react";
+import moment from "moment";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import AppDialog from "../../../../../../components/AppDialog";
 import AppLoading from "../../../../../../components/AppLoading";
 import useFetch from "../../../../../../hooks/useFetch";
 import ProfileSocialPost from "../ProfileSocialPost";
+import Picker from "emoji-picker-react";
 import "./index.scss";
+import { time } from "console";
 
 const dummyRequest = ({ file, onSuccess }: any) => {
   setTimeout(() => {
@@ -25,7 +28,6 @@ type IPost = {
   content: string;
   contentShortcut: string;
   likes: number;
-  comments: number;
 };
 
 const ProfileSocialPosts: React.FC = (props) => {
@@ -36,10 +38,10 @@ const ProfileSocialPosts: React.FC = (props) => {
   const dispatch = useDispatch();
   const [newPost, setNewPost] = useState<IPost | undefined>(undefined);
   const [postList, setPostList] = useState<IPost[]>([]);
-  const avatarLink = userData?.UserMedia.find(
+  const avatarLink = userData?.UserMedia?.find(
     (media: any) => media.type === "1" && media.active === 1
   )
-    ? userData?.UserMedia.find(
+    ? userData?.UserMedia?.find(
         (media: any) => media.type === "1" && media.active === 1
       ).link
     : "/icon/AvatarTmp.png";
@@ -63,29 +65,31 @@ const ProfileSocialPosts: React.FC = (props) => {
     }
   }, [id]);
 
-  const getTimeDiff = (time: any) => {
-    var now = new Date();
-    var then = new Date(time);
-    return "20h";
+  const convertToLocaleString = (time: string) => {
+    const t3 = time.replace("seconds", "giây");
+    const t4 = t3.replace("minutes", "phút");
+    const t5 = t4.replace("minute", "phút");
+    const t6 = t5.replace("hours", "giờ");
+    const t7 = t6.replace("hour", "giờ");
+    const t8 = t7.replace("days", "ngày");
+    const t9 = t8.replace("day", "ngày");
+    const t10 = t9.replace("months", "tháng");
+    const t11 = t10.replace("month", "tháng");
+    const t12 = t11.replace("years", "năm");
+    const t13 = t12.replace("year", "năm");
+    const t14 = t13.replace("a few", "Một vài");
+    const t15 = t14.replace("a", "Một");
+    return t15;
   };
 
-  // const getUserName = () => {
-  //   let name = userData?.name;
-  //   let lastName = userData?.lastName;
-  //   if (!userData?.lastName && !userData?.name) {
-  //     return "Người dùng";
-  //   }
-  //   if (!userData?.lastName) {
-  //     lastName = "";
-  //   }
-  //   if (!userData?.name) {
-  //     name = "";
-  //   }
-  //   return `${lastName} ${name}`;
-  // };
+  const getTimeDiff = (time: any) => {
+    const timestamp = moment(time).fromNow(true);
+    const convertedTime = convertToLocaleString(timestamp);
+    return convertedTime;
+  };
 
   const { data: userPost, loading: loadingGetPostAllTime } = useFetch<any>(
-    "post/get-post-all-time?limit=10&offset=0",
+    "post/get-post-by-current-user?limit=10&offset=0",
     {},
     false,
     [callWithoutParam],
@@ -101,7 +105,6 @@ const ProfileSocialPosts: React.FC = (props) => {
           content: post.content,
           contentShortcut: post.content?.substring(0, 200),
           likes: 100,
-          comments: 0,
         };
       });
       setPostList(formatPosts);
@@ -125,7 +128,6 @@ const ProfileSocialPosts: React.FC = (props) => {
           content: post.content,
           contentShortcut: post.content?.substring(0, 200),
           likes: 100,
-          comments: 0,
         };
       });
       setPostList(formatPosts);
@@ -222,7 +224,7 @@ const ProfileSocialPosts: React.FC = (props) => {
     (e) => {
       setHasImg(undefined);
       const data = e.data;
-      const list = postList;
+      // const list = postList;
       const newPost: IPost = {
         images: formData.image.map((img: any) => {
           return { image: img.link, title: "", description: "" };
@@ -231,9 +233,7 @@ const ProfileSocialPosts: React.FC = (props) => {
         content: data.content,
         contentShortcut: data.content?.substring(0, 200),
         likes: 100,
-        comments: 0,
       };
-      list.unshift(newPost);
       setNewPost(newPost);
     }
   );
@@ -255,19 +255,13 @@ const ProfileSocialPosts: React.FC = (props) => {
     (e) => {
       setUpdateWithoutAva(undefined);
       const data = e.data;
-      const list = postList;
       const newPost: IPost = {
-        // images: data.PostMedia?.map((p: any) => {
-        //   return { image: p.link, title: "", description: "" };
-        // }),
         images: [],
         timestamp: getTimeDiff(data.createDate),
         content: data.content,
         contentShortcut: data.content?.substring(0, 200),
         likes: 100,
-        comments: 0,
       };
-      list.unshift(newPost);
       setNewPost(newPost);
     }
   );
@@ -281,6 +275,17 @@ const ProfileSocialPosts: React.FC = (props) => {
       setPostList(list);
     }
   }, [newPost]);
+
+  const [emojiVisible, setEmojiVisible] = useState(false);
+  const ref = useRef<any>(null);
+
+  const onEmojiClick = (event: any, emojiObject: any) => {
+    const newValue = inputValue + emojiObject.emoji;
+    console.log(ref.current.value);
+
+    ref.current = newValue;
+    setInputValue(newValue);
+  };
 
   return (
     <>
@@ -322,6 +327,9 @@ const ProfileSocialPosts: React.FC = (props) => {
                   <Input
                     placeholder="Hãy nhập gì đó..."
                     onChange={(e) => setInputValue(e.target.value)}
+                    value={inputValue}
+                    ref={ref}
+                    accept="image/*"
                   />
                 </Form.Item>
               </div>
@@ -348,7 +356,11 @@ const ProfileSocialPosts: React.FC = (props) => {
               <hr className="profile-social__posts__upload__form__divider" />
               <div className="profile-social__posts__upload__form__footer">
                 <div className="profile-social__posts__upload__form__footer__buttons">
-                  <Button type="default" icon={<VideoCameraOutlined />}>
+                  <Button
+                    type="default"
+                    icon={<VideoCameraOutlined />}
+                    className="button"
+                  >
                     Phát trực tiếp
                   </Button>
                   <Upload
@@ -363,11 +375,29 @@ const ProfileSocialPosts: React.FC = (props) => {
                     <Button
                       disabled={fileList.length > 0}
                       icon={<FileImageOutlined />}
+                      className="button"
                     >
                       Ảnh
                     </Button>
                   </Upload>
-                  <Button icon={<SmileOutlined />}>Trạng thái</Button>
+                  <div>
+                    <Button
+                      icon={<SmileOutlined />}
+                      onClick={() => {
+                        setEmojiVisible(!emojiVisible);
+                      }}
+                      className="button"
+                    >
+                      Trạng thái
+                    </Button>
+                    <Picker
+                      onEmojiClick={onEmojiClick}
+                      pickerStyle={{
+                        position: "absolute",
+                        display: emojiVisible ? "flex" : "none",
+                      }}
+                    />
+                  </div>
                 </div>
                 <Button
                   type="primary"
@@ -381,29 +411,29 @@ const ProfileSocialPosts: React.FC = (props) => {
             </Form>
           </div>
         )}
-        {postList.map((post, index) => {
-          const {
-            images,
-            timestamp,
-            content,
-            contentShortcut,
-            likes,
-            comments,
-          } = post;
-          return (
-            <React.Fragment key={content + index}>
-              <ProfileSocialPost
-                images={images}
-                timestamp={timestamp}
-                content={content}
-                contentShortcut={contentShortcut}
-                likes={likes}
-                comments={comments}
-                seeMore={!!contentShortcut}
-              />
-            </React.Fragment>
-          );
-        })}
+        {postList.length > 0 ? (
+          postList.map((post, index) => {
+            const { images, timestamp, content, contentShortcut, likes } = post;
+            return (
+              <React.Fragment key={content + index}>
+                <ProfileSocialPost
+                  images={images}
+                  timestamp={timestamp}
+                  content={content}
+                  contentShortcut={contentShortcut}
+                  likes={likes}
+                  seeMore={!!contentShortcut}
+                />
+              </React.Fragment>
+            );
+          })
+        ) : (
+          <div className="profile-social__posts__empty-post">
+            {!id
+              ? "Không có bài viết nào"
+              : "Người dùng tạm thời chưa đăng bài viết nào"}
+          </div>
+        )}
       </div>
     </>
   );

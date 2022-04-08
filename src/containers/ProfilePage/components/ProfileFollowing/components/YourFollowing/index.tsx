@@ -39,18 +39,18 @@ const YourFollowing: React.FC = () => {
   return (
     <div className="your-following">
       <header className="your-following__header">
-        <p className="your-following__header-title">Your following</p>
-        <span className="your-following__header-see">See all</span>
+        <p className="your-following__header-title">Bạn đang theo dõi</p>
+        <span className="your-following__header-see">Xem thêm</span>
       </header>
       <div className="your-following__cards">
         {followingData?.rows.map((following: any, index: number) => (
           <React.Fragment key={following.userIdTo + index}>
             <YourFollowingCard
               id={following.userIdTo}
-              name={getUserName(following.User.name, following.User.lastName)}
+              name={getUserName(following?.following?.name, following?.following?.lastName)}
               status={following.status}
               avatar={
-                following.User.UserMedia.find(
+                following?.following?.UserMedia?.find(
                   (media: any) => media.active === 1 && media.type === "1"
                 )?.link
               }

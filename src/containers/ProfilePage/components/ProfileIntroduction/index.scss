@@ -14,7 +14,7 @@
   &__avatar {
     width: 120px;
     height: 120px;
-    border: 1px solid #EDEDED;
+    border: 1px solid #ededed;
   }
 
   &__name {
@@ -126,6 +126,13 @@
     margin-bottom: 13px;
   }
 
+  &__more {
+    font-size: 14px;
+    color: #3156db;
+    border: none;
+    margin-bottom: 13px;
+  }
+
   &__gallery {
     display: flex;
     align-items: center;
@@ -209,6 +216,7 @@
   font-size: 20px;
   line-height: 143%;
   color: $primaryColor;
+  margin-top: 20px;
 
   &__txt {
     margin-left: 5px;

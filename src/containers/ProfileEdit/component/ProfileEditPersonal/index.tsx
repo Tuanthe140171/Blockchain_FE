@@ -33,12 +33,12 @@ const ProfilePerson = () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const { userData } = useSelector((state: any) => state.userLayout);
   const dispatch = useDispatch();
-  const avatarLink = userData?.UserMedia.find(
+  const avatarLink = userData?.UserMedia?.find(
     (media: any) => media.type === "1" && media.active === 1
   )
-    ? userData?.UserMedia.find(
-        (media: any) => media.type === "1" && media.active === 1
-      ).link
+    ? userData?.UserMedia?.find(
+      (media: any) => media.type === "1" && media.active === 1
+    ).link
     : "/icon/AvatarTmp.png";
 
   useEffect(() => {
@@ -51,8 +51,8 @@ const ProfilePerson = () => {
           userData.gender === 0
             ? "male"
             : userData.gender === 1
-            ? "female"
-            : "other",
+              ? "female"
+              : "other",
         nation: userData.country,
         nativeAddress: userData.baseAddress,
         permanentAddress: userData.currentAddress,
@@ -70,7 +70,7 @@ const ProfilePerson = () => {
     }
   }, [userData]);
 
-  const { data: provinceData } = useFetch<any>(
+  const { data: provinceData, loading: loadingProvince } = useFetch<any>(
     "assets/province",
     {
       "Content-Type": "application/json",
@@ -79,10 +79,10 @@ const ProfilePerson = () => {
     false,
     [],
     {},
-    (e) => {}
+    (e) => { }
   );
 
-  const { data: countryData } = useFetch<any>(
+  const { data: countryData, loading: loadingCountry } = useFetch<any>(
     "assets/country",
     {
       "Content-Type": "application/json",
@@ -91,7 +91,7 @@ const ProfilePerson = () => {
     false,
     [],
     {},
-    (e) => {}
+    (e) => { }
   );
 
   const onChange = ({ fileList: newFileList }: any) => {
@@ -101,7 +101,7 @@ const ProfilePerson = () => {
 
   const [hasImg, setHasImg] = useState<any>(undefined);
 
-  const { data: submitImg } = useFetch<any>(
+  const { data: submitImg, loading: loadingSubmitImg } = useFetch<any>(
     "image/upload-multiple-file",
     {},
     false,
@@ -124,31 +124,41 @@ const ProfilePerson = () => {
   );
 
   const onSubmit = (values: any) => {
-    const dataSubmit = {
-      name: values.name,
-      lastName: values.lastName,
-      dob: values.dob,
-      country: values.nation,
-      baseAddress: values.nativeAddress,
-      currentAddress: values.permanentAddress,
-      liveAddress: values.address,
-      identityId: values.cmnd,
-      identityDate: values.date,
-      identityPlace: values.place,
-      gender: values.gender === "male" ? 0 : values.gender === "female" ? 1 : 2,
-    };
-    setFormData(dataSubmit);
-    if (isUploadAva) {
-      setIsUploadAva(false);
-      let data = new FormData();
-      data.append("files", values.upload.file.originFileObj);
-      setImgData(data);
+    if (new Date(birthday) > new Date()) {
+      form.setFields([{ name: "dob", errors: ["Ngày sinh không phù hợp!"] }]);
+    } else if (
+      new Date(cmndDay) > new Date() ||
+      new Date(cmndDay).getFullYear() < new Date(birthday).getFullYear() + 14
+    ) {
+      form.setFields([{ name: "dob", errors: ["Ngày cấp không phù hợp!"] }]);
     } else {
-      setUpdateWithoutAva(true);
+      const dataSubmit = {
+        name: values.name,
+        lastName: values.lastName,
+        dob: values.dob,
+        country: values.nation,
+        baseAddress: values.nativeAddress,
+        currentAddress: values.permanentAddress,
+        liveAddress: values.address,
+        identityId: values.cmnd,
+        identityDate: values.date,
+        identityPlace: values.place,
+        gender:
+          values.gender === "male" ? 0 : values.gender === "female" ? 1 : 2,
+      };
+      setFormData(dataSubmit);
+      if (isUploadAva) {
+        setIsUploadAva(false);
+        let data = new FormData();
+        data.append("files", values.upload.file.originFileObj);
+        setImgData(data);
+      } else {
+        setUpdateWithoutAva(true);
+      }
     }
   };
 
-  const { data: submitData } = useFetch<any>(
+  const { data: submitData, loading: loadingSubmitData } = useFetch<any>(
     "users/update-user-profile",
     {
       "Content-Type": "application/json",
@@ -167,24 +177,25 @@ const ProfilePerson = () => {
     }
   );
 
-  const { data: submitDataWithoutAva, loading } = useFetch<any>(
-    "users/update-user-profile",
-    {
-      "Content-Type": "application/json",
-    },
-    false,
-    [updateWithoutAva],
-    {
-      method: "POST",
-      body: JSON.stringify(formData),
-    },
-    (e) => {
-      const action = getUserById(e.data);
-      dispatch(action);
-      setUpdateWithoutAva(undefined);
-      setOpenDialog(true);
-    }
-  );
+  const { data: submitDataWithoutAva, loading: loadingSubmitWithoutAva } =
+    useFetch<any>(
+      "users/update-user-profile",
+      {
+        "Content-Type": "application/json",
+      },
+      false,
+      [updateWithoutAva],
+      {
+        method: "POST",
+        body: JSON.stringify(formData),
+      },
+      (e) => {
+        const action = getUserById(e.data);
+        dispatch(action);
+        setUpdateWithoutAva(undefined);
+        setOpenDialog(true);
+      }
+    );
 
   const onPreview = async (file: any) => {
     let src = file.url;
@@ -201,12 +212,27 @@ const ProfilePerson = () => {
     imgWindow && imgWindow.document.write(image.outerHTML);
   };
 
-  const normFile = (e: any) => {
-    if (Array.isArray(e)) {
-      return e;
+  const [birthday, setBirthday] = useState("");
+  const [cmndDay, setCmndDay] = useState("");
+  const [errorBirthdayField, setErrorBirthdayField] = useState(false);
+  const [errorCmndField, setErrorCmndField] = useState(false);
+
+  useEffect(() => {
+    if (errorBirthdayField) {
+      form.setFields([{ name: "dob", errors: ["Ngày sinh không phù hợp!"] }]);
+      setErrorBirthdayField(false);
     }
-    return e && e.fileList;
-  };
+    // else {
+    //   form.setFields([{ name: "dob", errors: [] }]);
+    // }
+  }, [errorBirthdayField]);
+
+  useEffect(() => {
+    if (errorCmndField) {
+      form.setFields([{ name: "date", errors: ["Ngày cấp không phù hợp!"] }]);
+      setErrorCmndField(false);
+    }
+  }, [errorCmndField]);
 
   return (
     <>
@@ -221,12 +247,16 @@ const ProfilePerson = () => {
           }}
         />
       ) : null}
-      {loading && (
-        <AppLoading loadingContent={<div></div>} showContent={false} />
-      )}
+      {(loadingCountry ||
+        loadingProvince ||
+        loadingSubmitData ||
+        loadingSubmitImg ||
+        loadingSubmitWithoutAva) && (
+          <AppLoading loadingContent={<div></div>} showContent={false} />
+        )}
       <div className="profile-person">
-        <div className="profile-person__title">Personal Information</div>
-        <div className="profile-person__description">* Indicates required</div>
+        <div className="profile-person__title">Thông tin cá nhân</div>
+        <div className="profile-person__description">*Yêu cầu</div>
         <div className="profile-person__container">
           <div className="profile-person__container__information">
             <Form
@@ -244,11 +274,13 @@ const ProfilePerson = () => {
                     <Form.Item
                       name={"name"}
                       label={"Tên đệm và tên"}
+                      validateTrigger="onBlur"
                       rules={[
                         {
                           required: true,
-                          message: "Input something!",
+                          message: "Hãy điền trường còn thiếu!",
                         },
+                        { max: 20, message: "Tối đa 20 kí tự!" },
                       ]}
                     >
                       <Input placeholder="Tên đệm và tên" />
@@ -262,10 +294,15 @@ const ProfilePerson = () => {
                     <Form.Item
                       name={"lastName"}
                       label={"Họ"}
+                      validateTrigger="onBlur"
                       rules={[
                         {
                           required: true,
-                          message: "Input something!",
+                          message: "Hãy điền trường còn thiếu!",
+                        },
+                        {
+                          max: 10,
+                          message: "Tối đa 10 kí tự!",
                         },
                       ]}
                     >
@@ -282,14 +319,28 @@ const ProfilePerson = () => {
                     <Form.Item
                       name={"dob"}
                       label={"Ngày sinh"}
+                      validateTrigger="onBlur"
                       rules={[
                         {
                           required: true,
-                          message: "Input something!",
+                          message: "Hãy điền trường còn thiếu!",
                         },
                       ]}
                     >
-                      <Input placeholder="Ngày sinh" type={"date"} />
+                      <Input
+                        placeholder="Ngày sinh"
+                        type={"date"}
+                        onBlur={(e) => {
+                          if (new Date(e.target.value) > new Date()) {
+                            setErrorBirthdayField(true);
+                          } else {
+                            setErrorBirthdayField(false);
+                          }
+                        }}
+                        onChange={(e) => {
+                          setBirthday(e.target.value);
+                        }}
+                      />
                     </Form.Item>
                   </Col>
                   <Col
@@ -319,15 +370,16 @@ const ProfilePerson = () => {
                     <Form.Item
                       name={"nation"}
                       label={"Quốc gia"}
+                      validateTrigger="onBlur"
                       rules={[
                         {
                           required: true,
-                          message: "Input something!",
+                          message: "Hãy điền trường còn thiếu!",
                         },
                       ]}
                     >
                       <Select placeholder="Quốc gia">
-                        {countryData?.map((country: any) => {
+                        {countryData?.sort().map((country: any) => {
                           return (
                             <Option key={country} value={`${country}`}>
                               {country}
@@ -347,10 +399,15 @@ const ProfilePerson = () => {
                     <Form.Item
                       name={"nativeAddress"}
                       label={`Nguyên quán`}
+                      validateTrigger="onBlur"
                       rules={[
                         {
                           required: true,
-                          message: "Input something!",
+                          message: "Hãy điền trường còn thiếu!",
+                        },
+                        {
+                          max: 50,
+                          message: "Tối đa 50 kí tự!",
                         },
                       ]}
                     >
@@ -367,11 +424,13 @@ const ProfilePerson = () => {
                     <Form.Item
                       name={"permanentAddress"}
                       label={"Nơi đăng kí hộ khẩu thường trú"}
+                      validateTrigger="onBlur"
                       rules={[
                         {
                           required: true,
-                          message: "Input something!",
+                          message: "Hãy điền trường còn thiếu!",
                         },
+                        { max: 50, message: " Tối đa 50 kí tự!" },
                       ]}
                     >
                       <Input placeholder="Nơi đăng kí hộ khẩu thường trú" />
@@ -386,17 +445,18 @@ const ProfilePerson = () => {
                   >
                     <Form.Item
                       name={"address"}
-                      label={"Nơi ở hiện tại"}
+                      label={"Nơi ở hiện tại (Tỉnh thành)"}
+                      validateTrigger="onBlur"
                       rules={[
                         {
                           required: true,
-                          message: "Input something!",
+                          message: "Hãy điền trường còn thiếu!",
                         },
                       ]}
                     >
                       {/* <Input placeholder="Nơi ở hiện tại" /> */}
                       <Select placeholder="Nơi ở hiện tại">
-                        {provinceData?.map((province: any) => {
+                        {provinceData?.sort().map((province: any) => {
                           return (
                             <Option
                               key={province.phone_code}
@@ -419,10 +479,16 @@ const ProfilePerson = () => {
                     <Form.Item
                       name={"cmnd"}
                       label={"CMND"}
+                      validateTrigger="onBlur"
                       rules={[
                         {
                           required: true,
-                          message: "Input something!",
+                          message: "Hãy điền trường còn thiếu!",
+                        },
+                        {
+                          pattern: /^[0-9]*$/g,
+                          len: 12,
+                          message: "12 kí tự số!",
                         },
                       ]}
                     >
@@ -437,14 +503,32 @@ const ProfilePerson = () => {
                     <Form.Item
                       name={"date"}
                       label={"Ngày cấp"}
+                      validateTrigger="onBlur"
                       rules={[
                         {
                           required: true,
-                          message: "Input something!",
+                          message: "Hãy điền trường còn thiếu!",
                         },
                       ]}
                     >
-                      <Input placeholder="Ngày cấp" type={"date"} />
+                      <Input
+                        placeholder="Ngày cấp"
+                        type={"date"}
+                        onBlur={(e) => {
+                          if (
+                            new Date(e.target.value) > new Date() ||
+                            new Date(e.target.value).getFullYear() <
+                            new Date(birthday).getFullYear() + 14
+                          ) {
+                            setErrorCmndField(true);
+                          } else {
+                            setErrorCmndField(false);
+                          }
+                        }}
+                        onChange={(e) => {
+                          setCmndDay(e.target.value);
+                        }}
+                      />
                     </Form.Item>
                   </Col>
                   <Col
@@ -455,11 +539,13 @@ const ProfilePerson = () => {
                     <Form.Item
                       name={"place"}
                       label={"Nơi cấp"}
+                      validateTrigger="onBlur"
                       rules={[
                         {
                           required: true,
-                          message: "Input something!",
+                          message: "Hãy điền trường còn thiếu!",
                         },
+                        { max: 20, message: "Tối đa 20 kí tự!" },
                       ]}
                     >
                       <Input placeholder="Nơi cấp" />
@@ -470,7 +556,7 @@ const ProfilePerson = () => {
                   type="primary"
                   className="profile-person__container__information__form__submit"
                   htmlType="submit"
-                  disabled={loading}
+                  disabled={loadingSubmitData}
                 >
                   Save Information
                 </Button>

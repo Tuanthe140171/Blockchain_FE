@@ -29,13 +29,13 @@ const ProfileSocialPersonal: React.FC = () => {
     <div className="profile-personal-wrapper">
       <div className="profile-personal">
         <header className="profile-personal__header">
-          <p className="personal-header__title">Personal Information</p>
+          <p className="personal-header__title">Thông tin cá nhân</p>
           {id ? null : (
             <span
               className="personal-header__edit"
               onClick={() => navigate("/profile/edit")}
             >
-              Edit
+              Chỉnh sửa
             </span>
           )}
         </header>
