@@ -1,5 +1,6 @@
 import { Avatar, Image } from "antd";
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AppDialog from "../../../../../../components/AppDialog";
@@ -24,6 +25,12 @@ const YourFollowerCard: React.FC<YourFollowerCardProps> = (props) => {
   const [unfollow, setUnfollow] = useState<any>(undefined);
   const [follow, setFollow] = useState<any>(undefined);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userFollowingData) {
+      setIsFollowing(userFollowingData?.includes(props.id));
+    }
+  }, [userFollowingData]);
 
   const { data: unfollowData } = useFetch<any>(
     "users/follow-people",
@@ -128,7 +135,7 @@ const YourFollowerCard: React.FC<YourFollowerCardProps> = (props) => {
             className="your-follower-card__following-icon"
           />
           <span className="your-follower-card__following-txt">
-            {isFollowing ? "Following" : "Follow"}
+            {isFollowing ? "Đang theo dõi" : "Theo dõi"}
           </span>
         </div>
       </div>

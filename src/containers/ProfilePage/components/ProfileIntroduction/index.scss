@@ -45,7 +45,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
 
     & > span {
       margin-left: 5px;
@@ -124,6 +123,13 @@
     font-size: 20px;
     line-height: 25px;
     color: #2f497f;
+    margin-bottom: 13px;
+  }
+
+  &__more {
+    font-size: 14px;
+    color: #3156db;
+    border: none;
     margin-bottom: 13px;
   }
 
@@ -210,6 +216,7 @@
   font-size: 20px;
   line-height: 143%;
   color: $primaryColor;
+  margin-top: 20px;
 
   &__txt {
     margin-left: 5px;

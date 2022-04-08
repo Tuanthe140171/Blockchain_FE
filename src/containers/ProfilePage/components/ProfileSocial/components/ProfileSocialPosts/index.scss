@@ -1,5 +1,14 @@
 .profile-social {
   &__posts {
+    &__empty-post {
+      margin-top: 12px;
+      background-color: #ffffff;
+      padding: 24px;
+      text-align: center;
+      color: #a7b2c8;
+      font-size: 20px;
+    }
+ 
     &__upload {
       &__form {
         margin: 10px 0;
@@ -45,7 +54,7 @@
               background-color: #ffffff;
             }
 
-            & button {
+            & button.button {
               margin: 0 25px 0 0;
               padding-left: 0;
               border: none;

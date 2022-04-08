@@ -37,8 +37,8 @@ const ProfilePerson = () => {
     (media: any) => media.type === "1" && media.active === 1
   )
     ? userData?.UserMedia?.find(
-        (media: any) => media.type === "1" && media.active === 1
-      ).link
+      (media: any) => media.type === "1" && media.active === 1
+    ).link
     : "/icon/AvatarTmp.png";
 
   useEffect(() => {
@@ -51,8 +51,8 @@ const ProfilePerson = () => {
           userData.gender === 0
             ? "male"
             : userData.gender === 1
-            ? "female"
-            : "other",
+              ? "female"
+              : "other",
         nation: userData.country,
         nativeAddress: userData.baseAddress,
         permanentAddress: userData.currentAddress,
@@ -79,7 +79,7 @@ const ProfilePerson = () => {
     false,
     [],
     {},
-    (e) => {}
+    (e) => { }
   );
 
   const { data: countryData, loading: loadingCountry } = useFetch<any>(
@@ -91,7 +91,7 @@ const ProfilePerson = () => {
     false,
     [],
     {},
-    (e) => {}
+    (e) => { }
   );
 
   const onChange = ({ fileList: newFileList }: any) => {
@@ -252,8 +252,8 @@ const ProfilePerson = () => {
         loadingSubmitData ||
         loadingSubmitImg ||
         loadingSubmitWithoutAva) && (
-        <AppLoading loadingContent={<div></div>} showContent={false} />
-      )}
+          <AppLoading loadingContent={<div></div>} showContent={false} />
+        )}
       <div className="profile-person">
         <div className="profile-person__title">Thông tin cá nhân</div>
         <div className="profile-person__description">*Yêu cầu</div>
@@ -379,7 +379,7 @@ const ProfilePerson = () => {
                       ]}
                     >
                       <Select placeholder="Quốc gia">
-                        {countryData?.map((country: any) => {
+                        {countryData?.sort().map((country: any) => {
                           return (
                             <Option key={country} value={`${country}`}>
                               {country}
@@ -456,7 +456,7 @@ const ProfilePerson = () => {
                     >
                       {/* <Input placeholder="Nơi ở hiện tại" /> */}
                       <Select placeholder="Nơi ở hiện tại">
-                        {provinceData?.map((province: any) => {
+                        {provinceData?.sort().map((province: any) => {
                           return (
                             <Option
                               key={province.phone_code}
@@ -518,7 +518,7 @@ const ProfilePerson = () => {
                           if (
                             new Date(e.target.value) > new Date() ||
                             new Date(e.target.value).getFullYear() <
-                              new Date(birthday).getFullYear() + 14
+                            new Date(birthday).getFullYear() + 14
                           ) {
                             setErrorCmndField(true);
                           } else {

@@ -64,7 +64,7 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
           className="profile-post__see-more"
           onClick={() => setSeeMore(true)}
         >
-          <span>... see more</span>
+          <span>... Xem thêm</span>
         </div>
       )}
       {images.length > 0 && (
@@ -92,11 +92,11 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
       <div className="profile-post__cta">
         <div className="cta__like">
           <Image src="/icon/like.svg" className="cta__icon cta__like-icon" />
-          <span className="cta__like-txt">Like</span>
+          <span className="cta__like-txt">Thích</span>
         </div>
         <div className="cta__share">
           <Image src="/icon/share.svg" className="cta__icon cta__share-icon" />
-          <span className="cta__share-txt">Share</span>
+          <span className="cta__share-txt">Chia sẻ</span>
         </div>
       </div>
     </div>

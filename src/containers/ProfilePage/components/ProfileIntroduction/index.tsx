@@ -8,11 +8,12 @@ import "./index.scss";
 
 type ProfileIntroductionProps = {
   isOwner: boolean;
+  openTabMedia: any;
 };
 
 const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
   const { id } = useParams();
-  const { isOwner } = props;
+  const { isOwner, openTabMedia } = props;
   const { userPostData: userData } = useSelector(
     (state: any) => state.userPostData
   );
@@ -60,10 +61,14 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
   };
 
   const getDate = () => {
-    const today = new Date(userData?.createDate);
-    const yyyy = today.getFullYear();
-    const mm = today.toLocaleString("default", { month: "long" });
-    return `${mm}, ${yyyy}`;
+    if (userData?.createDate) {
+      const today = new Date(userData?.createDate);
+      const yyyy = today.getFullYear();
+      const mm = today.toLocaleString("default", { month: "long" });
+      return `${mm}, ${yyyy}`;
+    } else {
+      return 2022;
+    }
   };
 
   const { data: unfollowData } = useFetch<any>(
@@ -159,7 +164,10 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
           <Avatar src={avatarLink} className="profile-intro__avatar" />
           <p className="profile-intro__name">{getUserName()}</p>
           <span className="profile-intro__status">{getSituation()}</span>
-          <div className="profile-intro__location">
+          <div
+            className="profile-intro__location"
+            style={{ display: userData?.currentAddress ? "block" : "none" }}
+          >
             <Image
               src="/icon/map.svg"
               className="profile-intro__location-icon"
@@ -187,28 +195,31 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
                 ? isFollowing
                   ? "Following"
                   : "Follow"
-                : "Edit your profile"}
+                : "Thông tin cá nhân"}
             </span>
           </Button>
           <div className="profile-intro__metrics">
             <div className="profile-intro__tier profile-intro__metrics-block">
               <p>Tier of Charity</p>
-              <span>{userData?.tierCharity}%</span>
+              <span>{userData?.tierCharity ? userData?.tierCharity : 0}%</span>
             </div>
             <div className="profile-intro__divider"></div>
             <div className="profile-intro__trust profile-intro__metrics-block">
               <p>Trust Score</p>
-              <span>{userData?.trustScore}%</span>
+              <span>{userData?.trustScore ? userData?.trustScore : 0}%</span>
             </div>
           </div>
         </div>
         <div className="profile-intro__desc">
           <div className="intro-desc">
-            <p className="intro-desc__title">Introduction</p>
+            <p className="intro-desc__title">Giới thiệu</p>
             <p className="intro-desc__txt">Cuộc đời này đã mang tôi tới đây</p>
             <div className="intro-desc__divider"></div>
             <ul className="intro-desc__extras">
-              <li className="intro-desc__extra">
+              <li
+                className="intro-desc__extra"
+                style={{ display: userData?.currentAddress ? "block" : "none" }}
+              >
                 <Image
                   src="/icon/map_v2.svg"
                   className="intro-desc__extra-icon"
@@ -218,7 +229,10 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
                   <strong>{userData?.currentAddress}</strong>
                 </p>
               </li>
-              <li className="intro-desc__extra">
+              <li
+                className="intro-desc__extra"
+                style={{ display: userData?.baseAddress ? "block" : "none" }}
+              >
                 <Image
                   src="/icon/home.svg"
                   className="intro-desc__extra-icon"
@@ -243,8 +257,10 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
         </div>
         <div className="profile-intro__images intro-images">
           <div className="intro-images__header">
-            <p className="intro-images__title">Images</p>
-            <Link to="/">See all images</Link>
+            <p className="intro-images__title">Ảnh</p>
+            <Button className="intro-images__more" onClick={openTabMedia}>
+              Xem thêm
+            </Button>
           </div>
           <div className="intro-images__gallery">
             {userData?.UserMedia[0]?.link ? (

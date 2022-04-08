@@ -5,14 +5,16 @@ import {
 } from "@ant-design/icons";
 import { Avatar, Button, Form, Input, Upload } from "antd";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import AppDialog from "../../../../../../components/AppDialog";
 import AppLoading from "../../../../../../components/AppLoading";
 import useFetch from "../../../../../../hooks/useFetch";
 import ProfileSocialPost from "../ProfileSocialPost";
+import Picker from "emoji-picker-react";
 import "./index.scss";
+import { time } from "console";
 
 const dummyRequest = ({ file, onSuccess }: any) => {
   setTimeout(() => {
@@ -63,9 +65,27 @@ const ProfileSocialPosts: React.FC = (props) => {
     }
   }, [id]);
 
+  const convertToLocaleString = (time: string) => {
+    const t3 = time.replace("seconds", "giây");
+    const t4 = t3.replace("minutes", "phút");
+    const t5 = t4.replace("minute", "phút");
+    const t6 = t5.replace("hours", "giờ");
+    const t7 = t6.replace("hour", "giờ");
+    const t8 = t7.replace("days", "ngày");
+    const t9 = t8.replace("day", "ngày");
+    const t10 = t9.replace("months", "tháng");
+    const t11 = t10.replace("month", "tháng");
+    const t12 = t11.replace("years", "năm");
+    const t13 = t12.replace("year", "năm");
+    const t14 = t13.replace("a few", "Một vài");
+    const t15 = t14.replace("a", "Một");
+    return t15;
+  };
+
   const getTimeDiff = (time: any) => {
     const timestamp = moment(time).fromNow(true);
-    return timestamp;
+    const convertedTime = convertToLocaleString(timestamp);
+    return convertedTime;
   };
 
   const { data: userPost, loading: loadingGetPostAllTime } = useFetch<any>(
@@ -256,6 +276,17 @@ const ProfileSocialPosts: React.FC = (props) => {
     }
   }, [newPost]);
 
+  const [emojiVisible, setEmojiVisible] = useState(false);
+  const ref = useRef<any>(null);
+
+  const onEmojiClick = (event: any, emojiObject: any) => {
+    const newValue = inputValue + emojiObject.emoji;
+    console.log(ref.current.value);
+
+    ref.current = newValue;
+    setInputValue(newValue);
+  };
+
   return (
     <>
       {openDialog ? (
@@ -296,6 +327,9 @@ const ProfileSocialPosts: React.FC = (props) => {
                   <Input
                     placeholder="Hãy nhập gì đó..."
                     onChange={(e) => setInputValue(e.target.value)}
+                    value={inputValue}
+                    ref={ref}
+                    accept="image/*"
                   />
                 </Form.Item>
               </div>
@@ -322,7 +356,11 @@ const ProfileSocialPosts: React.FC = (props) => {
               <hr className="profile-social__posts__upload__form__divider" />
               <div className="profile-social__posts__upload__form__footer">
                 <div className="profile-social__posts__upload__form__footer__buttons">
-                  <Button type="default" icon={<VideoCameraOutlined />}>
+                  <Button
+                    type="default"
+                    icon={<VideoCameraOutlined />}
+                    className="button"
+                  >
                     Phát trực tiếp
                   </Button>
                   <Upload
@@ -337,11 +375,29 @@ const ProfileSocialPosts: React.FC = (props) => {
                     <Button
                       disabled={fileList.length > 0}
                       icon={<FileImageOutlined />}
+                      className="button"
                     >
                       Ảnh
                     </Button>
                   </Upload>
-                  <Button icon={<SmileOutlined />}>Trạng thái</Button>
+                  <div>
+                    <Button
+                      icon={<SmileOutlined />}
+                      onClick={() => {
+                        setEmojiVisible(!emojiVisible);
+                      }}
+                      className="button"
+                    >
+                      Trạng thái
+                    </Button>
+                    <Picker
+                      onEmojiClick={onEmojiClick}
+                      pickerStyle={{
+                        position: "absolute",
+                        display: emojiVisible ? "flex" : "none",
+                      }}
+                    />
+                  </div>
                 </div>
                 <Button
                   type="primary"
@@ -355,21 +411,29 @@ const ProfileSocialPosts: React.FC = (props) => {
             </Form>
           </div>
         )}
-        {postList.map((post, index) => {
-          const { images, timestamp, content, contentShortcut, likes } = post;
-          return (
-            <React.Fragment key={content + index}>
-              <ProfileSocialPost
-                images={images}
-                timestamp={timestamp}
-                content={content}
-                contentShortcut={contentShortcut}
-                likes={likes}
-                seeMore={!!contentShortcut}
-              />
-            </React.Fragment>
-          );
-        })}
+        {postList.length > 0 ? (
+          postList.map((post, index) => {
+            const { images, timestamp, content, contentShortcut, likes } = post;
+            return (
+              <React.Fragment key={content + index}>
+                <ProfileSocialPost
+                  images={images}
+                  timestamp={timestamp}
+                  content={content}
+                  contentShortcut={contentShortcut}
+                  likes={likes}
+                  seeMore={!!contentShortcut}
+                />
+              </React.Fragment>
+            );
+          })
+        ) : (
+          <div className="profile-social__posts__empty-post">
+            {!id
+              ? "Không có bài viết nào"
+              : "Người dùng tạm thời chưa đăng bài viết nào"}
+          </div>
+        )}
       </div>
     </>
   );
