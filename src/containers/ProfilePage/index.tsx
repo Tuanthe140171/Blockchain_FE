@@ -22,7 +22,7 @@ const ProfilePage: React.FC = () => {
     } else {
       setCallWithoutParam(true);
     }
-  }, []);
+  }, [id]);
 
   const { data: userWithParam } = useFetch<any>(
     `users/get-user-by-id-with-params/${id}`,
@@ -35,24 +35,31 @@ const ProfilePage: React.FC = () => {
       const action = getUserPostData(e.data);
       dispatch(action);
     }
-    );
-    
-    const { data: userWithoutParam } = useFetch<any>(
-      "users/get-user-by-id",
-      {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      false,
-      [callWithoutParam],
-      { method: "GET" },
-      (e) => {
-        console.log(e.data);
-        setCallWithoutParam(undefined);
+  );
+
+  const { data: userWithoutParam } = useFetch<any>(
+    "users/get-user-by-id",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [callWithoutParam],
+    { method: "GET" },
+    (e) => {
+      setCallWithoutParam(undefined);
       const action = getUserPostData(e.data);
       dispatch(action);
     }
   );
+
+  const [openTabMedia, setOpenTabMedia] = useState(false);
+  const handleOpenMedia = () => {
+    setOpenTabMedia(true);
+  };
+  const handleCloseMedia = () => {
+    setOpenTabMedia(false);
+  };
 
   return (
     <div className="profile">
@@ -60,8 +67,8 @@ const ProfilePage: React.FC = () => {
         <Image src="/icon/testing.jpg" />
       </div>
       <div className="profile__content">
-        <ProfileIntroduction isOwner={!id} />
-        <ProfileSocial />
+        <ProfileIntroduction isOwner={!id} openTabMedia={handleOpenMedia} />
+        <ProfileSocial openTabMedia={openTabMedia} canCloseMedia={handleCloseMedia}/>
         {!id ? <ProfileFollowing /> : <ProfileDonation />}
       </div>
     </div>

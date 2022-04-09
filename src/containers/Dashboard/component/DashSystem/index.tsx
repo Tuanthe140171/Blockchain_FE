@@ -142,7 +142,6 @@ const DashSystem: React.FC<{
         .div(1e18)
         .minus(new BigNumber(0));
     }
-    console.log(charityStatus.percentage);
     charityStatus.status = new BigNumber(charityStatus.percentage).lt(0)
       ? CharityStatus.DOWN
       : CharityStatus.UP;

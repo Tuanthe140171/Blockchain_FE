@@ -19,7 +19,6 @@ const ProfileSocialSituation = () => {
 
   useEffect(() => {
     if (userData) {
-      // const yourBadLuckerType = userData.BadLuckTypes;
       const listSituation = userData.BadLuckTypes.map((blk: any) => {
         return badluckerType.find((type: any) => type.id === blk.situationId);
       });
@@ -52,7 +51,6 @@ const ProfileSocialSituation = () => {
       const listNeedConfirm = userPostData.BadLuckTypes.filter(
         (situation: any) => situation.trustScore <= 50
       );
-      console.log(listNeedConfirm);
 
       setYourSituationList(listNeedConfirm);
     }
@@ -130,13 +128,13 @@ const ProfileSocialSituation = () => {
   return (
     <div className="profile-social-situation">
       <header className="profile-personal__header">
-        <p className="personal-header__title">Situation</p>
+        <p className="personal-header__title">Hoàn cảnh</p>
         {id ? null : (
           <span
             className="personal-header__edit"
             onClick={() => navigate("/profile/edit")}
           >
-            Edit
+            Chỉnh sửa
           </span>
         )}
       </header>

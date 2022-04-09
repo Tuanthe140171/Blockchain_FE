@@ -5,15 +5,27 @@ import { useNavigate } from "react-router-dom";
 import "./index.scss";
 
 const ModalProfileHeader = () => {
-  const { userData } = useSelector((state: any) => state.userLayout);
-  const avatarLink = userData?.UserMedia.find(
+  const { userData, badluckerType } = useSelector(
+    (state: any) => state.userLayout
+  );
+  const avatarLink = userData?.UserMedia?.find(
     (media: any) => media.type === "1" && media.active === 1
   )
-    ? userData?.UserMedia.find(
+    ? userData?.UserMedia?.find(
         (media: any) => media.type === "1" && media.active === 1
       ).link
     : "/icon/AvatarTmp.png";
   const navigate = useNavigate();
+
+  const getSituation = () => {
+    if (userData?.BadLuckTypes.length === 0) {
+      return "";
+    } else {
+      return badluckerType.find(
+        (type: any) => type.id === userData.BadLuckTypes[0].situationId
+      ).name;
+    }
+  };
 
   const getUserName = () => {
     let name = userData?.name;
@@ -42,7 +54,7 @@ const ModalProfileHeader = () => {
             {getUserName()}
           </div>
           <div className="modal-profile__header__avatar-group__name-group__description">
-            Người khuyết tật
+            {getSituation()}
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { Avatar, Image } from "antd";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AppDialog from "../../../../../../components/AppDialog";
 import useFetch from "../../../../../../hooks/useFetch";
 import "./index.scss";
@@ -17,6 +18,7 @@ const YourFollowingCard: React.FC<YourFollowingCardProps> = (props) => {
   const [isFollowing, setIsFollowing] = useState<boolean>(true);
   const [unfollow, setUnfollow] = useState<any>(undefined);
   const [follow, setFollow] = useState<any>(undefined);
+  const navigate = useNavigate();
 
   const { data: unfollowData } = useFetch<any>(
     "users/follow-people",
@@ -90,7 +92,13 @@ const YourFollowingCard: React.FC<YourFollowingCardProps> = (props) => {
       ) : null}
       <div className="your-following-card">
         <Avatar src={props.avatar} className="your-following-card__avatar" />
-        <p className="your-following-card__name">{props.name}</p>
+        <p
+          className="your-following-card__name"
+          onClick={() => navigate(`/profile/${props.id}`)}
+          style={{ cursor: "pointer" }}
+        >
+          {props.name}
+        </p>
         <span className="your-following-card__status">{props.status}</span>
         <div
           className="your-following-card__check"
@@ -103,7 +111,7 @@ const YourFollowingCard: React.FC<YourFollowingCardProps> = (props) => {
           }}
         >
           <Image src={isFollowing ? "/icon/tick.svg" : "/icon/plus.svg"} />
-          <span>{isFollowing ? "Following" : "Follow"}</span>
+          <span>{isFollowing ? "Đang theo dõi" : "Theo dõi"}</span>
         </div>
       </div>
     </>

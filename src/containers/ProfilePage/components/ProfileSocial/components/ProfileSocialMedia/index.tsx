@@ -14,6 +14,7 @@ import "./index.scss";
 import AppDialog from "../../../../../../components/AppDialog";
 import AppLoading from "../../../../../../components/AppLoading";
 import { useParams } from "react-router-dom";
+import { getUserPostData } from "../../../../../../stores/action/user-post.action";
 
 const ProfileSocialMedia = () => {
   const { userPostData: userData } = useSelector(
@@ -49,6 +50,8 @@ const ProfileSocialMedia = () => {
       setDataUpdateAva(undefined);
       const action = getUserById(e.data);
       dispatch(action);
+      const action_2 = getUserPostData(e.data);
+      dispatch(action_2);
       setOpenDialog(true);
     }
   );
@@ -87,7 +90,7 @@ const ProfileSocialMedia = () => {
   const [isFocusItem, setIsFocusItem] = useState<any>(null);
 
   const renderImage = () => {
-    return listImage.map((image: any, index) => {
+    return listImage?.map((image: any, index) => {
       return (
         <div
           className="profile-media__images__image"
@@ -128,14 +131,6 @@ const ProfileSocialMedia = () => {
                   <HeartOutlined className="icon" />
                   <div>{image.like}</div>
                 </div>
-                {/* <div>
-                <CommentOutlined className="icon" />
-                <div>{image.comment}</div>
-                </div>
-                <div>
-                <ShareAltOutlined className="icon" />
-                <div>{image.share}</div>
-              </div> */}
               </div>
             </div>
           )}
@@ -161,7 +156,7 @@ const ProfileSocialMedia = () => {
       )}
       <div className="profile-media">
         <header className="profile-media__header">
-          <p className="profile-media__header__title">Media</p>
+          <p className="profile-media__header__title">Ảnh</p>
         </header>
         <div className="profile-media__divider" />
         <div className="profile-media__images">{renderImage()}</div>
