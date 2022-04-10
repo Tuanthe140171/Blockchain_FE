@@ -6,7 +6,7 @@ import { BigNumber } from "bignumber.js";
 import { useCharityVerseContract } from "../../../../hooks/useContract";
 import "./index.scss";
 
-const MINIMUM_THRESHOLD = 9000;
+const MINIMUM_THRESHOLD = 200000;
 
 type SelectBuyAmountProps = {
     setCurrentStep: () => void,
@@ -77,6 +77,10 @@ const SelectBuyAmount: React.FC<SelectBuyAmountProps> = (props) => {
             <p className="select-buy-amount__rate">1 CRV ~ <strong>1000</strong> VND</p>
             <Button
                 disabled={(function () {
+                    if (!inputAmount) {
+                        return true;
+                    }
+
                     if (!isBuy) {
                         return new BigNumber(inputAmount).lte(0) || new BigNumber(inputAmount).gt(userBalance);
                     }
