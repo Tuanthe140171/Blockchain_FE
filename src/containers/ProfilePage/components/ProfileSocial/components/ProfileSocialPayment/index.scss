@@ -15,9 +15,15 @@
   &__details {
     padding-left: 0;
     padding-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 
     &__card {
       border-radius: 10px;
+      width: 40% !important;
+      margin: 0 25px;
+      margin-bottom: 10px;
     }
 
     &__info {
@@ -25,6 +31,13 @@
       align-items: center;
       justify-content: space-around;
       flex-direction: row-reverse;
+
+      & > div {
+        max-width: 180px;
+      }
+
+      &__check {
+      }
     }
   }
 
@@ -77,5 +90,37 @@
     line-height: 22px;
     color: #a7b2c8;
     cursor: pointer;
+  }
+}
+
+.profile-social-modal {
+  & .ant-modal-content {
+    border-radius: 10px;
+  }
+
+  & .ant-modal-header {
+    border-radius: 10px;
+  }
+
+  & .ant-modal-title {
+    color: #002169;
+    font-size: 20px;
+  }
+
+  &__line {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+
+    & > p {
+      width: 175px;
+      color: #2f497f;
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+
+    &__right {
+      max-width: 275px;
+    }
   }
 }

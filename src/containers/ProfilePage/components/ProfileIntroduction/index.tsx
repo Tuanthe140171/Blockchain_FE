@@ -218,7 +218,7 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
             <ul className="intro-desc__extras">
               <li
                 className="intro-desc__extra"
-                style={{ display: userData?.currentAddress ? "block" : "none" }}
+                style={{ display: userData?.currentAddress ? "flex" : "none" }}
               >
                 <Image
                   src="/icon/map_v2.svg"
@@ -231,7 +231,7 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
               </li>
               <li
                 className="intro-desc__extra"
-                style={{ display: userData?.baseAddress ? "block" : "none" }}
+                style={{ display: userData?.baseAddress ? "flex" : "none" }}
               >
                 <Image
                   src="/icon/home.svg"
