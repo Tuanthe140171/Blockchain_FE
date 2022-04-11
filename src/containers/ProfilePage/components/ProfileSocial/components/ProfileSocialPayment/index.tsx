@@ -8,7 +8,16 @@ import Meta from "antd/lib/card/Meta";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import AppDialog from "../../../../../../components/AppDialog";
+import useFetch from "../../../../../../hooks/useFetch";
 import "./index.scss";
+
+type IPayment = {
+  id: string;
+  type: number;
+  number: string;
+  bankUsername: string;
+  enable: number;
+};
 
 const ProfileSocialPayment = () => {
   const { id } = useParams();
@@ -20,9 +29,6 @@ const ProfileSocialPayment = () => {
     check: true,
     id: 1,
   });
-  const [openWarningDialog, setOpenWarningDialog] = useState(false);
-  const [deleteId, setDeleteId] = useState(1);
-
   const [paymentList, setPaymentList] = useState([
     {
       name: "Công ty mặt trời xanh",
@@ -43,13 +49,160 @@ const ProfileSocialPayment = () => {
       id: 3,
     },
   ]);
+  const [title, setTitle] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openWarningDialog, setOpenWarningDialog] = useState(false);
+  const [deleteId, setDeleteId] = useState(1);
+  const [isAdd, setIsAdd] = useState<any>(undefined);
+  const [isModify, setIsModify] = useState<any>(undefined);
+  const [isDelete, setIsDelete] = useState<any>(undefined);
+  const [newName, setNewName] = useState("");
+  const [newAccount, setNewAccount] = useState("");
+
+  const { data: paymentData, loading: loadingPayment } = useFetch(
+    `payment/get-payment-by-user`,
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [],
+    {},
+    (e) => {
+      const newList = e.data.map((data: any) => {
+        return {
+          name: data.bankUsername,
+          account: data.number,
+          check: data.enable,
+          id: data.id,
+        };
+      });
+      setPaymentList(newList);
+    }
+  );
+
+  // Add payment
+  const { data: paymentAddData, loading: loadingAddModify } = useFetch(
+    `payment/modify-payment`,
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [isAdd],
+    {
+      method: "POST",
+      body: JSON.stringify([
+        {
+          id: 0,
+          type: 1,
+          number: newAccount,
+          bankName: "",
+          bankBranch: "",
+          bankUsername: newName,
+          enable: 0,
+        },
+      ]),
+    },
+    (e) => {
+      setIsAdd(undefined);
+      const newList = e.data.map((data: any) => {
+        return {
+          name: data.bankUsername,
+          account: data.number,
+          check: data.enable,
+          id: data.id,
+        };
+      });
+      setPaymentList(newList);
+      setTitle("Thêm tài khoản thành công");
+      setOpenDialog(true);
+    }
+  );
+
+  // Modify payment
+  const { data: paymentModifyData, loading: loadingPaymentModify } = useFetch(
+    `payment/modify-payment`,
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [isModify],
+    {
+      method: "POST",
+      body: JSON.stringify([
+        {
+          id: tempData.id,
+          type: 1,
+          number: tempData.account,
+          bankName: "",
+          bankBranch: "",
+          bankUsername: tempData.name,
+          enable: tempData.check,
+        },
+      ]),
+    },
+    (e) => {
+      setIsModify(undefined);
+      const newList = e.data.map((data: any) => {
+        return {
+          name: data.bankUsername,
+          account: data.number,
+          check: data.enable,
+          id: data.id,
+        };
+      });
+      setPaymentList(newList);
+      console.log("modify");
+      console.log(e.data);
+    }
+  );
+
+  // Delete payment
+  const { data: paymentDeleteData, loading: loadingDeleteModify } = useFetch(
+    `payment/modify-payment`,
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [isDelete],
+    {
+      method: "POST",
+      body: JSON.stringify([
+        {
+          id: deleteId,
+          delete: 1,
+        },
+      ]),
+    },
+    (e) => {
+      setIsDelete(undefined);
+      const newList = e.data.map((data: any) => {
+        return {
+          name: data.bankUsername,
+          account: data.number,
+          check: data.enable,
+          id: data.id,
+        };
+      });
+      setPaymentList(newList);
+      setTitle("Gỡ tài khoản thành công");
+      setOpenDialog(true);
+      console.log("del");
+      console.log(e.data);
+    }
+  );
 
   return (
     <>
       <Modal
         title="Thêm phương thức thanh toán"
         visible={openPaymentModal}
-        onOk={() => setOpenPaymentModal(false)}
+        onOk={() => {
+          setIsAdd(true);
+        }}
         onCancel={() => setOpenPaymentModal(false)}
         cancelText="Đóng"
         okText="Thêm"
@@ -70,6 +223,7 @@ const ProfileSocialPayment = () => {
           <Input
             placeholder="Số tài khoản"
             className="profile-social-modal__line__right"
+            onChange={(e) => setNewAccount(e.target.value)}
           />
         </div>
         <div className="profile-social-modal__line">
@@ -77,21 +231,35 @@ const ProfileSocialPayment = () => {
           <Input
             placeholder="Tên chủ tài khoản"
             className="profile-social-modal__line__right"
+            onChange={(e) => setNewName(e.target.value)}
           />
         </div>
       </Modal>
-      {openWarningDialog ? (
+      {openDialog ? (
         <AppDialog
           type="infor"
+          title={title}
+          description=""
+          confirmText="Xác nhận"
+          onConfirm={() => {
+            setOpenPaymentModal(false);
+            setOpenDialog(false);
+          }}
+        />
+      ) : null}
+      {openWarningDialog ? (
+        <AppDialog
+          type="warning"
           title="Bạn có chắc muốn gỡ bỏ tài khoản này không?"
           description=""
           confirmText="Gỡ bỏ"
           cancelText="Hủy"
           onConfirm={() => {
-            let index = paymentList.findIndex((payment) => {
-              return payment.id === deleteId;
-            });
-            paymentList.splice(index, 1);
+            // let index = paymentList.findIndex((payment) => {
+            //   return payment.id === deleteId;
+            // });
+            // paymentList.splice(index, 1);
+            setIsDelete(true);
             setOpenWarningDialog(false);
           }}
           onClose={() => {

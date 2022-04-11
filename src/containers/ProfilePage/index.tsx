@@ -1,20 +1,22 @@
 import { Image } from "antd";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ProfileIntroduction from "./components/ProfileIntroduction";
 import ProfileSocial from "./components/ProfileSocial";
 import ProfileDonation from "./components/ProfileDonation";
 import ProfileFollowing from "./components/ProfileFollowing";
 import useFetch from "../../hooks/useFetch";
 import { getUserPostData } from "../../stores/action/user-post.action";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./index.scss";
 
 const ProfilePage: React.FC = () => {
   const { id } = useParams();
+  const { userData } = useSelector((state: any) => state.userLayout);
   const [callWithParam, setCallWithParam] = useState<any>(undefined);
   const [callWithoutParam, setCallWithoutParam] = useState<any>(undefined);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
@@ -23,6 +25,12 @@ const ProfilePage: React.FC = () => {
       setCallWithoutParam(true);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (userData && id === userData.id) {
+      navigate("/profile/");
+    }
+  }, [userData]);
 
   const { data: userWithParam } = useFetch<any>(
     `users/get-user-by-id-with-params/${id}`,
@@ -68,7 +76,10 @@ const ProfilePage: React.FC = () => {
       </div>
       <div className="profile__content">
         <ProfileIntroduction isOwner={!id} openTabMedia={handleOpenMedia} />
-        <ProfileSocial openTabMedia={openTabMedia} canCloseMedia={handleCloseMedia}/>
+        <ProfileSocial
+          openTabMedia={openTabMedia}
+          canCloseMedia={handleCloseMedia}
+        />
         {!id ? <ProfileFollowing /> : <ProfileDonation />}
       </div>
     </div>

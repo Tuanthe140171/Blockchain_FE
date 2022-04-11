@@ -15,9 +15,10 @@ const FollowNoti: React.FC<IFollowNotiProps> = (props) => {
 
   return (
     <div
-      className={`follow-noti ${
-        data.isRead ? "follow-read" : "follow-not-read"
-      }`}
+      // className={`follow-noti ${
+      //   data.isRead ? "follow-read" : "follow-not-read"
+      // }`}
+      className={`follow-noti follow-read`}
       onClick={() => {
         navigate(data.id);
       }}
@@ -27,7 +28,10 @@ const FollowNoti: React.FC<IFollowNotiProps> = (props) => {
         <div className="follow-noti__top__ava">
           <Avatar size={40} icon={<UserOutlined />} />
         </div>
-        <div className="follow-noti__top__message">{data.content}</div>
+        <div className="follow-noti__top__message">
+          <strong>{data.name}</strong>
+          {data.content}
+        </div>
       </div>
       <div className="follow-noti__bottom">
         <div>{moment(data.time).format("DD-MM-YYYY")}</div>
