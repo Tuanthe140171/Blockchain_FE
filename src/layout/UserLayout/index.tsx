@@ -270,7 +270,7 @@ const UserLayout: React.FC = (props): ReactElement => {
                           blockExplorerUrls: ["https://35.209.169.120:4000"],
                           nativeCurrency: {
                             name: "CharityVerse",
-                            symbol: "CRV", // 2-6 characters long
+                            symbol: "VNC", // 2-6 characters long
                             decimals: 18,
                           },
                         },

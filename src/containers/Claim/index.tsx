@@ -9,12 +9,13 @@ import AppPagination from '../../components/AppPagination';
 import AppLoading from '../../components/AppLoading';
 import useDebounce from '../../hooks/useDebounce';
 import { useTreasuryContract } from '../../hooks/useContract';
-import "./index.scss";
 import { useWeb3React } from 'web3-react-core';
 import { CHAIN_INFO } from '../../constants/chainInfo';
 import { SupportedChainId } from '../../constants/chains';
 import AppDialog from '../../components/AppDialog';
 import Message from '../../constants/message';
+import DashDate from '../Dashboard/component/DashDate';
+import "./index.scss";
 
 const Claim: React.FC = () => {
     const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -25,6 +26,10 @@ const Claim: React.FC = () => {
     const [startClaiming, setStartClaiming] = useState<boolean | undefined>(undefined);
     const [reloadClaiming, setReloadClaiming] = useState<boolean | undefined>(true);
     const userData = useSelector((state: any) => state.userLayout.userData);
+    const [pickedDate, setPickedDate] = useState<{
+        from: number,
+        to: number
+    } | undefined>(undefined)
 
     const { account, chainId } = useWeb3React();
     const treasuryContract = useTreasuryContract();
@@ -37,8 +42,15 @@ const Claim: React.FC = () => {
         chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
         ];
 
+    const handleDatePickerChange = (dates: any, dateStrings: any) => {
+        setPickedDate({
+            from: parseInt(`${dates[0].toDate().getTime()}`),
+            to: parseInt(`${dates[1].toDate().getTime()}`),
+        });
+    }
+
     const { data, loading } = useFetch<any>(
-        `reward?userId=${userData?.id}&keyword=${debouncedKeyword}`,
+        userData ? (pickedDate ? `reward?userId=${userData?.id}&keyword=${debouncedKeyword}&fromDate=${pickedDate.from}&toDate=${pickedDate.to}`: `reward?userId=${userData?.id}&keyword=${debouncedKeyword}`) : '',
         {
             "Content-Type": "application/json",
             Accept: "application/json",
@@ -85,6 +97,10 @@ const Claim: React.FC = () => {
     )
 
     useEffect(() => {
+        (account || pickedDate) && setReloadClaiming(true);
+    }, [account, pickedDate]);
+
+    useEffect(() => {
         error && message.error(error.message, 4);
     }, [error]);
 
@@ -95,15 +111,6 @@ const Claim: React.FC = () => {
     useEffect(() => {
         const issueTokens = async () => {
             try {
-                console.log(
-                    claimSignatureData?.payload.from,
-                    claimSignatureData?.payload.token,
-                    claimSignatureData?.payload.amount,
-                    claimSignatureData?.payload.expire,
-                    claimSignatureData?.payload.nonce,
-                    claimSignatureData?.signature,
-                    treasuryContract.address
-                )
                 const tx = await treasuryContract.claim(
                     claimSignatureData?.payload.from,
                     claimSignatureData?.payload.token,
@@ -139,21 +146,22 @@ const Claim: React.FC = () => {
                     <Typography.Title level={4} className="claim__list-title">
                         Tiền thưởng theo ngày
                     </Typography.Title>
-                    <Input.Search
+                    {/* <Input.Search
                         placeholder="Tìm kiếm"
                         onChange={(e: any) => {
                             setInputSearch(e.target.value)
                         }}
                         style={{ width: 260 }}
                         className="voting__list-input"
-                    />
+                    /> */}
+                    <DashDate onChange={handleDatePickerChange}/>
                 </div>
                 <div className="claim__content">
                     <div className="claim__main">
                         <p className="claim__line">
                             Tổng thưởng:
                             <strong className="claim__amount">
-                                <span>{new BigNumber(userClaimData?.totalClaimedReward || 0).div(1e18).toFixed()}</span>
+                                <span>{new BigNumber(userClaimData?.totalLeftReward || 0).div(1e18).toFixed()}</span>
                                 <div className="claim__icon">
                                     <Image src="/icon/ethereum_1.svg" preview={false} />
                                 </div>
@@ -161,7 +169,7 @@ const Claim: React.FC = () => {
                         </p>
                         <p className="claim__line">Đã lĩnh:
                             <strong className="claim__amount">
-                                <span>{new BigNumber(userClaimData?.totalLeftReward || 0).div(1e18).toFixed()}</span>
+                                <span>{new BigNumber(userClaimData?.totalClaimedReward || 0).div(1e18).toFixed()}</span>
                                 <div className="claim__icon">
                                     <Image src="/icon/ethereum_1.svg" preview={false} />
                                 </div>
@@ -176,7 +184,7 @@ const Claim: React.FC = () => {
                             className="claim__cta"
                             padding="20px 20px"
                             onClick={() => setStartGettingSignature(true)}
-                            disabled={new BigNumber(userClaimData?.totalClaimedReward).minus(new BigNumber(userClaimData?.totalLeftReward)).eq(0) || gettingSignatureLoading}
+                            disabled={new BigNumber(userClaimData?.totalLeftReward).eq(0) || gettingSignatureLoading}
                         />
                     </div>
                     {

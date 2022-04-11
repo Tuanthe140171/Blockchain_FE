@@ -79,3 +79,34 @@
         margin-left: 10px;
     }
 }
+
+.tx-info {
+    text-align: center;
+    &__title {
+        margin-bottom: 0;
+        color: #618AFB;
+        text-align: center;
+
+        & > strong {
+            font-family: 'Readex-Light';
+            font-size: 17px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50px;
+            color: #002169;
+        }
+    }
+
+    &__view-more {
+        margin-top: 0px;
+        font-size: 15px;
+        font-family: 'Readex-Light';
+        text-align: center;
+        margin: 0 auto;
+        display: block;
+        margin-top: 15px;
+        color: #618AFB;
+        font-weight: 300;
+        cursor: pointer;
+    }
+}

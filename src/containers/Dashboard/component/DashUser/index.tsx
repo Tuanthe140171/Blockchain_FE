@@ -391,7 +391,7 @@ const DashUser: React.FC<{
                       .div(1e18)
                       .toFixed(4)
                   : 0}{" "}
-                CRV
+                VNC
                 <span
                   className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${
                     givingStatus.status === CharityStatus.UP ? "up" : "down"
@@ -447,7 +447,7 @@ const DashUser: React.FC<{
                       .div(1e18)
                       .toFixed(4)
                   : 0}{" "}
-                CRV
+                VNC
                 <span
                   className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${
                     receivingStatus.status === CharityStatus.UP ? "up" : "down"

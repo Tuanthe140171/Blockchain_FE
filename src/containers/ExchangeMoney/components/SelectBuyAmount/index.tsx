@@ -54,7 +54,7 @@ const SelectBuyAmount: React.FC<SelectBuyAmountProps> = (props) => {
 
                         <div className="select-buy-amount__icon">
                             <Image src="/icon/ethereum_1.svg" preview={false} />
-                            <p>{isBuy ? `VND` : `CRV`}</p>
+                            <p>{isBuy ? `VND` : `VNC`}</p>
                         </div>
                     </div>
                 }
@@ -74,7 +74,7 @@ const SelectBuyAmount: React.FC<SelectBuyAmountProps> = (props) => {
                 controls={false}
                 className="select-buy-amount__input"
             />
-            <p className="select-buy-amount__rate">1 CRV ~ <strong>1000</strong> VND</p>
+            <p className="select-buy-amount__rate">1 VNC ~ <strong>1000</strong> VND</p>
             <Button
                 disabled={(function () {
                     if (!inputAmount) {

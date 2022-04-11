@@ -402,7 +402,7 @@ const DashSystem: React.FC<{
                       .div(1e18)
                       .toFixed(4)
                   : 0}{" "}
-                CRV
+                VNC
                 <span
                   className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${
                     charityStatus.status === CharityStatus.UP ? "up" : "down"
