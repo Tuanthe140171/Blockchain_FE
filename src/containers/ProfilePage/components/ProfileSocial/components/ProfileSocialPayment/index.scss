@@ -29,8 +29,8 @@
     &__info {
       display: flex;
       align-items: center;
-      justify-content: space-around;
       flex-direction: row-reverse;
+      justify-content: flex-end;
 
       & > div {
         max-width: 180px;

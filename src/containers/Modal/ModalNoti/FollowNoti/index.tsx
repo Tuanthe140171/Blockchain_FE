@@ -20,17 +20,16 @@ const FollowNoti: React.FC<IFollowNotiProps> = (props) => {
       // }`}
       className={`follow-noti follow-read`}
       onClick={() => {
-        navigate(data.id);
+        navigate(`profile/${data.external.id}`);
       }}
     >
-      {!data.isRead ? <div className="follow-noti__dotted"></div> : null}
+      {/* {!data.isRead ? <div className="follow-noti__dotted"></div> : null} */}
       <div className="follow-noti__top">
         <div className="follow-noti__top__ava">
-          <Avatar size={40} icon={<UserOutlined />} />
+          <Avatar size={40} icon={<UserOutlined />} src={data.avatar} />
         </div>
         <div className="follow-noti__top__message">
-          <strong>{data.name}</strong>
-          {data.content}
+          <strong>{data.name}</strong> {data.content}
         </div>
       </div>
       <div className="follow-noti__bottom">
