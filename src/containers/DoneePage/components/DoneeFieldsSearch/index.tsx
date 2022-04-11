@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Tag, Checkbox, Skeleton } from 'antd';
-import { CaretDownOutlined } from "@ant-design/icons";
+import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
+import useLocalStorage from '../../../../hooks/useLocalStorage';
 import "./index.scss";
 
 type FieldType = {
@@ -19,14 +20,20 @@ const DoneeFieldsSearch: React.FC<DoneeFieldsSearchProps> = (props) => {
     const { fields, title, loading = false, propagateSelectedFields } = props;
     const [selectedFields, setSelectedFields] = useState<number[]>([]);
     const [displayedFields, setDisplayedFields] = useState<FieldType[]>([]);
+    const [enclose, setEnclose] = useLocalStorage<{ [title: string]: boolean  }>("seeMore", {});
 
     useEffect(() => {
         propagateSelectedFields && propagateSelectedFields(selectedFields);
     }, [selectedFields, propagateSelectedFields]);
 
+    // useEffect(() => {
+    //     fields.length > 5 ? setDisplayedFields(fields.slice(0, 5)) : setDisplayedFields(fields);
+    // }, [fields]);
+
     useEffect(() => {
-        fields.length > 5 ? setDisplayedFields(fields.slice(0, 5)) : setDisplayedFields(fields);
-    }, [fields]);
+        console.log(enclose && enclose[title]);
+        (enclose && enclose[title] && fields.length > 5) ? setDisplayedFields(fields): setDisplayedFields(fields.slice(0, 5));
+    }, [enclose, title, fields]);
 
     return (
         <>
@@ -77,10 +84,25 @@ const DoneeFieldsSearch: React.FC<DoneeFieldsSearchProps> = (props) => {
                             }
                         </div>
                         {
-                            displayedFields.length < fields.length && (
-                                <div className="fields-filter__more" onClick={() => setDisplayedFields(fields)}>
+                            displayedFields.length < fields.length ? (
+                                <div className="fields-filter__more" onClick={() => {
+                                    setDisplayedFields(fields);
+                                    setEnclose({
+                                        [title]: true
+                                    })
+                                }}>
                                     <span>Thêm</span>
                                     <CaretDownOutlined className="fields-filter__more-icon" />
+                                </div>
+                            ) : (
+                                <div className="fields-filter__more" onClick={() => {
+                                    setDisplayedFields(fields.slice(0, 5));
+                                    setEnclose({
+                                        [title]: false
+                                    })
+                                }}>
+                                    <span>Thu gọn</span>
+                                    <CaretUpOutlined className="fields-filter__more-icon" />
                                 </div>
                             )
                         }

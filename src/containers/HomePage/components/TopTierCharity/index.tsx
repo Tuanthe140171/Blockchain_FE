@@ -5,8 +5,19 @@ import "react-multi-carousel/lib/styles.css";
 
 import TopTierCharityCard from "./components/TopCharityCard";
 import MyCarouselBtn, { Direction } from "../../../../components/MyCarouselBtn";
-
 import "./index.scss";
+
+type TopTierCharityProps = {
+  topTierOfCharity: {
+    id: string,
+    name: string,
+    desc: string,
+    avatar: string,
+    circumstances: string[],
+    trustScore: number,
+    tierOfCharity: number
+  }[]
+}
 
 const { Title } = Typography;
 
@@ -91,9 +102,10 @@ const mockData = [
   },
 ];
 
-const TopTierCharity: React.FC = () => {
+const TopTierCharity: React.FC<TopTierCharityProps> = (props) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRef = useRef<Carousel | null>();
+  const { topTierOfCharity } = props;
   return (
     <div className="top-charity">
       <Image
@@ -128,13 +140,18 @@ const TopTierCharity: React.FC = () => {
           }}
           ref={el => (carouselRef.current = el)}
         >
-          {mockData.map(data => (
+          {topTierOfCharity.map(data => (
             <TopTierCharityCard
-              image={data.image}
+              id={data.id}
+              avatar={data.avatar}
               name={data.name}
               desc={data.desc}
               circumstances={data.circumstances}
-              more={data.more}
+              more={
+                data.circumstances.length > 2
+                  ? data.circumstances.length - 2
+                  : 0
+              }
               tierOfCharity={data.tierOfCharity}
               trustScore={data.trustScore}
               key={data.id}

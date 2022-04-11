@@ -8,87 +8,19 @@ import "./index.scss";
 
 const { Title } = Typography;
 
-const TopDonation: React.FC = () => {
-    const topDonations = [
-        {
-            name: "Hoàng Lê Kim",
-            lastDonation: "3m ago",
-            totalDonation: "1,307,000",
-            image: "/icon/bad-lucker-1.svg",
-        },
-        {
-            name: "Nguyễn Xuyến",
-            lastDonation: "3m ago",
-            totalDonation: "1,627,000",
-            image: "/icon/bad-lucker-2.svg",
-        },
-        {
-            name: "Hoàng Lê Bảo",
-            lastDonation: "3m ago",
-            totalDonation: "3,307,000",
-            image: "/icon/bad-lucker-4.svg",
-        },
-        {
-            name: "Nguyễn Thị Minh",
-            lastDonation: "3m ago",
-            totalDonation: "5,307,000",
-            image: "/icon/bad-lucker-5.svg",
-        },
-        {
-            name: "Nguyễn Thị Minh",
-            lastDonation: "3m ago",
-            totalDonation: "5,307,000",
-            image: "/icon/bad-lucker-5.svg",
-        },
-        {
-            name: "Nguyễn Thị Minh",
-            lastDonation: "3m ago",
-            totalDonation: "5,307,000",
-            image: "/icon/bad-lucker-5.svg",
-        },
-        {
-            name: "Nguyễn Thị Minh",
-            lastDonation: "3m ago",
-            totalDonation: "5,307,000",
-            image: "/icon/bad-lucker-5.svg",
-        },
-        {
-            name: "Nguyễn Thị Minh",
-            lastDonation: "3m ago",
-            totalDonation: "5,307,000",
-            image: "/icon/bad-lucker-5.svg",
-        },
-        {
-            name: "Nguyễn Thị Minh",
-            lastDonation: "3m ago",
-            totalDonation: "5,307,000",
-            image: "/icon/bad-lucker-5.svg",
-        },
-        {
-            name: "Nguyễn Thị Minh",
-            lastDonation: "3m ago",
-            totalDonation: "5,307,000",
-            image: "/icon/bad-lucker-5.svg",
-        },
-        {
-            name: "Nguyễn Thị Minh",
-            lastDonation: "3m ago",
-            totalDonation: "5,307,000",
-            image: "/icon/bad-lucker-5.svg",
-        },
-        {
-            name: "Nguyễn Thị Minh",
-            lastDonation: "3m ago",
-            totalDonation: "5,307,000",
-            image: "/icon/bad-lucker-5.svg",
-        },
-        {
-            name: "Nguyễn Thị Minh",
-            lastDonation: "3m ago",
-            totalDonation: "5,307,000",
-            image: "/icon/bad-lucker-5.svg",
-        },
-    ];
+type TopDonationProps = {
+    donations: {
+        id: string,
+        lastName: string,
+        name: string,
+        image: string,
+        totalDonation: string,
+        lastDonation: string
+    }[]
+}
+
+const TopDonation: React.FC<TopDonationProps> = (props) => {
+    const { donations } = props;
 
     const [currentSlide, setCurrentSlide] = useState(0);
     const carouselRef = useRef<CarouselRef | undefined>();
@@ -96,48 +28,48 @@ const TopDonation: React.FC = () => {
     const renderCarouselCards = (cards: any) => {
         if (cards.length > 0) {
             let cardGroups = [];
-            for (let i = 0; i < topDonations.length; i++) {
+            for (let i = 0; i < donations.length; i++) {
                 if (i % 4 === 0) {
                     let tempCategory = [];
                     tempCategory.push(
                         <TopDonationCard
-                            image={topDonations[i].image}
-                            name={topDonations[i].name}
-                            lastDonation={topDonations[i].lastDonation}
-                            totalDonation={topDonations[i].totalDonation}
+                            image={donations[i].image}
+                            name={donations[i].name}
+                            lastDonation={donations[i].lastDonation}
+                            totalDonation={donations[i].totalDonation}
                             key={i}
                         />
                     );
 
-                    i + 1 <= topDonations.length - 1 &&
+                    i + 1 <= donations.length - 1 &&
                         tempCategory.push(
                             <TopDonationCard
-                                image={topDonations[i + 1].image}
-                                name={topDonations[i + 1].name}
-                                lastDonation={topDonations[i + 1].lastDonation}
-                                totalDonation={topDonations[i + 1].totalDonation}
+                                image={donations[i + 1].image}
+                                name={donations[i + 1].name}
+                                lastDonation={donations[i + 1].lastDonation}
+                                totalDonation={donations[i + 1].totalDonation}
                                 key={i + 1}
                             />
                         );
 
-                    i + 2 <= topDonations.length - 1 &&
+                    i + 2 <= donations.length - 1 &&
                         tempCategory.push(
                             <TopDonationCard
-                                image={topDonations[i + 2].image}
-                                name={topDonations[i + 2].name}
-                                lastDonation={topDonations[i + 2].lastDonation}
-                                totalDonation={topDonations[i + 2].totalDonation}
+                                image={donations[i + 2].image}
+                                name={donations[i + 2].name}
+                                lastDonation={donations[i + 2].lastDonation}
+                                totalDonation={donations[i + 2].totalDonation}
                                 key={i + 2}
                             />
                         );
 
-                    i + 3 <= topDonations.length - 1 &&
+                    i + 3 <= donations.length - 1 &&
                         tempCategory.push(
                             <TopDonationCard
-                                image={topDonations[i + 3].image}
-                                name={topDonations[i + 3].name}
-                                lastDonation={topDonations[i + 3].lastDonation}
-                                totalDonation={topDonations[i + 3].totalDonation}
+                                image={donations[i + 3].image}
+                                name={donations[i + 3].name}
+                                lastDonation={donations[i + 3].lastDonation}
+                                totalDonation={donations[i + 3].totalDonation}
                                 key={i + 3}
                             />
                         );
@@ -172,11 +104,11 @@ const TopDonation: React.FC = () => {
                         setCurrentSlide(slide);
                     }}    
                 >
-                    {renderCarouselCards(topDonations)}
+                    {renderCarouselCards(donations)}
                 </Carousel>
                 <div className="top-donation__cards-btns">
                     <MyCarouselBtn direction={Direction.LEFT} disabled={currentSlide === 0} transparent={true} onClick={() => carouselRef.current?.goTo(currentSlide > 1 ? currentSlide - 1: 0)}/>
-                    <MyCarouselBtn direction={Direction.RIGHT} disabled={false} transparent={true} onClick={() => carouselRef.current?.goTo(currentSlide + 1 <= topDonations.length - 2 ? currentSlide + 1: 0)}/>
+                    <MyCarouselBtn direction={Direction.RIGHT} disabled={false} transparent={true} onClick={() => carouselRef.current?.goTo(currentSlide + 1 <= donations.length - 2 ? currentSlide + 1: 0)}/>
                 </div>
             </div>
         </div>
