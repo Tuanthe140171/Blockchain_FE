@@ -428,7 +428,7 @@ const UserLayout: React.FC = (props): ReactElement => {
           <Header className="main-layout__site-layout__header">
             <Search
               className="main-layout__site-layout__header__search"
-              placeholder="Search donee, history..."
+              placeholder="Tìm kiếm theo người được từ thiện..."
             />
             <div className="main-layout__site-layout__header__group-avatar">
               {renderWeb3Account()}

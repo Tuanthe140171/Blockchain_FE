@@ -106,6 +106,12 @@
         & > span > span > button > span {
           font-size: 20px;
         }
+
+        & .anticon {
+          & > svg {
+            fill: white;
+          }
+        }
       }
 
       &__group-avatar {
