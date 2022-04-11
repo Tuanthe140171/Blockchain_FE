@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Tag, Checkbox, Skeleton } from 'antd';
-import { CaretDownOutlined } from "@ant-design/icons";
+import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 import "./index.scss";
 
 type FieldType = {
@@ -77,10 +77,15 @@ const DoneeFieldsSearch: React.FC<DoneeFieldsSearchProps> = (props) => {
                             }
                         </div>
                         {
-                            displayedFields.length < fields.length && (
+                            displayedFields.length < fields.length ? (
                                 <div className="fields-filter__more" onClick={() => setDisplayedFields(fields)}>
                                     <span>Thêm</span>
                                     <CaretDownOutlined className="fields-filter__more-icon" />
+                                </div>
+                            ) : (
+                                <div className="fields-filter__more" onClick={() => setDisplayedFields(fields.slice(0, 5))}>
+                                    <span>Thu gọn</span>
+                                    <CaretUpOutlined className="fields-filter__more-icon" />
                                 </div>
                             )
                         }

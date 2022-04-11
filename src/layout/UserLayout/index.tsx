@@ -391,7 +391,7 @@ const UserLayout: React.FC = (props): ReactElement => {
                 key="Admin"
                 icon={
                   <Image
-                    src="/icon/admin.png"
+                    src="/icon/admin.svg"
                     preview={false}
                     style={{ width: 25, height: 25 }}
                   />
@@ -409,7 +409,7 @@ const UserLayout: React.FC = (props): ReactElement => {
               key="Claim"
               icon={
                 <Image
-                  src="/icon/refund.png"
+                  src="/icon/finance.svg"
                   preview={false}
                   style={{ width: 25, height: 25 }}
                 />

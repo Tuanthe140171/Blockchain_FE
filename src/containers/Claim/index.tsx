@@ -1,22 +1,41 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
-import { Input, Typography, Image } from 'antd';
+import { Input, Typography, Image, message } from 'antd';
 import Button from '../../components/Button';
 import BigNumber from 'bignumber.js';
 import useFetch from '../../hooks/useFetch';
 import AppPagination from '../../components/AppPagination';
 import AppLoading from '../../components/AppLoading';
 import useDebounce from '../../hooks/useDebounce';
+import { useTreasuryContract } from '../../hooks/useContract';
 import "./index.scss";
+import { useWeb3React } from 'web3-react-core';
+import { CHAIN_INFO } from '../../constants/chainInfo';
+import { SupportedChainId } from '../../constants/chains';
+import AppDialog from '../../components/AppDialog';
+import Message from '../../constants/message';
 
 const Claim: React.FC = () => {
+    const [openDialog, setOpenDialog] = useState<boolean>(false);
+    const [txHash, setTxHash] = useState<undefined | string>(undefined);
     const [inputSearch, setInputSearch] = useState("");
     const [startGettingSignature, setStartGettingSignature] = useState<boolean | undefined>(undefined);
     const [currentPage, setCurrentPage] = useState(1);
+    const [startClaiming, setStartClaiming] = useState<boolean | undefined>(undefined);
+    const [reloadClaiming, setReloadClaiming] = useState<boolean | undefined>(true);
     const userData = useSelector((state: any) => state.userLayout.userData);
 
+    const { account, chainId } = useWeb3React();
+    const treasuryContract = useTreasuryContract();
+
     const debouncedKeyword = useDebounce<string>(inputSearch, 500);
+
+    const {
+        explorer
+    } = CHAIN_INFO[
+        chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
+        ];
 
     const { data, loading } = useFetch<any>(
         `reward?userId=${userData?.id}&keyword=${debouncedKeyword}`,
@@ -25,7 +44,10 @@ const Claim: React.FC = () => {
             Accept: "application/json",
         },
         false,
-        [userData]
+        [userData, reloadClaiming],
+        {},
+        () => { setReloadClaiming(undefined) },
+        () => { setReloadClaiming(undefined) }
     );
 
     const { data: userClaimData } = useFetch<any>(
@@ -44,7 +66,8 @@ const Claim: React.FC = () => {
             nonce: string,
             token: string,
             amount: string
-            from: string
+            from: string,
+            expire: string
         }
     }>(
         `reward/claim`,
@@ -61,7 +84,50 @@ const Claim: React.FC = () => {
         () => { setStartGettingSignature(undefined) }
     )
 
-    console.log(claimSignatureData);
+    useEffect(() => {
+        error && message.error(error.message, 4);
+    }, [error]);
+
+    useEffect(() => {
+        claimSignatureData ? setStartClaiming(true) : setStartClaiming(false);
+    }, [claimSignatureData]);
+
+    useEffect(() => {
+        const issueTokens = async () => {
+            try {
+                console.log(
+                    claimSignatureData?.payload.from,
+                    claimSignatureData?.payload.token,
+                    claimSignatureData?.payload.amount,
+                    claimSignatureData?.payload.expire,
+                    claimSignatureData?.payload.nonce,
+                    claimSignatureData?.signature,
+                    treasuryContract.address
+                )
+                const tx = await treasuryContract.claim(
+                    claimSignatureData?.payload.from,
+                    claimSignatureData?.payload.token,
+                    claimSignatureData?.payload.amount,
+                    claimSignatureData?.payload.expire,
+                    claimSignatureData?.payload.nonce,
+                    claimSignatureData?.signature
+                )
+
+                setTxHash(tx.hash);
+
+                await tx.wait(3);
+
+                setStartClaiming(false);
+                setTxHash(undefined);
+                setOpenDialog(true);
+            } catch (err: any) {
+                message.error(err.message, 3);
+                setStartClaiming(false);
+            }
+        }
+
+        claimSignatureData && treasuryContract && account && issueTokens();
+    }, [setStartClaiming, claimSignatureData, treasuryContract, account]);
 
     return (
         <div className="claim">
@@ -85,9 +151,9 @@ const Claim: React.FC = () => {
                 <div className="claim__content">
                     <div className="claim__main">
                         <p className="claim__line">
-                            Tổng thưởng: 
+                            Tổng thưởng:
                             <strong className="claim__amount">
-                                <span>{new BigNumber(userClaimData?.totalLeftReward || 0).div(1e18).toFixed()}</span>
+                                <span>{new BigNumber(userClaimData?.totalClaimedReward || 0).div(1e18).toFixed()}</span>
                                 <div className="claim__icon">
                                     <Image src="/icon/ethereum_1.svg" preview={false} />
                                 </div>
@@ -95,7 +161,7 @@ const Claim: React.FC = () => {
                         </p>
                         <p className="claim__line">Đã lĩnh:
                             <strong className="claim__amount">
-                                <span>{new BigNumber(userClaimData?.totalClaimedReward || 0).div(1e18).toFixed()}</span>
+                                <span>{new BigNumber(userClaimData?.totalLeftReward || 0).div(1e18).toFixed()}</span>
                                 <div className="claim__icon">
                                     <Image src="/icon/ethereum_1.svg" preview={false} />
                                 </div>
@@ -141,8 +207,29 @@ const Claim: React.FC = () => {
                     />
                 </div>
                 {
-                    (loading || gettingSignatureLoading) && <AppLoading showContent={false} loadingContent={<div></div>} />
+                    (loading || startClaiming || gettingSignatureLoading) && (
+                        <AppLoading showContent={txHash !== undefined} loadingContent={
+                            <div className="tx-info">
+                                <p className="tx-info__alert">Your transaction is processing! Please be patient.</p>
+                                <p className="tx-info__title"><strong>{txHash}</strong></p>
+                                <span className="tx-info__view-more" onClick={() => window.open(`${explorer}/tx/${txHash}`, '_blank')}>Click to view more</span>
+                            </div>
+                        } />
+                    )
                 }
+
+                {openDialog ? (
+                    <AppDialog
+                        type="infor"
+                        title={`Bạn đã lĩnh thưởng thành công!`}
+                        description={Message.INFOR_DC_01}
+                        confirmText={Message.INFOR_CF_01}
+                        onConfirm={() => {
+                            setReloadClaiming(true);
+                            setOpenDialog(false);
+                        }}
+                    />
+                ) : null}
             </div>
         </div>
     )
