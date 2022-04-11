@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import ProfileSocialMedia from "./components/ProfileSocialMedia";
 import ProfileSocialPayment from "./components/ProfileSocialPayment";
 import ProfileSocialPersonal from "./components/ProfileSocialPersonal";
@@ -46,6 +47,29 @@ const BREAD_CRUMBS: { [id: number]: BreadCrumbItem } = {
   },
 };
 
+const BREAD_CRUMBS_OTHERS: { [id: number]: BreadCrumbItem } = {
+  1: {
+    title: "Bài đăng",
+    id: 1,
+    component: ProfileSocialPosts,
+  },
+  3: {
+    title: "Thông tin cá nhân",
+    id: 3,
+    component: ProfileSocialPersonal,
+  },
+  4: {
+    title: "Ảnh",
+    id: 4,
+    component: ProfileSocialMedia,
+  },
+  5: {
+    title: "Hoàn cảnh",
+    id: 5,
+    component: ProfileSocialSituation,
+  },
+};
+
 type ProfileSocialProps = {
   openTabMedia: boolean;
   canCloseMedia: any;
@@ -53,6 +77,7 @@ type ProfileSocialProps = {
 
 const ProfileSocial: React.FC<ProfileSocialProps> = (props) => {
   const { openTabMedia, canCloseMedia } = props;
+  const { id } = useParams();
   const [activeTab, setActiveTab] = useState(1);
 
   useEffect(() => {
@@ -73,14 +98,29 @@ const ProfileSocial: React.FC<ProfileSocialProps> = (props) => {
 
   return (
     <div className="profile-social">
-      <ProfileSocialSelection
-        breadCrumbs={Object.keys(BREAD_CRUMBS).map((key: string) => ({
-          ...BREAD_CRUMBS[+key],
-        }))}
-        onActiveTabChange={handleActiveTabChange}
-        activeTab={activeTab}
-      />
-      {showActiveComponent()}
+      {id ? (
+        <>
+          <ProfileSocialSelection
+            breadCrumbs={Object.keys(BREAD_CRUMBS_OTHERS).map((key: string) => ({
+              ...BREAD_CRUMBS_OTHERS[+key],
+            }))}
+            onActiveTabChange={handleActiveTabChange}
+            activeTab={activeTab}
+          />
+          {showActiveComponent()}
+        </>
+      ) : (
+        <>
+          <ProfileSocialSelection
+            breadCrumbs={Object.keys(BREAD_CRUMBS).map((key: string) => ({
+              ...BREAD_CRUMBS[+key],
+            }))}
+            onActiveTabChange={handleActiveTabChange}
+            activeTab={activeTab}
+          />
+          {showActiveComponent()}
+        </>
+      )}
     </div>
   );
 };
