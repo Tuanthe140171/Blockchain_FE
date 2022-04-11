@@ -89,6 +89,7 @@ const ProfileSituationVoting: React.FC<VotingSituationViewProps> = (props) => {
             // disabled={isVoted}
           >
             {/* {isVoted ? "Đã xác nhận" : "Xác nhận"} */}
+            Button
           </Button>
         </div>
       </header>

@@ -6,8 +6,8 @@ import ProfileModal from "./component/ProfileEditModal";
 import ProfilePayment from "./component/ProfileEditPayment";
 import ProfilePerson from "./component/ProfileEditPersonal";
 import ProfileSituation from "./component/ProfileEditSituation";
-import "./index.scss";
 import { getUserById } from "../../stores/action/user-layout.action";
+import "./index.scss";
 
 const Dashboard = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);

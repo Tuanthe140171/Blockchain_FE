@@ -4,6 +4,7 @@ const initialState = {
   userData: null,
   badluckerType: null,
   userBlkType: null,
+  defaultNotification: null,
 };
 
 const userLayoutReducer = (state = initialState, action: any) => {
@@ -16,6 +17,9 @@ const userLayoutReducer = (state = initialState, action: any) => {
     }
     case "GET_USER_BLK_TYPE": {
       return { ...state, userBlkType: action.payload };
+    }
+    case "GET_DEFAULT_NOTIFICATION": {
+      return { ...state, defaultNotification: action.payload };
     }
     default:
       return state;
