@@ -15,27 +15,31 @@ import useFetch from "../../hooks/useFetch";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import {
   getBadluckerType,
+  getDefaultNotification,
   getUserById,
 } from "../../stores/action/user-layout.action";
 import { shortenAddress } from "../../utils";
-import io from 'socket.io-client';
+import io from "socket.io-client";
 import "./index.scss";
 
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 
-export const NotificationContext = React.createContext<{
-  content: string,
-  type: number,
-  createDate: string
-}[] | undefined>(undefined);
+export const NotificationContext = React.createContext<
+  | {
+      content: string;
+      type: number;
+      createDate: string;
+    }[]
+  | undefined
+>(undefined);
 
 const UserLayout: React.FC = (props): ReactElement => {
   const [notifications, setNotifications] = useState<
     {
-        content: string,
-    type: number,
-    createDate: string
+      content: string;
+      type: number;
+      createDate: string;
     }[]
   >([]);
   const [socket, setSocket] = useState<any>(null);
@@ -48,7 +52,9 @@ const UserLayout: React.FC = (props): ReactElement => {
 
   const navigate = useNavigate();
   const { account, chainId, error } = useWeb3React();
-  const [charityStorage, setCharityStorage] = useLocalStorage("charity", { auth: {} });
+  const [charityStorage, setCharityStorage] = useLocalStorage("charity", {
+    auth: {},
+  });
   const { userData } = useSelector((state: any) => state.userLayout);
   const dispatch = useDispatch();
 
@@ -57,20 +63,25 @@ const UserLayout: React.FC = (props): ReactElement => {
     setSocket(newSocket);
     return () => {
       newSocket.close();
-    }
+    };
   }, [setSocket]);
 
   useEffect(() => {
-    if (socket && account && charityStorage && (charityStorage as any).auth[account]) {
+    if (
+      socket &&
+      account &&
+      charityStorage &&
+      (charityStorage as any).auth[account]
+    ) {
       const socketData = (charityStorage as any).auth[account].socketData;
 
       socket.on(`notification/${socketData}`, (data: any) => {
         setNotifications([
           ...notifications,
           {
-            ...JSON.parse(data)
-          }
-        ])
+            ...JSON.parse(data),
+          },
+        ]);
       });
     }
   }, [socket, charityStorage, account]);
@@ -95,6 +106,23 @@ const UserLayout: React.FC = (props): ReactElement => {
     (e) => {
       const action = getUserById(e.data);
       dispatch(action);
+    }
+  );
+
+  const { data: notificationDefault } = useFetch<any>(
+    "notification/get-notification?type=0&limit=10&offset=0",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [],
+    {},
+    (e) => {
+      const action = getDefaultNotification(e.data);
+      dispatch(action);
+      // const action = getUserById(e.data);
+      // dispatch(action);
     }
   );
 
@@ -184,8 +212,19 @@ const UserLayout: React.FC = (props): ReactElement => {
             content={<ModalHeader type={0} />}
             trigger="click"
           >
-            <Badge count={notifications.length} size="small" showZero>
-              <BellOutlined style={{ fontSize: "20  px", color: "#ffffff" }} />
+            <Badge
+              count={notifications.length}
+              size="small"
+              showZero
+              style={{ cursor: "pointer" }}
+            >
+              <BellOutlined
+                style={{
+                  fontSize: "20px",
+                  color: "#ffffff",
+                  cursor: "pointer",
+                }}
+              />
             </Badge>
           </Popover>
           <Popover
@@ -263,95 +302,100 @@ const UserLayout: React.FC = (props): ReactElement => {
 
   return (
     <NotificationContext.Provider value={notifications}>
-    <Layout style={{ minHeight: "100vh" }} className="main-layout">
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={() => setCollapsed(!collapsed)}
-        color="#FFFFFF"
-        className="main-layout__sider"
-        theme="light"
-        style={{
-          overflow: "auto",
-          height: "100vh",
-          position: "fixed",
-          left: 0,
-        }}
-        width={260}
-      >
-        <div
-          className="main-layout__sider__img"
-          style={{ cursor: "pointer" }}
-          onClick={() => navigate("/")}
-        >
-          <img src="../../icon/logo.svg" alt="" />
-        </div>
-        <Menu
-          defaultSelectedKeys={[selectedKey]}
-          mode="inline"
+      <Layout style={{ minHeight: "100vh" }} className="main-layout">
+        <Sider
+          collapsible
+          collapsed={collapsed}
+          onCollapse={() => setCollapsed(!collapsed)}
+          color="#FFFFFF"
+          className="main-layout__sider"
           theme="light"
-          className="main-layout__sider__menu"
+          style={{
+            overflow: "auto",
+            height: "100vh",
+            position: "fixed",
+            left: 0,
+          }}
+          width={260}
         >
-          <Menu.Item
-            key="Dashboard"
-            icon={<Image src="/icon/dashboard.svg" preview={false} />}
-            className="main-layout__sider__menu__item"
-            onClick={() => {
-              setSelectedKey("Dashboard");
-              navigate("/dashboard");
-            }}
+          <div
+            className="main-layout__sider__img"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("/")}
           >
-            Bảng điểu khiển
-          </Menu.Item>
-          <Menu.Item
-            key="Donee"
-            icon={<Image src="/icon/donee.svg" preview={false} />}
-            className="main-layout__sider__menu__item"
-            onClick={() => {
-              setSelectedKey("Donee");
-              navigate("/donee");
-            }}
+            <img src="../../icon/logo.svg" alt="" />
+          </div>
+          <Menu
+            defaultSelectedKeys={[selectedKey]}
+            mode="inline"
+            theme="light"
+            className="main-layout__sider__menu"
           >
-            Người cần từ thiện
-          </Menu.Item>
-          <Menu.Item
-            key="Exchange"
-            icon={<Image src="/icon/exchange.svg" preview={false} />}
-            className="main-layout__sider__menu__item"
-            onClick={() => {
-              setSelectedKey("Exchange");
-              navigate("/exchange?type=buy&tab=0");
-            }}
-          >
-            Đổi tiền
-          </Menu.Item>
-          <Menu.Item
-            key="ContactF"
-            icon={<Image src="/icon/contact-us.svg" preview={false} />}
-            className="main-layout__sider__menu__item"
-            onClick={() => {
-              setSelectedKey("ContactUs");
-              navigate("/contact-us");
-            }}
-          >
-            Liên lạc
-          </Menu.Item>
-          <Menu.Item
-            key="Voting"
-            icon={<Image src="/icon/voting.svg" preview={false} />}
-            className="main-layout__sider__menu__item"
-            onClick={() => {
-              setSelectedKey("Voting");
-              navigate("/voting");
-            }}
-          >
-            Bỏ phiếu
-          </Menu.Item>
-          {
-            user?.isAdmin ? (
+            <Menu.Item
+              key="Dashboard"
+              icon={<Image src="/icon/dashboard.svg" preview={false} />}
+              className="main-layout__sider__menu__item"
+              onClick={() => {
+                setSelectedKey("Dashboard");
+                navigate("/dashboard");
+              }}
+            >
+              Bảng điểu khiển
+            </Menu.Item>
+            <Menu.Item
+              key="Donee"
+              icon={<Image src="/icon/donee.svg" preview={false} />}
+              className="main-layout__sider__menu__item"
+              onClick={() => {
+                setSelectedKey("Donee");
+                navigate("/donee");
+              }}
+            >
+              Người cần từ thiện
+            </Menu.Item>
+            <Menu.Item
+              key="Exchange"
+              icon={<Image src="/icon/exchange.svg" preview={false} />}
+              className="main-layout__sider__menu__item"
+              onClick={() => {
+                setSelectedKey("Exchange");
+                navigate("/exchange?type=buy&tab=0");
+              }}
+            >
+              Đổi tiền
+            </Menu.Item>
+            <Menu.Item
+              key="ContactF"
+              icon={<Image src="/icon/contact-us.svg" preview={false} />}
+              className="main-layout__sider__menu__item"
+              onClick={() => {
+                setSelectedKey("ContactUs");
+                navigate("/contact-us");
+              }}
+            >
+              Liên lạc
+            </Menu.Item>
+            <Menu.Item
+              key="Voting"
+              icon={<Image src="/icon/voting.svg" preview={false} />}
+              className="main-layout__sider__menu__item"
+              onClick={() => {
+                setSelectedKey("Voting");
+                navigate("/voting");
+              }}
+            >
+              Bỏ phiếu
+            </Menu.Item>
+            {user?.isAdmin ? (
               <Menu.Item
                 key="Admin"
-                icon={<Image src="/icon/admin.png" preview={false} style={{ width:25, height: 25 }} />}
+                icon={
+                  <Image
+                    src="/icon/admin.png"
+                    preview={false}
+                    style={{ width: 25, height: 25 }}
+                  />
+                }
                 className="main-layout__sider__menu__item"
                 onClick={() => {
                   setSelectedKey("Admin");
@@ -360,34 +404,39 @@ const UserLayout: React.FC = (props): ReactElement => {
               >
                 Quản trị
               </Menu.Item>
-            ) : undefined
-          }
-          <Menu.Item
-            key="Claim"
-            icon={<Image src="/icon/refund.png" preview={false} style={{ width:25, height: 25 }} />}
-            className="main-layout__sider__menu__item"
-            onClick={() => {
-              setSelectedKey("Claim");
-              navigate("/claim");
-            }}
-          >
-            Tiền thưởng
-          </Menu.Item>
-        </Menu>
-      </Sider>
-      <Layout className="main-layout__site-layout">
-        <Header className="main-layout__site-layout__header">
-          <Search
-            className="main-layout__site-layout__header__search"
-            placeholder="Search donee, history..."
-          />
-          <div className="main-layout__site-layout__header__group-avatar">
-            {renderWeb3Account()}
-          </div>
-        </Header>
-        <Content>{props.children}</Content>
+            ) : undefined}
+            <Menu.Item
+              key="Claim"
+              icon={
+                <Image
+                  src="/icon/refund.png"
+                  preview={false}
+                  style={{ width: 25, height: 25 }}
+                />
+              }
+              className="main-layout__sider__menu__item"
+              onClick={() => {
+                setSelectedKey("Claim");
+                navigate("/claim");
+              }}
+            >
+              Tiền thưởng
+            </Menu.Item>
+          </Menu>
+        </Sider>
+        <Layout className="main-layout__site-layout">
+          <Header className="main-layout__site-layout__header">
+            <Search
+              className="main-layout__site-layout__header__search"
+              placeholder="Search donee, history..."
+            />
+            <div className="main-layout__site-layout__header__group-avatar">
+              {renderWeb3Account()}
+            </div>
+          </Header>
+          <Content>{props.children}</Content>
+        </Layout>
       </Layout>
-    </Layout>
     </NotificationContext.Provider>
   );
 };

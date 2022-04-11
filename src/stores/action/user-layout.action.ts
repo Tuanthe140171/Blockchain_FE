@@ -18,3 +18,10 @@ export const getUserBlkType = (data: any) => {
     payload: data,
   };
 };
+
+export const getDefaultNotification = (data: any) => {
+  return {
+    type: "GET_DEFAULT_NOTIFICATION",
+    payload: data,
+  };
+};

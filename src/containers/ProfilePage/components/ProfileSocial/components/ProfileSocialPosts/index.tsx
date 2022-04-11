@@ -28,6 +28,8 @@ type IPost = {
   content: string;
   contentShortcut: string;
   likes: number;
+  id: string;
+  isLike: boolean;
 };
 
 const ProfileSocialPosts: React.FC = (props) => {
@@ -104,7 +106,9 @@ const ProfileSocialPosts: React.FC = (props) => {
           timestamp: getTimeDiff(post.createDate),
           content: post.content,
           contentShortcut: post.content?.substring(0, 200),
-          likes: 100,
+          likes: post.likeCount,
+          id: post.id,
+          isLike: post.isLike,
         };
       });
       setPostList(formatPosts);
@@ -118,6 +122,7 @@ const ProfileSocialPosts: React.FC = (props) => {
     [callWithParam],
     { method: "GET" },
     (e) => {
+      console.log(e.data);
       setCallWithParam(undefined);
       const formatPosts = e.data.map((post: any) => {
         return {
@@ -127,7 +132,9 @@ const ProfileSocialPosts: React.FC = (props) => {
           timestamp: getTimeDiff(post.createDate),
           content: post.content,
           contentShortcut: post.content?.substring(0, 200),
-          likes: 100,
+          likes: post.likeCount,
+          id: post.id,
+          isLike: post.isLike,
         };
       });
       setPostList(formatPosts);
@@ -224,7 +231,6 @@ const ProfileSocialPosts: React.FC = (props) => {
     (e) => {
       setHasImg(undefined);
       const data = e.data;
-      // const list = postList;
       const newPost: IPost = {
         images: formData.image.map((img: any) => {
           return { image: img.link, title: "", description: "" };
@@ -232,7 +238,9 @@ const ProfileSocialPosts: React.FC = (props) => {
         timestamp: getTimeDiff(data.createDate),
         content: data.content,
         contentShortcut: data.content?.substring(0, 200),
-        likes: 100,
+        likes: 0,
+        id: data.id,
+        isLike: data.isLike,
       };
       setNewPost(newPost);
     }
@@ -260,7 +268,9 @@ const ProfileSocialPosts: React.FC = (props) => {
         timestamp: getTimeDiff(data.createDate),
         content: data.content,
         contentShortcut: data.content?.substring(0, 200),
-        likes: 100,
+        likes: 0,
+        id: data.id,
+        isLike: data.isLike,
       };
       setNewPost(newPost);
     }
@@ -282,7 +292,6 @@ const ProfileSocialPosts: React.FC = (props) => {
   const onEmojiClick = (event: any, emojiObject: any) => {
     const newValue = inputValue + emojiObject.emoji;
     console.log(ref.current.value);
-
     ref.current = newValue;
     setInputValue(newValue);
   };
@@ -413,7 +422,15 @@ const ProfileSocialPosts: React.FC = (props) => {
         )}
         {postList.length > 0 ? (
           postList.map((post, index) => {
-            const { images, timestamp, content, contentShortcut, likes } = post;
+            const {
+              images,
+              timestamp,
+              content,
+              contentShortcut,
+              likes,
+              id,
+              isLike,
+            } = post;
             return (
               <React.Fragment key={content + index}>
                 <ProfileSocialPost
@@ -423,6 +440,8 @@ const ProfileSocialPosts: React.FC = (props) => {
                   contentShortcut={contentShortcut}
                   likes={likes}
                   seeMore={!!contentShortcut}
+                  id={id}
+                  isLike={isLike}
                 />
               </React.Fragment>
             );
