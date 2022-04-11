@@ -38,7 +38,7 @@ const Claim: React.FC = () => {
         []
     );
 
-    const { data: claimSignatureData, loading: gettingSignatureLoading } = useFetch<{
+    const { data: claimSignatureData, loading: gettingSignatureLoading, error } = useFetch<{
         signature: string,
         payload: {
             nonce: string,
@@ -84,10 +84,18 @@ const Claim: React.FC = () => {
                 </div>
                 <div className="claim__content">
                     <div className="claim__main">
-                        <p className="claim__line">Tổng thưởng: <strong>{new BigNumber(userClaimData?.totalClaimedReward || 0).div(1e18).toFixed(3)}</strong></p>
+                        <p className="claim__line">
+                            Tổng thưởng: 
+                            <strong className="claim__amount">
+                                <span>{new BigNumber(userClaimData?.totalLeftReward || 0).div(1e18).toFixed()}</span>
+                                <div className="claim__icon">
+                                    <Image src="/icon/ethereum_1.svg" preview={false} />
+                                </div>
+                            </strong>
+                        </p>
                         <p className="claim__line">Đã lĩnh:
                             <strong className="claim__amount">
-                                <span>{userClaimData?.totalLeftReward}</span>
+                                <span>{new BigNumber(userClaimData?.totalClaimedReward || 0).div(1e18).toFixed()}</span>
                                 <div className="claim__icon">
                                     <Image src="/icon/ethereum_1.svg" preview={false} />
                                 </div>
