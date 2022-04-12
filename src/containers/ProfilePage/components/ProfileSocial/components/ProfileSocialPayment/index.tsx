@@ -8,6 +8,7 @@ import Meta from "antd/lib/card/Meta";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import AppDialog from "../../../../../../components/AppDialog";
+import AppLoading from "../../../../../../components/AppLoading";
 import useFetch from "../../../../../../hooks/useFetch";
 import "./index.scss";
 
@@ -23,39 +24,18 @@ const ProfileSocialPayment = () => {
   const { id } = useParams();
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [openChangeModal, setOpenChangeModal] = useState(false);
-  const [tempData, setTempData] = useState({
-    name: "Công ty mặt trời xanh",
-    account: "0961249543",
-    check: true,
-    id: 1,
-  });
-  const [paymentList, setPaymentList] = useState([
-    {
-      name: "Công ty mặt trời xanh",
-      account: "0961249543",
-      check: true,
-      id: 1,
-    },
-    {
-      name: "Công ty mặt trời vàng",
-      account: "0123456789",
-      check: false,
-      id: 2,
-    },
-    {
-      name: "Công ty mặt trời vàng",
-      account: "0198765314",
-      check: false,
-      id: 3,
-    },
-  ]);
+  const [tempData, setTempData] = useState<any>(null);
+  const [tempDataList, setTempDataList] = useState([]);
+  const [paymentList, setPaymentList] = useState<any>([]);
   const [title, setTitle] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
+  const [openNotiDialog, setOpenNotiDialog] = useState(false);
   const [openWarningDialog, setOpenWarningDialog] = useState(false);
   const [deleteId, setDeleteId] = useState(1);
   const [isAdd, setIsAdd] = useState<any>(undefined);
   const [isModify, setIsModify] = useState<any>(undefined);
   const [isDelete, setIsDelete] = useState<any>(undefined);
+  const [isSelect, setIsSelect] = useState<any>(undefined);
   const [newName, setNewName] = useState("");
   const [newAccount, setNewAccount] = useState("");
 
@@ -82,7 +62,7 @@ const ProfileSocialPayment = () => {
   );
 
   // Add payment
-  const { data: paymentAddData, loading: loadingAddModify } = useFetch(
+  const { data: paymentAddData, loading: loadingAddPayment } = useFetch(
     `payment/modify-payment`,
     {
       "Content-Type": "application/json",
@@ -100,7 +80,7 @@ const ProfileSocialPayment = () => {
           bankName: "",
           bankBranch: "",
           bankUsername: newName,
-          enable: 0,
+          enable: paymentList.length === 0 ? 1 : 0,
         },
       ]),
     },
@@ -121,7 +101,7 @@ const ProfileSocialPayment = () => {
   );
 
   // Modify payment
-  const { data: paymentModifyData, loading: loadingPaymentModify } = useFetch(
+  const { data: paymentModifyData, loading: loadingModifyPayment } = useFetch(
     `payment/modify-payment`,
     {
       "Content-Type": "application/json",
@@ -133,13 +113,13 @@ const ProfileSocialPayment = () => {
       method: "POST",
       body: JSON.stringify([
         {
-          id: tempData.id,
+          id: tempData?.id,
           type: 1,
-          number: tempData.account,
+          number: tempData?.account,
           bankName: "",
           bankBranch: "",
-          bankUsername: tempData.name,
-          enable: tempData.check,
+          bankUsername: tempData?.name,
+          enable: tempData?.check,
         },
       ]),
     },
@@ -154,13 +134,13 @@ const ProfileSocialPayment = () => {
         };
       });
       setPaymentList(newList);
-      console.log("modify");
-      console.log(e.data);
+      setTitle("Cập nhật tài khoản thành công");
+      setOpenDialog(true);
     }
   );
 
   // Delete payment
-  const { data: paymentDeleteData, loading: loadingDeleteModify } = useFetch(
+  const { data: paymentDeleteData, loading: loadingDeletePayment } = useFetch(
     `payment/modify-payment`,
     {
       "Content-Type": "application/json",
@@ -190,13 +170,57 @@ const ProfileSocialPayment = () => {
       setPaymentList(newList);
       setTitle("Gỡ tài khoản thành công");
       setOpenDialog(true);
-      console.log("del");
-      console.log(e.data);
+    }
+  );
+
+  // Select payment
+  const { data: paymentSelectData, loading: loadingSelectPayment } = useFetch(
+    `payment/modify-payment`,
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [isSelect],
+    {
+      method: "POST",
+      body: JSON.stringify(
+        tempDataList.map((dt: any) => {
+          return {
+            id: dt?.id,
+            type: 1,
+            number: dt?.account,
+            bankName: "",
+            bankBranch: "",
+            bankUsername: dt?.name,
+            enable: dt?.check,
+          };
+        })
+      ),
+    },
+    (e) => {
+      setIsSelect(undefined);
+      const newList = e.data.map((data: any) => {
+        return {
+          name: data.bankUsername,
+          account: data.number,
+          check: data.enable,
+          id: data.id,
+        };
+      });
+      setPaymentList(newList);
     }
   );
 
   return (
     <>
+      {(loadingAddPayment ||
+        loadingModifyPayment ||
+        loadingDeletePayment ||
+        loadingSelectPayment ||
+        loadingPayment) && (
+        <AppLoading showContent={false} loadingContent={<div></div>} />
+      )}
       <Modal
         title="Thêm phương thức thanh toán"
         visible={openPaymentModal}
@@ -235,6 +259,49 @@ const ProfileSocialPayment = () => {
           />
         </div>
       </Modal>
+      <Modal
+        title="Thay đổi thông tin"
+        visible={openChangeModal}
+        onOk={() => {
+          setIsModify(true);
+          setOpenChangeModal(false);
+        }}
+        onCancel={() => setOpenChangeModal(false)}
+        cancelText="Hủy"
+        okText="Thay đổi"
+        className="profile-social-modal"
+      >
+        <div className="profile-social-modal__line">
+          <p>Phương thức:</p>
+          <Image
+            src="/icon/logo-momo-png-1.png"
+            width={40}
+            height={40}
+            className="profile-social-modal__line__right"
+            preview={false}
+          />
+        </div>
+        <div className="profile-social-modal__line">
+          <p>Số tài khoản:</p>
+          <Input
+            placeholder="Số tài khoản"
+            className="profile-social-modal__line__right"
+            value={tempData?.account}
+            onChange={(e) =>
+              setTempData({ ...tempData, account: e.target.value })
+            }
+          />
+        </div>
+        <div className="profile-social-modal__line">
+          <p>Tên chủ tài khoản:</p>
+          <Input
+            placeholder="Tên chủ tài khoản"
+            className="profile-social-modal__line__right"
+            value={tempData?.name}
+            onChange={(e) => setTempData({ ...tempData, name: e.target.value })}
+          />
+        </div>
+      </Modal>
       {openDialog ? (
         <AppDialog
           type="infor"
@@ -255,10 +322,6 @@ const ProfileSocialPayment = () => {
           confirmText="Gỡ bỏ"
           cancelText="Hủy"
           onConfirm={() => {
-            // let index = paymentList.findIndex((payment) => {
-            //   return payment.id === deleteId;
-            // });
-            // paymentList.splice(index, 1);
             setIsDelete(true);
             setOpenWarningDialog(false);
           }}
@@ -267,56 +330,17 @@ const ProfileSocialPayment = () => {
           }}
         />
       ) : null}
-      <Modal
-        title="Thay đổi thông tin"
-        visible={openChangeModal}
-        onOk={() => {
-          const newArr = paymentList.map((obj) => {
-            if (tempData.id === obj.id) {
-              return tempData;
-            } else {
-              return obj;
-            }
-          });
-          setPaymentList(newArr);
-          setOpenChangeModal(false);
-        }}
-        onCancel={() => setOpenChangeModal(false)}
-        cancelText="Hủy"
-        okText="Lưu"
-        className="profile-social-modal"
-      >
-        <div className="profile-social-modal__line">
-          <p>Phương thức:</p>
-          <Image
-            src="/icon/logo-momo-png-1.png"
-            width={40}
-            height={40}
-            className="profile-social-modal__line__right"
-            preview={false}
-          />
-        </div>
-        <div className="profile-social-modal__line">
-          <p>Số tài khoản:</p>
-          <Input
-            placeholder="Số tài khoản"
-            className="profile-social-modal__line__right"
-            value={tempData.account}
-            onChange={(e) =>
-              setTempData({ ...tempData, account: e.target.value })
-            }
-          />
-        </div>
-        <div className="profile-social-modal__line">
-          <p>Tên chủ tài khoản:</p>
-          <Input
-            placeholder="Tên chủ tài khoản"
-            className="profile-social-modal__line__right"
-            value={tempData.name}
-            onChange={(e) => setTempData({ ...tempData, name: e.target.value })}
-          />
-        </div>
-      </Modal>
+      {openNotiDialog ? (
+        <AppDialog
+          type="warning"
+          title="Tài khoản hiện đang được sử dụng!"
+          description="Vui lòng chuyển sang tài khoản khác"
+          confirmText="Đồng ý"
+          onConfirm={() => {
+            setOpenNotiDialog(false);
+          }}
+        />
+      ) : null}
       <div className="profile-social-payment-wrapper">
         <div className="profile-social-payment">
           <header className="profile-social-payment__header">
@@ -351,18 +375,41 @@ const ProfileSocialPayment = () => {
                     <DeleteOutlined
                       key="delete"
                       onClick={() => {
-                        setDeleteId(payment.id);
-                        setOpenWarningDialog(true);
+                        if (payment.check === 1) {
+                          setOpenNotiDialog(true);
+                        } else {
+                          setDeleteId(payment.id);
+                          setOpenWarningDialog(true);
+                        }
                       }}
                     />,
                   ]}
                 >
                   <div className="profile-social-payment__details__info">
                     <Meta title={payment.name} description={payment.account} />
-                    <Radio
-                      checked={payment.check}
-                      className="profile-social-payment__details__info__check"
-                    ></Radio>
+                    <div
+                      style={{
+                        width: "50px",
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Radio
+                        checked={payment.check}
+                        className="profile-social-payment__details__info__check"
+                        onClick={() => {
+                          const newList = paymentList.map((p: any) => {
+                            if (payment.id === p.id) {
+                              return { ...p, check: 1 };
+                            } else {
+                              return { ...p, check: 0 };
+                            }
+                          });
+                          setTempDataList(newList);
+                          setIsSelect(true);
+                        }}
+                      />
+                    </div>
                   </div>
                 </Card>
               );

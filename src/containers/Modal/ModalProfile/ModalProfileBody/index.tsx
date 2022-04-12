@@ -31,10 +31,6 @@ const ModalProfileBody = () => {
         <WalletOutlined className="modal-profile__body__line__icon" />
         <div className="modal-profile__body__line__text">Payment Method</div>
       </div>
-      <div className="modal-profile__body__line">
-        <SecurityScanOutlined className="modal-profile__body__line__icon" />
-        <div className="modal-profile__body__line__text">Security</div>
-      </div>
     </div>
   );
 };

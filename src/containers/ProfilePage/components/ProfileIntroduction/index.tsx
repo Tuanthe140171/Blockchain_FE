@@ -1,4 +1,4 @@
-import { Avatar, Button, Image } from "antd";
+import { Avatar, Button, Image, Input } from "antd";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -132,6 +132,11 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
     }
   };
 
+  const [canWrite, setCanWrite] = useState(false);
+  const [description, setDescription] = useState(
+    "Cuộc đời này đã mang tôi tới đây"
+  );
+
   return (
     <>
       {openConfirmDialog ? (
@@ -213,7 +218,14 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
         <div className="profile-intro__desc">
           <div className="intro-desc">
             <p className="intro-desc__title">Giới thiệu</p>
-            <p className="intro-desc__txt">Cuộc đời này đã mang tôi tới đây</p>
+            {canWrite ? (
+              <Input onChange={(e) => setDescription(e.target.value)} />
+            ) : (
+              <div>
+                <p className="intro-desc__txt">{description}</p>
+                <Button>click</Button>
+              </div>
+            )}
             <div className="intro-desc__divider"></div>
             <ul className="intro-desc__extras">
               <li

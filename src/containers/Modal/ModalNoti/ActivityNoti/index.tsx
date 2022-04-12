@@ -19,11 +19,13 @@ const ActivityNoti: React.FC<VotingNotiProps> = (props) => {
       {!data.isRead ? <div className="activity-noti__dotted"></div> : null}
       <div className="activity-noti__top">
         <div className="activity-noti__top__ava">
-          <Avatar size={40} icon={<UserOutlined />} />
+          <Avatar size={40} icon={<UserOutlined />} src={data.avatar} />
         </div>
-        <div className="activity-noti__top__message">{data.message}</div>
+        <div className="activity-noti__top__message">
+          <strong>{data.name}</strong> {data.message}
+        </div>
       </div>
-      <div className="activity-noti__description">"{data.description}"</div>
+      <div className="activity-noti__description">{data.description}</div>
       <div className="activity-noti__bottom">
         <div>{data.time}</div>
       </div>

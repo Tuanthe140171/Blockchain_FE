@@ -79,8 +79,9 @@ const ProfileSocialPosts: React.FC = (props) => {
     const t12 = t11.replace("years", "năm");
     const t13 = t12.replace("year", "năm");
     const t14 = t13.replace("a few", "Một vài");
-    const t15 = t14.replace("a", "Một");
-    return t15;
+    const t15 = t14.replace("an", "Một");
+    const t16 = t15.replace("a", "Một");
+    return t16;
   };
 
   const getTimeDiff = (time: any) => {
@@ -369,13 +370,13 @@ const ProfileSocialPosts: React.FC = (props) => {
               <hr className="profile-social__posts__upload__form__divider" />
               <div className="profile-social__posts__upload__form__footer">
                 <div className="profile-social__posts__upload__form__footer__buttons">
-                  <Button
+                  {/* <Button
                     type="default"
                     icon={<VideoCameraOutlined />}
                     className="button"
                   >
-                    Phát trực tiếp
-                  </Button>
+                    Phát trực tiếp  
+                  </Button> */}
                   <Upload
                     name="logo"
                     maxCount={3}
