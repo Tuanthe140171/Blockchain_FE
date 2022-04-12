@@ -5,31 +5,17 @@ import CategoryCard from "./components/CategoryCard";
 import DonationCategoryItem from "./components/CategoryItem";
 import "./index.scss";
 
-const DonationCategory: React.FC = (props) => {
-  const [activatedCategory, setActivatedCategory] = useState("");
+type DonationCategoryProps = {
+  categories: {
+    id: string,
+    title: string,
+    url: string
+  }[]
+}
 
-  const categories = [
-    {
-      title: "Người khuyết tật",
-      url: "/a",
-    },
-    {
-      title: "Trẻ em mồ côi",
-      url: "/b",
-    },
-    {
-      title: "Thiên tai, dịch bệnh",
-      url: "/c",
-    },
-    {
-      title: "Người nhiễm chất độc da cam",
-      url: "/d",
-    },
-    {
-      title: "Người gặp hoàn cảnh khó khăn",
-      url: "/e",
-    },
-  ];
+const DonationCategory: React.FC<DonationCategoryProps> = (props) => {
+  const { categories } = props;
+  const [activatedCategory, setActivatedCategory] = useState("");
 
   const mockData = [
     {

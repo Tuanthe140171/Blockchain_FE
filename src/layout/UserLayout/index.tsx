@@ -270,7 +270,7 @@ const UserLayout: React.FC = (props): ReactElement => {
                           blockExplorerUrls: ["https://35.209.169.120:4000"],
                           nativeCurrency: {
                             name: "CharityVerse",
-                            symbol: "CRV", // 2-6 characters long
+                            symbol: "VNC", // 2-6 characters long
                             decimals: 18,
                           },
                         },
@@ -391,7 +391,7 @@ const UserLayout: React.FC = (props): ReactElement => {
                 key="Admin"
                 icon={
                   <Image
-                    src="/icon/admin.png"
+                    src="/icon/admin.svg"
                     preview={false}
                     style={{ width: 25, height: 25 }}
                   />
@@ -409,7 +409,7 @@ const UserLayout: React.FC = (props): ReactElement => {
               key="Claim"
               icon={
                 <Image
-                  src="/icon/refund.png"
+                  src="/icon/finance.svg"
                   preview={false}
                   style={{ width: 25, height: 25 }}
                 />
@@ -428,7 +428,7 @@ const UserLayout: React.FC = (props): ReactElement => {
           <Header className="main-layout__site-layout__header">
             <Search
               className="main-layout__site-layout__header__search"
-              placeholder="Search donee, history..."
+              placeholder="Tìm kiếm theo người được từ thiện..."
             />
             <div className="main-layout__site-layout__header__group-avatar">
               {renderWeb3Account()}

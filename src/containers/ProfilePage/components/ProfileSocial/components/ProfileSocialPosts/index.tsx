@@ -5,7 +5,7 @@ import {
 } from "@ant-design/icons";
 import { Avatar, Button, Form, Input, Upload } from "antd";
 import moment from "moment";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import AppDialog from "../../../../../../components/AppDialog";
@@ -14,7 +14,6 @@ import useFetch from "../../../../../../hooks/useFetch";
 import ProfileSocialPost from "../ProfileSocialPost";
 import Picker from "emoji-picker-react";
 import "./index.scss";
-import { time } from "console";
 
 const dummyRequest = ({ file, onSuccess }: any) => {
   setTimeout(() => {
@@ -292,8 +291,6 @@ const ProfileSocialPosts: React.FC = (props) => {
 
   const onEmojiClick = (event: any, emojiObject: any) => {
     const newValue = inputValue + emojiObject.emoji;
-    console.log(ref.current.value);
-    ref.current = newValue;
     setInputValue(newValue);
   };
 
@@ -324,6 +321,12 @@ const ProfileSocialPosts: React.FC = (props) => {
               form={form}
               className="profile-social__posts__upload__form"
               onFinish={(e) => onSubmit(e)}
+              fields={[
+                {
+                  name: ["status"],
+                  value: inputValue,
+                },
+              ]}
             >
               <div className="profile-social__posts__upload__form__wrapper">
                 <Avatar
@@ -338,6 +341,7 @@ const ProfileSocialPosts: React.FC = (props) => {
                     placeholder="Hãy nhập gì đó..."
                     onChange={(e) => setInputValue(e.target.value)}
                     value={inputValue}
+                    defaultValue={inputValue}
                     ref={ref}
                     accept="image/*"
                   />

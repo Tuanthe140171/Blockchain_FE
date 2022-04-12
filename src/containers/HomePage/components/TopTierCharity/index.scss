@@ -5,6 +5,25 @@
     overflow: hidden;
     background-color: #EFFFF9;
 
+    &__more {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 10.1069px;
+        line-height: 13px;
+        color: #a7b2c8;
+        display: flex;
+        align-items: center;
+    }
+
+    &__desc {
+        display: -webkit-box;
+        line-height: 1.4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: $lines-to-show;
+    }
+
     &__header {
         position: absolute;
         top: 50%;

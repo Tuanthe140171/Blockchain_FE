@@ -88,7 +88,7 @@ const DefaultLayout: React.FC = (props): ReactElement => {
       <Layout.Header className="header">
         <div className="header__left">
           <Image
-            width={90}
+            width={180}
             src="/icon/logo.svg"
             preview={false}
             className="header__logo"
@@ -126,7 +126,7 @@ const DefaultLayout: React.FC = (props): ReactElement => {
                       blockExplorerUrls: ["https://blockscout.charityverse.info/"],
                       nativeCurrency: {
                         name: "CharityVerse",
-                        symbol: "CRV", // 2-6 characters long
+                        symbol: "VNC", // 2-6 characters long
                         decimals: 18,
                       },
                     },

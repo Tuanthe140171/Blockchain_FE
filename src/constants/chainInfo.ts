@@ -20,8 +20,8 @@ export const CHAIN_INFO: ChainInfoMap = {
         docs: 'https://docs.uniswap.org/',
         explorer: 'https://blockscout.charityverse.info',
         infoLink: 'https://info.uniswap.org/#/',
-        label: 'Charity',
+        label: 'Extreme',
         logoUrl: "/icon/charity.svg",
-        nativeCurrency: { name: 'Charity', symbol: 'CRV', decimals: 18 },
+        nativeCurrency: { name: 'CharityVerse', symbol: 'VNC', decimals: 18 },
     }
 };
