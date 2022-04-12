@@ -35,6 +35,7 @@ const DonationCategory: React.FC<DonationCategoryProps> = (props) => {
           let tempCategory = [];
           tempCategory.push(
             <CategoryCard
+              id={users[i].id}
               image={users[i].avatar}
               name={users[i].name}
               desc={users[i].desc}
@@ -50,6 +51,7 @@ const DonationCategory: React.FC<DonationCategoryProps> = (props) => {
           i + 1 <= users.length - 1 &&
             tempCategory.push(
               <CategoryCard
+                id={users[i + 1].id}
                 image={users[i + 1].avatar}
                 name={users[i + 1].name}
                 desc={users[i + 1].desc}
@@ -77,12 +79,12 @@ const DonationCategory: React.FC<DonationCategoryProps> = (props) => {
 
   return (
     <div className="donation-categories">
-      <div 
+      <div
         className="donation-categories__img"
       >
         <Image
-            src="/icon/category-corner.svg"
-            preview={false}
+          src="/icon/category-corner.svg"
+          preview={false}
         />
       </div>
       <div className="donation-categories__list">
