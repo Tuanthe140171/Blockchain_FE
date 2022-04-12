@@ -172,7 +172,7 @@ const TokenTransferManagement: React.FC = () => {
             modifyDate: moment(redeem.modifyDate).format("hh:mm:ss DD-MM-YYYY"),
             receiver: `${redeem.User.lastName} ${redeem.User.name}`,
             hasRedeemed: redeem.hasRedeemed,
-            paymentMethod: redeem.User.PaymentMethods[0].number,
+            paymentMethod: redeem.User.PaymentMethods.length > 0 ? redeem.User.PaymentMethods[0].number: "Chưa có",
             userId: redeem.User.id
         }))
         : [];

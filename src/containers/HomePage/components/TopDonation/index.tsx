@@ -90,7 +90,7 @@ const TopDonation: React.FC<TopDonationProps> = (props) => {
 
     return (
         <div className="top-donation">
-            <span className="top-donation__monthly">CVERSE MONTHLY HONOR</span>
+            <span className="top-donation__monthly">CVERSE Vinh Danh Hàng Tháng</span>
             <Title level={3} className="top-donation__desc">
                 Top những người quyên góp nhiều nhất
             </Title>

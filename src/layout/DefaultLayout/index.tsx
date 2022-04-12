@@ -94,18 +94,18 @@ const DefaultLayout: React.FC = (props): ReactElement => {
             className="header__logo"
           />
           <Menu mode="horizontal" selectable={false} className="header__menu">
-            <Menu.Item
+            {/* <Menu.Item
               key="1"
               icon={<CaretDownOutlined />}
               className="menu__icon"
             >
               Donate for
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item key="2" className="menu__icon">
-              How it works
+              Giới thiệu
             </Menu.Item>
             <Menu.Item key="3" className="menu__icon">
-              About us
+              Hướng dẫn sử dụng
             </Menu.Item>
           </Menu>
         </div>
@@ -141,7 +141,7 @@ const DefaultLayout: React.FC = (props): ReactElement => {
           }
           }>
             {
-              authorizeError === AuthorizeErrorType.NONE ? "Launch App" : "Connect Wallet"
+              authorizeError === AuthorizeErrorType.NONE ? "Vào ứng dụng" : "Kết nối ví"
             }
           </Button>
           <Modal
