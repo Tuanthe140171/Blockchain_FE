@@ -49,11 +49,11 @@ enum CharityStatus {
 
 const DashUser: React.FC<{
   pickedDate:
-    | {
-        from: number;
-        to: number;
-      }
-    | undefined;
+  | {
+    from: number;
+    to: number;
+  }
+  | undefined;
 }> = (props) => {
   const navigate = useNavigate();
   const { account, chainId } = useWeb3React();
@@ -66,7 +66,7 @@ const DashUser: React.FC<{
 
   const { explorer } =
     CHAIN_INFO[
-      chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
+    chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
     ];
 
   const { data: transactionsResp, loading } = useFetch<any>(
@@ -158,40 +158,40 @@ const DashUser: React.FC<{
 
   const transactionsTableData = transactionsResp
     ? transactionsResp.rows.map((transaction: any) => ({
-        id: transaction.id,
-        key: shortenTx(transaction.id),
-        name:
-          ethers.utils.getAddress(transaction.fromUser.walletAddress) ===
+      id: transaction.id,
+      key: shortenTx(transaction.id),
+      name:
+        ethers.utils.getAddress(transaction.fromUser.walletAddress) ===
           ethers.utils.getAddress(account || "")
-            ? "Bạn"
-            : transaction.fromUser.name,
-        donee:
-          ethers.utils.getAddress(transaction.toUser.walletAddress) ===
+          ? "Bạn"
+          : transaction.fromUser.name,
+      donee:
+        ethers.utils.getAddress(transaction.toUser.walletAddress) ===
           ethers.utils.getAddress(account || "")
-            ? "Bạn"
-            : transaction.toUser.name,
-        date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
-        amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
-        status: ["loser"],
-        doneeAvatar: (function () {
-          const userAvatar = transaction.toUser.UserMedia.filter(
-            (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
-          )
-            .slice(0, 1)
-            .pop();
-          return userAvatar ? userAvatar.link : null;
-        })(),
-        avatar: (function () {
-          const userAvatar = transaction.fromUser.UserMedia.filter(
-            (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
-          )
-            .slice(0, 1)
-            .pop();
-          return userAvatar ? userAvatar.link : null;
-        })(),
-        philanthropistId: transaction.fromUser.id,
-        doneeId: transaction.toUser.id,
-      }))
+          ? "Bạn"
+          : transaction.toUser.name,
+      date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
+      amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
+      status: ["loser"],
+      doneeAvatar: (function () {
+        const userAvatar = transaction.toUser.UserMedia.filter(
+          (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+        )
+          .slice(0, 1)
+          .pop();
+        return userAvatar ? userAvatar.link : null;
+      })(),
+      avatar: (function () {
+        const userAvatar = transaction.fromUser.UserMedia.filter(
+          (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+        )
+          .slice(0, 1)
+          .pop();
+        return userAvatar ? userAvatar.link : null;
+      })(),
+      philanthropistId: transaction.fromUser.id,
+      doneeId: transaction.toUser.id,
+    }))
     : [];
 
   var gradientStroke = chartRef?.ctx?.createLinearGradient(0, 500, 0, 100);
@@ -210,16 +210,16 @@ const DashUser: React.FC<{
   const data: ChartData<"line", any, unknown> = {
     labels: dailyDonationResp
       ? dailyDonationResp.userDonationDayDatas.map((data: any) =>
-          moment(parseInt(data.date) * 1000).format("DD-MM-yy")
-        )
+        moment(parseInt(data.date) * 1000).format("DD-MM-yy")
+      )
       : [],
     datasets: [
       {
         fill: true,
         data: dailyDonationResp
           ? dailyDonationResp.userDonationDayDatas.map((data: any) =>
-              new BigNumber(data.totalDonation).div(1e18).toFixed(4)
-            )
+            new BigNumber(data.totalDonation).div(1e18).toFixed(4)
+          )
           : [],
         backgroundColor: gradientStroke,
         borderColor: "#EEC909",
@@ -234,16 +234,16 @@ const DashUser: React.FC<{
   const receivingData: ChartData<"line", any, unknown> = {
     labels: dailyDonationResp
       ? dailyDonationResp.userDonationDayDatas.map((data: any) =>
-          moment(parseInt(data.date) * 1000).format("DD-MM-yy")
-        )
+        moment(parseInt(data.date) * 1000).format("DD-MM-yy")
+      )
       : [],
     datasets: [
       {
         fill: true,
         data: dailyDonationResp
           ? dailyDonationResp.userDonationDayDatas.map((data: any) =>
-              new BigNumber(data.totalReceive).div(1e18).toFixed(4)
-            )
+            new BigNumber(data.totalReceive).div(1e18).toFixed(4)
+          )
           : [],
         backgroundColor: userGradientStroke,
         borderColor: "#52BFD6",
@@ -388,21 +388,19 @@ const DashUser: React.FC<{
               <h1 className="chart-group__data-group__data">
                 {userStatsResp && userStatsResp.userStatistic
                   ? new BigNumber(userStatsResp.userStatistic.totalDonation)
-                      .div(1e18)
-                      .toFixed(4)
+                    .div(1e18)
+                    .toFixed(4)
                   : 0}{" "}
                 VNC
                 <span
-                  className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${
-                    givingStatus.status === CharityStatus.UP ? "up" : "down"
-                  }`}
+                  className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${givingStatus.status === CharityStatus.UP ? "up" : "down"
+                    }`}
                 >
                   <Image
                     preview={false}
                     src="/icon/growth.svg"
-                    className={`chart-group__data-group__data__icon--${
-                      givingStatus.status === CharityStatus.UP ? "up" : "down"
-                    }`}
+                    className={`chart-group__data-group__data__icon--${givingStatus.status === CharityStatus.UP ? "up" : "down"
+                      }`}
                   />
                   <span>{toPercent(givingStatus.percentage)}%</span>
                 </span>
@@ -442,25 +440,23 @@ const DashUser: React.FC<{
               <h1 className="chart-group__data-group__data">
                 {userStatsResp && userStatsResp.userStatistic
                   ? new BigNumber(
-                      userStatsResp.userStatistic.totalDonationReceive
-                    )
-                      .div(1e18)
-                      .toFixed(4)
+                    userStatsResp.userStatistic.totalDonationReceive
+                  )
+                    .div(1e18)
+                    .toFixed(4)
                   : 0}{" "}
                 VNC
                 <span
-                  className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${
-                    receivingStatus.status === CharityStatus.UP ? "up" : "down"
-                  }`}
+                  className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${receivingStatus.status === CharityStatus.UP ? "up" : "down"
+                    }`}
                 >
                   <Image
                     preview={false}
                     src="/icon/growth.svg"
-                    className={`chart-group__data-group__data__icon--${
-                      receivingStatus.status === CharityStatus.UP
+                    className={`chart-group__data-group__data__icon--${receivingStatus.status === CharityStatus.UP
                         ? "up"
                         : "down"
-                    }`}
+                      }`}
                   />
                   <span>{toPercent(receivingStatus.percentage)}%</span>
                 </span>
@@ -485,6 +481,47 @@ const DashUser: React.FC<{
                 <div className="table-group__header__right-group__icons">
                   <DownloadOutlined
                     style={{ fontSize: "15px", color: "black" }}
+                    onClick={() =>
+                      exportDataToCsv(
+                        transactionsResp
+                          ? transactionsResp.rows.map((transaction: any) => ({
+                            id: transaction.id,
+                            key: shortenTx(transaction.id),
+                            name:
+                              ethers.utils.getAddress(transaction.fromUser.walletAddress) ===
+                                ethers.utils.getAddress(account || "")
+                                ? "Bạn"
+                                : transaction.fromUser.name,
+                            donee:
+                              ethers.utils.getAddress(transaction.toUser.walletAddress) ===
+                                ethers.utils.getAddress(account || "")
+                                ? "Bạn"
+                                : transaction.toUser.name,
+                            date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss").toString(),
+                            amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
+                            status: ["loser"],
+                            doneeAvatar: (function () {
+                              const userAvatar = transaction.toUser.UserMedia.filter(
+                                (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+                              )
+                                .slice(0, 1)
+                                .pop();
+                              return userAvatar ? userAvatar.link : null;
+                            })(),
+                            avatar: (function () {
+                              const userAvatar = transaction.fromUser.UserMedia.filter(
+                                (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+                              )
+                                .slice(0, 1)
+                                .pop();
+                              return userAvatar ? userAvatar.link : null;
+                            })(),
+                            philanthropistId: transaction.fromUser.id,
+                            doneeId: transaction.toUser.id,
+                          }))
+                          : []
+                        , "transactions")
+                    }
                   />
                 </div>
               </div>

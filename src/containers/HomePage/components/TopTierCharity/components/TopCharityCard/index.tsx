@@ -57,7 +57,7 @@ const TopTierCharityCard: React.FC<TopTierCharityCardProps> = (props: TopTierCha
                     </div>
                 </div>
             </div>
-            <Button width="100%" maxWidth="100%" content="Donate" onClick={() => {
+            <Button width="100%" maxWidth="100%" content="Ủng hộ" onClick={() => {
                 if (authorizeError === AuthorizeErrorType.NONE) {
                     setSelectedKey("Dashboard");
                     navigate(`/profile/${id}`);

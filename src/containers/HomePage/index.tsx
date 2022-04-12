@@ -28,7 +28,18 @@ const HomePage = () => {
     lastName: topPhilanthropist.lastName,
     name: topPhilanthropist.name,
     lastDonation: "3m ago",
-    image: "/icon/bad-lucker-2.svg"
+    image: (function () {
+      const userAvatar = topPhilanthropist.UserMedia.filter(
+        (userMedia: any) =>
+          userMedia.type === "1" && userMedia.active === 1
+      )
+        .slice(-1)
+        .pop();
+
+      return userAvatar
+        ? userAvatar.link
+        : "/icon/bad-lucker.svg";
+    })()
   })) : []
 
   const topTierOfCharity = data ? data.topTOCs.map((topTOC: any) => ({
@@ -42,6 +53,7 @@ const HomePage = () => {
       )
         .slice(-1)
         .pop();
+
       return userAvatar
         ? userAvatar.link
         : "/icon/bad-lucker.svg";

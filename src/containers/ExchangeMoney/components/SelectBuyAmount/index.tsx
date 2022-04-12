@@ -85,12 +85,12 @@ const SelectBuyAmount: React.FC<SelectBuyAmountProps> = (props) => {
                         return new BigNumber(inputAmount).lte(0) || new BigNumber(inputAmount).gt(userBalance);
                     }
 
-                    return new BigNumber(inputAmount).lte(MINIMUM_THRESHOLD);
+                    return new BigNumber(inputAmount).lt(MINIMUM_THRESHOLD);
                 }())}
                 className="select-buy-amount__btn"
                 onClick={props.setCurrentStep}
             >
-                Confirm
+                Xác nhận
             </Button>
         </div>
     )
