@@ -29,7 +29,18 @@ const Sell: React.FC = () => {
     const [currentStep, setCurrentStep] = useState<number>(0);
     const [openDialog, setOpenDialog] = useState(false);
 
-    const { data, loading } = useFetch<{ paymentName: string, paymentNumber: string }>("payment/get-payment-information");
+    let { data: paymentData, loading } = useFetch<any>(`payment/get-payment-by-user`,
+        {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+        },
+        false,
+        [true],
+        {}
+    );
+
+    let enablePayments = paymentData && paymentData.filter((payment: any) => payment.enable === 1);
+    paymentData = (enablePayments && enablePayments.length > 0) ? enablePayments[0] : {};
 
     useEffect(() => {
         if (currentStep === 3) {
@@ -52,7 +63,7 @@ const Sell: React.FC = () => {
         {
             title: "Chọn phương thức",
             description: "",
-            component: <PaymentMethod isBuy={false} account={data?.paymentName || ""} accountNumber={data?.paymentNumber || ""} chosenPaymentMethod={paymentMethod} supportedPaymentMethods={ALL_SUPPORTED_METHODS} setPaymentMethod={setPaymentMethod} setCurrentStep={() => {
+            component: <PaymentMethod isBuy={false} account={paymentData?.bankUsername || ""} accountNumber={paymentData?.number || ""} chosenPaymentMethod={paymentMethod} supportedPaymentMethods={ALL_SUPPORTED_METHODS} setPaymentMethod={setPaymentMethod} setCurrentStep={() => {
                 setCurrentStep(0);
             }} onNext={() => { setCurrentStep(2) }}/>
         },
@@ -83,7 +94,7 @@ const Sell: React.FC = () => {
                 />
                 {BUY_STEPS[currentStep].component}
             </div>
-            <TransactionDetails isBuy={false} account={data?.paymentNumber || ""} accountNumber={data?.paymentName || ""} loading={loading} inputAmount={inputAmount} chosenPaymentMethod={ALL_SUPPORTED_METHODS[paymentMethod]} />
+            <TransactionDetails isBuy={false} account={paymentData?.bankUsername || ""} accountNumber={paymentData?.number || ""} loading={loading} inputAmount={inputAmount} chosenPaymentMethod={ALL_SUPPORTED_METHODS[paymentMethod]} />
             {openDialog ? (
                 <AppDialog
                     type="infor"

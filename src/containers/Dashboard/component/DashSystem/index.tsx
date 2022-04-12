@@ -53,11 +53,11 @@ ChartJS.register(
 
 const DashSystem: React.FC<{
   pickedDate:
-    | {
-        from: number;
-        to: number;
-      }
-    | undefined;
+  | {
+    from: number;
+    to: number;
+  }
+  | undefined;
 }> = (props) => {
   const { chainId, account } = useWeb3React();
   const [keyWord, setKeyWord] = useState("");
@@ -70,7 +70,7 @@ const DashSystem: React.FC<{
 
   const { explorer } =
     CHAIN_INFO[
-      chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
+    chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
     ];
 
   const { data: transactionsResp, loading } = useFetch<any>(
@@ -189,16 +189,16 @@ const DashSystem: React.FC<{
   const data: ChartData<"line", any, unknown> = {
     labels: dailyDonationResp
       ? dailyDonationResp.donationDayDatas.map((data: any) =>
-          moment(parseInt(data.date) * 1000).format("DD-MM")
-        )
+        moment(parseInt(data.date) * 1000).format("DD-MM")
+      )
       : [],
     datasets: [
       {
         fill: true,
         data: dailyDonationResp
           ? dailyDonationResp.donationDayDatas.map((data: any) =>
-              new BigNumber(data.dailyVolume).div(1e18).toFixed(4)
-            )
+            new BigNumber(data.dailyVolume).div(1e18).toFixed(4)
+          )
           : [],
         backgroundColor: gradientStroke,
         borderColor: "#EEC909",
@@ -213,8 +213,8 @@ const DashSystem: React.FC<{
   const userStatsData: ChartData<"line", any, unknown> = {
     labels: userActiveResp
       ? userActiveResp.map((stats: any) =>
-          moment(new Date(stats.date)).format("DD-MM")
-        )
+        moment(new Date(stats.date)).format("DD-MM")
+      )
       : [],
     datasets: [
       {
@@ -313,40 +313,40 @@ const DashSystem: React.FC<{
 
   const transactionsTableData = transactionsResp
     ? transactionsResp.rows.map((transaction: any) => ({
-        id: transaction.id,
-        key: shortenTx(transaction.id),
-        name:
-          ethers.utils.getAddress(transaction.fromUser.walletAddress) ===
+      id: transaction.id,
+      key: shortenTx(transaction.id),
+      name:
+        ethers.utils.getAddress(transaction.fromUser.walletAddress) ===
           ethers.utils.getAddress(account || "")
-            ? "Bạn"
-            : transaction.fromUser.name,
-        donee:
-          ethers.utils.getAddress(transaction.toUser.walletAddress) ===
+          ? "Bạn"
+          : transaction.fromUser.name,
+      donee:
+        ethers.utils.getAddress(transaction.toUser.walletAddress) ===
           ethers.utils.getAddress(account || "")
-            ? "Bạn"
-            : transaction.toUser.name,
-        date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
-        amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
-        status: ["loser"],
-        doneeAvatar: (function () {
-          const userAvatar = transaction.toUser.UserMedia.filter(
-            (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
-          )
-            .slice(0, 1)
-            .pop();
-          return userAvatar ? userAvatar.link : null;
-        })(),
-        avatar: (function () {
-          const userAvatar = transaction.fromUser.UserMedia.filter(
-            (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
-          )
-            .slice(0, 1)
-            .pop();
-          return userAvatar ? userAvatar.link : null;
-        })(),
-        philanthropistId: transaction.fromUser.id,
-        doneeId: transaction.toUser.id,
-      }))
+          ? "Bạn"
+          : transaction.toUser.name,
+      date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
+      amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
+      status: ["loser"],
+      doneeAvatar: (function () {
+        const userAvatar = transaction.toUser.UserMedia.filter(
+          (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+        )
+          .slice(0, 1)
+          .pop();
+        return userAvatar ? userAvatar.link : null;
+      })(),
+      avatar: (function () {
+        const userAvatar = transaction.fromUser.UserMedia.filter(
+          (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+        )
+          .slice(0, 1)
+          .pop();
+        return userAvatar ? userAvatar.link : null;
+      })(),
+      philanthropistId: transaction.fromUser.id,
+      doneeId: transaction.toUser.id,
+    }))
     : [];
 
   const pieData: ChartData<"pie", any, unknown> = {
@@ -355,9 +355,9 @@ const DashSystem: React.FC<{
       {
         data: userStatsResp
           ? [
-              userStatsResp.totalNum - userStatsResp.doneeNum,
-              userStatsResp.doneeNum,
-            ]
+            userStatsResp.totalNum - userStatsResp.doneeNum,
+            userStatsResp.doneeNum,
+          ]
           : [50, 50],
         backgroundColor: ["#52BFD6", "#EA6A3F"],
       },
@@ -399,21 +399,19 @@ const DashSystem: React.FC<{
               <h1 className="chart-group__data-group__data">
                 {donationResp && donationResp.donations.length !== 0
                   ? new BigNumber(donationResp.donations[0].totalVolume)
-                      .div(1e18)
-                      .toFixed(4)
+                    .div(1e18)
+                    .toFixed(4)
                   : 0}{" "}
                 VNC
                 <span
-                  className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${
-                    charityStatus.status === CharityStatus.UP ? "up" : "down"
-                  }`}
+                  className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${charityStatus.status === CharityStatus.UP ? "up" : "down"
+                    }`}
                 >
                   <Image
                     preview={false}
                     src="/icon/growth.svg"
-                    className={`chart-group__data-group__data__icon--${
-                      charityStatus.status === CharityStatus.UP ? "up" : "down"
-                    }`}
+                    className={`chart-group__data-group__data__icon--${charityStatus.status === CharityStatus.UP ? "up" : "down"
+                      }`}
                   />
                   <span>{toPercent(charityStatus.percentage)}%</span>
                 </span>
@@ -451,18 +449,16 @@ const DashSystem: React.FC<{
               <h1 className="chart-group__data-group__data">
                 {userStatsStatus.totalUserActions.toFixed()}
                 <span
-                  className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${
-                    userStatsStatus.status === CharityStatus.UP ? "up" : "down"
-                  }`}
+                  className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${userStatsStatus.status === CharityStatus.UP ? "up" : "down"
+                    }`}
                 >
                   <Image
                     preview={false}
                     src="/icon/growth.svg"
-                    className={`chart-group__data-group__data__icon--${
-                      userStatsStatus.status === CharityStatus.UP
+                    className={`chart-group__data-group__data__icon--${userStatsStatus.status === CharityStatus.UP
                         ? "up"
                         : "down"
-                    }`}
+                      }`}
                   />
                   <span>{toPercent(userStatsStatus.percentage)}%</span>
                 </span>
@@ -488,7 +484,45 @@ const DashSystem: React.FC<{
                   <DownloadOutlined
                     style={{ fontSize: "15px", color: "black" }}
                     onClick={() =>
-                      exportDataToCsv(transactionsResp.rows, "transactions")
+                      exportDataToCsv(
+                        transactionsResp
+                          ? transactionsResp.rows.map((transaction: any) => ({
+                            id: transaction.id,
+                            key: shortenTx(transaction.id),
+                            name:
+                              ethers.utils.getAddress(transaction.fromUser.walletAddress) ===
+                                ethers.utils.getAddress(account || "")
+                                ? "Bạn"
+                                : transaction.fromUser.name,
+                            donee:
+                              ethers.utils.getAddress(transaction.toUser.walletAddress) ===
+                                ethers.utils.getAddress(account || "")
+                                ? "Bạn"
+                                : transaction.toUser.name,
+                            date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss").toString(),
+                            amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
+                            status: ["loser"],
+                            doneeAvatar: (function () {
+                              const userAvatar = transaction.toUser.UserMedia.filter(
+                                (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+                              )
+                                .slice(0, 1)
+                                .pop();
+                              return userAvatar ? userAvatar.link : null;
+                            })(),
+                            avatar: (function () {
+                              const userAvatar = transaction.fromUser.UserMedia.filter(
+                                (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+                              )
+                                .slice(0, 1)
+                                .pop();
+                              return userAvatar ? userAvatar.link : null;
+                            })(),
+                            philanthropistId: transaction.fromUser.id,
+                            doneeId: transaction.toUser.id,
+                          }))
+                          : []
+                        , "transactions")
                     }
                   />
                 </div>

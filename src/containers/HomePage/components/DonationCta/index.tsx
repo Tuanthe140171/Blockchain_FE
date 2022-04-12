@@ -21,7 +21,7 @@ const DonationCta: React.FC = () => {
                 Hãy tham gia quyên góp cùng chúng tôi nhé
             </Title>
             <p className="donation-cta__desc">Trong số 3.000 gia đình mà chương trình Mỗi Ngày Một Quả Trứng (MNMQT)</p>
-            <Button content="Donate" className="donation-cta__btn" padding="25px 100px" onClick={() => {
+            <Button content="Ủng hộ" className="donation-cta__btn" padding="25px 100px" onClick={() => {
                 if (authorizeError === AuthorizeErrorType.NONE) {
                     setSelectedKey("Donee");
                     navigate("/donee");
