@@ -6,9 +6,12 @@ import TopDonation from "./components/TopDonation";
 import TopTierCharity from "./components/TopTierCharity";
 import DefaultLayout from "../../layout/DefaultLayout";
 import useFetch from "../../hooks/useFetch";
+//@ts-ignore
 import { BigNumber } from "bignumber.js";
+import { useState } from "react";
 
 const HomePage = () => { 
+    const [activatedCategory, setActivatedCategory] = useState("1");
   const { data, loading } = useFetch<any>(
     'landing-page',
     {
@@ -61,14 +64,38 @@ const HomePage = () => {
     circumstances: topTOC.BadLuckTypes.map(
       (badLuckType: any) => badLuckType.BadLuckerSituation.name
     ),
-    trustScore: topTOC.trustScore,
-    tierOfCharity: topTOC.tierCharity
+    trustScore: topTOC.trustScore || 0,
+    tierOfCharity: topTOC.tierCharity || 0
   })) : []  
 
   const categories = data ? data.slides.map((slide: any) => ({
     id: slide.id,
     title: slide.name,
-    url: "/a"
+    url: "/donee"
+  })) : []
+
+  const chosenSlide = data ? data.slides.filter((slide: any) => slide.id === activatedCategory) : undefined;
+  const users = chosenSlide ? chosenSlide[0].Users.slice(0, 4).map((user: any) => ({
+    id: user.id,
+    name: `${user.lastName || ""} ${user.name || ""}`,
+    desc: "Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với sức đối với",
+    avatar: (function () {
+      const userAvatar = user.UserMedia.filter(
+        (userMedia: any) =>
+          userMedia.type === "1" && userMedia.active === 1
+      )
+        .slice(-1)
+        .pop();
+
+      return userAvatar
+        ? userAvatar.link
+        : "/icon/bad-lucker.svg";
+    })(),
+    // circumstances: topTOC.BadLuckTypes.map(
+    //   (badLuckType: any) => badLuckType.BadLuckerSituation.name
+    // ),
+    trustScore: user.trustScore || 0,
+    tierOfCharity: user.tierCharity || 0
   })) : []
 
   const posts = data ? data.trends.map((trend: any) => ({
@@ -81,7 +108,7 @@ const HomePage = () => {
     <DefaultLayout>
       <Banner posts={posts} />
       <TopTierCharity topTierOfCharity={topTierOfCharity} />
-      <DonationCategory categories={categories} />
+      <DonationCategory users={users} categories={categories}  setActivatedCategory={setActivatedCategory} activatedCategory={activatedCategory} />
       <TopDonation donations={topPhilanthropists} />
       <DonationCta />
       {

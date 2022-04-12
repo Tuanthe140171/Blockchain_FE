@@ -70,7 +70,7 @@ const Sell: React.FC = () => {
         {
             title: "Xác minh",
             description: "",
-            component: <SellVerification paymentTxId={paymentTxId} setInputAmount={setInputAmount} setPaymentTxId={(text: any) => setPaymentTxId(text)} inputAmount={inputAmount} setCurrentStep={() => {
+            component: <SellVerification paymentTxId={paymentTxId} setInputAmount={setInputAmount} setPaymentTxId={(text: any) => setPaymentTxId(text)} inputAmount={inputAmount} setCurrentStepWhenError={() => setCurrentStep(1)} setCurrentStep={() => {
                 setCurrentStep(3)
             }} />
         },
