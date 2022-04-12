@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Button, message } from 'antd';
+import { Typography, message } from 'antd';
 import { useWeb3React } from 'web3-react-core';
-import { BigNumber } from 'bignumber.js';
 import useFetch from '../../../../hooks/useFetch';
 import { useCharityVerseContract } from '../../../../hooks/useContract';
 import AppLoading from '../../../../components/AppLoading';
 import { SupportedChainId } from '../../../../constants/chains';
 import { CHAIN_INFO } from '../../../../constants/chainInfo';
 import "./index.scss";
+import { useNavigate } from 'react-router-dom';
 
 type VerificationProps = {
+    setCurrentStepWhenError?: () => void,
     setCurrentStep: () => void,
     inputAmount: string,
     paymentTxId: string,
@@ -18,7 +19,7 @@ type VerificationProps = {
 }
 
 const SellVerification: React.FC<VerificationProps> = (props) => {
-    const { inputAmount, setCurrentStep } = props;
+    const { inputAmount, setCurrentStep, setCurrentStepWhenError } = props;
 
     const [txHash, setTxHash] = useState<undefined | string>(undefined);
     const [startIssuing, setStartIssuing] = useState<boolean | undefined>(undefined);
@@ -76,6 +77,7 @@ const SellVerification: React.FC<VerificationProps> = (props) => {
                 setTxHash(undefined);
                 setCurrentStep();
             } catch (err: any) {
+                setCurrentStepWhenError && setCurrentStepWhenError();
                 message.error(err.message, 3);
                 setStartIssuing(false);
             }

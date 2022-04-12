@@ -10,7 +10,7 @@ type TopTierCharityCardProps = {
     image: string,
     name: string,
     desc: string,
-    circumstances: string[],
+    // circumstances: string[],
     more: number,
     tierOfCharity: number,
     trustScore: number,
@@ -18,18 +18,18 @@ type TopTierCharityCardProps = {
 }
 
 const CategoryCard: React.FC<TopTierCharityCardProps> = (props: TopTierCharityCardProps) => {
-    const { image, circumstances, name, desc, tierOfCharity, trustScore, style = {} } = props;
+    const { image, name, desc, tierOfCharity, trustScore, style = {} } = props;
     return (
         <Card className="category-card" style={style}>
             <Image src={image} preview={false} />
             <div className="category-card__body">
-                <div className="category-card__circumstances">
+                {/* <div className="category-card__circumstances">
                     {
                         circumstances.map(circumstance => (
                             <div className="category-card__circumstance" key={circumstance}>{circumstance}</div>
                         ))
                     }
-                </div>
+                </div> */}
                 <Title level={3} className="category-card__name">{name}</Title>
                 <p className="category-card__desc">{desc}</p>
                 <div className="category-card__metrics">
