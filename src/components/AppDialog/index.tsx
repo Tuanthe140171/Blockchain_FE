@@ -92,10 +92,13 @@ const AppDialog: React.FC<AppDialogProps> = (props) => {
     <Modal
       visible
       centered
-      closable={false}
+      closable={true}
       footer={null}
       bodyStyle={{ height: "440px" }}
       width={720}
+      maskClosable={true}
+      mask={true}
+      keyboard
     >
       <div className="app-dialog">
         {renderIcon()}

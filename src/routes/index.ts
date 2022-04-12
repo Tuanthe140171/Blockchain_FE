@@ -14,8 +14,11 @@ const VotingPage = lazy(() => import("../containers/VotingPage"));
 const DoneePage = lazy(() => import("../containers/DoneePage"));
 const ExchangeMoneyPage = lazy(() => import("../containers/ExchangeMoney"));
 const ContactUs = lazy(() => import("../containers/ContactUs"));
-const TokenTransferManagement = lazy(() => import("../containers/TokenTransferManagement"));
+const TokenTransferManagement = lazy(
+  () => import("../containers/TokenTransferManagement")
+);
 const Claim = lazy(() => import("../containers/Claim"));
+const Notification = lazy(() => import("../containers/Notification"));
 
 const routes: CRVRoute[] = [
   {
@@ -66,6 +69,16 @@ const routes: CRVRoute[] = [
   {
     path: "/profile/edit/",
     component: ProfileEditPage,
+    exact: true,
+  },
+  {
+    path: "/notification/",
+    component: Notification,
+    exact: true,
+  },
+  {
+    path: "/notification/:id",
+    component: Notification,
     exact: true,
   },
 ];

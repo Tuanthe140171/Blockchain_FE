@@ -1,6 +1,9 @@
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { Button } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import useFetch from "../../../hooks/useFetch";
 import ActivityNoti from "./ActivityNoti";
 import FollowNoti from "./FollowNoti";
 import "./index.scss";
@@ -17,101 +20,109 @@ const ModalNoti: React.FC<
   | undefined
 > = (props) => {
   const { notifications } = props;
-  console.log(notifications);
-  // const votingData = [
-  //   {
-  //     id: 1,
-  //     type: 1,
-  //     message:
-  //       "Hệ thống đang có 13 người cần được từ thiện chờ bạn xác minh thông tin của họ.",
-  //     time: "",
-  //     isRead: true,
-  //   },
-  //   {
-  //     id: 2,
-  //     type: 2,
-  //     message: "Nguyễn Lâm Thảo cần xác minh cho Trẻ em mồ côi và Người nghèo",
-  //     time: "Today at 9:42 AM",
-  //     isRead: true,
-  //   },
-  //   {
-  //     id: 1,
-  //     type: 2,
-  //     message:
-  //       "Hoàng Minh Tuấn Anh cần xác minh cho Trẻ em mồ côi và Người nghèo",
-  //     time: "Yesterday at 11:42 PM",
-  //     isRead: false,
-  //   },
-  // ];
+  const defaultNotification = useSelector(
+    (state: any) => state.userLayout.defaultNotification
+  );
+  const [propsData, setPropsData] = useState<any>(null);
+  const navigate = useNavigate();
 
-  // const followerData = [
-  //   {
-  //     id: 1,
-  //     message: "Hoàng Minh Tuấn Anh đã theo dõi bạn",
-  //     time: "Last Wednesday at 11:15 AM",
-  //     isRead: true,
-  //   },
-  // ];
-
-  // const activityData = [
-  //   {
-  //     id: 1,
-  //     message: "Dennis Nedry đã đăng tải dòng trạng thái trên tường. ",
-  //     description: `“Oh, I finished de-bugging the phones, but the system's compiling for eighteen minutes, or twenty.  `,
-  //     time: "Yesterday at 5:42 PM",
-  //     isRead: false,
-  //   },
-  // ];
+  useEffect(() => {
+    const arrFollow = defaultNotification.followNoti.map((noti: any) => ({
+      content: noti.content,
+      name: noti.name,
+      avatar: noti.avatar,
+      external: {
+        userId: JSON.parse(noti.external)?.userId,
+      },
+      type: noti.type,
+      createDate: noti.createDate,
+    }));
+    const arrActivity = defaultNotification.postNoti.map((noti: any) => ({
+      content: noti.content,
+      name: noti.name,
+      avatar: noti.avatar,
+      external: {
+        userId: JSON.parse(noti.external)?.postId,
+      },
+      type: noti.type,
+      createDate: noti.createDate,
+    }));
+    const arrVoting = defaultNotification.registerNoti.map((noti: any) => ({
+      content: noti.content,
+      name: noti.name,
+      avatar: noti.avatar,
+      external: {
+        userId: JSON.parse(noti.external)?.userId,
+      },
+      type: noti.type,
+      createDate: noti.createDate,
+    }));
+    const combineArray = arrActivity.concat(arrFollow, arrVoting);
+    setPropsData(combineArray.concat(notifications));
+    console.log(combineArray);
+  }, [notifications]);
 
   const renderVoting = () => {
-    return notifications.map((data) => {
-      // return data.type === 1 ? (
-      //   <VotingNoti data={data} />
-      // ) : (
-      //   <VotingConfirm data={data} />
-      // );
-      return data.type === 1 && <VotingConfirm data={data} />;
+    return propsData?.map((data: any) => {
+      return (
+        data.type === 1 && (
+          <VotingConfirm data={data} key={data.avatar + data.createDate} />
+        )
+      );
     });
   };
 
   const renderFollower = () => {
-    return notifications.map((data) => {
-      return data.type === 2 && <FollowNoti data={data} />;
+    return propsData?.map((data: any) => {
+      return (
+        data.type === 2 && (
+          <FollowNoti data={data} key={data.avatar + data.createDate} />
+        )
+      );
     });
   };
 
   const renderActivity = () => {
-    return notifications.map((data) => {
-      return data.type === 3 && <ActivityNoti data={data} />;
+    return propsData?.map((data: any) => {
+      return (
+        data.type === 3 && (
+          <ActivityNoti data={data} key={data.avatar + data.createDate} />
+        )
+      );
     });
   };
 
   return (
     <div className="modal-noti">
       <div className="modal-noti__header">
-        <div className="modal-noti__header__title">Notifications</div>
-        <Button type="ghost" style={{ fontSize: "15px", color: "#B3CDFB" }}>
-          Mark all as read <CheckCircleOutlined />
-        </Button>
+        <div className="modal-noti__header__title">Thông báo</div>
       </div>
       <div className="modal-noti__wrapper">
         <div className="modal-noti__wrapper__header">
-          <div className="modal-noti__wrapper__header__title">Voting</div>
-          <Button type="ghost">See all</Button>
+          <div className="modal-noti__wrapper__header__title">Bỏ phiếu</div>
+          <Button type="ghost" onClick={() => navigate("/notification/1")}>
+            Xem tất cả
+          </Button>
         </div>
         {renderVoting()}
       </div>
       <div className="modal-noti__wrapper">
         <div className="modal-noti__wrapper__header">
-          <div className="modal-noti__wrapper__header__title">Followers</div>
-          <Button type="ghost">See all</Button>
+          <div className="modal-noti__wrapper__header__title">
+            Người theo dõi
+          </div>
+          <Button type="ghost" onClick={() => navigate("/notification/2")}>
+            Xem tất cả
+          </Button>
         </div>
         {renderFollower()}
       </div>
       <div className="modal-noti__wrapper">
         <div className="modal-noti__wrapper__header">
-          <div className="modal-noti__wrapper__header__title">Activities</div>
-          <Button type="ghost">See all</Button>
+          <div className="modal-noti__wrapper__header__title">Hoạt động</div>
+          <Button type="ghost" onClick={() => navigate("/notification/3")}>
+            Xem tất cả
+          </Button>
         </div>
         {renderActivity()}
       </div>

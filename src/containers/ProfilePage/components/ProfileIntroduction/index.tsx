@@ -217,14 +217,16 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
         </div>
         <div className="profile-intro__desc">
           <div className="intro-desc">
-            <p className="intro-desc__title">Giới thiệu</p>
+            <div className="intro-desc__group">
+              <p className="intro-desc__title">Giới thiệu</p>
+              <Button onClick={() => setCanWrite(!canWrite)} className="intro-desc__button">
+                {canWrite ? "Lưu" : "Sửa"}
+              </Button>
+            </div>
             {canWrite ? (
-              <Input onChange={(e) => setDescription(e.target.value)} />
+              <Input onChange={(e) => setDescription(e.target.value)} className="intro-desc__input"/>
             ) : (
-              <div>
-                <p className="intro-desc__txt">{description}</p>
-                <Button>click</Button>
-              </div>
+              <p className="intro-desc__txt">{description}</p>
             )}
             <div className="intro-desc__divider"></div>
             <ul className="intro-desc__extras">
