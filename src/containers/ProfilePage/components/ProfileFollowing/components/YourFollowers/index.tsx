@@ -1,7 +1,6 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import useFetch from "../../../../../../hooks/useFetch";
-
 import YourFollowerCard from "../YourFollowerCard";
 import "./index.scss";
 
@@ -14,6 +13,7 @@ const YourFollowers: React.FC = () => {
     { method: "GET" },
     (e) => {}
   );
+  const navigate = useNavigate();
 
   const getUserName = (nameData: any, lastNameData: any) => {
     let name = nameData;
@@ -34,14 +34,22 @@ const YourFollowers: React.FC = () => {
     <div className="your-followers">
       <header className="your-followers__header">
         <p className="your-followers__header-title">Người theo dõi bạn</p>
-        <span className="your-followers__header-see">Xem thêm</span>
+        <span
+          className="your-followers__header-see"
+          onClick={() => navigate("/follow/2")}
+        >
+          Xem thêm
+        </span>
       </header>
       <div className="your-followers__cards">
         {followerData?.rows.map((follower: any, index: number) => (
           <React.Fragment key={follower.userIdFrom + index}>
             <YourFollowerCard
-              id={follower.userIdFrom} 
-              name={getUserName(follower?.follower?.name, follower?.follower?.lastName)}
+              id={follower.userIdFrom}
+              name={getUserName(
+                follower?.follower?.name,
+                follower?.follower?.lastName
+              )}
               status={follower.status}
               avatar={
                 follower?.follower?.UserMedia?.find(

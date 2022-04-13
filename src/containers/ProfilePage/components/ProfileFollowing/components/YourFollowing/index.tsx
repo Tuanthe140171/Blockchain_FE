@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
-import useFetch from "../../../../../../hooks/useFetch";
+import { useNavigate } from "react-router-dom";
 import { getUserFollowingData } from "../../../../../../stores/action/user-post.action";
 import YourFollowingCard from "../YourFollowingCard";
+import useFetch from "../../../../../../hooks/useFetch";
 import "./index.scss";
 
 const YourFollowing: React.FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { data: followingData } = useFetch<any>(
     "users/get-following-people",
@@ -40,14 +42,22 @@ const YourFollowing: React.FC = () => {
     <div className="your-following">
       <header className="your-following__header">
         <p className="your-following__header-title">Bạn đang theo dõi</p>
-        <span className="your-following__header-see">Xem thêm</span>
+        <span
+          className="your-following__header-see"
+          onClick={() => navigate("/follow/1")}
+        >
+          Xem thêm
+        </span>
       </header>
       <div className="your-following__cards">
         {followingData?.rows.map((following: any, index: number) => (
           <React.Fragment key={following.userIdTo + index}>
             <YourFollowingCard
               id={following.userIdTo}
-              name={getUserName(following?.following?.name, following?.following?.lastName)}
+              name={getUserName(
+                following?.following?.name,
+                following?.following?.lastName
+              )}
               status={following.status}
               avatar={
                 following?.following?.UserMedia?.find(

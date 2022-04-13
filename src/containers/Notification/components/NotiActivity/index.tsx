@@ -18,7 +18,7 @@ const NotificationActivity = () => {
     [],
     {},
     (e) => {
-      setData(e.data.postNoti);
+      setData(e.data.rows);
     }
   );
 
@@ -28,7 +28,10 @@ const NotificationActivity = () => {
       <div className="notification-activity__body">
         {data?.map((activity: any) => {
           return (
-            <div className={"notification-activity-confirm"} key={activity.avatar}>
+            <div
+              className={"notification-activity-confirm"}
+              key={activity.avatar}
+            >
               <div className="notification-activity-confirm__top">
                 <div className="notification-activity-confirm__top__ava">
                   <Avatar

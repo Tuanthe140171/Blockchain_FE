@@ -19,6 +19,7 @@ const TokenTransferManagement = lazy(
 );
 const Claim = lazy(() => import("../containers/Claim"));
 const Notification = lazy(() => import("../containers/Notification"));
+const Follow = lazy(() => import("../containers/Follow"));
 
 const routes: CRVRoute[] = [
   {
@@ -79,6 +80,16 @@ const routes: CRVRoute[] = [
   {
     path: "/notification/:id",
     component: Notification,
+    exact: true,
+  },
+  {
+    path: "/follow/",
+    component: Follow,
+    exact: true,
+  },
+  {
+    path: "/follow/:id",
+    component: Follow,
     exact: true,
   },
 ];

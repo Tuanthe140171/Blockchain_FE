@@ -24,12 +24,12 @@ const ModalProfileBody = () => {
           height={21}
         />
         <div className="modal-profile__body__line__text">
-          Personal Information
+          Thông tin cá nhân
         </div>
       </div>
       <div className="modal-profile__body__line">
         <WalletOutlined className="modal-profile__body__line__icon" />
-        <div className="modal-profile__body__line__text">Payment Method</div>
+        <div className="modal-profile__body__line__text">Phương thức thanh toán</div>
       </div>
     </div>
   );
