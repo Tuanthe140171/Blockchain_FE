@@ -94,6 +94,7 @@ const Sell: React.FC = () => {
           setInputAmount={setInputAmount}
           setPaymentTxId={(text: any) => setPaymentTxId(text)}
           inputAmount={inputAmount}
+          setCurrentStepWhenError={() => setCurrentStep(1)}
           setCurrentStep={() => {
             setCurrentStep(3);
           }}

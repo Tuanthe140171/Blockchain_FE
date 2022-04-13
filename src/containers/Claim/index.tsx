@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { useSelector } from "react-redux";
-import { Input, Typography, Image, message } from "antd";
+import { Input, Typography, Image, message, Tooltip } from "antd";
 import Button from "../../components/Button";
 import BigNumber from "bignumber.js";
 import useFetch from "../../hooks/useFetch";
@@ -227,21 +227,34 @@ const Claim: React.FC = () => {
             data.rows.map((claimData: any) => (
               <div className="claim__block" key={claimData.id}>
                 <div className="claim__divider"></div>
-                <p className="claim__line">
-                  Ngày:{" "}
-                  <strong>{moment(claimData.date).format("DD-MM-YYYY")}</strong>
-                </p>
-                <p className="claim__line">
-                  Số lượng:{" "}
-                  <strong className="claim__amount">
-                    <span>
-                      {new BigNumber(claimData.amount).div(1e18).toFixed(3)}
-                    </span>
-                    <div className="claim__icon">
-                      <Image src="/icon/ethereum_1.svg" preview={false} />
-                    </div>
-                  </strong>
-                </p>
+                <div className="claim__wrapper">
+                  <div className="claim__left">
+                    <p className="claim__line">
+                      Ngày:{" "}
+                      <strong>
+                        {moment(claimData.date).format("DD-MM-YYYY")}
+                      </strong>
+                    </p>
+                    <p className="claim__line">
+                      Số lượng:{" "}
+                      <strong className="claim__amount">
+                        <span>
+                          {new BigNumber(claimData.amount).div(1e18).toFixed(3)}
+                        </span>
+                        <div className="claim__icon">
+                          <Image src="/icon/ethereum_1.svg" preview={false} />
+                        </div>
+                      </strong>
+                    </p>
+                  </div>
+                  <Tooltip title="Đã lĩnh">
+                    <Image
+                      className="claim__claimed"
+                      src="/icon/reward.svg"
+                      preview={false}
+                    />
+                  </Tooltip>
+                </div>
                 <div className="claim__divider"></div>
               </div>
             ))}

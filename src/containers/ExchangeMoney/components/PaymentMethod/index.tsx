@@ -79,7 +79,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
             <div className="payment__btns">
                 <Button disabled={loading} className="payment__btn" onClick={props.setCurrentStep}>Trở lại</Button>
                 {
-                    !isBuy && <Button disabled={loading} className="payment__btn payment__next" onClick={onNext}>Tiếp tục</Button>
+                    !isBuy && <Button disabled={loading || !accountNumber} className="payment__btn payment__next" onClick={onNext}>Tiếp tục</Button>
 
                 }
             </div>

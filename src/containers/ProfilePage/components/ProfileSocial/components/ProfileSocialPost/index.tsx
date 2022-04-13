@@ -150,7 +150,7 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
       )}
       {/* <div className="profile-post__metrics">
         <div className="metrics__likes">
-          <Image src="/icon/1.svg" preview={false} />
+          <Image src="/icon/1.svg" preview={false} /> 
           <Image src="/icon/2.svg" preview={false} />
           <Image src="/icon/3.svg" preview={false} />
           <span>{likeCount}</span>

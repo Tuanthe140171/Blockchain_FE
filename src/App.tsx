@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 //@ts-ignore
 import Lottie from 'react-lottie';
@@ -7,9 +7,8 @@ import routes, { CRVRoute } from "./routes";
 import UserLayout from "./layout/UserLayout";
 import Web3ReactManager from "./components/Web3ReactManager";
 import AppPrivateRoute from "./components/AppPrivateRoute";
+import HomePage from './containers/HomePage';
 import "./index.scss";
-
-const HomePage = lazy(() => import("./containers/HomePage"));
 
 const App = () => {
   const renderContainers = (routes: CRVRoute[]) => {
