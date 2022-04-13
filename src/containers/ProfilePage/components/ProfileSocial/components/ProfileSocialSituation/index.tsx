@@ -17,6 +17,14 @@ const ProfileSocialSituation = () => {
   const [yourSituationCfList, setYourSituationCfList] = useState([]);
   const navigate = useNavigate();
 
+  // isVoted: (function () {
+  //   return userData
+  //     ? donee.UserVotes.map(
+  //         (userVote: any) => userVote.userIdFrom
+  //       ).indexOf(userData.id) >= 0
+  //     : true;
+  // })(),
+
   useEffect(() => {
     if (userData) {
       const listSituation = userData.BadLuckTypes.map((blk: any) => {
@@ -37,24 +45,40 @@ const ProfileSocialSituation = () => {
   }
 
   useEffect(() => {
-    if (userPostData) {
-      // const listSituation = userPostData.BadLuckTypes;
-      // listSituation.sort(compare);
-      // setYourPageSituationList(listSituation);
-      const listConfirmed = userPostData.BadLuckTypes.filter(
-        (situation: any) => situation.trustScore > 50
-      ).map((data: any) => {
-        return badluckerType.find((type: any) => type.id === data.situationId);
+    if (userPostData && userData) {
+      const isVoted = userPostData
+        ? userPostData.UserVotes.map(
+          (userVote: any) => userVote.userIdFrom
+        ).indexOf(userData.id) >= 0
+        : true;
+
+      console.log(userPostData.BadLuckTypes);
+
+      const listConfirmed = userPostData.BadLuckTypes.map((data: any) => {
+        return data.UserSituationConfirms.find((type: any) => type.userId === userData.id);
       });
+
       setYourSituationCfList(listConfirmed);
 
       const listNeedConfirm = userPostData.BadLuckTypes.filter(
-        (situation: any) => situation.trustScore <= 50
+        (situation: any) => {
+          return !(
+            isVoted
+              ? true
+              : userData
+                ? situation.UserSituationConfirms.map(
+                  (userVote: any) => userVote.userId
+                ).indexOf(userData.id) >= 0
+                : true
+          )
+        }
       );
+
+      console.log(listNeedConfirm);
 
       setYourSituationList(listNeedConfirm);
     }
-  }, [userPostData]);
+  }, [userPostData, userData]);
 
   const myPageSituation = () => {
     return (
@@ -84,7 +108,13 @@ const ProfileSocialSituation = () => {
     );
   };
 
+
   const yourPageSituation = () => {
+    const isVoted = userPostData
+      ? userPostData.UserVotes.map(
+        (userVote: any) => userVote.userIdFrom
+      ).indexOf(userData.id) >= 0
+      : true;
     return (
       <ul className="profile-social-situation__details">
         {yourSituationCfList.map((situation: any, index: number) => {
@@ -111,14 +141,26 @@ const ProfileSocialSituation = () => {
             </li>
           );
         })}
-        <p className="profile-social-situation__text">
-          Hoàn cảnh cần xác nhận ({yourSituationList.length || 0})
-        </p>
+        {
+          yourSituationList && yourSituationList.length > 0 && <p className="profile-social-situation__text">
+            Hoàn cảnh cần xác nhận ({yourSituationList.length || 0})
+          </p>
+        }
 
         {yourSituationList.map((userSituation: any) => (
           <ProfileSituationVoting
             data={userSituation}
             images={userSituation.BadLuckMedia.map((media: any) => media.link)}
+            isVoted={
+              isVoted
+                ? true
+                : userData
+                  ? userSituation.UserSituationConfirms.map(
+                    (userVote: any) => userVote.userId
+                  ).indexOf(userData.id) >= 0
+                  : true
+            }
+            id={userSituation.userId}
           />
         ))}
       </ul>

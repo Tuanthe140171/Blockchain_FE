@@ -117,112 +117,112 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
               Xác nhận
             </Button>
           </header>
-          <div className="profile-personal__header">
+          <div className="profile-personal-v2__header">
             <p className="personal-header__title">Thông tin cá nhân</p>
           </div>
-          <div className="profile-personal-wrapper">
-            <div className="profile-personal__view">
+          <div className="profile-personal-wrapper-v2">
+            <div className="profile-personal-v2__view">
               <Avatar
                 src={selectedUser?.avatar}
-                className="profile-personal__avatar"
+                className="profile-personal-v2__avatar"
               />
               <Button
-                className="profile-personal__btn-link"
+                className="profile-personal-v2__btn-link"
                 onClick={() => navigate(`/profile/${selectedUser?.userId}`)}
               >
                 Thông tin cá nhân
               </Button>
             </div>
-            <div className="profile-personal">
-              <ul className="profile-personal__details">
-                <li className="profile-personal__detail">
-                  <div className="profile-personal__detail-label">
+            <div className="profile-personal-v2">
+              <ul className="profile-personal-v2__details">
+                <li className="profile-personal-v2__detail">
+                  <div className="profile-personal-v2__detail-label">
                     <Image
                       src="/icon/user-admin_3.svg"
-                      className="profile-personal__detail-icon"
+                      className="profile-personal-v2__detail-icon"
                       preview={false}
                     />
                     <span>Họ và Tên</span>
                   </div>
-                  <span className="profile-personal__detail-content">
+                  <span className="profile-personal-v2__detail-content">
                     {selectedUser?.donee}
                   </span>
                 </li>
-                <li className="profile-personal__detail">
-                  <div className="profile-personal__detail-label">
+                <li className="profile-personal-v2__detail">
+                  <div className="profile-personal-v2__detail-label">
                     <Image
                       src="/icon/calendar.svg"
-                      className="profile-personal__detail-icon"
+                      className="profile-personal-v2__detail-icon"
                       preview={false}
                     />
                     <span>Ngày Sinh</span>
                   </div>
-                  <span className="profile-personal__detail-content">
+                  <span className="profile-personal-v2__detail-content">
                     {selectedUser?.dob}
                   </span>
                 </li>
-                <li className="profile-personal__detail">
-                  <div className="profile-personal__detail-label">
+                <li className="profile-personal-v2__detail">
+                  <div className="profile-personal-v2__detail-label">
                     <Image
                       src="/icon/location.svg"
-                      className="profile-personal__detail-icon"
+                      className="profile-personal-v2__detail-icon"
                       preview={false}
                     />
                     <span>Trú quán</span>
                   </div>
-                  <span className="profile-personal__detail-content">
+                  <span className="profile-personal-v2__detail-content">
                     {selectedUser?.address}
                   </span>
                 </li>
-                <li className="profile-personal__detail">
-                  <div className="profile-personal__detail-label">
+                <li className="profile-personal-v2__detail">
+                  <div className="profile-personal-v2__detail-label">
                     <Image
                       src="/icon/home_1.svg"
-                      className="profile-personal__detail-icon"
+                      className="profile-personal-v2__detail-icon"
                       preview={false}
                     />
                     <span>Nguyên quán</span>
                   </div>
-                  <span className="profile-personal__detail-content">
+                  <span className="profile-personal-v2__detail-content">
                     {selectedUser?.address}
                   </span>
                 </li>
-                <li className="profile-personal__detail">
-                  <div className="profile-personal__detail-label">
+                <li className="profile-personal-v2__detail">
+                  <div className="profile-personal-v2__detail-label">
                     <Image
                       src="/icon/id-management.svg"
-                      className="profile-personal__detail-icon"
+                      className="profile-personal-v2__detail-icon"
                       preview={false}
                     />
                     <span>Số CMND</span>
                   </div>
-                  <span className="profile-personal__detail-content">
+                  <span className="profile-personal-v2__detail-content">
                     {selectedUser?.id}
                   </span>
                 </li>
-                <li className="profile-personal__detail">
-                  <div className="profile-personal__detail-label">
+                <li className="profile-personal-v2__detail">
+                  <div className="profile-personal-v2__detail-label">
                     <Image
                       src="/icon/id-management.svg"
-                      className="profile-personal__detail-icon"
+                      className="profile-personal-v2__detail-icon"
                       preview={false}
                     />
                     <span>Ngày cấp CMND</span>
                   </div>
-                  <span className="profile-personal__detail-content">
+                  <span className="profile-personal-v2__detail-content">
                     {moment(selectedUser?.identityDate).format("DD-MM-yy")}
                   </span>
                 </li>
-                <li className="profile-personal__detail">
-                  <div className="profile-personal__detail-label">
+                <li className="profile-personal-v2__detail">
+                  <div className="profile-personal-v2__detail-label">
                     <Image
                       src="/icon/id-management.svg"
-                      className="profile-personal__detail-icon"
+                      className="profile-personal-v2__detail-icon"
                       preview={false}
                     />
                     <span>Nơi cấp CMND</span>
                   </div>
-                  <span className="profile-personal__detail-content">
+                  <span className="profile-personal-v2__detail-content">
                     {selectedUser?.identityPlace}
                   </span>
                 </li>
