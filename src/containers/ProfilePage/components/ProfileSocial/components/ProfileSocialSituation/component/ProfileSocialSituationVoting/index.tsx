@@ -2,10 +2,11 @@ import { Button, Image, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { PhotoSlider } from "react-photo-view";
 import "react-photo-view/dist/react-photo-view.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import AppDialog from "../../../../../../../../components/AppDialog";
 import AppLoading from "../../../../../../../../components/AppLoading";
 import useFetch from "../../../../../../../../hooks/useFetch";
+import { getUserPostData } from "../../../../../../../../stores/action/user-post.action";
 import "./index.scss";
 
 type VotingSituationViewProps = {
@@ -14,18 +15,21 @@ type VotingSituationViewProps = {
   // setReloadVotingData?: React.Dispatch<
   //   React.SetStateAction<boolean | undefined>
   // >;
-  // isVoted: boolean;
+  isVoted: boolean;
+  id: string;
 };
 
 const ProfileSituationVoting: React.FC<VotingSituationViewProps> = (props) => {
   const {
-    // isVoted,
+    isVoted,
     data,
     images,
-    // setReloadVotingData,
+    id
   } = props;
+  const dispatch = useDispatch();
   const { badluckerType } = useSelector((state: any) => state.userLayout);
   const { userPostData } = useSelector((state: any) => state.userPostData);
+  const [reloadVotingData, setReloadVotingData] = useState<boolean | undefined>(undefined);
   const [viewVerification, setViewVerification] = useState<boolean>(false);
   const [startVotingSituation, setStartVotingSituation] = useState<
     boolean | undefined
@@ -66,17 +70,29 @@ const ProfileSituationVoting: React.FC<VotingSituationViewProps> = (props) => {
         } thông tin ${title} của ${userPostData.name}`,
         4
       );
-      // setReloadVotingData(true);
+      setReloadVotingData(true);
     },
     () => {
       setStartVotingSituation(undefined);
-      // setReloadVotingData(true);
+      setReloadVotingData(true);
     }
   );
 
   useEffect(() => {
     error && message.error(error.message, 4);
   }, [error]);
+
+  const { data: userWithParam } = useFetch<any>(
+    `users/get-user-by-id-with-params/${id}`,
+    {},
+    false,
+    [reloadVotingData],
+    { method: "GET" },
+    (e) => {
+      const action = getUserPostData(e.data);
+      dispatch(action);
+    }
+  );
 
   return (
     <div className="profile-situation-voting">
@@ -86,10 +102,9 @@ const ProfileSituationVoting: React.FC<VotingSituationViewProps> = (props) => {
           <Button
             className="profile-situation-voting__cta profile-situation-voting__confirm"
             onClick={() => setOpenDialog(true)}
-            // disabled={isVoted}
+            disabled={isVoted}
           >
-            {/* {isVoted ? "Đã xác nhận" : "Xác nhận"} */}
-            Button
+            {isVoted ? "Đã xác nhận" : "Xác nhận"}
           </Button>
         </div>
       </header>
