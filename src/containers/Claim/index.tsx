@@ -204,13 +204,7 @@ const Claim: React.FC = () => {
                 <div className="claim__content">
                     <div className="claim__main">
                         <p className="claim__line">
-                            Tổng thưởng:
                             <strong className="claim__amount">
-                                <span>
-                                    {new BigNumber(userClaimData?.totalLeftReward || 0)
-                                        .div(1e18)
-                                        .toFixed()}
-                                </span>
                                 <div className="claim__icon">
                                     <Image src="/icon/ethereum_1.svg" preview={false} />
                                 </div>
@@ -276,56 +270,7 @@ const Claim: React.FC = () => {
                                 </div>
                             </strong>
                         </p>
-                        <Button
-                            fontSize="17px"
-                            width="150px"
-                            maxWidth="100%"
-                            content="Lĩnh thưởng"
-                            bgColor="#F0CF27"
-                            className="claim__cta"
-                            padding="20px 20px"
-                            onClick={() => setStartGettingSignature(true)}
-                            disabled={
-                                new BigNumber(userClaimData?.totalLeftReward).eq(0) ||
-                                gettingSignatureLoading
-                            }
-                        />
                     </div>
-                    {data &&
-                        data.rows.map((claimData: any) => (
-                            <div className="claim__block" key={claimData.id}>
-                                <div className="claim__divider"></div>
-                                <div className="claim__wrapper">
-                                    <div className="claim__left">
-                                        <p className="claim__line">
-                                            Ngày:{" "}
-                                            <strong>
-                                                {moment(claimData.date).format("DD-MM-YYYY")}
-                                            </strong>
-                                        </p>
-                                        <p className="claim__line">
-                                            Số lượng:{" "}
-                                            <strong className="claim__amount">
-                                                <span>
-                                                    {new BigNumber(claimData.amount).div(1e18).toFixed(3)}
-                                                </span>
-                                                <div className="claim__icon">
-                                                    <Image src="/icon/ethereum_1.svg" preview={false} />
-                                                </div>
-                                            </strong>
-                                        </p>
-                                    </div>
-                                    <Tooltip title="Đã lĩnh">
-                                        <Image
-                                            className="claim__claimed"
-                                            src="/icon/reward.svg"
-                                            preview={false}
-                                        />
-                                    </Tooltip>
-                                </div>
-                                <div className="claim__divider"></div>
-                            </div>
-                        ))}
                 </div>
                 <div className="claim__pagination-wrapper">
                     <AppPagination
@@ -336,7 +281,7 @@ const Claim: React.FC = () => {
                         onChange={(page: number) => setCurrentPage(page)}
                     />
                 </div>
-                {(loading || startClaiming || gettingSignatureLoading) && (
+                {(loading || startClaiming || gettingSignatureLoading || rewardRefreshLoading) && (
                     <AppLoading
                         showContent={txHash !== undefined}
                         loadingContent={
