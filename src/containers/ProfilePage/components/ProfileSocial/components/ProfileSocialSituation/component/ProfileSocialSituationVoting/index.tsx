@@ -26,6 +26,9 @@ const ProfileSituationVoting: React.FC<VotingSituationViewProps> = (props) => {
     images,
     id
   } = props;
+  const { userData } = useSelector(
+    (state: any) => state.userLayout
+  );
   const dispatch = useDispatch();
   const { badluckerType } = useSelector((state: any) => state.userLayout);
   const { userPostData } = useSelector((state: any) => state.userPostData);
@@ -39,9 +42,8 @@ const ProfileSituationVoting: React.FC<VotingSituationViewProps> = (props) => {
   const title = badluckerType.find(
     (type: any) => type.id === data.situationId
   ).name;
-  const verificationType = `Giấy chứng nhận ${
-    badluckerType.find((type: any) => type.id === data.situationId).message
-  }`;
+  const verificationType = `Giấy chứng nhận ${badluckerType.find((type: any) => type.id === data.situationId).message
+    }`;
 
   const {
     data: situationVoting,
@@ -65,8 +67,7 @@ const ProfileSituationVoting: React.FC<VotingSituationViewProps> = (props) => {
     () => {
       setStartVotingSituation(undefined);
       message.success(
-        `Bạn đã ${
-          voteType === 1 ? "xác nhận" : "không xác nhận"
+        `Bạn đã ${voteType === 1 ? "xác nhận" : "không xác nhận"
         } thông tin ${title} của ${userPostData.name}`,
         4
       );
@@ -99,13 +100,15 @@ const ProfileSituationVoting: React.FC<VotingSituationViewProps> = (props) => {
       <header className="profile-situation-voting__header">
         <span className="profile-situation-voting__title">{title}</span>
         <div className="profile-situation-voting__ctas">
-          <Button
-            className="profile-situation-voting__cta profile-situation-voting__confirm"
-            onClick={() => setOpenDialog(true)}
-            disabled={isVoted}
-          >
-            {isVoted ? "Đã xác nhận" : "Xác nhận"}
-          </Button>
+          {
+            userData.id !== id && (<Button
+              className="profile-situation-voting__cta profile-situation-voting__confirm"
+              onClick={() => setOpenDialog(true)}
+              disabled={isVoted}
+            >
+              {isVoted ? "Đã xác nhận" : "Xác nhận"}
+            </Button>)
+          }
         </div>
       </header>
       <div className="profile-situation-voting__verification">

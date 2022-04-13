@@ -5,8 +5,10 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "./index.scss";
 import ProfileSituationVoting from "./component/ProfileSocialSituationVoting";
+import { PhotoSlider } from "react-photo-view";
 
 const ProfileSocialSituation = () => {
+  const [viewVerification, setViewVerification] = useState<boolean>(false);
   const { id } = useParams();
   const { userData, badluckerType } = useSelector(
     (state: any) => state.userLayout
@@ -27,7 +29,7 @@ const ProfileSocialSituation = () => {
 
   useEffect(() => {
     if (userData) {
-      const listSituation = userData.BadLuckTypes.map((blk: any) => {
+      const listSituation = userData.BadLuckTypes.filter((blk: any) => {
         return badluckerType.find((type: any) => type.id === blk.situationId);
       });
       setMyPageSituationList(listSituation);
@@ -52,9 +54,7 @@ const ProfileSocialSituation = () => {
         ).indexOf(userData.id) >= 0
         : true;
 
-      console.log(userPostData.BadLuckTypes);
-
-      const listConfirmed = userPostData.BadLuckTypes.map((data: any) => {
+      const listConfirmed = userPostData.BadLuckTypes.filter((data: any) => {
         return data.UserSituationConfirms.find((type: any) => type.userId === userData.id);
       });
 
@@ -74,8 +74,6 @@ const ProfileSocialSituation = () => {
         }
       );
 
-      console.log(listNeedConfirm);
-
       setYourSituationList(listNeedConfirm);
     }
   }, [userPostData, userData]);
@@ -84,24 +82,32 @@ const ProfileSocialSituation = () => {
     return (
       <ul className="profile-social-situation__details">
         {myPageSituationList.map((situation: any, index: number) => {
+          console.log(situation);
           return (
-            <li className="profile-social-situation__detail" key={situation}>
-              <div className="profile-social-situation__detail-label">
-                <Image
-                  src="/icon/identification.svg"
-                  className="profile-social-situation__detail-icon"
-                  preview={false}
+            <ProfileSituationVoting
+                data={situation}
+                images={situation.BadLuckMedia.map((media: any) => media.link)}
+                isVoted={true}
+                id={situation.userId}
+                key={situation.id}
                 />
-                <span>Hoàn Cảnh {index + 1}</span>
-              </div>
-              <div className="profile-social-situation__detail-content">
-                <span>{situation.name}</span>
-                <div className="profile-social-situation__detail-view-more">
-                  <span>Giấy chứng nhận {situation.message} có công chứng</span>
-                  <Link to="/">View</Link>
-                </div>
-              </div>
-            </li>
+            // <li className="profile-social-situation__detail" key={situation}>
+            //   <div className="profile-social-situation__detail-label">
+            //     <Image
+            //       src="/icon/identification.svg"
+            //       className="profile-social-situation__detail-icon"
+            //       preview={false}
+            //     />
+            //     <span>Hoàn Cảnh {index + 1}</span>
+            //   </div>
+            //   <div className="profile-social-situation__detail-content">
+            //     <span>{situation.name}</span>
+            //     <div className="profile-social-situation__detail-view-more">
+            //       <span>Giấy chứng nhận {situation.message} có công chứng</span>
+            //       <Link to="/">Chi tiết</Link>
+            //     </div>
+            //   </div>
+            // </li>
           );
         })}
       </ul>
@@ -118,27 +124,28 @@ const ProfileSocialSituation = () => {
     return (
       <ul className="profile-social-situation__details">
         {yourSituationCfList.map((situation: any, index: number) => {
+          console.log(situation);
           return (
-            <li
-              className="profile-social-situation__detail"
-              key={situation.trustScore + index}
-            >
-              <div className="profile-social-situation__detail-label">
-                <Image
-                  src="/icon/identification.svg"
-                  className="profile-social-situation__detail-icon"
-                  preview={false}
+            // <li
+            //   className="profile-social-situation__detail"
+            //   key={situation.trustScore + index}
+            // >
+              <ProfileSituationVoting
+                data={situation}
+                images={situation.BadLuckMedia.map((media: any) => media.link)}
+                isVoted={
+                  isVoted
+                    ? true
+                    : userData
+                      ? situation.UserSituationConfirms.map(
+                        (userVote: any) => userVote.userId
+                      ).indexOf(userData.id) >= 0
+                      : true
+                }
+                id={situation.userId}
+                key={situation.id}
                 />
-                <span>Hoàn Cảnh {index + 1}</span>
-              </div>
-              <div className="profile-social-situation__detail-content">
-                <span>{situation.name}</span>
-                <div className="profile-social-situation__detail-view-more">
-                  <span>Giấy chứng nhận {situation.message} có công chứng</span>
-                  <Link to="/">View</Link>
-                </div>
-              </div>
-            </li>
+            // </li>
           );
         })}
         {
@@ -161,6 +168,7 @@ const ProfileSocialSituation = () => {
                   : true
             }
             id={userSituation.userId}
+            key={userSituation.id}
           />
         ))}
       </ul>
