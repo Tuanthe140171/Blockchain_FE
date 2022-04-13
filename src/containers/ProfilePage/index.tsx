@@ -19,7 +19,7 @@ const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (id) {
+    if (id && id !== userData.id) {
       setCallWithParam(true);
     } else {
       setCallWithoutParam(true);

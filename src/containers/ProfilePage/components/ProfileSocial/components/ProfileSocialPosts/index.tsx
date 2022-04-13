@@ -36,6 +36,7 @@ const ProfileSocialPosts: React.FC = (props) => {
   const { userPostData: userData } = useSelector(
     (state: any) => state.userPostData
   );
+  const { userData: mainUser } = useSelector((state: any) => state.userLayout);
   const dispatch = useDispatch();
   const [newPost, setNewPost] = useState<IPost | undefined>(undefined);
   const [postList, setPostList] = useState<IPost[]>([]);
@@ -59,7 +60,7 @@ const ProfileSocialPosts: React.FC = (props) => {
   const [callWithoutParam, setCallWithoutParam] = useState<any>(undefined);
 
   useEffect(() => {
-    if (id) {
+    if (id && id !== mainUser.id) {
       setCallWithParam(true);
     } else {
       setCallWithoutParam(true);

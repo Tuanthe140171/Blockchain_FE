@@ -26,9 +26,9 @@ const ProfileSocialPersonal: React.FC = () => {
   };
 
   return (
-    <div className="profile-personal-wrapper">
+    <div className="profile-personal-wrapper-social">
       <div className="profile-personal">
-        <header className="profile-personal__header">
+        <header className="profile-personal__header-social">
           <p className="personal-header__title">Thông tin cá nhân</p>
           {id ? null : (
             <span
