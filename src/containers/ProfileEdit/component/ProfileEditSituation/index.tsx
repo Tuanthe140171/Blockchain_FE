@@ -590,61 +590,61 @@ const ProfileSituation = () => {
 
   return (
     <>
-      {openDialog ? (
-        <AppDialog
-          type="infor"
-          title={dialogTitle}
-          description={dialogDescription}
-          confirmText={Message.INFOR_CF_01}
-          onConfirm={() => {
-            if (dialogTitle === "Bạn đã gửi đơn xác nhận hộ nghèo thành công") {
-              setOpenDialog(false);
-              const action = getUserById(rerenderData);
-              dispatch(action);
-            } else {
-              setOpenDialog(false);
-            }
-          }}
-        />
-      ) : null}
-      {openConfirmDialog ? (
-        <AppDialog
-          type="confirm"
-          title={"Bạn chắc chắn muốn cập nhật các giấy tờ này chứ?"}
-          confirmText={"Xác nhận"}
-          cancelText={"Đóng"}
-          onConfirm={() => {
-            setIsUpdate(true);
-            setOpenConfirmDialog(false);
-          }}
-          onClose={() => {
-            setOpenConfirmDialog(false);
-          }}
-        />
-      ) : null}
-      {openWarnDialog ? (
-        <AppDialog
-          type="warning"
-          title={
-            hasButtons
-              ? "Bạn chắc chắn muốn xóa hoàn cảnh này?"
-              : "Bạn cần nộp đầy đủ các giấy tờ yêu cầu!"
+      <AppDialog
+        type="infor"
+        title={dialogTitle}
+        description={dialogDescription}
+        confirmText={Message.INFOR_CF_01}
+        onConfirm={() => {
+          if (dialogTitle === "Bạn đã gửi đơn xác nhận hộ nghèo thành công") {
+            setOpenDialog(false);
+            const action = getUserById(rerenderData);
+            dispatch(action);
+          } else {
+            setOpenDialog(false);
           }
-          confirmText={hasButtons ? "Xác nhận" : "Đóng"}
-          cancelText={hasButtons ? "Đóng" : ""}
-          onConfirm={() => {
-            if (hasButtons) {
-              setIsDelete(true);
-            }
-            setHasButtons(false);
-            setOpenWarnDialog(false);
-          }}
-          onClose={() => {
-            setHasButtons(false);
-            setOpenWarnDialog(false);
-          }}
-        />
-      ) : null}
+        }}
+        visible={openDialog}
+        onCancel={() => setOpenDialog(false)}
+      />
+      <AppDialog
+        type="confirm"
+        title={"Bạn chắc chắn muốn cập nhật các giấy tờ này chứ?"}
+        confirmText={"Xác nhận"}
+        cancelText={"Đóng"}
+        onConfirm={() => {
+          setIsUpdate(true);
+          setOpenConfirmDialog(false);
+        }}
+        onClose={() => {
+          setOpenConfirmDialog(false);
+        }}
+        visible={openConfirmDialog}
+        onCancel={() => setOpenConfirmDialog(false)}
+      />
+      <AppDialog
+        type="warning"
+        title={
+          hasButtons
+            ? "Bạn chắc chắn muốn xóa hoàn cảnh này?"
+            : "Bạn cần nộp đầy đủ các giấy tờ yêu cầu!"
+        }
+        confirmText={hasButtons ? "Xác nhận" : "Đóng"}
+        cancelText={hasButtons ? "Đóng" : ""}
+        onConfirm={() => {
+          if (hasButtons) {
+            setIsDelete(true);
+          }
+          setHasButtons(false);
+          setOpenWarnDialog(false);
+        }}
+        onClose={() => {
+          setHasButtons(false);
+          setOpenWarnDialog(false);
+        }}
+        visible={openWarnDialog}
+        onCancel={() => setOpenWarnDialog(false)}
+      />
       {(loadingConfirmRes ||
         loadingDeleteSituation ||
         loadingGetLinkCmnd ||

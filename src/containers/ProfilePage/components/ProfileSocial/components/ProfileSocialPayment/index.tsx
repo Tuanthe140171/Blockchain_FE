@@ -302,45 +302,45 @@ const ProfileSocialPayment = () => {
           />
         </div>
       </Modal>
-      {openDialog ? (
-        <AppDialog
-          type="infor"
-          title={title}
-          description=""
-          confirmText="Xác nhận"
-          onConfirm={() => {
-            setOpenPaymentModal(false);
-            setOpenDialog(false);
-          }}
-        />
-      ) : null}
-      {openWarningDialog ? (
-        <AppDialog
-          type="warning"
-          title="Bạn có chắc muốn gỡ bỏ tài khoản này không?"
-          description=""
-          confirmText="Gỡ bỏ"
-          cancelText="Hủy"
-          onConfirm={() => {
-            setIsDelete(true);
-            setOpenWarningDialog(false);
-          }}
-          onClose={() => {
-            setOpenWarningDialog(false);
-          }}
-        />
-      ) : null}
-      {openNotiDialog ? (
-        <AppDialog
-          type="warning"
-          title="Tài khoản hiện đang được sử dụng!"
-          description="Vui lòng chuyển sang tài khoản khác"
-          confirmText="Đồng ý"
-          onConfirm={() => {
-            setOpenNotiDialog(false);
-          }}
-        />
-      ) : null}
+      <AppDialog
+        type="infor"
+        title={title}
+        description=""
+        confirmText="Xác nhận"
+        onConfirm={() => {
+          setOpenPaymentModal(false);
+          setOpenDialog(false);
+        }}
+        visible={openDialog}
+        onCancel={() => setOpenDialog(false)}
+      />
+      <AppDialog
+        type="warning"
+        title="Bạn có chắc muốn gỡ bỏ tài khoản này không?"
+        description=""
+        confirmText="Gỡ bỏ"
+        cancelText="Hủy"
+        onConfirm={() => {
+          setIsDelete(true);
+          setOpenWarningDialog(false);
+        }}
+        onClose={() => {
+          setOpenWarningDialog(false);
+        }}
+        visible={openWarningDialog}
+        onCancel={() => setOpenWarningDialog(false)}
+      />
+      <AppDialog
+        type="warning"
+        title="Tài khoản hiện đang được sử dụng!"
+        description="Vui lòng chuyển sang tài khoản khác"
+        confirmText="Đồng ý"
+        onConfirm={() => {
+          setOpenNotiDialog(false);
+        }}
+        visible={openNotiDialog}
+        onCancel={() => setOpenNotiDialog(false)}
+      />
       <div className="profile-social-payment-wrapper">
         <div className="profile-social-payment">
           <header className="profile-social-payment__header">

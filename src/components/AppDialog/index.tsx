@@ -18,6 +18,8 @@ type AppDialogProps = {
   onClose?: any;
   onConfirm?: any;
   content?: any;
+  visible?: boolean;
+  onCancel?: any;
 };
 
 const AppDialog: React.FC<AppDialogProps> = (props) => {
@@ -30,6 +32,8 @@ const AppDialog: React.FC<AppDialogProps> = (props) => {
     onClose,
     onConfirm,
     content,
+    visible,
+    onCancel,
   } = props;
 
   const renderIcon = () => {
@@ -90,7 +94,7 @@ const AppDialog: React.FC<AppDialogProps> = (props) => {
 
   return (
     <Modal
-      visible
+      visible={visible}
       centered
       closable={true}
       footer={null}
@@ -99,6 +103,7 @@ const AppDialog: React.FC<AppDialogProps> = (props) => {
       maskClosable={true}
       mask={true}
       keyboard
+      onCancel={() => onCancel()}
     >
       <div className="app-dialog">
         {renderIcon()}

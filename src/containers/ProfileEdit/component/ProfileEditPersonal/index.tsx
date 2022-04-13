@@ -37,8 +37,8 @@ const ProfilePerson = () => {
     (media: any) => media.type === "1" && media.active === 1
   )
     ? userData?.UserMedia?.find(
-      (media: any) => media.type === "1" && media.active === 1
-    ).link
+        (media: any) => media.type === "1" && media.active === 1
+      ).link
     : "/icon/AvatarTmp.png";
 
   useEffect(() => {
@@ -51,8 +51,8 @@ const ProfilePerson = () => {
           userData.gender === 0
             ? "male"
             : userData.gender === 1
-              ? "female"
-              : "other",
+            ? "female"
+            : "other",
         nation: userData.country,
         nativeAddress: userData.baseAddress,
         permanentAddress: userData.currentAddress,
@@ -79,7 +79,7 @@ const ProfilePerson = () => {
     false,
     [],
     {},
-    (e) => { }
+    (e) => {}
   );
 
   const { data: countryData, loading: loadingCountry } = useFetch<any>(
@@ -91,7 +91,7 @@ const ProfilePerson = () => {
     false,
     [],
     {},
-    (e) => { }
+    (e) => {}
   );
 
   const onChange = ({ fileList: newFileList }: any) => {
@@ -236,24 +236,24 @@ const ProfilePerson = () => {
 
   return (
     <>
-      {openDialog ? (
-        <AppDialog
-          type="infor"
-          title={"Cập nhật thông tin thành công"}
-          description={"Thông tin user đã được cập nhật"}
-          confirmText={"Ok"}
-          onConfirm={() => {
-            setOpenDialog(false);
-          }}
-        />
-      ) : null}
+      <AppDialog
+        type="infor"
+        title={"Cập nhật thông tin thành công"}
+        description={"Thông tin user đã được cập nhật"}
+        confirmText={"Ok"}
+        onConfirm={() => {
+          setOpenDialog(false);
+        }}
+        visible={openDialog}
+        onCancel={() => setOpenDialog(false)}
+      />
       {(loadingCountry ||
         loadingProvince ||
         loadingSubmitData ||
         loadingSubmitImg ||
         loadingSubmitWithoutAva) && (
-          <AppLoading loadingContent={<div></div>} showContent={false} />
-        )}
+        <AppLoading loadingContent={<div></div>} showContent={false} />
+      )}
       <div className="profile-person">
         <div className="profile-person__title">Thông tin cá nhân</div>
         <div className="profile-person__description">*Yêu cầu</div>
@@ -518,7 +518,7 @@ const ProfilePerson = () => {
                           if (
                             new Date(e.target.value) > new Date() ||
                             new Date(e.target.value).getFullYear() <
-                            new Date(birthday).getFullYear() + 14
+                              new Date(birthday).getFullYear() + 14
                           ) {
                             setErrorCmndField(true);
                           } else {

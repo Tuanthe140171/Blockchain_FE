@@ -159,25 +159,25 @@ const ProfileSituationVoting: React.FC<VotingSituationViewProps> = (props) => {
       {loading && (
         <AppLoading loadingContent={<div></div>} showContent={false} />
       )}
-      {openDialog ? (
-        <AppDialog
-          type="confirm"
-          title={`Bạn có đồng ý thông tin "${title}" của người này là sự thật không ?`}
-          description="Nếu chưa xem xét hết thông tin, hãy xem lại"
-          confirmText={"Đồng ý"}
-          cancelText={"Không"}
-          onConfirm={() => {
-            setOpenDialog(false);
-            setStartVotingSituation(true);
-            setVoteType(1);
-          }}
-          onClose={() => {
-            setOpenDialog(false);
-            setStartVotingSituation(true);
-            setVoteType(-1);
-          }}
-        />
-      ) : null}
+      <AppDialog
+        type="confirm"
+        title={`Bạn có đồng ý thông tin "${title}" của người này là sự thật không ?`}
+        description="Nếu chưa xem xét hết thông tin, hãy xem lại"
+        confirmText={"Đồng ý"}
+        cancelText={"Không"}
+        onConfirm={() => {
+          setOpenDialog(false);
+          setStartVotingSituation(true);
+          setVoteType(1);
+        }}
+        onClose={() => {
+          setOpenDialog(false);
+          setStartVotingSituation(true);
+          setVoteType(-1);
+        }}
+        visible={openDialog}
+        onCancel={() => setOpenDialog(false)}
+      />
     </div>
   );
 };

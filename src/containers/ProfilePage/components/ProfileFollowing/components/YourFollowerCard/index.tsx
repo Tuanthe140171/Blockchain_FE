@@ -77,31 +77,31 @@ const YourFollowerCard: React.FC<YourFollowerCardProps> = (props) => {
 
   return (
     <>
-      {openConfirmDialog ? (
-        <AppDialog
-          type="confirm"
-          title={`Bạn chắc chắn muốn hủy theo dõi người này không?`}
-          confirmText={"Hủy theo dõi"}
-          cancelText={"Đóng"}
-          onConfirm={() => {
-            setUnfollow(true);
-          }}
-          onClose={() => {
-            setOpenConfirmDialog(false);
-          }}
-        />
-      ) : null}
-      {openDialog ? (
-        <AppDialog
-          type="infor"
-          title={`Hủy theo dõi thành công`}
-          confirmText={"Đóng"}
-          onConfirm={() => {
-            setIsFollowing(false);
-            setOpenDialog(false);
-          }}
-        />
-      ) : null}
+      <AppDialog
+        type="confirm"
+        title={`Bạn chắc chắn muốn hủy theo dõi người này không?`}
+        confirmText={"Hủy theo dõi"}
+        cancelText={"Đóng"}
+        onConfirm={() => {
+          setUnfollow(true);
+        }}
+        onClose={() => {
+          setOpenConfirmDialog(false);
+        }}
+        onCancel={() => setOpenConfirmDialog(false)}
+        visible={openConfirmDialog}
+      />
+      <AppDialog
+        type="infor"
+        title={`Hủy theo dõi thành công`}
+        confirmText={"Đóng"}
+        onConfirm={() => {
+          setIsFollowing(false);
+          setOpenDialog(false);
+        }}
+        onCancel={() => setOpenDialog(false)}
+        visible={openDialog}
+      />
       <div className="your-follower-card" key={props.name}>
         <div className="your-follower-card__details">
           <Avatar src={props.avatar} className="your-follower-card__avatar" />

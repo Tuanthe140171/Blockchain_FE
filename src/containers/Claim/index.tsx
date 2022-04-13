@@ -279,18 +279,18 @@ const Claim: React.FC = () => {
           />
         )}
 
-        {openDialog ? (
-          <AppDialog
-            type="infor"
-            title={`Bạn đã lĩnh thưởng thành công!`}
-            description={Message.INFOR_DC_01}
-            confirmText={Message.INFOR_CF_01}
-            onConfirm={() => {
-              setReloadClaiming(true);
-              setOpenDialog(false);
-            }}
-          />
-        ) : null}
+        <AppDialog
+          type="infor"
+          title={`Bạn đã lĩnh thưởng thành công!`}
+          description={Message.INFOR_DC_01}
+          confirmText={Message.INFOR_CF_01}
+          onConfirm={() => {
+            setReloadClaiming(true);
+            setOpenDialog(false);
+          }}
+          visible={openDialog}
+          onCancel={() => setOpenDialog(false)}
+        />
       </div>
     </div>
   );

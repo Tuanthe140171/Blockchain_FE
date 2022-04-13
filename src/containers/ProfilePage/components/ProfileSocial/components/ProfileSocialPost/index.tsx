@@ -116,7 +116,11 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
           <p className="poster__name">{getUserName()}</p>
           <div className="poster__timestamp">
             <span>{timestamp}</span>
-            <Image src="/icon/globe.svg" className="poster__timestamp-icon" preview={false}/>
+            <Image
+              src="/icon/globe.svg"
+              className="poster__timestamp-icon"
+              preview={false}
+            />
           </div>
         </div>
       </div>
@@ -144,14 +148,14 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
           }
         </div>
       )}
-      <div className="profile-post__metrics">
+      {/* <div className="profile-post__metrics">
         <div className="metrics__likes">
           <Image src="/icon/1.svg" preview={false} />
           <Image src="/icon/2.svg" preview={false} />
           <Image src="/icon/3.svg" preview={false} />
           <span>{likeCount}</span>
         </div>
-      </div>
+      </div> */}
       <div className="profile-post__divider"></div>
       <div className="profile-post__cta">
         <div
@@ -164,22 +168,13 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
             }
           }}
         >
-          {/* <Image
-            src="/icon/like.svg"
-            className="cta__icon cta__like-icon"
-            preview={false}
-          /> */}
           {isLike ? <HeartFilled /> : <HeartOutlined />}
           <span className="cta__like-txt">Thích</span>
         </div>
         <div className="cta__share">
-          {/* <Image
-            src="/icon/share.svg"
-            className="cta__icon cta__share-icon"
-            preview={false}
-          /> */}
-          <ShareAltOutlined />
-          <span className="cta__share-txt">Chia sẻ</span>
+          {likeCount === 0
+            ? "Hãy là người đầu tiên thích bài viết này"
+            : `Có ${likeCount} người thích bài viết của bạn`}
         </div>
       </div>
     </div>

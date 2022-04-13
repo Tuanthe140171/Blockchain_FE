@@ -23,21 +23,21 @@ const NotificationFollow = () => {
   );
 
   return (
-    <div className="notification-voting">
-      <p className="notification-voting__header">Bỏ phiếu</p>
-      <div className="notification-voting__body">
+    <div className="notification-follow">
+      <p className="notification-follow__header">Bỏ phiếu</p>
+      <div className="notification-follow__body">
         {data?.map((voting: any) => {
           return (
-            <div className={"notification-voting-confirm"} key={voting.avatar}>
-              <div className="notification-voting-confirm__top">
-                <div className="notification-voting-confirm__top__ava">
+            <div className={"notification-follow-confirm"} key={voting.avatar}>
+              <div className="notification-follow-confirm__top">
+                <div className="notification-follow-confirm__top__ava">
                   <Avatar
                     size={40}
                     icon={<UserOutlined />}
                     src={voting.avatar}
                   />
                 </div>
-                <div className="notification-voting-confirm__top__message">
+                <div className="notification-follow-confirm__top__message">
                   <strong>{voting.name}</strong> {voting.content}
                   <div>{moment(voting.createDate).format("DD-MM-YYYY")}</div>
                 </div>
