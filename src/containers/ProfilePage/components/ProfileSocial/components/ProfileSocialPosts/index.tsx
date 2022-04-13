@@ -296,17 +296,17 @@ const ProfileSocialPosts: React.FC = (props) => {
 
   return (
     <>
-      {openDialog ? (
-        <AppDialog
-          type="infor"
-          title={"Cập nhật thông tin thành công"}
-          description={"Thông tin user đã được cập nhật"}
-          confirmText={"Ok"}
-          onConfirm={() => {
-            setOpenDialog(false);
-          }}
-        />
-      ) : null}
+      <AppDialog
+        type="infor"
+        title={"Cập nhật thông tin thành công"}
+        description={"Thông tin user đã được cập nhật"}
+        confirmText={"Ok"}
+        onConfirm={() => {
+          setOpenDialog(false);
+        }}
+        onCancel={() => setOpenDialog(false)}
+        visible={openDialog}
+      />
       {(loadingSubmitImg ||
         loadingGetPostById ||
         loadingGetPostAllTime ||

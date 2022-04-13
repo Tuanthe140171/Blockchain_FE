@@ -12,15 +12,13 @@ type IFollowNotiProps = {
 const FollowNoti: React.FC<IFollowNotiProps> = (props) => {
   const { data } = props;
   const navigate = useNavigate();
+  console.log(data);
 
   return (
     <div
-      // className={`follow-noti ${
-      //   data.isRead ? "follow-read" : "follow-not-read"
-      // }`}
       className={`follow-noti follow-read`}
       onClick={() => {
-        navigate(`profile/${data.external.id}`);
+        navigate(`/profile/${data.external.userId}`);
       }}
     >
       {/* {!data.isRead ? <div className="follow-noti__dotted"></div> : null} */}
@@ -30,10 +28,8 @@ const FollowNoti: React.FC<IFollowNotiProps> = (props) => {
         </div>
         <div className="follow-noti__top__message">
           <strong>{data.name}</strong> {data.content}
+          <div>{moment(data.createDate).format("DD-MM-YYYY")}</div>
         </div>
-      </div>
-      <div className="follow-noti__bottom">
-        <div>{moment(data.time).format("DD-MM-YYYY")}</div>
       </div>
     </div>
   );

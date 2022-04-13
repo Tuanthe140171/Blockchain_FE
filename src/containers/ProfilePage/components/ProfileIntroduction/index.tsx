@@ -1,8 +1,9 @@
 import { Avatar, Button, Image, Input } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import AppDialog from "../../../../components/AppDialog";
+import AppLoading from "../../../../components/AppLoading";
 import useFetch from "../../../../hooks/useFetch";
 import "./index.scss";
 
@@ -32,8 +33,9 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
   const [follow, setFollow] = useState<any>(undefined);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);
+  const [titleDialog, setTitleDialog] = useState("");
 
-  const { data: followingData } = useFetch<any>(
+  const { data: followingData, loading: loadingFollowing } = useFetch<any>(
     "users/get-following-people",
     {},
     false,
@@ -71,7 +73,7 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
     }
   };
 
-  const { data: unfollowData } = useFetch<any>(
+  const { data: unfollowData, loading: loadingUnfollow } = useFetch<any>(
     "users/follow-people",
     {
       "Content-Type": "application/json",
@@ -89,11 +91,12 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
     (e) => {
       setUnfollow(undefined);
       setOpenConfirmDialog(false);
+      setTitleDialog("Hủy theo dõi thành công!");
       setOpenDialog(true);
     }
   );
 
-  const { data: followData } = useFetch<any>(
+  const { data: followData, loading: loadingFollow } = useFetch<any>(
     "users/follow-people",
     {
       "Content-Type": "application/json",
@@ -133,37 +136,69 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
   };
 
   const [canWrite, setCanWrite] = useState(false);
-  const [description, setDescription] = useState(
-    "Cuộc đời này đã mang tôi tới đây"
+  const [description, setDescription] = useState<string>("");
+  const [isUpdateDes, setIsUpdateDes] = useState<any>(undefined);
+  useEffect(() => {
+    if (userData) {
+      setDescription(userData.description);
+    }
+  }, [userData]);
+
+  const { data: updateDes, loading: loadingUpdateDes } = useFetch<any>(
+    "users/update-description",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [isUpdateDes],
+    {
+      method: "PUT",
+      body: JSON.stringify({ description: description }),
+    },
+    (e) => {
+      setIsUpdateDes(undefined);
+      setCanWrite(!canWrite);
+      setTitleDialog("Cập nhật giới thiệu thành công!");
+      setOpenDialog(true);
+    }
   );
+
+  console.log(openConfirmDialog);
 
   return (
     <>
-      {openConfirmDialog ? (
-        <AppDialog
-          type="confirm"
-          title={`Bạn chắc chắn muốn hủy theo dõi người này không?`}
-          confirmText={"Hủy theo dõi"}
-          cancelText={"Đóng"}
-          onConfirm={() => {
-            setUnfollow(true);
-          }}
-          onClose={() => {
-            setOpenConfirmDialog(false);
-          }}
-        />
-      ) : null}
-      {openDialog ? (
-        <AppDialog
-          type="infor"
-          title={`Hủy theo dõi thành công`}
-          confirmText={"Đóng"}
-          onConfirm={() => {
-            setIsFollowing(false);
-            setOpenDialog(false);
-          }}
-        />
-      ) : null}
+      <AppDialog
+        type="confirm"
+        title={`Bạn chắc chắn muốn hủy theo dõi người này không?`}
+        confirmText={"Hủy theo dõi"}
+        cancelText={"Đóng"}
+        onConfirm={() => {
+          setUnfollow(true);
+        }}
+        onClose={() => {
+          setOpenConfirmDialog(false);
+        }}
+        visible={openConfirmDialog}
+        onCancel={() => setOpenConfirmDialog(false)}
+      />
+      <AppDialog
+        type="infor"
+        title={titleDialog}
+        confirmText={"Đóng"}
+        onConfirm={() => {
+          setIsFollowing(false);
+          setOpenDialog(false);
+        }}
+        onCancel={() => setOpenDialog(false)}
+        visible={openDialog}
+      />
+      {(loadingFollow ||
+        loadingUnfollow ||
+        loadingFollowing ||
+        loadingUpdateDes) && (
+        <AppLoading loadingContent={<div></div>} showContent={false} />
+      )}
       <div className="profile-intro">
         <div className="profile-intro__details">
           <Avatar src={avatarLink} className="profile-intro__avatar" />
@@ -217,14 +252,29 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
         </div>
         <div className="profile-intro__desc">
           <div className="intro-desc">
-            <p className="intro-desc__title">Giới thiệu</p>
+            <div className="intro-desc__group">
+              <p className="intro-desc__title">Giới thiệu</p>
+              <Button
+                onClick={() => {
+                  if (canWrite) {
+                    setIsUpdateDes(true);
+                  } else {
+                    setCanWrite(!canWrite);
+                  }
+                }}
+                className="intro-desc__button"
+              >
+                {canWrite ? "Lưu" : "Sửa"}
+              </Button>
+            </div>
             {canWrite ? (
-              <Input onChange={(e) => setDescription(e.target.value)} />
+              <Input
+                onChange={(e) => setDescription(e.target.value)}
+                className="intro-desc__input"
+                value={description}
+              />
             ) : (
-              <div>
-                <p className="intro-desc__txt">{description}</p>
-                <Button>click</Button>
-              </div>
+              <p className="intro-desc__txt">{description}</p>
             )}
             <div className="intro-desc__divider"></div>
             <ul className="intro-desc__extras">

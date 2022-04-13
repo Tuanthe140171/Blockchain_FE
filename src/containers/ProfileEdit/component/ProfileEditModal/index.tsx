@@ -329,30 +329,30 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
 
   return (
     <>
-      {openDialog ? (
-        <AppDialog
-          type="infor"
-          title={Message.INFOR_01}
-          description={Message.INFOR_DC_01}
-          confirmText={Message.INFOR_CF_01}
-          onConfirm={() => {
-            setOpenDialog(false);
-            submitted();
-            closeModal();
-          }}
-        />
-      ) : null}
-      {openWarnDialog ? (
-        <AppDialog
-          type="infor"
-          title={"Bạn cần nộp đầy đủ các giấy tờ yêu cầu"}
-          description={""}
-          confirmText={"Đóng"}
-          onConfirm={() => {
-            setOpenWarnDialog(false);
-          }}
-        />
-      ) : null}
+      <AppDialog
+        type="infor"
+        title={Message.INFOR_01}
+        description={Message.INFOR_DC_01}
+        confirmText={Message.INFOR_CF_01}
+        onConfirm={() => {
+          setOpenDialog(false);
+          submitted();
+          closeModal();
+        }}
+        visible={openDialog}
+        onCancel={() => setOpenDialog(false)}
+      />
+      <AppDialog
+        type="infor"
+        title={"Bạn cần nộp đầy đủ các giấy tờ yêu cầu"}
+        description={""}
+        confirmText={"Đóng"}
+        onConfirm={() => {
+          setOpenWarnDialog(false);
+        }}
+        visible={openWarnDialog}
+        onCancel={() => setOpenWarnDialog(false)}
+      />
       <AppDrawer
         title="Thông tin cá nhân"
         isVisible={isVisible}

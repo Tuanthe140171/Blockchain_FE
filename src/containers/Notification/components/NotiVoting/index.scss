@@ -1,0 +1,39 @@
+.notification-voting {
+  background-color: #ffffff;
+  margin-top: 24px;
+
+  &__header {
+    color: #002169;
+    font-size: 24px;
+    padding: 20px 40px;
+    margin: 0;
+  }
+}
+
+.notification-voting-confirm {
+  padding: 0 15px;
+  &__top {
+    display: flex;
+    align-items: center;
+
+    &__ava {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 76px;
+      height: 76px;
+    }
+
+    &__message {
+      max-width: 398px;
+      color: #002169;
+      font-size: 16px;
+    }
+  }
+
+  &__bottom {
+    color: #a5acb8;
+    font-size: 15px;
+    margin: 2px 0 19px 76px;
+  }
+}
