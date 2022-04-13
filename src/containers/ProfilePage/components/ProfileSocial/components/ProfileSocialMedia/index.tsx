@@ -141,16 +141,16 @@ const ProfileSocialMedia = () => {
 
   return (
     <>
-      {openDialog ? (
-        <AppDialog
-          type="infor"
-          title={"Cập nhật ảnh đại diện thành công"}
-          confirmText={"Ok"}
-          onConfirm={() => {
-            setOpenDialog(false);
-          }}
-        />
-      ) : null}
+      <AppDialog
+        type="infor"
+        title={"Cập nhật ảnh đại diện thành công"}
+        confirmText={"Ok"}
+        onConfirm={() => {
+          setOpenDialog(false);
+        }}
+        onCancel={() => setOpenDialog(false)}
+        visible={openDialog}
+      />
       {loading && (
         <AppLoading loadingContent={<div></div>} showContent={false} />
       )}

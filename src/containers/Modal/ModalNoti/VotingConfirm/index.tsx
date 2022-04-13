@@ -1,5 +1,6 @@
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar } from "antd";
+import moment from "moment";
 import React from "react";
 import "./index.scss";
 
@@ -11,20 +12,16 @@ const VotingConfirm: React.FC<VotingNotiProps> = (props) => {
   const { data } = props;
 
   return (
-    <div
-      className={`voting-confirm ${
-        data.isRead ? "voting-read" : "voting-not-read"
-      }`}
-    >
-      {!data.isRead ? <div className="voting-confirm__dotted"></div> : null}
+    <div className={"voting-confirm  voting-read"}>
+      {/* {!data.isRead ? <div className="voting-confirm__dotted"></div> : null} */}
       <div className="voting-confirm__top">
         <div className="voting-confirm__top__ava">
-          <Avatar size={40} icon={<UserOutlined />} />
+          <Avatar size={40} icon={<UserOutlined />} src={data.avatar} />
         </div>
-        <div className="voting-confirm__top__message">{data.message}</div>
-      </div>
-      <div className="voting-confirm__bottom">
-        <div>{data.time}</div>
+        <div className="voting-confirm__top__message">
+          <strong>{data.name}</strong> {data.content}
+          <div>{moment(data.createDate).format("DD-MM-YYYY")}</div>
+        </div>
       </div>
     </div>
   );

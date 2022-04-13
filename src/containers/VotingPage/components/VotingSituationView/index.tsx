@@ -13,14 +13,26 @@ type VotingSituationViewProps = {
   verificationType: string;
   images: string[];
   userName: string;
-  setReloadVotingData: React.Dispatch<React.SetStateAction<boolean | undefined>>;
-  isVoted: boolean
+  setReloadVotingData: React.Dispatch<
+    React.SetStateAction<boolean | undefined>
+  >;
+  isVoted: boolean;
 };
 
 const VotingSituationView: React.FC<VotingSituationViewProps> = (props) => {
-  const { isVoted, id, userName, title, verificationType, images, setReloadVotingData } = props;
+  const {
+    isVoted,
+    id,
+    userName,
+    title,
+    verificationType,
+    images,
+    setReloadVotingData,
+  } = props;
   const [viewVerification, setViewVerification] = useState<boolean>(false);
-  const [startVotingSituation, setStartVotingSituation] = useState<boolean | undefined>(undefined);
+  const [startVotingSituation, setStartVotingSituation] = useState<
+    boolean | undefined
+  >(undefined);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [voteType, setVoteType] = useState<number>(-1);
 
@@ -28,7 +40,7 @@ const VotingSituationView: React.FC<VotingSituationViewProps> = (props) => {
     `votes/situation`,
     {
       "Content-Type": "application/json",
-      Accept: "application/json"
+      Accept: "application/json",
     },
     false,
     [startVotingSituation],
@@ -36,22 +48,27 @@ const VotingSituationView: React.FC<VotingSituationViewProps> = (props) => {
       method: "POST",
       body: JSON.stringify({
         badLuckTypeId: id,
-        isConfirm: voteType
-      })
+        isConfirm: voteType,
+      }),
     },
     () => {
       setStartVotingSituation(undefined);
-      message.success(`Bạn đã ${voteType === 1 ? 'xác nhận' : 'không xác nhận'} thông tin ${title} của ${userName}`, 4);
+      message.success(
+        `Bạn đã ${
+          voteType === 1 ? "xác nhận" : "không xác nhận"
+        } thông tin ${title} của ${userName}`,
+        4
+      );
       setReloadVotingData(true);
     },
     () => {
-      setStartVotingSituation(undefined)
-      setReloadVotingData(true)
+      setStartVotingSituation(undefined);
+      setReloadVotingData(true);
     }
-  )
+  );
 
   useEffect(() => {
-        error && message.error(error.message, 4);
+    error && message.error(error.message, 4);
   }, [error]);
 
   return (
@@ -59,14 +76,27 @@ const VotingSituationView: React.FC<VotingSituationViewProps> = (props) => {
       <header className="voting-situation-view__header">
         <span className="voting-situation-view__title">{title}</span>
         <div className="voting-situation-view__ctas">
-          <Button className="voting-situation-view__cta voting-situation-view__confirm" onClick={() => setOpenDialog(true)} disabled={isVoted}>
-            {isVoted ? 'Đã xác nhận' : 'Xác nhận'}
+          <Button
+            className="voting-situation-view__cta voting-situation-view__confirm"
+            onClick={() => setOpenDialog(true)}
+            disabled={isVoted}
+          >
+            {isVoted ? "Đã xác nhận" : "Xác nhận"}
           </Button>
         </div>
       </header>
       <div className="voting-situation-view__verification">
         <div className="voting-situation-view__verification-type">
-          <Image src={images[0]} preview={false} style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 5 }} />
+          <Image
+            src={images[0]}
+            preview={false}
+            style={{
+              width: 40,
+              height: 40,
+              objectFit: "cover",
+              borderRadius: 5,
+            }}
+          />
           <span>{verificationType}</span>
         </div>
         <Button
@@ -118,26 +148,28 @@ const VotingSituationView: React.FC<VotingSituationViewProps> = (props) => {
           );
         }}
       />
-      {loading && <AppLoading loadingContent={<div></div>} showContent={false} />}
-      {openDialog ? (
-        <AppDialog
-          type="confirm"
-          title={`Bạn có đồng ý thông tin "${title}" của người này là sự thật không ?`}
-          description="Nếu chưa xem xét hết thông tin, hãy xem lại"
-          confirmText={"Đồng ý"}
-          cancelText={"Không"}
-          onConfirm={() => {
-            setOpenDialog(false);
-            setStartVotingSituation(true);
-            setVoteType(1);
-          }}
-          onClose={() => {
-            setOpenDialog(false);
-            setStartVotingSituation(true);
-            setVoteType(-1);
-          }}
-        />
-      ) : null}
+      {loading && (
+        <AppLoading loadingContent={<div></div>} showContent={false} />
+      )}
+      <AppDialog
+        type="confirm"
+        title={`Bạn có đồng ý thông tin "${title}" của người này là sự thật không ?`}
+        description="Nếu chưa xem xét hết thông tin, hãy xem lại"
+        confirmText={"Đồng ý"}
+        cancelText={"Không"}
+        onConfirm={() => {
+          setOpenDialog(false);
+          setStartVotingSituation(true);
+          setVoteType(1);
+        }}
+        onClose={() => {
+          setOpenDialog(false);
+          setStartVotingSituation(true);
+          setVoteType(-1);
+        }}
+        visible={openDialog}
+        onCancel={() => setOpenDialog(false)}
+      />
     </div>
   );
 };

@@ -150,6 +150,19 @@
 }
 
 .intro-desc {
+  &__group {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__input {
+    margin-bottom: 1em;
+  }
+
+  &__button {
+    border: none;
+  }
+
   &__title {
     font-style: normal;
     font-weight: normal;
