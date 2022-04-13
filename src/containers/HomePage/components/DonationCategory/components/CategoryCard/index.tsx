@@ -40,7 +40,7 @@ const CategoryCard: React.FC<TopTierCharityCardProps> = (props: TopTierCharityCa
                         ))
                     }
                 </div> */}
-                <Title level={3} className="category-card__name">{name}</Title>
+                <Title level={3} className="category-card__name" onClick={() => navigate(`/profile/${id}`)}>{name}</Title>
                 <p className="category-card__desc">{desc}</p>
                 <div className="category-card__metrics">
                     <div className="category-card__tier category-card__metrics-block">
