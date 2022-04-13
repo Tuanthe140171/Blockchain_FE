@@ -19,7 +19,6 @@ const Followers = () => {
     { method: "GET" },
     (e) => {
       setData(e.data.rows);
-      console.log(e.data.rows);
     }
   );
 
