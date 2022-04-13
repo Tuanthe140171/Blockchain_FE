@@ -25,6 +25,7 @@ const ModalNoti: React.FC<
   );
   const [propsData, setPropsData] = useState<any>(null);
   const navigate = useNavigate();
+  console.log(notifications);
 
   useEffect(() => {
     const arrFollow = defaultNotification.followNoti.map((noti: any) => ({
@@ -43,6 +44,7 @@ const ModalNoti: React.FC<
       avatar: noti.avatar,
       external: {
         userId: JSON.parse(noti.external)?.postId,
+        description: JSON.parse(noti.external)?.description,
       },
       type: noti.type,
       createDate: noti.createDate,

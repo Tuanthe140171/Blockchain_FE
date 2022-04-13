@@ -4,11 +4,11 @@ import moment from "moment";
 import React from "react";
 import "./index.scss";
 
-type VotingNotiProps = {
+type IVotingNotiProps = {
   data: any;
 };
 
-const VotingConfirm: React.FC<VotingNotiProps> = (props) => {
+const VotingConfirm: React.FC<IVotingNotiProps> = (props) => {
   const { data } = props;
 
   return (

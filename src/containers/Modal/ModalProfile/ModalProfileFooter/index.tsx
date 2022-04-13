@@ -26,7 +26,7 @@ const ModalProfileFooter = () => {
   return (
     <div className="modal-profile__footer">
       <LogoutOutlined className="modal-profile__footer__icon" />
-      <div className="modal-profile__footer__text" onClick={logOut}>Log out</div>
+      <div className="modal-profile__footer__text" onClick={logOut}>Đăng xuất</div>
     </div>
   );
 };

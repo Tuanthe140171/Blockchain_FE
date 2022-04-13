@@ -18,7 +18,7 @@ const NotificationFollow = () => {
     [],
     {},
     (e) => {
-      setData(e.data.followNoti);
+      setData(e.data.rows);
     }
   );
 

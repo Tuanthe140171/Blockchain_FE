@@ -4,16 +4,16 @@ import moment from "moment";
 import React from "react";
 import "./index.scss";
 
-type VotingNotiProps = {
+type IActivityNotiProps = {
   data: any;
 };
 
-const ActivityNoti: React.FC<VotingNotiProps> = (props) => {
+const ActivityNoti: React.FC<IActivityNotiProps> = (props) => {
   const { data } = props;
+  console.log(data);
 
   return (
     <div className={"activity-noti voting-read"}>
-      {/* {!data.isRead ? <div className="activity-noti__dotted"></div> : null} */}
       <div className="activity-noti__top">
         <div className="activity-noti__top__ava">
           <Avatar size={40} icon={<UserOutlined />} src={data.avatar} />

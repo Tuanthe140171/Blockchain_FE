@@ -131,8 +131,9 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
         <div
           className="profile-post__see-more"
           onClick={() => setSeeMore(true)}
+          style={{ cursor: "pointer" }}
         >
-          <span>... Xem thêm</span>
+          <span>{seeMore ? "" : "... Xem thêm"}</span>
         </div>
       )}
       {images.length > 0 && (

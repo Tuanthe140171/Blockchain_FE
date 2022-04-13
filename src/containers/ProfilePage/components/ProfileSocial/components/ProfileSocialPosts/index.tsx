@@ -122,7 +122,6 @@ const ProfileSocialPosts: React.FC = (props) => {
     [callWithParam],
     { method: "GET" },
     (e) => {
-      console.log(e.data);
       setCallWithParam(undefined);
       const formatPosts = e.data.map((post: any) => {
         return {
@@ -341,7 +340,6 @@ const ProfileSocialPosts: React.FC = (props) => {
                     placeholder="Hãy nhập gì đó..."
                     onChange={(e) => setInputValue(e.target.value)}
                     value={inputValue}
-                    defaultValue={inputValue}
                     ref={ref}
                     accept="image/*"
                   />

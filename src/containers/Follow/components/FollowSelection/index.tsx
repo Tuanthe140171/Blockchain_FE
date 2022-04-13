@@ -28,7 +28,7 @@ const NotificationSelection: React.FC<INotificationSelectionProps> = (
           key={breadCrumb.id}
           onClick={() => {
             props.onActiveTabChange && props.onActiveTabChange(breadCrumb.id);
-            navigate(`/notification/${breadCrumb.id}`);
+            navigate(`/follow/${breadCrumb.id}`);
           }}
         >
           {breadCrumb.title}
