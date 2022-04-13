@@ -25,6 +25,7 @@ const Claim: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [startClaiming, setStartClaiming] = useState<boolean | undefined>(undefined);
     const [reloadClaiming, setReloadClaiming] = useState<boolean | undefined>(true);
+    const [claimSuccess, setClaimSuccess] = useState<boolean | undefined>(undefined);
     const userData = useSelector((state: any) => state.userLayout.userData);
     const [pickedDate, setPickedDate] = useState<{
         from: number,
@@ -60,6 +61,21 @@ const Claim: React.FC = () => {
         {},
         () => { setReloadClaiming(undefined) },
         () => { setReloadClaiming(undefined) }
+    );
+
+    const { loading: rewardRefreshLoading } = useFetch<any>(
+        "reward/refresh",
+        {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
+        false,
+        [claimSuccess],
+        {
+            method: "POST"
+        },
+        () => { setClaimSuccess(undefined); setOpenDialog(true) },
+        () => { setClaimSuccess(undefined) }
     );
 
     const { data: userClaimData } = useFetch<any>(
@@ -126,7 +142,7 @@ const Claim: React.FC = () => {
 
                 setStartClaiming(false);
                 setTxHash(undefined);
-                setOpenDialog(true);
+                setClaimSuccess(true);
             } catch (err: any) {
                 message.error(err.message, 3);
                 setStartClaiming(false);
@@ -203,9 +219,13 @@ const Claim: React.FC = () => {
                                             </strong>
                                         </p>
                                     </div>
-                                    <Tooltip title="Đã lĩnh">
-                                        <Image className="claim__claimed" src="/icon/reward.svg" preview={false} />
-                                    </Tooltip>
+                                    {
+                                        claimData.deletedAt && (
+                                            <Tooltip title="Đã lĩnh">
+                                                <Image className="claim__claimed" src="/icon/reward.svg" preview={false} />
+                                            </Tooltip>
+                                        )
+                                    }
                                 </div>
                                 <div className="claim__divider"></div>
                             </div>
@@ -222,7 +242,7 @@ const Claim: React.FC = () => {
                     />
                 </div>
                 {
-                    (loading || startClaiming || gettingSignatureLoading) && (
+                    (loading || startClaiming || gettingSignatureLoading || rewardRefreshLoading) && (
                         <AppLoading showContent={txHash !== undefined} loadingContent={
                             <div className="tx-info">
                                 <p className="tx-info__alert">Your transaction is processing! Please be patient.</p>
