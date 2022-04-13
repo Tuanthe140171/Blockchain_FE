@@ -1,0 +1,17 @@
+.follow {
+    padding: 54px 66px;
+  
+    &__breadcrumb {
+      font-size: 18px;
+      margin-bottom: 10px;
+      
+      &__from {
+        color: #2f497f;
+      }
+  
+      &__to {
+        color: #a7b2c8;
+      }
+    }
+  }
+  

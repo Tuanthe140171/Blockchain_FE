@@ -254,18 +254,20 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
           <div className="intro-desc">
             <div className="intro-desc__group">
               <p className="intro-desc__title">Giới thiệu</p>
-              <Button
-                onClick={() => {
-                  if (canWrite) {
-                    setIsUpdateDes(true);
-                  } else {
-                    setCanWrite(!canWrite);
-                  }
-                }}
-                className="intro-desc__button"
-              >
-                {canWrite ? "Lưu" : "Sửa"}
-              </Button>
+              {id ? null : (
+                <Button
+                  onClick={() => {
+                    if (canWrite) {
+                      setIsUpdateDes(true);
+                    } else {
+                      setCanWrite(!canWrite);
+                    }
+                  }}
+                  className="intro-desc__button"
+                >
+                  {canWrite ? "Lưu" : "Sửa"}
+                </Button>
+              )}
             </div>
             {canWrite ? (
               <Input

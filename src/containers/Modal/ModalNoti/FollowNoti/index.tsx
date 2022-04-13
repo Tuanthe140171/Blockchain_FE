@@ -12,7 +12,6 @@ type IFollowNotiProps = {
 const FollowNoti: React.FC<IFollowNotiProps> = (props) => {
   const { data } = props;
   const navigate = useNavigate();
-  console.log(data);
 
   return (
     <div

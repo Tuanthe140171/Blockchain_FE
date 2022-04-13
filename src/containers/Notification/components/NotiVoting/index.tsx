@@ -18,7 +18,7 @@ const NotificationVoting = () => {
     [],
     {},
     (e) => {
-      setData(e.data.registerNoti);
+      setData(e.data.rows);
     }
   );
 
