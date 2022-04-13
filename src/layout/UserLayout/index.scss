@@ -132,7 +132,8 @@
 
         &__noti {
           position: fixed;
-          .ant-popover-inner-content {
+
+          & .ant-popover-inner-content {
             padding: 0;
           }
         }

@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar } from "antd";
+import { Avatar, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
 import "./index.scss";
 
@@ -27,8 +27,13 @@ const FollowNoti: React.FC<IFollowNotiProps> = (props) => {
           <Avatar size={40} icon={<UserOutlined />} src={data.avatar} />
         </div>
         <div className="follow-noti__top__message">
-          <strong>{data.name}</strong> {data.content}
-          <div>{moment(data.createDate).format("DD-MM-YYYY")}</div>
+          <Tooltip title={<strong>{data.name} {data.content}</strong>}>
+            <div>
+              <strong>{data.name}</strong>&nbsp;
+              <span>{data.content}</span>
+            </div>
+          </Tooltip>
+          <span>{moment(data.createDate).format("DD-MM-YYYY")}</span>
         </div>
       </div>
     </div>

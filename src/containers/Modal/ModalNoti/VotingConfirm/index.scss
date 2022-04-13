@@ -16,6 +16,11 @@
   &__top {
     display: flex;
     align-items: center;
+    transition: .2s all ease-in;
+
+    &:hover {
+      background-color: #8fa7e9;
+    }
 
     &__ava {
       display: flex;
@@ -29,6 +34,13 @@
       max-width: 398px;
       color: #002169;
       font-size: 16px;
+
+      & > div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+        white-space: nowrap;
+      }
     }
   }
 

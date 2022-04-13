@@ -80,7 +80,23 @@ const ProfilePage: React.FC = () => {
           openTabMedia={openTabMedia}
           canCloseMedia={handleCloseMedia}
         />
-        {!id ? <ProfileFollowing /> : <ProfileDonation />}
+        {!id ? <ProfileFollowing /> : <ProfileDonation donation={
+          userWithParam ? {
+            image: (function () {
+              const userAvatar = userWithParam.UserMedia.filter(
+                (userMedia: any) =>
+                  userMedia.type === "1" && userMedia.active === 1
+              )
+                .slice(-1)
+                .pop();
+              return userAvatar
+                ? userAvatar.link
+                : "/icon/bad-lucker.svg";
+            })(),
+            name: userWithParam.name,
+            walletAddress: userWithParam.walletAddress
+          } : undefined
+        } />}
       </div>
     </div>
   );

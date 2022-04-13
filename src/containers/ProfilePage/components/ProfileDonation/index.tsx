@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { InputNumber, Button, Image, Avatar } from "antd";
 import DonationAmountBox from "./components/DonationAmountBox";
 
 import "./index.scss";
+import AppDonate from "../../../../components/AppDonate";
 
 const DONATE_AMOUNT_QUICK_SELECTS = [50, 100, 200, 500, 1000];
 const TOP_PEOPLE_DONATED = [
@@ -26,25 +27,36 @@ const TOP_PEOPLE_DONATED = [
   },
 ];
 
-const ProfileDonation: React.FC = () => {
+type ProfileDonationProps = {
+  donation: {
+    image: string;
+    name: string;
+    walletAddress: string;
+  } | undefined
+};
+
+const ProfileDonation: React.FC<ProfileDonationProps> = (props) => {
+  const { donation } = props;
+  const [visible, setVisible] = useState<boolean>(false);
+
   return (
     <div className="profile-donation">
       <div className="direct-donation">
-        <div className="direct-donation__title">Select an donation amount</div>
-        <p className="direct-donation__quick-select">Quick select</p>
+        {/* <div className="direct-donation__title">Số lượng ủng hộ</div> */}
+        {/* <p className="direct-donation__quick-select">Chọn nhanh</p>
         <div className="direct-donation__amounts">
           {DONATE_AMOUNT_QUICK_SELECTS.map((QUICK_SELECT) => (
             <DonationAmountBox amount={QUICK_SELECT} key={QUICK_SELECT}/>
           ))}
         </div>
         <p className="direct-donation__input-title">
-          Or enter an amount to give
+          Hoặc điền số lượng bạn muốn ủng hộ
         </p>
         <InputNumber
           placeholder="Custom amount"
           className="direct-donation__input"
-        />
-        <Button className="direct-donation__btn">Donate</Button>
+        /> */}
+        <Button className="direct-donation__btn" onClick={() => setVisible(true)}>Ủng hộ</Button>
       </div>
       <div className="people-donated">
         <header className="people-donated__header">
@@ -81,6 +93,16 @@ const ProfileDonation: React.FC = () => {
           ))}
         </ul>
         <Button className="people-donated__see-all">Sell all donations</Button>
+        {visible && donation && (
+        <AppDonate
+          name={donation.name}
+          avatar={donation.image}
+          walletAddress={donation.walletAddress}
+          onClose={() => {
+            setVisible(false);
+          }}
+        />
+      )}
       </div>
     </div>
   );
