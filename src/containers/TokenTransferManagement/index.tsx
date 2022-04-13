@@ -256,7 +256,7 @@ const TokenTransferManagement: React.FC = () => {
         <AppDialog
           type="confirm"
           title={`Bạn muốn xác nhận là ${
-            selectedUser.checked ? "đã" : "chưa"
+            selectedUser?.checked ? "đã" : "chưa"
           } chuyển tiền cho ${selectedUser?.receiver} ?`}
           description="Nếu chưa xem xét hết thông tin, hãy xem lại"
           confirmText={"Đồng ý"}
