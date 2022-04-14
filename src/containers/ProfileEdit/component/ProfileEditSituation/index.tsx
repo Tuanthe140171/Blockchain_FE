@@ -158,7 +158,7 @@ const ProfileSituation = () => {
 
   // get initial Situation media
   const getSituationMedia = (data: any, text: string) => {
-    const situationMedia = data.map((media: any, index: number) => ({
+    const situationMedia = data?.map((media: any, index: number) => ({
       name: `Giấy xác nhận ${text}`,
       status: "done",
       url: media.link,

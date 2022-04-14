@@ -64,7 +64,7 @@ const ProfileSocialPersonal: React.FC = () => {
               <span>Ngày Sinh</span>
             </div>
             <span className="profile-personal__detail-content">
-              {userData.dob?.split("T")[0]}
+              {userData?.dob?.split("T")[0]}
             </span>
           </li>
           <li className="profile-personal__detail">
@@ -77,7 +77,7 @@ const ProfileSocialPersonal: React.FC = () => {
               <span>Trú quán</span>
             </div>
             <span className="profile-personal__detail-content">
-              {userData.currentAddress}
+              {userData?.currentAddress}
             </span>
           </li>
           <li className="profile-personal__detail">
@@ -90,7 +90,7 @@ const ProfileSocialPersonal: React.FC = () => {
               <span>Nguyên quán</span>
             </div>
             <span className="profile-personal__detail-content">
-              {userData.baseAddress}
+              {userData?.baseAddress}
             </span>
           </li>
           <li className="profile-personal__detail">
@@ -103,7 +103,7 @@ const ProfileSocialPersonal: React.FC = () => {
               <span>Số CMND</span>
             </div>
             <span className="profile-personal__detail-content">
-              {userData.identityId}
+              {userData?.identityId}
             </span>
           </li>
           <li className="profile-personal__detail">
@@ -116,7 +116,7 @@ const ProfileSocialPersonal: React.FC = () => {
               <span>Ngày cấp CMND</span>
             </div>
             <span className="profile-personal__detail-content">
-              {userData.identityDate}
+              {userData?.identityDate}
             </span>
           </li>
           <li className="profile-personal__detail">
@@ -129,7 +129,7 @@ const ProfileSocialPersonal: React.FC = () => {
               <span>Nơi cấp CMND</span>
             </div>
             <span className="profile-personal__detail-content">
-              {userData.identityPlace}
+              {userData?.identityPlace}
             </span>
           </li>
         </ul>

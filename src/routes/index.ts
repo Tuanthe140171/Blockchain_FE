@@ -68,7 +68,12 @@ const routes: CRVRoute[] = [
     exact: true,
   },
   {
-    path: "/profile/edit/",
+    path: "/profile-edit/",
+    component: ProfileEditPage,
+    exact: true,
+  },
+  {
+    path: "/profile-edit/:id",
     component: ProfileEditPage,
     exact: true,
   },

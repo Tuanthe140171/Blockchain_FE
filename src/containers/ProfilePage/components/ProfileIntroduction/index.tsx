@@ -126,7 +126,7 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
   };
 
   const getSituation = () => {
-    if (userData?.BadLuckTypes.length === 0) {
+    if (userData?.BadLuckTypes?.length === 0) {
       return "";
     } else {
       return badluckerType?.find(

@@ -1,39 +1,130 @@
-// @import "../../styles/variables.scss";
+.profile-edit-payment-wrapper {
+  margin-top: 12px;
+}
 
-.profile-payment {
-  background-color: #ffffff;
+.profile-edit-payment {
+  background-color: white;
+  padding: 32px;
 
-  &__title {
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
-  &__container {
+  &__details {
+    padding-left: 0;
+    padding-top: 40px;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 
-    &__avatar {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    &__card {
+      border-radius: 10px;
+      width: 20% !important;
+      margin: 0 25px;
+      margin-bottom: 10px;
     }
 
-    &__information {
-      &__form {
-        max-width: 600px;
-        &__form-item {
-          & > div {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-          }
+    &__info {
+      display: flex;
+      align-items: center;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
 
-          .ant-form-item-control {
-            width: 100%;
-
-            & input {
-              height: 40px;
-            }
-          }
-        }
+      & > div {
+        max-width: 180px;
       }
+
+      & > div:first-child .ant-card-meta-title {
+        white-space: normal;
+      }
+
+      &__check {
+      }
+    }
+  }
+
+  &__divider {
+    height: 1px;
+    background-color: #e0e6f1;
+    margin-top: 20px;
+  }
+
+  &__add-info {
+    display: flex;
+    align-items: center;
+    margin-top: 40px;
+
+    & > span {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 22px;
+      color: #3156db;
+      margin-left: 10px;
+    }
+
+    & > .ant-image {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.payment-header {
+  display: flex;
+  align-items: center;
+
+  &__title {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+    color: #2f497f;
+    margin-bottom: 0;
+  }
+
+  &__edit {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+    color: #a7b2c8;
+    cursor: pointer;
+  }
+}
+
+.profile-social-modal {
+  & .ant-modal-content {
+    border-radius: 10px;
+  }
+
+  & .ant-modal-header {
+    border-radius: 10px;
+  }
+
+  & .ant-modal-title {
+    color: #002169;
+    font-size: 20px;
+  }
+
+  &__line {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+
+    & > p {
+      width: 175px;
+      color: #2f497f;
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+
+    &__right {
+      max-width: 275px;
     }
   }
 }

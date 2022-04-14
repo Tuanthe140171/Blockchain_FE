@@ -17,14 +17,17 @@ const ProfilePage: React.FC = () => {
   const [callWithoutParam, setCallWithoutParam] = useState<any>(undefined);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  console.log(userData);
 
   useEffect(() => {
-    if (id && id !== userData.id) {
-      setCallWithParam(true);
-    } else {
-      setCallWithoutParam(true);
+    if (userData?.id) {
+      if (id && id !== userData.id) {
+        setCallWithParam(true);
+      } else {
+        setCallWithoutParam(true);
+      }
     }
-  }, [id]);
+  }, [id, userData]);
 
   useEffect(() => {
     if (userData && id === userData.id) {
@@ -80,23 +83,31 @@ const ProfilePage: React.FC = () => {
           openTabMedia={openTabMedia}
           canCloseMedia={handleCloseMedia}
         />
-        {!id ? <ProfileFollowing /> : <ProfileDonation donation={
-          userWithParam ? {
-            image: (function () {
-              const userAvatar = userWithParam.UserMedia.filter(
-                (userMedia: any) =>
-                  userMedia.type === "1" && userMedia.active === 1
-              )
-                .slice(-1)
-                .pop();
-              return userAvatar
-                ? userAvatar.link
-                : "/icon/bad-lucker.svg";
-            })(),
-            name: userWithParam.name,
-            walletAddress: userWithParam.walletAddress
-          } : undefined
-        } />}
+        {!id ? (
+          <ProfileFollowing />
+        ) : (
+          <ProfileDonation
+            donation={
+              userWithParam
+                ? {
+                    image: (function () {
+                      const userAvatar = userWithParam.UserMedia.filter(
+                        (userMedia: any) =>
+                          userMedia.type === "1" && userMedia.active === 1
+                      )
+                        .slice(-1)
+                        .pop();
+                      return userAvatar
+                        ? userAvatar.link
+                        : "/icon/bad-lucker.svg";
+                    })(),
+                    name: userWithParam.name,
+                    walletAddress: userWithParam.walletAddress,
+                  }
+                : undefined
+            }
+          />
+        )}
       </div>
     </div>
   );

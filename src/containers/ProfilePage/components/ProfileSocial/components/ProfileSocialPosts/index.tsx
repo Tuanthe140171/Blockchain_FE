@@ -60,12 +60,14 @@ const ProfileSocialPosts: React.FC = (props) => {
   const [callWithoutParam, setCallWithoutParam] = useState<any>(undefined);
 
   useEffect(() => {
-    if (id && id !== mainUser.id) {
-      setCallWithParam(true);
-    } else {
-      setCallWithoutParam(true);
+    if (mainUser?.id) {
+      if (id && id !== mainUser.id) {
+        setCallWithParam(true);
+      } else {
+        setCallWithoutParam(true);
+      }
     }
-  }, [id]);
+  }, [id, mainUser]);
 
   const convertToLocaleString = (time: string) => {
     const t3 = time.replace("seconds", "giây");
@@ -242,6 +244,7 @@ const ProfileSocialPosts: React.FC = (props) => {
         id: data.id,
         isLike: data.isLike,
       };
+      setInputValue("");
       setNewPost(newPost);
     }
   );
@@ -272,6 +275,7 @@ const ProfileSocialPosts: React.FC = (props) => {
         id: data.id,
         isLike: data.isLike,
       };
+      setInputValue("");
       setNewPost(newPost);
     }
   );
@@ -293,6 +297,8 @@ const ProfileSocialPosts: React.FC = (props) => {
     const newValue = inputValue + emojiObject.emoji;
     setInputValue(newValue);
   };
+
+  console.log(inputValue);
 
   return (
     <>

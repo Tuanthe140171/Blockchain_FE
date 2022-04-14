@@ -22,13 +22,11 @@ const NotificationVoting = () => {
     }
   );
 
-  console.log(votingData);
-
   return (
     <div className="notification-voting">
       <p className="notification-voting__header">Bỏ phiếu</p>
       <div className="notification-voting__body">
-        {votingData ? votingData.map((voting: any) => {
+        {data?.map((voting: any) => {
           return (
             <div className={"notification-voting-confirm"} key={voting.avatar}>
               <div className="notification-voting-confirm__top">
@@ -46,7 +44,7 @@ const NotificationVoting = () => {
               </div>
             </div>
           );
-        }): []}
+        })}
       </div>
     </div>
   );
