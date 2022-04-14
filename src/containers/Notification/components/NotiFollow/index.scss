@@ -1,6 +1,8 @@
 .notification-follow {
     background-color: #ffffff;
     margin-top: 24px;
+    padding-bottom: 20px;
+    padding-right: 20px;
   
     &__header {
       color: #002169;
@@ -12,6 +14,8 @@
   
   .notification-follow-confirm {
     padding: 0 15px;
+    margin-top: 20px;
+
     &__top {
       display: flex;
       align-items: center;
@@ -37,4 +41,3 @@
       margin: 2px 0 19px 76px;
     }
   }
-  

@@ -4,11 +4,12 @@ import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import useFetch from "../../../../hooks/useFetch";
 import "./index.scss";
+import AppPagination from "../../../../components/AppPagination";
 
 const NotificationActivity = () => {
-  const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: activityData } = useFetch<any>(
+  const { data } = useFetch<any>(
     "notification/get-notification?type=3&limit=10&offset=0",
     {
       "Content-Type": "application/json",
@@ -17,16 +18,13 @@ const NotificationActivity = () => {
     false,
     [],
     {},
-    (e) => {
-      setData(e.data.rows);
-    }
   );
 
   return (
     <div className="notification-activity">
       <p className="notification-activity__header">Hoạt động</p>
       <div className="notification-activity__body">
-        {data?.map((activity: any) => {
+        {data?.rows.map((activity: any) => {
           return (
             <div
               className={"notification-activity-confirm"}
@@ -48,6 +46,15 @@ const NotificationActivity = () => {
             </div>
           );
         })}
+      </div>
+      <div className="notification-follow-wrapper">
+        <AppPagination
+          defaultPageSize={data ? data.limit : 10}
+          pageSize={data ? data.limit : 10}
+          totalPage={data ? data.count : 0}
+          current={currentPage}
+          onChange={(page: number) => setCurrentPage(page)}
+        />
       </div>
     </div>
   );

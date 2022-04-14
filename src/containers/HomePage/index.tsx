@@ -9,6 +9,31 @@ import useFetch from "../../hooks/useFetch";
 //@ts-ignore
 import { BigNumber } from "bignumber.js";
 import { useState } from "react";
+import moment from "moment";
+
+const convertToLocaleString = (time: string) => {
+  const t3 = time.replace("seconds", "giây");
+  const t4 = t3.replace("minutes", "phút");
+  const t5 = t4.replace("minute", "phút");
+  const t6 = t5.replace("hours", "giờ");
+  const t7 = t6.replace("hour", "giờ");
+  const t8 = t7.replace("days", "ngày");
+  const t9 = t8.replace("day", "ngày");
+  const t10 = t9.replace("months", "tháng");
+  const t11 = t10.replace("month", "tháng");
+  const t12 = t11.replace("years", "năm");
+  const t13 = t12.replace("year", "năm");
+  const t14 = t13.replace("a few", "Một vài");
+  const t15 = t14.replace("an", "Một");
+  const t16 = t15.replace("a", "Một");
+  return t16;
+};
+
+const getTimeDiff = (time: any) => {
+  const timestamp = moment(time).fromNow(true);
+  const convertedTime = convertToLocaleString(timestamp);
+  return convertedTime;
+};
 
 const HomePage = () => { 
     const [activatedCategory, setActivatedCategory] = useState("1");
@@ -30,7 +55,7 @@ const HomePage = () => {
     totalDonation: new BigNumber(topPhilanthropist.totalDonation).div(1e18).toFixed(3),
     lastName: topPhilanthropist.lastName,
     name: topPhilanthropist.name,
-    lastDonation: "3m ago",
+    lastDonation: getTimeDiff(topPhilanthropist.transactionsFrom[0].date),
     image: (function () {
       const userAvatar = topPhilanthropist.UserMedia.filter(
         (userMedia: any) =>

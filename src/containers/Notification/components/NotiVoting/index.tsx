@@ -4,11 +4,12 @@ import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import useFetch from "../../../../hooks/useFetch";
 import "./index.scss";
+import AppPagination from "../../../../components/AppPagination";
 
 const NotificationVoting = () => {
-  const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: votingData } = useFetch<any>(
+  const { data } = useFetch<any>(
     "notification/get-notification?type=1&limit=10&offset=0",
     {
       "Content-Type": "application/json",
@@ -17,16 +18,13 @@ const NotificationVoting = () => {
     false,
     [],
     {},
-    (e) => {
-      setData(e.data.rows);
-    }
   );
 
   return (
     <div className="notification-voting">
       <p className="notification-voting__header">Bỏ phiếu</p>
       <div className="notification-voting__body">
-        {data?.map((voting: any) => {
+        {data ? data.rows.map((voting: any) => {
           return (
             <div className={"notification-voting-confirm"} key={voting.avatar}>
               <div className="notification-voting-confirm__top">
@@ -44,7 +42,16 @@ const NotificationVoting = () => {
               </div>
             </div>
           );
-        })}
+        }): []}
+      </div>
+      <div className="notification-follow-wrapper">
+        <AppPagination
+          defaultPageSize={data ? data.limit : 10}
+          pageSize={data ? data.limit : 10}
+          totalPage={data ? data.count : 0}
+          current={currentPage}
+          onChange={(page: number) => setCurrentPage(page)}
+        />
       </div>
     </div>
   );
