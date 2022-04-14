@@ -35,7 +35,7 @@ const Banner: React.FC<BannerProps> = (props) => {
             Quyên góp cho trẻ em nghèo Việt Nam
           </Title>
           <div className="donate-cta">
-            <Button content="Donate" onClick={() => {
+            <Button content="Ủng hộ" onClick={() => {
               if (authorizeError === AuthorizeErrorType.NONE) {
                 setSelectedKey("Donee");
                 navigate("/donee");

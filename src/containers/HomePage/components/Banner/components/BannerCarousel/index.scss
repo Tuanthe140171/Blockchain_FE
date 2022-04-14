@@ -59,7 +59,8 @@
         align-items: flex-start;
 
         &--first, &--second {
-            max-width: 340px;
+            width: 340px;
+            height: 200px;
         }
 
         &--first {

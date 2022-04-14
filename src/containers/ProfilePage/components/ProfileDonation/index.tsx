@@ -1,61 +1,65 @@
 import React, { useState } from "react";
-import { InputNumber, Button, Image, Avatar } from "antd";
-import DonationAmountBox from "./components/DonationAmountBox";
+import { Button, Image, Avatar } from "antd";
+import moment from "moment";
 
-import "./index.scss";
 import AppDonate from "../../../../components/AppDonate";
-
-const DONATE_AMOUNT_QUICK_SELECTS = [50, 100, 200, 500, 1000];
-const TOP_PEOPLE_DONATED = [
-  {
-    name: "Bùi Văn Quyết",
-    lastDonated: "3 hours ago",
-    amount: 250,
-    icon: "/icon/bad-lucker-2.svg",
-  },
-  {
-    name: "Bùi Hoàng Xuân Bách",
-    lastDonated: "3 hours ago",
-    amount: 10,
-    icon: "/icon/bad-lucker-4.svg",
-  },
-  {
-    name: "Nguyễn Lâm Thảo My",
-    lastDonated: "2 hours ago",
-    amount: 10,
-    icon: "/icon/bad-lucker-5.svg",
-  },
-];
+import useFetch from "../../../../hooks/useFetch";
+import BigNumber from "bignumber.js";
+import { useNavigate } from "react-router-dom";
+import "./index.scss";
 
 type ProfileDonationProps = {
   donation: {
     image: string;
     name: string;
     walletAddress: string;
+    id: string
   } | undefined
+};
+
+const convertToLocaleString = (time: string) => {
+  const t3 = time.replace("seconds", "giây");
+  const t4 = t3.replace("minutes", "phút");
+  const t5 = t4.replace("minute", "phút");
+  const t6 = t5.replace("hours", "giờ");
+  const t7 = t6.replace("hour", "giờ");
+  const t8 = t7.replace("days", "ngày");
+  const t9 = t8.replace("day", "ngày");
+  const t10 = t9.replace("months", "tháng");
+  const t11 = t10.replace("month", "tháng");
+  const t12 = t11.replace("years", "năm");
+  const t13 = t12.replace("year", "năm");
+  const t14 = t13.replace("a few", "Một vài");
+  const t15 = t14.replace("an", "Một");
+  const t16 = t15.replace("a", "Một");
+  return t16;
+};
+
+const getTimeDiff = (time: any) => {
+  const timestamp = moment(time).fromNow(true);
+  const convertedTime = convertToLocaleString(timestamp);
+  return convertedTime;
 };
 
 const ProfileDonation: React.FC<ProfileDonationProps> = (props) => {
   const { donation } = props;
+  const navigate = useNavigate();
   const [visible, setVisible] = useState<boolean>(false);
+
+  const { data, loading } = useFetch<any>(
+    donation ? `users/me/philanthropists?id=${donation.id}&limit=5` : undefined,
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    donation?.id ? [true] : [undefined],
+    { method: "GET" },
+  );
 
   return (
     <div className="profile-donation">
       <div className="direct-donation">
-        {/* <div className="direct-donation__title">Số lượng ủng hộ</div> */}
-        {/* <p className="direct-donation__quick-select">Chọn nhanh</p>
-        <div className="direct-donation__amounts">
-          {DONATE_AMOUNT_QUICK_SELECTS.map((QUICK_SELECT) => (
-            <DonationAmountBox amount={QUICK_SELECT} key={QUICK_SELECT}/>
-          ))}
-        </div>
-        <p className="direct-donation__input-title">
-          Hoặc điền số lượng bạn muốn ủng hộ
-        </p>
-        <InputNumber
-          placeholder="Custom amount"
-          className="direct-donation__input"
-        /> */}
         <Button className="direct-donation__btn" onClick={() => setVisible(true)}>Ủng hộ</Button>
       </div>
       <div className="people-donated">
@@ -66,43 +70,50 @@ const ProfileDonation: React.FC<ProfileDonationProps> = (props) => {
             preview={false}
           />
           <span className="people-donated__total">
-            2,713 people just donated
+            {data?.count || 0} người đã ủng hộ
           </span>
         </header>
         <ul className="people-donated__list">
-          {TOP_PEOPLE_DONATED.map((TOP_DONATED) => (
-            <React.Fragment key={TOP_DONATED.amount + TOP_DONATED.icon}>
+          {data?.rows.map((TOP_DONATED: any, key: number) => (
+            <React.Fragment key={key}>
               <div className="people-donated__divider"></div>
               <li className="people-donated__list-item">
                 <Avatar
-                  src={TOP_DONATED.icon}
+                  src={(function () {
+                    const userAvatar = TOP_DONATED.from.UserMedia.filter(
+                      (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+                    )
+                      .slice(0, 1)
+                      .pop();
+                    return userAvatar ? userAvatar.link : null;
+                  })()}
                   className="people-donated__avatar"
                 />
                 <div className="people-donated__details">
-                  <p className="people-donated__name">{TOP_DONATED.name}</p>
+                  <p className="people-donated__name">{TOP_DONATED.from.name}</p>
                   <p className="people-donated__last-donated">
-                    {TOP_DONATED.lastDonated}
+                    {getTimeDiff(TOP_DONATED.from.transactionsFrom[0].date)}
                   </p>
                 </div>
                 <div className="people-donated__amount">
                   <Image src="/icon/ethereum_1.svg" preview={false} />
-                  <span>{TOP_DONATED.amount}</span>
+                  <span>{new BigNumber(TOP_DONATED.amount).div(1e18).toFixed(3)}</span>
                 </div>
               </li>
             </React.Fragment>
           ))}
         </ul>
-        <Button className="people-donated__see-all">Sell all donations</Button>
+        <Button className="people-donated__see-all" onClick={() => navigate(`/donations/${donation?.id}`)}>Xem tất cả ủng hộ</Button>
         {visible && donation && (
-        <AppDonate
-          name={donation.name}
-          avatar={donation.image}
-          walletAddress={donation.walletAddress}
-          onClose={() => {
-            setVisible(false);
-          }}
-        />
-      )}
+          <AppDonate
+            name={donation.name}
+            avatar={donation.image}
+            walletAddress={donation.walletAddress}
+            onClose={() => {
+              setVisible(false);
+            }}
+          />
+        )}
       </div>
     </div>
   );
