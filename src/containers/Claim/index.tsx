@@ -80,16 +80,14 @@ const Claim: React.FC = () => {
     //   );
 
     const { data, loading } = useFetch<any>(
-        userData ? (pickedDate ? `reward?userId=${userData?.id}&keyword=${debouncedKeyword}&fromDate=${pickedDate.from}&toDate=${pickedDate.to}` : `reward?userId=${userData?.id}&keyword=${debouncedKeyword}`) : '',
+        userData ? (pickedDate ? `reward?page=${currentPage}&userId=${userData?.id}&keyword=${debouncedKeyword}&fromDate=${pickedDate.from}&toDate=${pickedDate.to}&orderBy=deletedAt` : `reward?page=${currentPage}&userId=${userData?.id}&keyword=${debouncedKeyword}&orderBy=date`) : '',
         {
             "Content-Type": "application/json",
             Accept: "application/json",
         },
         false,
-        [userData, reloadClaiming],
-        {},
-        () => { setReloadClaiming(undefined) },
-        () => { setReloadClaiming(undefined) }
+        [userData, account],
+        {}
     );
 
     const { loading: rewardRefreshLoading } = useFetch<any>(
@@ -114,7 +112,10 @@ const Claim: React.FC = () => {
             Accept: "application/json",
         },
         false,
-        []
+        [reloadClaiming],
+        {},
+        () => { setReloadClaiming(undefined) },
+        () => { setReloadClaiming(undefined) }
     );
 
     const { data: claimSignatureData, loading: gettingSignatureLoading, error } = useFetch<{

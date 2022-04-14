@@ -10,7 +10,7 @@ const NotificationFollow = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data } = useFetch<any>(
-    "notification/get-notification?type=2&limit=10&offset=0",
+    `notification/get-notification?type=2&limit=10&offset=0&page=${currentPage}`,
     {
       "Content-Type": "application/json",
       Accept: "application/json",

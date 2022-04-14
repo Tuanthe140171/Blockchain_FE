@@ -18,8 +18,14 @@ const DoneePage: React.FC = () => {
   let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}&orderBy=${sortBy}&userType=4`;
 
   if (situations.length > 0) {
-    situations.forEach((situation, key) => {
+    situations.forEach((situation) => {
       url += `&situation[]=${situation}`;
+    });
+  }
+
+  if (provinces.length > 0) {
+    provinces.forEach((province) => {
+      url += `&place[]=${province}`;
     });
   }
 

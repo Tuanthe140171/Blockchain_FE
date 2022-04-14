@@ -27,8 +27,8 @@ const DoneeSearchFilter: React.FC<DoneeSearchFilterProps> = (props) => {
                 name: situation.name
             })): []} />
             <div className="donee-filter__divider"></div>
-            <DonationFieldsSearch propagateSelectedFields={props.setProvinces} loading={loading} title="Theo địa điểm" fields={provincesData ? provincesData.map(provinceData => ({
-                id: provinceData.code,
+            <DonationFieldsSearch usingName={true} propagateSelectedFields={props.setProvinces} loading={loading} title="Theo địa điểm" fields={provincesData ? provincesData.map(provinceData => ({
+                id: provinceData.name,
                 name: provinceData.name
             })) : []} />
         </div>
