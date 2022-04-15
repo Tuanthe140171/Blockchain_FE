@@ -1,4 +1,5 @@
 import {
+  FileTextOutlined,
   SecurityScanOutlined,
   UserOutlined,
   WalletOutlined,
@@ -15,7 +16,7 @@ const ModalProfileBody = () => {
       <div
         className="modal-profile__body__line"
         onClick={() => {
-          navigate("/profile/edit");
+          navigate("/profile-edit/1");
         }}
       >
         <UserOutlined
@@ -23,13 +24,29 @@ const ModalProfileBody = () => {
           width={21}
           height={21}
         />
+        <div className="modal-profile__body__line__text">Thông tin cá nhân</div>
+      </div>
+      <div
+        className="modal-profile__body__line"
+        onClick={() => {
+          navigate("/profile-edit/2");
+        }}
+      >
+        <WalletOutlined className="modal-profile__body__line__icon" />
         <div className="modal-profile__body__line__text">
-          Thông tin cá nhân
+          Phương thức thanh toán
         </div>
       </div>
-      <div className="modal-profile__body__line">
-        <WalletOutlined className="modal-profile__body__line__icon" />
-        <div className="modal-profile__body__line__text">Phương thức thanh toán</div>
+      <div
+        className="modal-profile__body__line"
+        onClick={() => {
+          navigate("/profile-edit/3");
+        }}
+      >
+        <FileTextOutlined className="modal-profile__body__line__icon" />
+        <div className="modal-profile__body__line__text">
+          Hoàn cảnh
+        </div>
       </div>
     </div>
   );

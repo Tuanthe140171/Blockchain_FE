@@ -1,5 +1,5 @@
 import { Breadcrumb, Button, Divider } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useFetch from "../../hooks/useFetch";
 import { useSelector, useDispatch } from "react-redux";
 import ProfileModal from "./component/ProfileEditModal";
@@ -7,17 +7,20 @@ import ProfilePayment from "./component/ProfileEditPayment";
 import ProfilePerson from "./component/ProfileEditPersonal";
 import ProfileSituation from "./component/ProfileEditSituation";
 import { getUserById } from "../../stores/action/user-layout.action";
+import { useNavigate, useParams } from "react-router-dom";
 import "./index.scss";
 
 const Dashboard = () => {
+  const { id } = useParams();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSubmit, setIsSubmit] = useState<any>(undefined);
   const [selectedTab, setSelectedTab] = useState(1);
   const { userData } = useSelector((state: any) => state.userLayout);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { data: userOriginData } = useFetch<any>(
-    "users/type",
+    "users/get-user-by-id",
     {
       "Content-Type": "application/json",
       Accept: "application/json",
@@ -39,6 +42,12 @@ const Dashboard = () => {
   const dataSubmitted = () => {
     setIsSubmit(true);
   };
+
+  useEffect(() => {
+    if (id) {
+      setSelectedTab(+id);
+    }
+  }, [id]);
 
   const renderTab = () => {
     if (selectedTab === 1) return <ProfilePerson />;
@@ -76,7 +85,10 @@ const Dashboard = () => {
               className={
                 selectedTab === 1 ? `profile-edit__header__buttons__button` : ""
               }
-              onClick={() => setSelectedTab(1)}
+              onClick={() => {
+                setSelectedTab(1);
+                navigate("/profile-edit/1");
+              }}
             >
               Personal Information
             </button>
@@ -84,7 +96,10 @@ const Dashboard = () => {
               className={
                 selectedTab === 2 ? `profile-edit__header__buttons__button` : ""
               }
-              onClick={() => setSelectedTab(2)}
+              onClick={() => {
+                setSelectedTab(2);
+                navigate("/profile-edit/2");
+              }}
             >
               Payment Method
             </button>
@@ -95,7 +110,10 @@ const Dashboard = () => {
                     ? `profile-edit__header__buttons__button`
                     : ""
                 }
-                onClick={() => setSelectedTab(3)}
+                onClick={() => {
+                  setSelectedTab(3);
+                  navigate("/profile-edit/3");
+                }}
               >
                 Situation
               </button>

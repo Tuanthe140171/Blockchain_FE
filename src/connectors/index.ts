@@ -5,8 +5,6 @@ import { Web3Provider } from "@ethersproject/providers";
 import { NetworkConnector } from "./NetworkConnector";
 import getLibrary from '../utils/getLibrary'
 
-console.log(ALL_SUPPORTED_CHAIN_IDS);
-
 export const network = new NetworkConnector({
     urls: INFURA_NETWORK_URLS,
     defaultChainId: 2018,

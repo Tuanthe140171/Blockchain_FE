@@ -82,7 +82,6 @@ const ProfileSocialSituation = () => {
     return (
       <ul className="profile-social-situation__details">
         {myPageSituationList.map((situation: any, index: number) => {
-          console.log(situation);
           return (
             <ProfileSituationVoting
                 data={situation}
@@ -124,7 +123,6 @@ const ProfileSocialSituation = () => {
     return (
       <ul className="profile-social-situation__details">
         {yourSituationCfList.map((situation: any, index: number) => {
-          console.log(situation);
           return (
             // <li
             //   className="profile-social-situation__detail"

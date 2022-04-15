@@ -126,7 +126,7 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
   };
 
   const getSituation = () => {
-    if (userData?.BadLuckTypes.length === 0) {
+    if (userData?.BadLuckTypes?.length === 0) {
       return "";
     } else {
       return badluckerType?.find(
@@ -163,8 +163,6 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
       setOpenDialog(true);
     }
   );
-
-  console.log(openConfirmDialog);
 
   return (
     <>

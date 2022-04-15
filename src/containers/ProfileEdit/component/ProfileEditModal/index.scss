@@ -43,6 +43,17 @@
       background: #ffffff;
       padding: 5px;
       margin: 0 15px;
+      color: #2F497F;
+      font-size: 18px;
+    }
+
+    &__title:hover {
+      top: 15px;
+      background: #ffffff;
+      padding: 5px;
+      margin: 0 15px;
+      color: #2F497F;
+      font-size: 18px;
     }
 
     &__wrapper {
@@ -54,7 +65,7 @@
           width: 100%;
           height: 45px;
           background-color: #f6faff;
-          font-size: 12px;
+          font-size: 14px;
           color: #3156db;
         }
 

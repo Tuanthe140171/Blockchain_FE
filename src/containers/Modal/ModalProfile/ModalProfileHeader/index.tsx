@@ -18,12 +18,12 @@ const ModalProfileHeader = () => {
   const navigate = useNavigate();
 
   const getSituation = () => {
-    if (userData?.BadLuckTypes.length === 0) {
+    if (userData?.BadLuckTypes?.length === 0) {
       return "";
     } else {
-      return badluckerType.find(
-        (type: any) => type.id === userData.BadLuckTypes[0].situationId
-      ).name;
+      return badluckerType?.find(
+        (type: any) => type.id === userData?.BadLuckTypes[0]?.situationId
+      )?.name;
     }
   };
 

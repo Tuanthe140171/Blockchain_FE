@@ -43,23 +43,24 @@ const ProfilePerson = () => {
 
   useEffect(() => {
     if (userData) {
+      
       form.setFieldsValue({
-        name: userData.name,
-        lastName: userData.lastName,
-        dob: userData.dob?.split("T")[0],
+        name: userData?.name,
+        lastName: userData?.lastName,
+        dob: userData?.dob?.split("T")[0],
         gender:
           userData.gender === 0
             ? "male"
             : userData.gender === 1
             ? "female"
             : "other",
-        nation: userData.country,
-        nativeAddress: userData.baseAddress,
-        permanentAddress: userData.currentAddress,
-        address: userData.liveAddress,
-        cmnd: userData.identityId,
-        date: userData.identityDate,
-        place: userData.identityPlace,
+        nation: userData?.country,
+        nativeAddress: userData?.baseAddress,
+        permanentAddress: userData?.currentAddress,
+        address: userData?.liveAddress,
+        cmnd: userData?.identityId,
+        date: userData?.identityDate,
+        place: userData?.identityPlace,
       });
       setFileList([
         {
@@ -130,7 +131,7 @@ const ProfilePerson = () => {
       new Date(cmndDay) > new Date() ||
       new Date(cmndDay).getFullYear() < new Date(birthday).getFullYear() + 14
     ) {
-      form.setFields([{ name: "dob", errors: ["Ngày cấp không phù hợp!"] }]);
+      form.setFields([{ name: "date", errors: ["Ngày cấp không phù hợp!"] }]);
     } else {
       const dataSubmit = {
         name: values.name,
@@ -222,9 +223,6 @@ const ProfilePerson = () => {
       form.setFields([{ name: "dob", errors: ["Ngày sinh không phù hợp!"] }]);
       setErrorBirthdayField(false);
     }
-    // else {
-    //   form.setFields([{ name: "dob", errors: [] }]);
-    // }
   }, [errorBirthdayField]);
 
   useEffect(() => {

@@ -25,7 +25,6 @@ const ModalNoti: React.FC<
   );
   const [propsData, setPropsData] = useState<any>(null);
   const navigate = useNavigate();
-  console.log(notifications);
 
   useEffect(() => {
     const arrFollow = defaultNotification.followNoti.map((noti: any) => ({
@@ -61,7 +60,6 @@ const ModalNoti: React.FC<
     }));
     const combineArray = arrActivity.concat(arrFollow, arrVoting);
     setPropsData(combineArray.concat(notifications));
-    console.log(combineArray);
   }, [notifications]);
 
   const renderVoting = () => {

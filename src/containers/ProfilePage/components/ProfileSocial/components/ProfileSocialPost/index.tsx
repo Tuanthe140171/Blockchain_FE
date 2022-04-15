@@ -175,7 +175,7 @@ const ProfileSocialPost: React.FC<ProfileSocialPostProps> = (props) => {
         <div className="cta__share">
           {likeCount === 0
             ? "Hãy là người đầu tiên thích bài viết này"
-            : `Có ${likeCount} người thích bài viết của bạn`}
+            : `Có ${likeCount} người thích bài viết này`}
         </div>
       </div>
     </div>

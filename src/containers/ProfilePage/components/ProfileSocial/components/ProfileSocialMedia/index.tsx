@@ -30,7 +30,6 @@ const ProfileSocialMedia = () => {
     const formatList = userData?.UserMedia?.map((data: any) => ({
       id: data.id,
       url: data.link,
-      like: 100,
     }));
     setListImage(formatList);
   }, []);
@@ -126,12 +125,12 @@ const ProfileSocialMedia = () => {
               >
                 <div onClick={() => setIsFocusItem(index)}>...</div>
               </Popover>
-              <div className="profile-media__images__image__mask__info">
+              {/* <div className="profile-media__images__image__mask__info">
                 <div>
                   <HeartOutlined className="icon" />
                   <div>{image.like}</div>
                 </div>
-              </div>
+              </div> */}
             </div>
           )}
         </div>
