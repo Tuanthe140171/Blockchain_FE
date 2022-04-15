@@ -82,31 +82,24 @@ const ProfilePage: React.FC = () => {
           openTabMedia={openTabMedia}
           canCloseMedia={handleCloseMedia}
         />
-        {!id ? (
-          <ProfileFollowing />
-        ) : (
-          <ProfileDonation
-            donation={
-              userWithParam
-                ? {
-                    image: (function () {
-                      const userAvatar = userWithParam.UserMedia.filter(
-                        (userMedia: any) =>
-                          userMedia.type === "1" && userMedia.active === 1
-                      )
-                        .slice(-1)
-                        .pop();
-                      return userAvatar
-                        ? userAvatar.link
-                        : "/icon/bad-lucker.svg";
-                    })(),
-                    name: userWithParam.name,
-                    walletAddress: userWithParam.walletAddress,
-                  }
-                : undefined
-            }
-          />
-        )}
+        {!id ? <ProfileFollowing /> : <ProfileDonation donation={
+          userWithParam ? {
+            image: (function () {
+              const userAvatar = userWithParam.UserMedia.filter(
+                (userMedia: any) =>
+                  userMedia.type === "1" && userMedia.active === 1
+              )
+                .slice(-1)
+                .pop();
+              return userAvatar
+                ? userAvatar.link
+                : "/icon/bad-lucker.svg";
+            })(),
+            name: userWithParam.name,
+            walletAddress: userWithParam.walletAddress,
+            id: userWithParam.id
+          } : undefined
+        } />}
       </div>
     </div>
   );

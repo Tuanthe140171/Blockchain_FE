@@ -231,8 +231,8 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
             <span className="follow-btn__txt">
               {!isOwner
                 ? isFollowing
-                  ? "Following"
-                  : "Follow"
+                  ? "Đang theo dõi"
+                  : "Theo dõi"
                 : "Thông tin cá nhân"}
             </span>
           </Button>
