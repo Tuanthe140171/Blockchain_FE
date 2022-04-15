@@ -298,8 +298,6 @@ const ProfileSocialPosts: React.FC = (props) => {
     setInputValue(newValue);
   };
 
-  console.log(inputValue);
-
   return (
     <>
       <AppDialog

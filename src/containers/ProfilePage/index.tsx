@@ -17,7 +17,6 @@ const ProfilePage: React.FC = () => {
   const [callWithoutParam, setCallWithoutParam] = useState<any>(undefined);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(userData);
 
   useEffect(() => {
     if (userData?.id) {

@@ -10,7 +10,6 @@ type IActivityNotiProps = {
 
 const ActivityNoti: React.FC<IActivityNotiProps> = (props) => {
   const { data } = props;
-  console.log(data);
 
   return (
     <div className={"activity-noti voting-read"}>

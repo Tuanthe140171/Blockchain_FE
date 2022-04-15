@@ -25,7 +25,7 @@ const AppDrawer: React.FC<AppDrawerProps> = (props) => {
       closeIcon={<ArrowLeftOutlined />}
       width="45%"
       className={`${className} app-drawer`}
-      headerStyle={{ height: "98px", padding: "24px 65px 0 39px" }}
+      // headerStyle={{ height: "98px", padding: "24px 65px 0 39px" }}
       bodyStyle={{ padding: "24px 65px 0 39px" }}
     >
       {content}

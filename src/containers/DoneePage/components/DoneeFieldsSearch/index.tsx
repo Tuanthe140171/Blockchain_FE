@@ -31,7 +31,6 @@ const DoneeFieldsSearch: React.FC<DoneeFieldsSearchProps> = (props) => {
     // }, [fields]);
 
     useEffect(() => {
-        console.log(enclose && enclose[title]);
         (enclose && enclose[title] && fields.length > 5) ? setDisplayedFields(fields): setDisplayedFields(fields.slice(0, 5));
     }, [enclose, title, fields]);
 

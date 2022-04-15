@@ -164,8 +164,6 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
     }
   );
 
-  console.log(openConfirmDialog);
-
   return (
     <>
       <AppDialog
