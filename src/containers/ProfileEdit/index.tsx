@@ -20,7 +20,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const { data: userOriginData } = useFetch<any>(
-    "users/type",
+    "users/get-user-by-id",
     {
       "Content-Type": "application/json",
       Accept: "application/json",
