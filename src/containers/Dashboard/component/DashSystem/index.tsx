@@ -65,7 +65,9 @@ const DashSystem: React.FC<{
   const [chartRef, setChartRef] = useState<any>();
   const [userChartRef, setUserChartRef] = useState<any>();
 
+
   const debouncedKeyword = useDebounce<string>(keyWord, 500);
+  console.log(`transactions?page=${currentPage}&keyword=${debouncedKeyword}`);
   const navigate = useNavigate();
 
   const { explorer } =
@@ -104,7 +106,7 @@ const DashSystem: React.FC<{
   const { data: userActiveResp } = useFetch<any>(
     !props.pickedDate
       ? `active/stats`
-      : `active/stats?fromDate=${props.pickedDate.from}&toDate=${props.pickedDate.to}&sortBy=date`,
+      : `active/stats?fromDate=${props.pickedDate.from}&toDate=${props.pickedDate.to}`,
     {
       "Content-Type": "application/json",
       Accept: "application/json",
