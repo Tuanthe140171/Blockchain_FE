@@ -43,7 +43,6 @@ const ProfilePerson = () => {
 
   useEffect(() => {
     if (userData) {
-      
       form.setFieldsValue({
         name: userData?.name,
         lastName: userData?.lastName,
@@ -484,13 +483,13 @@ const ProfilePerson = () => {
                           message: "Hãy điền trường còn thiếu!",
                         },
                         {
-                          pattern: /^[0-9]*$/g,
                           len: 12,
-                          message: "12 kí tự số!",
+                          message: "CMND bao gồm 12 kí tự!",
                         },
                       ]}
+                      className="profile-input-number"
                     >
-                      <Input placeholder="CMND" />
+                      <Input type="number" placeholder="CMND" />
                     </Form.Item>
                   </Col>
                   <Col

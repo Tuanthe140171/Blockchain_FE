@@ -33,7 +33,7 @@ const ProfileSocialPersonal: React.FC = () => {
           {id ? null : (
             <span
               className="personal-header__edit"
-              onClick={() => navigate("/profile/edit")}
+              onClick={() => navigate("/profile-edit/")}
             >
               Chỉnh sửa
             </span>

@@ -20,16 +20,18 @@ const ProfileSocialMedia = () => {
   const { userPostData: userData } = useSelector(
     (state: any) => state.userPostData
   );
+  const { id } = useParams();
+  const dispatch = useDispatch();
   const [listImage, setListImage] = useState([]);
   const [dataUpdateAva, setDataUpdateAva] = useState<any>(undefined);
-  const { id } = useParams();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const [deleteImage, setDeleteImage] = useState<any>(undefined);
 
   useEffect(() => {
     const formatList = userData?.UserMedia?.map((data: any) => ({
       id: data.id,
       url: data.link,
+      type: data.type,
     }));
     setListImage(formatList);
   }, []);
@@ -59,6 +61,33 @@ const ProfileSocialMedia = () => {
     setDataUpdateAva({ ...userData, image: [{ link: url, type: "1" }] });
   };
 
+  const { data: deleteImgData, loading: loadingDeleteImg } = useFetch<any>(
+    "users/update-image",
+    {
+      "Content-Type": "application/json",
+    },
+    false,
+    [deleteImage],
+    {
+      method: "POST",
+      body: JSON.stringify({
+        type: deleteImage?.type,
+        imageList: [
+          {
+            action: "delete",
+            id: deleteImage?.id,
+          },
+        ],
+      }),
+    },
+    (e) => {
+      console.log(listImage);
+      setDeleteImage(undefined);
+      console.log(e.data);
+    }
+  );
+  console.log(deleteImage);
+
   const renderOptions = (image: any) => {
     return (
       <div className="profile-media__popup-option__wrapper">
@@ -77,7 +106,12 @@ const ProfileSocialMedia = () => {
           </div>
         </div>
         <hr />
-        <div className="profile-media__popup-option__wrapper__footer">
+        <div
+          className="profile-media__popup-option__wrapper__footer"
+          onClick={() => {
+            setDeleteImage(image);
+          }}
+        >
           <DeleteOutlined className="icon" />
           <div>Xóa ảnh</div>
         </div>
@@ -85,15 +119,20 @@ const ProfileSocialMedia = () => {
     );
   };
 
-  const [activeImage, setActiveImage] = useState<any>(null);
+  const [activeImage, setActiveImage] = useState<any>(false);
   const [isFocusItem, setIsFocusItem] = useState<any>(null);
+  const [canActive, setCanActive] = useState<boolean>(true);
 
   const renderImage = () => {
     return listImage?.map((image: any, index) => {
       return (
         <div
           className="profile-media__images__image"
-          onMouseOver={() => setActiveImage(index)}
+          onMouseOver={() => {
+            if (canActive) {
+              setActiveImage(index);
+            }
+          }}
           onMouseOut={() => {
             if (!isFocusItem) {
               setActiveImage(false);
@@ -104,7 +143,6 @@ const ProfileSocialMedia = () => {
           <Image
             src={image.url}
             className="profile-media__images__image__pic"
-            preview
           />
           {id ? null : (
             <div
@@ -119,18 +157,26 @@ const ProfileSocialMedia = () => {
                 trigger="click"
                 overlayClassName="profile-media__popup-option"
                 onVisibleChange={(e) => {
-                  setActiveImage(e);
-                  setIsFocusItem(e);
+                  if (e) {
+                    setIsFocusItem(e);
+                    setActiveImage(index);
+                    setCanActive(false);
+                  } else {
+                    setIsFocusItem(e);
+                    setActiveImage(false);
+                    setCanActive(true);
+                  }
                 }}
               >
-                <div onClick={() => setIsFocusItem(index)}>...</div>
-              </Popover>
-              {/* <div className="profile-media__images__image__mask__info">
-                <div>
-                  <HeartOutlined className="icon" />
-                  <div>{image.like}</div>
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsFocusItem(index);
+                  }}
+                >
+                  ...
                 </div>
-              </div> */}
+              </Popover>
             </div>
           )}
         </div>
@@ -150,7 +196,7 @@ const ProfileSocialMedia = () => {
         onCancel={() => setOpenDialog(false)}
         visible={openDialog}
       />
-      {loading && (
+      {(loading || loadingDeleteImg) && (
         <AppLoading loadingContent={<div></div>} showContent={false} />
       )}
       <div className="profile-media">
