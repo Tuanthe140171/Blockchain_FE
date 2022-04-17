@@ -154,9 +154,9 @@ const DefaultLayout: React.FC = (props): ReactElement => {
             className="signature-require-modal"
           >
             <WarningOutlined className="signature-require-modal__icon" />
-            <p className="signature-require-modal__title">Signature Required</p>
-            <p className="signature-require-modal__desc">Please sign on your wallet to confirm</p>
-            <Button className="signature-require-modal__btn" onClick={doAuthorize}>Sign</Button>
+            <p className="signature-require-modal__title">Yêu cầu chữ ký</p>
+            <p className="signature-require-modal__desc">Vui lòng đăng kí bằng ví của bạn để xác nhận</p>
+            <Button className="signature-require-modal__btn" onClick={doAuthorize}>Ký</Button>
           </Modal>
         </div>
       </Layout.Header>

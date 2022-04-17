@@ -264,7 +264,7 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
           loadingContent={
             <div className="tx-info">
               <p className="tx-info__alert">
-                Your transaction is processing! Please be patient.
+                Giao dịch của bạn đang được xử lý ! Vui lòng kiên nhẫn.
               </p>
               <p className="tx-info__title">
                 <strong>{txHash}</strong>
@@ -275,7 +275,7 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
                   window.open(`${explorer}/tx/${txHash}`, "_blank")
                 }
               >
-                Click to view more
+                Nhấn để xem thêm
               </span>
             </div>
           }

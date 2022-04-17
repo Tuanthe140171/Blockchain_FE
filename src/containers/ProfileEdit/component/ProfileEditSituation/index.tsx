@@ -216,7 +216,7 @@ const ProfileSituation = () => {
               customRequest={dummyRequest}
               isImageUrl={(file: any) => true}
             >
-              <Button>+ Add more file</Button>
+              <Button>+ Tải thêm</Button>
             </Upload>
           </div>
         </div>
@@ -494,7 +494,7 @@ const ProfileSituation = () => {
                 customRequest={dummyRequest}
                 isImageUrl={(file: any) => true}
               >
-                <Button>+ Add more file</Button>
+                <Button>+ Tải thêm</Button>
               </Upload>
             </div>
           </div>
@@ -657,7 +657,7 @@ const ProfileSituation = () => {
         <div className="profile-situation__container">
           <div className="profile-situation__container__list-situation">
             <div className="profile-situation__container__list-situation__title">
-              Your situation ({situationList.length})
+              Hoàn cảnh của bạn ({situationList.length})
             </div>
             <div className="profile-situation__container__list-situation__cmnd">
               <div className="profile-situation__container__list-situation__cmnd__title-wrapper">
@@ -688,7 +688,7 @@ const ProfileSituation = () => {
                   maxCount={2}
                   isImageUrl={(file: any) => true}
                 >
-                  <Button>+ Add more file</Button>
+                  <Button>+ Tải thêm</Button>
                 </Upload>
               </div>
             </div>
