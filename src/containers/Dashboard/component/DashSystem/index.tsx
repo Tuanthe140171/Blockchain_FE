@@ -67,7 +67,6 @@ const DashSystem: React.FC<{
 
 
   const debouncedKeyword = useDebounce<string>(keyWord, 500);
-  console.log(`transactions?page=${currentPage}&keyword=${debouncedKeyword}`);
   const navigate = useNavigate();
 
   const { explorer } =
@@ -458,8 +457,8 @@ const DashSystem: React.FC<{
                     preview={false}
                     src="/icon/growth.svg"
                     className={`chart-group__data-group__data__icon--${userStatsStatus.status === CharityStatus.UP
-                        ? "up"
-                        : "down"
+                      ? "up"
+                      : "down"
                       }`}
                   />
                   <span>{toPercent(userStatsStatus.percentage)}%</span>
@@ -480,7 +479,7 @@ const DashSystem: React.FC<{
                   // onSearch={onSearch}
                   style={{ width: 230 }}
                   value={keyWord}
-                  onChange={(e) => setKeyWord(e.target.value)}
+                  onChange={(e) => setKeyWord(e.target.value.replace(/[^\w\s]/gi, ""))}
                 />
                 <div className="table-group__header__right-group__icons">
                   <DownloadOutlined
