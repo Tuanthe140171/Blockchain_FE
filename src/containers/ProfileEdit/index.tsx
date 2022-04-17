@@ -69,7 +69,7 @@ const Dashboard = () => {
         ) : null}
         <Breadcrumb separator=">" className="profile-edit__header__breadcrumb">
           <Breadcrumb.Item className="profile-edit__header__breadcrumb__from">
-            Profile
+            Hồ sơ
           </Breadcrumb.Item>
           <Breadcrumb.Item className="profile-edit__header__breadcrumb__to">
             {selectedTab === 1
@@ -90,7 +90,7 @@ const Dashboard = () => {
                 navigate("/profile-edit/1");
               }}
             >
-              Personal Information
+              Thông tin cá nhân
             </button>
             <button
               className={
@@ -101,7 +101,7 @@ const Dashboard = () => {
                 navigate("/profile-edit/2");
               }}
             >
-              Payment Method
+              Phương thức thanh toán
             </button>
             {userData?.type > 2 || isSubmit ? (
               <button
@@ -115,7 +115,7 @@ const Dashboard = () => {
                   navigate("/profile-edit/3");
                 }}
               >
-                Situation
+                Hoàn cảnh
               </button>
             ) : null}
           </div>

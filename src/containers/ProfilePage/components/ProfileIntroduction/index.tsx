@@ -215,7 +215,7 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
           <Button
             className="follow-btn"
             onClick={() => {
-              isOwner ? navigate("/profile/edit") : handleFollowUser();
+              isOwner ? navigate("/profile-edit/") : handleFollowUser();
             }}
           >
             <Image
