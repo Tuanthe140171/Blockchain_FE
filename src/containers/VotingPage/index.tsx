@@ -217,8 +217,9 @@ const VotingPage: React.FC = () => {
           <Search
             placeholder="Tìm kiếm"
             onChange={(e: any) => {
-              setInputSearch(e.target.value);
+              setInputSearch(e.target.value.replace(/[^\w\s]/gi, ""));
             }}
+            value={inputSearch}
             style={{ width: 260 }}
             className="voting__list-input"
           />
