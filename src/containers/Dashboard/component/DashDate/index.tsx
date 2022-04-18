@@ -1,10 +1,12 @@
 import { DatePicker, Divider, Space } from "antd";
 import React, { useState } from "react";
+import 'moment/locale/vi';
+import locale from 'antd/es/date-picker/locale/vi_VN';
 import "./index.scss";
 
 type DashDateProps = {
   onChange?: (dates: any, dateStrings: any) => void;
-}
+};
 
 const { RangePicker } = DatePicker;
 
@@ -23,7 +25,12 @@ const DashDate: React.FC<DashDateProps> = (props) => {
         >
           <button onClick={() => setDateOption("date")}>Ngày</button>
           <div className="divider"></div>
-          <RangePicker onChange={props?.onChange} className="picker" clearIcon={true} />
+          <RangePicker
+            onChange={props?.onChange}
+            className="picker"
+            clearIcon={true}
+            locale={locale}
+          />
         </div>
         <div
           className={
@@ -34,7 +41,12 @@ const DashDate: React.FC<DashDateProps> = (props) => {
         >
           <button onClick={() => setDateOption("week")}>Tuần</button>
           <Divider type="vertical" className="divider" />
-          <RangePicker onChange={props?.onChange} picker="week" className="picker" clearIcon={true} />
+          <RangePicker
+            onChange={props?.onChange}
+            picker="week"
+            className="picker"
+            clearIcon={true}
+          />
         </div>
         <div
           className={
@@ -45,7 +57,12 @@ const DashDate: React.FC<DashDateProps> = (props) => {
         >
           <button onClick={() => setDateOption("month")}>Tháng</button>
           <Divider type="vertical" className="divider" />
-          <RangePicker onChange={props?.onChange} picker="month" className="picker" clearIcon={true} />
+          <RangePicker
+            onChange={props?.onChange}
+            picker="month"
+            className="picker"
+            clearIcon={true}
+          />
         </div>
         <div
           className={
@@ -56,7 +73,12 @@ const DashDate: React.FC<DashDateProps> = (props) => {
         >
           <button onClick={() => setDateOption("year")}>Năm</button>
           <Divider type="vertical" className="divider" />
-          <RangePicker onChange={props?.onChange} picker="year" className="picker" clearIcon={true} />
+          <RangePicker
+            onChange={props?.onChange}
+            picker="year"
+            className="picker"
+            clearIcon={true}
+          />
         </div>
       </Space>
     </>

@@ -555,7 +555,7 @@ const ProfilePerson = () => {
                   htmlType="submit"
                   disabled={loadingSubmitData}
                 >
-                  Save Information
+                  Lưu thông tin
                 </Button>
               </div>
               <Form.Item
@@ -579,7 +579,7 @@ const ProfilePerson = () => {
                     icon={<UploadOutlined />}
                     className="profile-person__container__avatar__wrapper__button"
                   />{" "}
-                  Upload
+                  Tải lên
                 </Upload>
                 {/* <input type={file} */}
               </Form.Item>
