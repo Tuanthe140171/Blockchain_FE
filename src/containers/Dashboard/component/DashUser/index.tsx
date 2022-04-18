@@ -476,7 +476,7 @@ const DashUser: React.FC<{
                   // onSearch={onSearch}
                   style={{ width: 230 }}
                   value={keyWord}
-                  onChange={(e) => setKeyWord(e.target.value)}
+                  onChange={(e) => setKeyWord(e.target.value.replace(/[^\w\s]/gi, ""))}
                 />
                 <div className="table-group__header__right-group__icons">
                   <DownloadOutlined

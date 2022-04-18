@@ -54,10 +54,13 @@ const ProfileSocialSituation = () => {
           ).indexOf(userData.id) >= 0
         : true;
 
-      const listConfirmed = userPostData.BadLuckTypes.filter((data: any) => {
-        return data.UserSituationConfirms.find(
-          (type: any) => type.userId === userData.id
-        );
+      const listConfirmed = userPostData.BadLuckTypes.map((data: any) => {
+        return {
+          isConfirmed: data.UserSituationConfirms.find(
+            (type: any) => type.userId === userData.id
+          ) ? true: false,
+          ...data
+        }
       });
 
       setYourSituationCfList(listConfirmed);
@@ -119,6 +122,8 @@ const ProfileSocialSituation = () => {
           (userVote: any) => userVote.userIdFrom
         ).indexOf(userData.id) >= 0
       : true;
+
+    console.log(yourSituationCfList);
     return (
       <ul className="profile-social-situation__details">
         {yourSituationCfList.map((situation: any, index: number) => {
@@ -145,7 +150,7 @@ const ProfileSocialSituation = () => {
             // </li>
           );
         })}
-        {yourSituationList && yourSituationList.length > 0 && (
+        {/* {yourSituationList && yourSituationList.length > 0 && (
           <p className="profile-social-situation__text">
             Hoàn cảnh cần xác nhận ({yourSituationList.length || 0})
           </p>
@@ -167,7 +172,7 @@ const ProfileSocialSituation = () => {
             id={userSituation.userId}
             key={userSituation.id}
           />
-        ))}
+        ))} */}
       </ul>
     );
   };
