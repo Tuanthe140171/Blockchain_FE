@@ -71,6 +71,16 @@ const ProfilePage: React.FC = () => {
     setOpenTabMedia(false);
   };
 
+  const { userPostData } = useSelector((state: any) => state.userPostData);
+  const avatarLink = userPostData?.UserMedia?.find(
+    (media: any) => media.type === "2" && media.active === 1
+  )
+    ? userPostData?.UserMedia?.find(
+        (media: any) => media.type === "2" && media.active === 1
+      ).link
+    : "/icon/AvatarTmp.png";
+  console.log(userPostData);
+
   return (
     <div className="profile">
       <div className="profile__img-bg">
@@ -82,24 +92,32 @@ const ProfilePage: React.FC = () => {
           openTabMedia={openTabMedia}
           canCloseMedia={handleCloseMedia}
         />
-        {!id ? <ProfileFollowing /> : <ProfileDonation donation={
-          userWithParam ? {
-            image: (function () {
-              const userAvatar = userWithParam.UserMedia.filter(
-                (userMedia: any) =>
-                  userMedia.type === "1" && userMedia.active === 1
-              )
-                .slice(-1)
-                .pop();
-              return userAvatar
-                ? userAvatar.link
-                : "/icon/bad-lucker.svg";
-            })(),
-            name: userWithParam.name,
-            walletAddress: userWithParam.walletAddress,
-            id: userWithParam.id
-          } : undefined
-        } />}
+        {!id ? (
+          <ProfileFollowing />
+        ) : (
+          <ProfileDonation
+            donation={
+              userWithParam
+                ? {
+                    image: (function () {
+                      const userAvatar = userWithParam.UserMedia.filter(
+                        (userMedia: any) =>
+                          userMedia.type === "1" && userMedia.active === 1
+                      )
+                        .slice(-1)
+                        .pop();
+                      return userAvatar
+                        ? userAvatar.link
+                        : "/icon/bad-lucker.svg";
+                    })(),
+                    name: userWithParam.name,
+                    walletAddress: userWithParam.walletAddress,
+                    id: userWithParam.id,
+                  }
+                : undefined
+            }
+          />
+        )}
       </div>
     </div>
   );

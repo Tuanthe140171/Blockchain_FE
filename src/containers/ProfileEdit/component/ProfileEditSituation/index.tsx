@@ -86,8 +86,10 @@ const ProfileSituation = () => {
 
   useEffect(() => {
     if (userData) {
-      const cmnd = userData?.UserMedia.filter((data: any) => data.type === "3");
-      if (cmnd && cmnd.length === 2) {
+      const cmnd = userData?.UserMedia?.filter(
+        (data: any) => data.type === "3"
+      );
+      if (cmnd && cmnd?.length === 2) {
         setCmndList([
           {
             name: `CMND mặt 1`,
@@ -122,19 +124,19 @@ const ProfileSituation = () => {
       }
       const situation = userData?.BadLuckTypes;
       setSituationList(userData.BadLuckTypes);
-      const formatSituation = userData.BadLuckTypes.map((blt: any) => ({
+      const formatSituation = userData.BadLuckTypes?.map((blt: any) => ({
         id: blt.id,
-        files: blt.BadLuckMedia.map((blm: any) => ({
+        files: blt.BadLuckMedia?.map((blm: any) => ({
           id: blm.id,
           link: blm.link,
         })),
       }));
 
-      if (badluckerType && badluckerType.length > 0) {
-        const newArr = badluckerType.filter((blk: any) => {
-          return !situation.some((s: any) => s.situationId === blk.id);
+      if (badluckerType && badluckerType?.length > 0) {
+        const newArr = badluckerType?.filter((blk: any) => {
+          return !situation?.some((s: any) => s.situationId === blk.id);
         });
-        const optionRes = newArr.map((opt: any, index: number) => ({
+        const optionRes = newArr?.map((opt: any, index: number) => ({
           value: opt.name,
           label: opt.name,
           index: index,
@@ -168,7 +170,7 @@ const ProfileSituation = () => {
 
   // render initial Situation
   const renderSituation = () => {
-    return situationList.map((s: any, index: number) => {
+    return situationList?.map((s: any, index: number) => {
       return (
         <div
           className="profile-situation__container__list-situation__situation"
@@ -278,22 +280,22 @@ const ProfileSituation = () => {
 
         const linkArray = e.data;
         const combineArray: any = [];
-        for (let i = 0; i < newSituationFile.length; i++) {
+        for (let i = 0; i < newSituationFile?.length; i++) {
           combineArray.push({ id: newSituationFile[i].id, link: linkArray[i] });
         }
 
         const listId = [];
-        for (let i = 0; i < newSituationFile.length; i++) {
+        for (let i = 0; i < newSituationFile?.length; i++) {
           listId.push(newSituationFile[i].id);
         }
         const uniqueId = [...(new Set(listId) as any)];
 
-        const finalData = uniqueId.map((e) => {
+        const finalData = uniqueId?.map((e) => {
           return {
             id: e,
             link: combineArray
-              .filter((data: any) => data.id === e)
-              .map((data1: any) => data1.link),
+              ?.filter((data: any) => data.id === e)
+              ?.map((data1: any) => data1.link),
           };
         });
 
@@ -308,7 +310,7 @@ const ProfileSituation = () => {
     // const cmndList
     setCmndList(newFileList);
     let data = new FormData();
-    const modifyCmnd = newFileList.map((f: any, index: number) => {
+    const modifyCmnd = newFileList?.map((f: any, index: number) => {
       if (!f.lastModified) {
         return { id: tempId[index], link: f.url };
       } else {
@@ -323,7 +325,7 @@ const ProfileSituation = () => {
 
   // when user update cmnd files
   const onCmndUpdate = () => {
-    if (submitCmndList.length < 2) {
+    if (submitCmndList?.length < 2) {
       setOpenWarnDialog(true);
     } else {
       setIsUpdateCmnd(true);
@@ -342,12 +344,12 @@ const ProfileSituation = () => {
     (e) => {
       setIsUpdateCmnd(undefined);
       let modifyList;
-      if (e.data.length === 1) {
-        modifyList = submitCmndList.map((cmnd: any) => {
+      if (e.data?.length === 1) {
+        modifyList = submitCmndList?.map((cmnd: any) => {
           return cmnd.file ? { id: cmnd.id, link: e.data[0] } : cmnd;
         });
       } else {
-        modifyList = submitCmndList.map((cmnd: any, index: number) => {
+        modifyList = submitCmndList?.map((cmnd: any, index: number) => {
           return { id: cmnd.id, link: e.data[index] };
         });
       }
@@ -391,7 +393,7 @@ const ProfileSituation = () => {
     setNewSituationFile(
       newSituationFile.filter(
         (s: any) =>
-          s.id !== badluckerType.find((blk: any) => blk.name === e[0]).id
+          s.id !== badluckerType?.find((blk: any) => blk.name === e[0]).id
       )
     );
     return;
@@ -411,7 +413,7 @@ const ProfileSituation = () => {
 
   // render list of tags of new situation
   const renderTag = () => {
-    return selectedList.map((tag: any, index: any) => {
+    return selectedList?.map((tag: any, index: any) => {
       return (
         <Tag
           closable
@@ -434,28 +436,28 @@ const ProfileSituation = () => {
   ) => {
     const newObj: ISituation = {
       id: id,
-      file: newFileList[newFileList.length - 1]?.originFileObj,
+      file: newFileList[newFileList?.length - 1]?.originFileObj,
       value: value,
     };
 
-    const fileInUploadList = newSituationFile.filter((f: any) => f.id === id);
+    const fileInUploadList = newSituationFile?.filter((f: any) => f.id === id);
 
-    if (fileInUploadList.length > newFileList.length) {
+    if (fileInUploadList?.length > newFileList?.length) {
       const newUid: any = [];
       newFileList.forEach((f: any) => newUid.push(f.uid));
-      const newFiles = newSituationFile.filter((f: any) => f.id === id);
-      const deleteUid = newFiles.filter(
+      const newFiles = newSituationFile?.filter((f: any) => f.id === id);
+      const deleteUid = newFiles?.filter(
         (f: any) => newUid.indexOf(f.file.uid) < 0
       )[0].file.uid;
 
       setNewSituationFile(
-        newSituationFile.filter((f: any) => f.file.uid !== deleteUid)
+        newSituationFile?.filter((f: any) => f.file.uid !== deleteUid)
       );
       return;
     }
 
     if (
-      newSituationFile.some(
+      newSituationFile?.some(
         (s: any) => s.id === newObj.id && s.file.uid === newObj.file.uid
       )
     ) {
@@ -467,8 +469,8 @@ const ProfileSituation = () => {
 
   // render list of new situation
   const renderProof = () => {
-    return options.map((option: any, index) => {
-      if (selectedList.some((data: any) => data[0] === option.value)) {
+    return options?.map((option: any, index) => {
+      if (selectedList?.some((data: any) => data[0] === option.value)) {
         return (
           <div
             className="profile-situation__container__list-situation__situation"
@@ -518,7 +520,7 @@ const ProfileSituation = () => {
     newSituationFile.forEach((f: any) => tmpSituation.push(f.file));
 
     let data = new FormData();
-    for (let i = 0; i < tmpSituation.length; i++) {
+    for (let i = 0; i < tmpSituation?.length; i++) {
       data.append("files", tmpSituation[i]);
     }
     setSubmitFile(data);
@@ -543,22 +545,22 @@ const ProfileSituation = () => {
 
       const linkArray = e.data;
       const combineArray: any = [];
-      for (let i = 0; i < newSituationFile.length; i++) {
+      for (let i = 0; i < newSituationFile?.length; i++) {
         combineArray.push({ id: newSituationFile[i].id, link: linkArray[i] });
       }
 
       const listId = [];
-      for (let i = 0; i < newSituationFile.length; i++) {
+      for (let i = 0; i < newSituationFile?.length; i++) {
         listId.push(newSituationFile[i].id);
       }
       const uniqueId = [...(new Set(listId) as any)];
 
-      const finalData = uniqueId.map((e) => {
+      const finalData = uniqueId?.map((e) => {
         return {
           id: e,
           link: combineArray
-            .filter((data: any) => data.id === e)
-            .map((data1: any) => data1.link),
+            ?.filter((data: any) => data.id === e)
+            ?.map((data1: any) => data1.link),
         };
       });
 
@@ -657,7 +659,7 @@ const ProfileSituation = () => {
         <div className="profile-situation__container">
           <div className="profile-situation__container__list-situation">
             <div className="profile-situation__container__list-situation__title">
-              Hoàn cảnh của bạn ({situationList.length})
+              Hoàn cảnh của bạn ({situationList?.length})
             </div>
             <div className="profile-situation__container__list-situation__cmnd">
               <div className="profile-situation__container__list-situation__cmnd__title-wrapper">
@@ -732,7 +734,7 @@ const ProfileSituation = () => {
                       }}
                       color="#108ee9"
                     >
-                      {selectedList.length}
+                      {selectedList?.length}
                     </Tag>
                     Hoàn cảnh
                   </div>

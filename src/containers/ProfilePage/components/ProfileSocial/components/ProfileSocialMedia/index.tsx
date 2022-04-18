@@ -26,9 +26,12 @@ const ProfileSocialMedia = () => {
   const [dataUpdateAva, setDataUpdateAva] = useState<any>(undefined);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [deleteImage, setDeleteImage] = useState<any>(undefined);
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
-    const formatList = userData?.UserMedia?.map((data: any) => ({
+    const formatList = userData?.UserMedia?.filter(
+      (media: any) => media.type !== "3"
+    ).map((data: any) => ({
       id: data.id,
       url: data.link,
       type: data.type,
@@ -53,6 +56,7 @@ const ProfileSocialMedia = () => {
       dispatch(action);
       const action_2 = getUserPostData(e.data);
       dispatch(action_2);
+      setTitle("Cập nhật ảnh đại diện thành công!");
       setOpenDialog(true);
     }
   );
@@ -81,12 +85,17 @@ const ProfileSocialMedia = () => {
       }),
     },
     (e) => {
-      console.log(listImage);
+      const newArray: any = listImage.filter((image: any) => {
+        if (image.id !== deleteImage.id) {
+          return image;
+        }
+      });
+      setListImage(newArray);
       setDeleteImage(undefined);
-      console.log(e.data);
+      setTitle("Ảnh đã được xóa thành công!");
+      setOpenDialog(true);
     }
   );
-  console.log(deleteImage);
 
   const renderOptions = (image: any) => {
     return (
@@ -94,7 +103,9 @@ const ProfileSocialMedia = () => {
         <div className="profile-media__popup-option__wrapper__body">
           <div>
             <DownloadOutlined className="icon" />
-            <div>Tải ảnh xuống</div>
+            <a href={image.url} download>
+              Tải ảnh xuống
+            </a>
           </div>
           <div onClick={() => handleSetAvatar(image.url)}>
             <UserOutlined className="icon" />
@@ -188,7 +199,7 @@ const ProfileSocialMedia = () => {
     <>
       <AppDialog
         type="infor"
-        title={"Cập nhật ảnh đại diện thành công"}
+        title={title}
         confirmText={"Ok"}
         onConfirm={() => {
           setOpenDialog(false);
