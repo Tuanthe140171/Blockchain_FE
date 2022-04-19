@@ -84,8 +84,8 @@ const Claim: React.FC = () => {
   const { data, loading } = useFetch<any>(
     userData
       ? pickedDate
-        ? `reward?page=${currentPage}&userId=${userData?.id}&keyword=${debouncedKeyword}&fromDate=${pickedDate.from}&toDate=${pickedDate.to}&orderBy=deletedAt`
-        : `reward?page=${currentPage}&userId=${userData?.id}&keyword=${debouncedKeyword}&orderBy=date`
+        ? `reward?page=${currentPage}&orderDirection=DESC&limit=8&userId=${userData?.id}&keyword=${debouncedKeyword}&fromDate=${pickedDate.from}&toDate=${pickedDate.to}&orderBy=deletedAt`
+        : `reward?page=${currentPage}&orderDirection=DESC&limit=8&userId=${userData?.id}&keyword=${debouncedKeyword}&orderBy=date`
       : "",
     {
       "Content-Type": "application/json",
@@ -275,6 +275,7 @@ const Claim: React.FC = () => {
                       }
                     />
                   </div>
+                  <div>
                   {data &&
                     data.rows.map((claimData: any) => (
                       <div className="claim__block" key={claimData.id}>
@@ -317,6 +318,7 @@ const Claim: React.FC = () => {
                         <div className="claim__divider"></div>
                       </div>
                     ))}
+                  </div>
                 </div>
               </strong>
             </p>
