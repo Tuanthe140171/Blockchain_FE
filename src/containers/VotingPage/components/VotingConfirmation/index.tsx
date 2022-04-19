@@ -73,8 +73,7 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
       setStartVotingUser(undefined);
       onClose && onClose();
       message.success(
-        `Bạn đã ${
-          voteType === 1 ? "xác nhận" : "không xác nhận"
+        `Bạn đã ${voteType === 1 ? "xác nhận" : "không xác nhận"
         } thông tin của ${selectedUser?.donee}`,
         4
       );
@@ -111,7 +110,20 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
             </div>
             <Button
               className="voting-confirmation__btn-back"
-              disabled={selectedUser?.isVoted || loading}
+              disabled={(
+                selectedUser?.isVoted
+                  ? true
+                  : userData
+                    ? (
+                      selectedUser?.situations.map((userSituation: any) => userSituation.UserSituationConfirms.map(
+                        (userVote: any) => userVote.userId
+                      ).indexOf(userData.id) >= 0).reduce((totalConfirmed: number, isConfirmed: boolean) => {
+                        if (isConfirmed) totalConfirmed += 1;
+                        return totalConfirmed;
+                      }, 0) < selectedUser?.situations.length * 2 / 3
+                    )
+                    : true
+              ) || loading}
               onClick={handleUserConfirm}
             >
               Xác nhận
@@ -251,10 +263,10 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
                       selectedUser?.isVoted
                         ? true
                         : userData
-                        ? userSituation.UserSituationConfirms.map(
+                          ? userSituation.UserSituationConfirms.map(
                             (userVote: any) => userVote.userId
                           ).indexOf(userData.id) >= 0
-                        : true
+                          : true
                     }
                   />
                 ))}

@@ -4,9 +4,11 @@ import { useWeb3React } from "web3-react-core";
 import { ethers } from "ethers";
 import { BigNumber } from "bignumber.js";
 import { useCharityVerseContract } from "../../../../hooks/useContract";
+//@ts-ignore
+import currencyFormatter from 'currency-formatter';
 import "./index.scss";
 
-const MINIMUM_THRESHOLD = 200000;
+const MINIMUM_THRESHOLD = 50000;
 
 type SelectBuyAmountProps = {
     setCurrentStep: () => void,
@@ -74,7 +76,7 @@ const SelectBuyAmount: React.FC<SelectBuyAmountProps> = (props) => {
                 controls={false}
                 className="select-buy-amount__input"
             />
-            <p className="select-buy-amount__rate">1 VNC ~ <strong>1000</strong> VND</p>
+            <p className="select-buy-amount__rate">1 VNC ~ <strong>1000</strong> VND {isBuy && `(Số tiền ít nhất có thể mua: ${currencyFormatter.format(50000, { code: 'VND' })})`}</p>
             <Button
                 disabled={(function () {
                     if (!inputAmount) {
