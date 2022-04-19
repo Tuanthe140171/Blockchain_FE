@@ -1,20 +1,21 @@
 import {
   DeleteOutlined,
-  DownloadOutlined,
-  HeartOutlined,
   PictureOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Image, Popover } from "antd";
 import React, { useEffect, useState } from "react";
-import useFetch from "../../../../../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserById } from "../../../../../../stores/action/user-layout.action";
-import "./index.scss";
+import { useParams } from "react-router-dom";
 import AppDialog from "../../../../../../components/AppDialog";
 import AppLoading from "../../../../../../components/AppLoading";
-import { useParams } from "react-router-dom";
-import { getUserPostData } from "../../../../../../stores/action/user-post.action";
+import useFetch from "../../../../../../hooks/useFetch";
+import { getUserById } from "../../../../../../stores/action/user-layout.action";
+import {
+  getUserPostBanner,
+  getUserPostData,
+} from "../../../../../../stores/action/user-post.action";
+import "./index.scss";
 
 const ProfileSocialMedia = () => {
   const { userPostData: userData } = useSelector(
@@ -27,6 +28,14 @@ const ProfileSocialMedia = () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [deleteImage, setDeleteImage] = useState<any>(undefined);
   const [title, setTitle] = useState("");
+  const [fileList, setFileList] = useState<any>([
+    {
+      uid: "-1",
+      name: "image.png",
+      status: "done",
+      url: "",
+    },
+  ]);
 
   useEffect(() => {
     const formatList = userData?.UserMedia?.filter(
@@ -97,21 +106,20 @@ const ProfileSocialMedia = () => {
     }
   );
 
+  const handleSetBanner = (url: string) => {
+    const action = getUserPostBanner(url);
+    dispatch(action);
+  };
+
   const renderOptions = (image: any) => {
     return (
       <div className="profile-media__popup-option__wrapper">
         <div className="profile-media__popup-option__wrapper__body">
-          <div>
-            <DownloadOutlined className="icon" />
-            <a href={image.url} download>
-              Tải ảnh xuống
-            </a>
-          </div>
           <div onClick={() => handleSetAvatar(image.url)}>
             <UserOutlined className="icon" />
             <div>Đặt làm ảnh đại diện</div>
           </div>
-          <div>
+          <div onClick={() => handleSetBanner(image.url)}>
             <PictureOutlined className="icon" />
             <div>Đặt làm ảnh bìa</div>
           </div>
@@ -133,6 +141,8 @@ const ProfileSocialMedia = () => {
   const [activeImage, setActiveImage] = useState<any>(false);
   const [isFocusItem, setIsFocusItem] = useState<any>(null);
   const [canActive, setCanActive] = useState<boolean>(true);
+  const [isPreview, setIsPreview] = useState<boolean>(false);
+  const [selectImage, setSelectImage] = useState<any>(null);
 
   const renderImage = () => {
     return listImage?.map((image: any, index) => {
@@ -150,10 +160,20 @@ const ProfileSocialMedia = () => {
             }
           }}
           key={image.url + index}
+          onClick={() => {
+            setIsPreview(true);
+            setSelectImage(index);
+          }}
         >
           <Image
             src={image.url}
             className="profile-media__images__image__pic"
+            preview={{
+              visible: isPreview && selectImage === index,
+              onVisibleChange: (value) => {
+                setIsPreview(value);
+              },
+            }}
           />
           {id ? null : (
             <div
