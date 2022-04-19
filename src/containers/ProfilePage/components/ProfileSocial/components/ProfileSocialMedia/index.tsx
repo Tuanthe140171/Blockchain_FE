@@ -1,6 +1,7 @@
 import {
-  DeleteOutlined, PictureOutlined,
-  UserOutlined
+  DeleteOutlined,
+  PictureOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { Image, Popover } from "antd";
 import React, { useEffect, useState } from "react";
@@ -12,7 +13,7 @@ import useFetch from "../../../../../../hooks/useFetch";
 import { getUserById } from "../../../../../../stores/action/user-layout.action";
 import {
   getUserPostBanner,
-  getUserPostData
+  getUserPostData,
 } from "../../../../../../stores/action/user-post.action";
 import "./index.scss";
 
@@ -140,6 +141,8 @@ const ProfileSocialMedia = () => {
   const [activeImage, setActiveImage] = useState<any>(false);
   const [isFocusItem, setIsFocusItem] = useState<any>(null);
   const [canActive, setCanActive] = useState<boolean>(true);
+  const [isPreview, setIsPreview] = useState<boolean>(false);
+  const [selectImage, setSelectImage] = useState<any>(null);
 
   const renderImage = () => {
     return listImage?.map((image: any, index) => {
@@ -157,10 +160,20 @@ const ProfileSocialMedia = () => {
             }
           }}
           key={image.url + index}
+          onClick={() => {
+            setIsPreview(true);
+            setSelectImage(index);
+          }}
         >
           <Image
             src={image.url}
             className="profile-media__images__image__pic"
+            preview={{
+              visible: isPreview && selectImage === index,
+              onVisibleChange: (value) => {
+                setIsPreview(value);
+              },
+            }}
           />
           {id ? null : (
             <div
