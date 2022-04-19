@@ -64,7 +64,7 @@ const ModalProfileHeader = () => {
           navigate("/profile/");
         }}
       >
-        Hồ sơ của tôi
+        Trang cá nhân
       </div>
     </div>
   );

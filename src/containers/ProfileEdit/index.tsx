@@ -69,7 +69,7 @@ const Dashboard = () => {
         ) : null}
         <Breadcrumb separator=">" className="profile-edit__header__breadcrumb">
           <Breadcrumb.Item className="profile-edit__header__breadcrumb__from">
-            Hồ sơ
+            Trang cá nhân
           </Breadcrumb.Item>
           <Breadcrumb.Item className="profile-edit__header__breadcrumb__to">
             {selectedTab === 1
