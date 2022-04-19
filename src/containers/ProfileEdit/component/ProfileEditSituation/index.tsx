@@ -26,19 +26,6 @@ const ProfileSituation = () => {
   );
   const dispatch = useDispatch();
 
-  /** Right side **/
-  // set call api or not
-  // const [isSubmit, setIsSubmit] = useState<any>(undefined);
-  // // list of file when call api upload-multiple-file
-  // const [submitFile, setSubmitFile] = useState<any>([]);
-  // // list of link response of api upload-multiple-file
-  // const [responseLink, setResponseLink] = useState<any>(undefined);
-  // // list new situation
-  // const [newSituationFile, setNewSituationFile] = useState<ISituation[]>([]);
-  // // list option of situation checkbox
-  // const [options, setOptions] = useState([]);
-  // const [rerenderData, setRerenderData] = useState<any>(null);
-
   /** Left side */
   // CMND state
   // list initial cmnd
@@ -67,8 +54,6 @@ const ProfileSituation = () => {
   const [updateId, setUpdateId] = useState<any>(undefined);
   // set call api update or not
   const [isUpdate, setIsUpdate] = useState<any>(undefined);
-  // list of checkbox selected
-  const [selectedList, setSelectedList] = useState<any>([]);
 
   /** Dialog */
   // dialog infor data
@@ -334,27 +319,28 @@ const ProfileSituation = () => {
     }
   );
 
-  /**  Fucntion about new situation **/
-  // when user change new situation
-  const onNewSituationChange = (value: any) => {
-    setSelectedList(value);
-  };
+  /**
+   *
+   * New situation
+   */
+  const [options, setOptions] = useState<any>([]);
+  const [situationFile, setSituationFile] = useState<ISituation[]>([]);
+  const [submitAll, setSubmitAll] = useState<any>(null);
 
-  const randomColor = () => {
+  const randomColor = (() => {
     "use strict";
     const randomInt = (min: any, max: any) => {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     };
-    var h = randomInt(0, 360);
-    var s = randomInt(42, 98);
-    var l = randomInt(40, 90);
-    return `hsl(${h},${s}%,${l}%)`;
-  };
+    return () => {
+      var h = randomInt(0, 360);
+      var s = randomInt(42, 98);
+      var l = randomInt(40, 90);
+      return `hsl(${h},${s}%,${l}%)`;
+    };
+  })();
 
-  const [options, setOptions] = useState<any>([]);
-  const [situationFile, setSituationFile] = useState<ISituation[]>([]);
-
-  const [linkSituationObject, setLinkSituationObject] = useState<any>({});
+  const [selectedList, setSelectedList] = useState<any>([]);
 
   const onTagClose = (e: any, index: any) => {
     const pos = options.find((option: any) => option.value === e[0])?.id;
@@ -366,6 +352,129 @@ const ProfileSituation = () => {
       setSituationFile(situationFile.filter((s: any) => s.value !== e[0]));
     }
     return;
+  };
+
+  useEffect(() => {
+    if (badluckerType) {
+      const optionRes = badluckerType?.map((opt: any, index: number) => {
+        return {
+          value: opt.name,
+          label: opt.name,
+          index: index,
+          message: opt.message,
+          id: opt.id,
+        };
+      });
+      setOptions(optionRes);
+    }
+  }, [badluckerType]);
+
+  const onChange = (value: any) => {
+    const listId = value.map(
+      (val: any) => options.find((op: any) => op.value === val[0])?.id
+    );
+    if (Object.keys(linkSituationObject).length < listId.length) {
+      for (let i = 0; i < listId.length; i++) {
+        if (!linkSituationObject[listId[i]]) {
+          linkSituationObject[listId[i]] = [];
+        }
+      }
+    } else {
+      delete linkSituationObject[
+        `${Object.keys(linkSituationObject).find(
+          (val) => !listId.includes(val)
+        )}`
+      ];
+    }
+    setSelectedList(value);
+  };
+
+  const [isSubmit, setIsSubmit] = useState<any>(undefined);
+  const [tempSituationId, setTempSituationId] = useState<any>(0);
+  const [tempSituation, setTempSituation] = useState<any>([]);
+  const [fileSituationUpload, setFileSituationUpload] =
+    useState<any>(undefined);
+  const [linkSituationObject, setLinkSituationObject] = useState<any>({});
+
+  const onSituationUpload = ({ fileList: newFileList }: any, id: any) => {
+    setTempSituationId(id);
+    setTempSituation(newFileList);
+  };
+
+  useEffect(() => {
+    if (tempSituation && tempSituation.length === 0 && tempSituationId !== 0) {
+      linkSituationObject[tempSituationId] = [];
+      setLinkSituationObject(linkSituationObject);
+    }
+    if (tempSituation && tempSituationId !== 0) {
+      let data = new FormData();
+      for (let i = 0; i < tempSituation.length; i++) {
+        data.append("files", tempSituation[i]?.originFileObj);
+      }
+      setFileSituationUpload(data);
+    }
+  }, [tempSituation]);
+
+  const { data: uploadSituationData, loading: loadingSituation } =
+    useFetch<any>(
+      "image/upload-multiple-file",
+      {},
+      false,
+      [fileSituationUpload],
+      {
+        method: "POST",
+        body: fileSituationUpload,
+      },
+      (e) => {
+        setFileSituationUpload(undefined);
+        const tmpLink: any = [];
+        for (let i = 0; i < e.data.length; i++) {
+          tmpLink.push(e.data[i]);
+        }
+        linkSituationObject[tempSituationId] = tmpLink;
+        setLinkSituationObject(linkSituationObject);
+      }
+    );
+
+  const { data: confirmRes, loading: loadingConfirmRes } = useFetch<any>(
+    "bad-lucker/update-badlucker",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [isSubmit],
+    {
+      method: "POST",
+      body: JSON.stringify(submitAll),
+    },
+    () => {
+      setIsSubmit(undefined);
+      setOpenDialog(true);
+    }
+  );
+
+  const handleSubmit = () => {
+    if (
+      Object.keys(linkSituationObject).length === 0 ||
+      Object.keys(linkSituationObject).some(
+        (value) => linkSituationObject[value].length < 1
+      )
+    ) {
+      setOpenWarnDialog(true);
+    } else {
+      const situationData = Object.keys(linkSituationObject).map((value) => {
+        return {
+          id: value,
+          link: linkSituationObject[value],
+        };
+      });
+      const combineData = {
+        badLuckType: situationData,
+      };
+      setSubmitAll(combineData);
+      setIsSubmit(true);
+    }
   };
 
   const renderTag = () => {
@@ -381,6 +490,35 @@ const ProfileSituation = () => {
           <span>{tag[0]}</span>
         </Tag>
       );
+    });
+  };
+
+  const renderProof = () => {
+    return options.map((option: any) => {
+      if (selectedList.some((data: any) => data[0] === option?.value)) {
+        return (
+          <div className="profile-drawer__cmnd" key={option?.index}>
+            <Button type="text" className="profile-drawer__cmnd__title">
+              Giấy chứng nhận {option?.message}
+            </Button>
+            <div className="profile-drawer__cmnd__wrapper">
+              <Upload
+                className="profile-drawer__cmnd__wrapper__container"
+                maxCount={5}
+                defaultFileList={[]}
+                onChange={(e) => onSituationUpload(e, option?.id)}
+                customRequest={dummyRequest}
+              >
+                <Button>+ Tải thêm</Button>
+              </Upload>
+              <div className="profile-upload__wrapper__download">
+                Bạn chưa có mẫu giấy công chứng?{" "}
+                <Button type="link">Download</Button>
+              </div>
+            </div>
+          </div>
+        );
+      }
     });
   };
 
@@ -493,8 +631,9 @@ const ProfileSituation = () => {
             <div className="profile-situation__container__add-situation__title">
               <div>Thêm hoàn cảnh</div>
               <Button
+                disabled={!selectedList.length}
                 onClick={() => {
-                  // checkSituationUpload();
+                  handleSubmit();
                 }}
               >
                 Xác nhận
@@ -505,8 +644,8 @@ const ProfileSituation = () => {
                 Bạn hãy chọn những hoàn cảnh phù hợp với hoàn cảnh của bạn :
               </div>
               <Cascader
-                // options={options}
-                onChange={onNewSituationChange}
+                options={options}
+                onChange={onChange}
                 value={selectedList}
                 style={{ width: "100%" }}
                 dropdownClassName="profile-situation-dropdown"
@@ -519,7 +658,7 @@ const ProfileSituation = () => {
                       closable
                       onClose={() => {
                         setSelectedList([]);
-                        // setNewSituationFile([]);
+                        setSituationFile([]);
                       }}
                       color="#108ee9"
                     >
@@ -533,7 +672,7 @@ const ProfileSituation = () => {
               <div className="profile-situation__container__add-situation__cascader__tags">
                 {renderTag()}
               </div>
-              {/* {renderProof()} */}
+              {renderProof()}
             </div>
           </div>
         </div>
