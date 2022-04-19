@@ -74,7 +74,10 @@ const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
                 }
             </div>
             {
-                paymentURI && <p className="payment__uri"  onClick={() => window.open(paymentURI, "_self")}>{paymentURI}</p>
+                paymentURI && <div className="payment-wrapper">
+                    <strong  className="payment-wrapper__title">Vui lòng thanh toán qua đường dẫn bên dưới: </strong>
+                    <p className="payment__uri"  onClick={() => window.open(paymentURI, "_self")}>{paymentURI}</p>
+                </div>
             }
             <div className="payment__btns">
                 <Button disabled={loading} className="payment__btn" onClick={props.setCurrentStep}>Trở lại</Button>
