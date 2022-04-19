@@ -5,6 +5,7 @@ export interface CRVRoute extends RouteProps {
   path: string;
   component: React.ElementType;
   exact: boolean;
+  isAdmin?: boolean
 }
 
 const Dashboard = lazy(() => import("../containers/Dashboard"));
@@ -37,11 +38,13 @@ const routes: CRVRoute[] = [
     path: "/admin",
     component: TokenTransferManagement,
     exact: true,
+    isAdmin: true
   },
   {
     path: "/contact-us",
     component: ContactUs,
     exact: true,
+    isAdmin: true
   },
   {
     path: "/exchange",
@@ -62,6 +65,7 @@ const routes: CRVRoute[] = [
     path: "/dashboard/",
     component: Dashboard,
     exact: true,
+    isAdmin: true
   },
   {
     path: "/profile/:id",

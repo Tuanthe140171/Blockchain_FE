@@ -1,8 +1,9 @@
 import { Divider } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DashDate from "./component/DashDate";
 import DashSystem from "./component/DashSystem";
 import DashUser from "./component/DashUser";
+import useLocalStorage from "../../hooks/useLocalStorage";
 import "./index.scss";
 
 const Dashboard = () => {
@@ -11,6 +12,15 @@ const Dashboard = () => {
     from: number,
     to: number
   } | undefined>(undefined)
+
+  const [selectedKey, setSelectedKey] = useLocalStorage(
+    "activeTab",
+    "Dashboard"
+  );
+
+  useEffect(() => {
+    setSelectedKey("Dashboard");
+  }, [setSelectedKey])
 
   const handleDatePickerChange = (dates: any, dateStrings: any) => {
     setPickedDate({
