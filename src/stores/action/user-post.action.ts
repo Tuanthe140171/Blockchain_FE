@@ -12,3 +12,10 @@ export const getUserFollowingData = (data: any) => {
   };
 };
 
+export const getUserPostBanner = (data: any) => {
+  return {
+    type: "GET_USER_POST_BANNER",
+    payload: data,
+  };
+};
+

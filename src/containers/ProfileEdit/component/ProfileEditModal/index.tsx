@@ -98,8 +98,8 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [openWarnDialog, setOpenWarnDialog] = useState(false);
 
-  const [isSubmit, setIsSubmit] = useState<any>(undefined);
   const [tempCmnd, setTempCmnd] = useState<any>([]);
+  const [isSubmit, setIsSubmit] = useState<any>(undefined);
   const [fileCmndUpload, setFileCmndUpload] = useState<any>(undefined);
   const [tempSituationId, setTempSituationId] = useState<any>(0);
   const [tempSituation, setTempSituation] = useState<any>([]);
@@ -118,7 +118,6 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
   };
 
   useEffect(() => {
-    // if (tempCmnd && tempCmnd.length > 0) {
     if (tempCmnd) {
       let data = new FormData();
       for (let i = 0; i < tempCmnd.length; i++) {
@@ -129,7 +128,6 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
   }, [tempCmnd]);
 
   useEffect(() => {
-    // if (tempSituation && tempSituation.length > 0) {
     if (tempSituation && tempSituation.length === 0 && tempSituationId !== 0) {
       linkSituationObject[tempSituationId] = [];
       setLinkSituationObject(linkSituationObject);

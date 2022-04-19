@@ -3,6 +3,7 @@ const initialState = {
   updating: false,
   userPostData: null,
   userFollowingData: null,
+  userPostBanner: null,
 };
 
 const userPostDataReducer = (state = initialState, action: any) => {
@@ -12,6 +13,9 @@ const userPostDataReducer = (state = initialState, action: any) => {
     }
     case "GET_USER_FOLLOWING_DATA": {
       return { ...state, userFollowingData: action.payload };
+    }
+    case "GET_USER_POST_BANNER": {
+      return { ...state, userPostBanner: action.payload };
     }
     default:
       return state;
