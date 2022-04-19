@@ -1,5 +1,5 @@
 import { BellOutlined, SwapOutlined } from "@ant-design/icons";
-import { Badge, Button, Image, Input, Layout, Menu, Popover } from "antd";
+import { Badge, Button, Image, Input, Layout, Menu, Popover, Tooltip } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
 import { BigNumber } from "bignumber.js";
 import { ethers } from "ethers";
@@ -236,11 +236,14 @@ const UserLayout: React.FC = (props): ReactElement => {
             content={<ModalHeader type={1} />}
             trigger="click"
           >
-            <Avatar
-              src={avatarLink}
-              className="main-layout__site-layout__header__group-avatar__avatar"
-            />
+            <div className="avatar-group-v1">
+              <Avatar
+                src={avatarLink}
+                className="main-layout__site-layout__header__group-avatar__avatar"
+              />
+            </div>
           </Popover>
+          {userData?.isOnTop && <Tooltip title="Bạn được chọn là người đi xác nhận hoàn cảnh!"><Image className="on-top" preview={false} src="/icon/selected-user.svg" /></Tooltip>}
         </>
       );
     } else if (error instanceof UnsupportedChainIdError) {
