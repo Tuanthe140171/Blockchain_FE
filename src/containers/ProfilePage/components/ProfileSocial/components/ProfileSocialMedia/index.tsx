@@ -113,7 +113,10 @@ const ProfileSocialMedia = () => {
 
   const renderOptions = (image: any) => {
     return (
-      <div className="profile-media__popup-option__wrapper">
+      <div
+        className="profile-media__popup-option__wrapper"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="profile-media__popup-option__wrapper__body">
           <div onClick={() => handleSetAvatar(image.url)}>
             <UserOutlined className="icon" />

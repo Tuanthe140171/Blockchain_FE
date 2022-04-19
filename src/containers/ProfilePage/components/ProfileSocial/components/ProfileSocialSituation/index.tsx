@@ -123,7 +123,6 @@ const ProfileSocialSituation = () => {
         ).indexOf(userData.id) >= 0
       : true;
 
-    console.log(yourSituationCfList);
     return (
       <ul className="profile-social-situation__details">
         {yourSituationCfList.map((situation: any, index: number) => {
