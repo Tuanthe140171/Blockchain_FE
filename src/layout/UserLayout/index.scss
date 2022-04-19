@@ -78,13 +78,28 @@
         width: 500px;
         margin: 19px 0 0 260px;
 
-        & > span > input {
-          border: none;
-          background-color: #2f4980;
-          height: 46px;
-          width: 454px !important;
+        & .ant-select-selector {
+          background-color: #2f4980 !important;
           color: #A7B2C8;
+          height: 40px !important;
+          border: none !important;
         }
+
+        & .ant-select-selection-placeholder {
+          line-height: 40px !important;
+        }
+
+        & .ant-select-selection-search-input {
+          height: 40px !important;
+        }
+
+        // & > span > input {
+        //   border: none;
+        //   background-color: #2f4980;
+        //   height: 46px;
+        //   width: 454px !important;
+        //   color: #A7B2C8;
+        // }
 
         & > span > span {
           background-color: #2f4980;
@@ -273,4 +288,23 @@
   width: 25px;
   height: 25px;
   margin-left: 15px;
+}
+
+.layout__header__dropdown {
+  z-index: 9999999999;
+}
+
+.search-option {
+  &__name {
+    margin-left: 15px;
+    color: #142d85;
+  }
+
+  &__divider {
+    margin: 0 10px;
+  }
+
+  & > strong {
+    color: #2f4980;
+  }
 }

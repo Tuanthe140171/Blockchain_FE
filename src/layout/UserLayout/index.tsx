@@ -1,5 +1,5 @@
 import { BellOutlined, SwapOutlined } from "@ant-design/icons";
-import { Badge, Button, Image, Input, Layout, Menu, Popover, Tooltip } from "antd";
+import { AutoComplete, Badge, Button, Image, Input, Layout, Menu, Popover, SelectProps, Tooltip } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
 import { BigNumber } from "bignumber.js";
 import { ethers } from "ethers";
@@ -21,20 +21,24 @@ import {
 import { shortenAddress } from "../../utils";
 import io from "socket.io-client";
 import "./index.scss";
+import useDebounce from "../../hooks/useDebounce";
 
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 
 export const NotificationContext = React.createContext<
   | {
-      content: string;
-      type: number;
-      createDate: string;
-    }[]
+    content: string;
+    type: number;
+    createDate: string;
+  }[]
   | undefined
 >(undefined);
 
 const UserLayout: React.FC = (props): ReactElement => {
+  const [inputSearch, setInputSearch] = useState("");
+  const [dataSource, setDataSource] = useState<SelectProps<object>['options']>([]);
+
   const [notifications, setNotifications] = useState<
     {
       content: string;
@@ -50,13 +54,57 @@ const UserLayout: React.FC = (props): ReactElement => {
   );
   const [collapsed, setCollapsed] = useState(false);
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { account, chainId, error } = useWeb3React();
   const [charityStorage, setCharityStorage] = useLocalStorage("charity", {
     auth: {},
   });
+  
+  const { badluckerType } = useSelector((state: any) => state.userLayout);
   const { userData } = useSelector((state: any) => state.userLayout);
-  const dispatch = useDispatch();
+
+  const debouncedKeyword = useDebounce<string>(inputSearch, 500);
+
+  let url = `users/donees?&limit=30&keyword=${debouncedKeyword}&userType=4`;
+
+  const { data, loading } = useFetch<any>(url, {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+    false,
+    [],
+    {},
+  );
+
+  useEffect(() => {
+    data && setDataSource(data.rows.map((dataResult: any) => ({
+      text: dataResult.name,
+      id: dataResult.id,
+      avatar: (function () {
+        const userAvatar = dataResult.UserMedia.filter(
+          (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+        )
+          .slice(0, 1)
+          .pop();
+        return userAvatar ? userAvatar.link : null;
+      })(),
+      identityId: dataResult.identityId,
+      situation: (function () {
+        if (dataResult?.BadLuckTypes?.length === 0) {
+          return "";
+        } else {
+          return badluckerType?.find(
+            (type: any) => type.id === userData?.BadLuckTypes[0].situationId
+          )?.name;
+        }
+      }())
+    })))
+  }, [data]);
+
+  const handleSearch = (value: string) => {
+    setInputSearch(value);
+  };
 
   useEffect(() => {
     const newSocket = io(`https://socket.test.charityverse.info`);
@@ -90,8 +138,8 @@ const UserLayout: React.FC = (props): ReactElement => {
     (media: any) => media.type === "1" && media.active === 1
   )
     ? userData?.UserMedia?.find(
-        (media: any) => media.type === "1" && media.active === 1
-      ).link
+      (media: any) => media.type === "1" && media.active === 1
+    ).link
     : "/icon/AvatarTmp.png";
 
   const { data: user } = useFetch<any>(
@@ -166,7 +214,7 @@ const UserLayout: React.FC = (props): ReactElement => {
     nativeCurrency: { symbol: nativeCurrencySymbol },
   } = CHAIN_INFO[
     chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
-  ];
+    ];
 
   const getDate = () => {
     const today = new Date();
@@ -353,6 +401,7 @@ const UserLayout: React.FC = (props): ReactElement => {
                 setSelectedKey("Donee");
                 navigate("/donee");
               }}
+              hidden={user?.isAdmin}
             >
               Người cần từ thiện
             </Menu.Item>
@@ -364,6 +413,7 @@ const UserLayout: React.FC = (props): ReactElement => {
                 setSelectedKey("Exchange");
                 navigate("/exchange?type=buy&tab=0");
               }}
+              hidden={user?.isAdmin}
             >
               Đổi tiền
             </Menu.Item>
@@ -386,6 +436,7 @@ const UserLayout: React.FC = (props): ReactElement => {
                 setSelectedKey("Voting");
                 navigate("/voting");
               }}
+              hidden={user?.isAdmin}
             >
               Bỏ phiếu
             </Menu.Item>
@@ -422,6 +473,7 @@ const UserLayout: React.FC = (props): ReactElement => {
                 setSelectedKey("Claim");
                 navigate("/claim");
               }}
+              hidden={user?.isAdmin}
             >
               Tiền thưởng
             </Menu.Item>
@@ -429,10 +481,34 @@ const UserLayout: React.FC = (props): ReactElement => {
         </Sider>
         <Layout className="main-layout__site-layout">
           <Header className="main-layout__site-layout__header">
-            <Search
+            <AutoComplete
+              // open={inputSearch !== ""}
+              value={inputSearch}
+              dropdownMatchSelectWidth={500}
+              autoFocus={true}
+              onSelect={(val: any) => {
+                setInputSearch("")
+                navigate(`/profile/${val}`)
+              }}
+              onSearch={handleSearch}
+              dropdownClassName="layout__header__dropdown"
               className="main-layout__site-layout__header__search"
+              notFoundContent="Không tìm thấy người được từ thiện!"
               placeholder="Tìm kiếm theo người được từ thiện..."
-            />
+            >
+              {
+                dataSource?.map(data => (
+                  <AutoComplete.Option key={data.id}>
+                    <div className="search-option">
+                      <Avatar src={data.avatar} className="search-option__avatar"/>
+                      <span className="search-option__name">{data.text} ({data.identityId})</span>
+                      <span className="search-option__divider">-</span>
+                      <strong>{data.situation}</strong>
+                    </div>
+                  </AutoComplete.Option>
+                ))
+              }
+            </AutoComplete>
             <div className="main-layout__site-layout__header__group-avatar">
               {renderWeb3Account()}
             </div>
