@@ -19,6 +19,8 @@ import { Line, Pie } from "react-chartjs-2";
 import { useWeb3React } from "web3-react-core";
 import moment from "moment";
 import BigNumber from "bignumber.js";
+//@ts-ignore
+import currencyFormatter from 'currency-formatter';
 import useFetch from "../../../../hooks/useFetch";
 import useDebounce from "../../../../hooks/useDebounce";
 import { shortenTx } from "../../../../utils";
@@ -28,8 +30,8 @@ import { toPercent } from "../../../../utils/convert";
 import { options } from "../../../../constants/chart";
 import { CHAIN_INFO } from "../../../../constants/chainInfo";
 import { SupportedChainId } from "../../../../constants/chains";
-import "./index.scss";
 import { useNavigate } from "react-router-dom";
+import "./index.scss";
 
 enum CharityStatus {
   UP,
@@ -326,7 +328,7 @@ const DashSystem: React.FC<{
           ? "Bạn"
           : transaction.toUser.name,
       date: moment(new Date(transaction["date"])).format("MM/DD/YY hh:ss"),
-      amount: new BigNumber(transaction.amount).div(1e18).toFixed(),
+      amount: currencyFormatter.format(new BigNumber(transaction.amount).div(1e18).multipliedBy(1000).toFixed(), { code: 'VND' }),
       status: ["loser"],
       doneeAvatar: (function () {
         const userAvatar = transaction.toUser.UserMedia.filter(
@@ -402,7 +404,7 @@ const DashSystem: React.FC<{
                     .div(1e18)
                     .toFixed(4)
                   : 0}{" "}
-                VNC
+                <Image src="/icon/ethereum_1.svg" preview={false} />
                 <span
                   className={`chart-group__data-group__data__rate chart-group__data-group__data__rate--${charityStatus.status === CharityStatus.UP ? "up" : "down"
                     }`}
