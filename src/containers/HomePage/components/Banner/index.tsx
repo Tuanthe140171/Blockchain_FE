@@ -5,6 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "../../../../components/Button";
 import BannerCarousel from "./components/BannerCarousel";
 import { useContext } from "react";
+//@ts-ignore
+import {Fade, Slide} from 'react-reveal';
 import "./index.scss";
 import { AuthorizationContext } from "../../../../components/Web3ReactManager";
 import useLocalStorage from "../../../../hooks/useLocalStorage";
@@ -31,24 +33,30 @@ const Banner: React.FC<BannerProps> = (props) => {
       <Image src="/icon/banner.svg" preview={false} className="banner__img" />
       <div className="banner__content">
         <div className="banner__header">
-          <Title level={2} className="banner__title">
-            Quyên góp cho trẻ em nghèo Việt Nam
-          </Title>
-          <div className="donate-cta">
-            <Button content="Ủng hộ" onClick={() => {
-              if (authorizeError === AuthorizeErrorType.NONE) {
-                setSelectedKey("Donee");
-                navigate("/donee");
-              }
-            }} />
-            <div className="donate-cta__link">
-              <Link className="donate-cta__view-more" to="/donate">Tìm hiểu thêm</Link>
-              <RightOutlined color="white" className="donate-cta__icon" />
+          <Fade collapse  left>
+            <Title level={2} className="banner__title">
+              Quyên góp cho trẻ em nghèo Việt Nam
+            </Title>
+          </Fade>
+          <Fade collapse bottom>
+            <div className="donate-cta">
+              <Button content="Ủng hộ" onClick={() => {
+                if (authorizeError === AuthorizeErrorType.NONE) {
+                  setSelectedKey("Donee");
+                  navigate("/donee");
+                }
+              }} />
+              <div className="donate-cta__link">
+                <Link className="donate-cta__view-more" to="/donate">Tìm hiểu thêm</Link>
+                <RightOutlined color="white" className="donate-cta__icon" />
+              </div>
             </div>
-          </div>
+          </Fade>
         </div>
       </div>
-      <BannerCarousel posts={posts} />
+      <Slide right>
+        <BannerCarousel posts={posts} />
+      </Slide>
     </div>
   );
 };
