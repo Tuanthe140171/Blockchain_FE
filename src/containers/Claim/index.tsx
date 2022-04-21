@@ -225,13 +225,11 @@ const Claim: React.FC = () => {
                     /> */}
           <DashDate onChange={handleDatePickerChange} />
         </div>
-        <div className="claim__content">
-          <div className="claim__main">
-            <p className="claim__line">
-              <strong className="claim__amount">
-                <div className="claim__icon">
-                  <Image src="/icon/ethereum_1.svg" preview={false} />
-                </div>
+            {/* <p className="claim__line"> */}
+              {/* <strong className="claim__amount"> */}
+                {/* <div className="claim__icon"> */}
+                  {/* <Image src="/icon/ethereum_1.svg" preview={false} /> */}
+                {/* </div> */}
                 <div className="claim__content">
                   <div className="claim__main">
                     <p className="claim__line">
@@ -275,7 +273,7 @@ const Claim: React.FC = () => {
                       }
                     />
                   </div>
-                  <div>
+                  <div className="claim__block-container">
                   {data &&
                     data.rows.map((claimData: any) => (
                       <div className="claim__block" key={claimData.id}>
@@ -319,10 +317,8 @@ const Claim: React.FC = () => {
                       </div>
                     ))}
                   </div>
-                </div>
-              </strong>
-            </p>
-          </div>
+              {/* </strong> */}
+            {/* </p> */}
         </div>
         <div className="claim__pagination-wrapper">
           <AppPagination

@@ -17,6 +17,7 @@ type VotingSituationViewProps = {
     React.SetStateAction<boolean | undefined>
   >;
   isVoted: boolean;
+  isOnTop: boolean
 };
 
 const VotingSituationView: React.FC<VotingSituationViewProps> = (props) => {
@@ -28,6 +29,7 @@ const VotingSituationView: React.FC<VotingSituationViewProps> = (props) => {
     verificationType,
     images,
     setReloadVotingData,
+    isOnTop
   } = props;
   const [viewVerification, setViewVerification] = useState<boolean>(false);
   const [startVotingSituation, setStartVotingSituation] = useState<
@@ -71,6 +73,9 @@ const VotingSituationView: React.FC<VotingSituationViewProps> = (props) => {
     error && message.error(error.message, 4);
   }, [error]);
 
+
+  console.log("IS VOTED", isVoted, isOnTop)
+
   return (
     <div className="voting-situation-view">
       <header className="voting-situation-view__header">
@@ -79,7 +84,7 @@ const VotingSituationView: React.FC<VotingSituationViewProps> = (props) => {
           <Button
             className="voting-situation-view__cta voting-situation-view__confirm"
             onClick={() => setOpenDialog(true)}
-            disabled={isVoted}
+            disabled={isVoted || !isOnTop}
           >
             {isVoted ? "Đã xác nhận" : "Xác nhận"}
           </Button>

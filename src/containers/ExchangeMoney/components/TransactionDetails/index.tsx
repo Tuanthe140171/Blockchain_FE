@@ -77,7 +77,7 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = (props) => {
                         </div>
                         <div className="transaction-details__receipt details-receipt">
                             <span className="details-receipt__label">
-                                Tổng số {isBuy ? 'coin bán': 'tiền nhận'}
+                                Tổng số {isBuy ? 'coin mua': 'tiền nhận'}
                             </span>
                             <span className="details-receipt__text">
                                 <Tooltip title={inputAmount ? (isBuy ? new BigNumber(inputAmount).div(1000).toFixed(3): currencyFormatter.format(new BigNumber(inputAmount).multipliedBy(1000).toFixed(3), { code: 'VND' })): 0}><strong>{inputAmount ? (isBuy ? new BigNumber(inputAmount).div(1000).toFixed(3): currencyFormatter.format(new BigNumber(inputAmount).multipliedBy(1000).toFixed(3), { code: 'VND' })): 0}</strong></Tooltip>

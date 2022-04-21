@@ -44,6 +44,14 @@
         margin-top: 30px;
     }
 
+    &__block-container {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        max-height: 800px;
+    }
+
     &__left {
         width: 100%;
     }
@@ -78,7 +86,7 @@
     }
 
     &__main {
-        margin-bottom: 40px;
+        margin-bottom: 10px;
     }
 
     &__cta {

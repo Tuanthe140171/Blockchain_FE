@@ -65,7 +65,6 @@ const DashSystem: React.FC<{
   const [chartRef, setChartRef] = useState<any>();
   const [userChartRef, setUserChartRef] = useState<any>();
 
-
   const debouncedKeyword = useDebounce<string>(keyWord, 500);
   const navigate = useNavigate();
 
@@ -479,7 +478,10 @@ const DashSystem: React.FC<{
                   // onSearch={onSearch}
                   style={{ width: 230 }}
                   value={keyWord}
-                  onChange={(e) => setKeyWord(e.target.value.replace(/[^\w\s]/gi, ""))}
+                  onChange={(e) => {
+                    setCurrentPage(1);
+                    setKeyWord(e.target.value.replace(/[^\w\s]/gi, ""))
+                  }}
                 />
                 <div className="table-group__header__right-group__icons">
                   <DownloadOutlined
