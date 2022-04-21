@@ -6,6 +6,7 @@ import {
   Tooltip,
   Checkbox,
   message,
+  Radio,
 } from "antd";
 import moment from "moment";
 //@ts-ignore
@@ -33,20 +34,19 @@ const TokenTransferManagement: React.FC = () => {
   const [startPaymentConfirm, setStartPaymentConfirm] = useState<
     boolean | undefined
   >(undefined);
-  const [hasRedeemed, setHasRedeemed] = useState<boolean>(false);
+  const [hasRedeemed, setHasRedeemed] = useState<boolean | undefined>(undefined);
 
   const { chainId, account } = useWeb3React();
   const { explorer } =
     CHAIN_INFO[
-      chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
+    chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
     ];
 
   const navigate = useNavigate();
   const debouncedKeyword = useDebounce<string>(inputSearch, 500);
 
   const { data, loading } = useFetch<any>(
-    `redeems?page=${currentPage}&limit=8&keyword=${debouncedKeyword}${
-      hasRedeemed ? `&hasRedeemed=1` : ""
+    `redeems?page=${currentPage}&limit=8&keyword=${debouncedKeyword}${hasRedeemed !== undefined ? (hasRedeemed ? `&hasRedeemed=1` : "&hasRedeemed=0") : ""
     }`,
     {
       "Content-Type": "application/json",
@@ -83,8 +83,7 @@ const TokenTransferManagement: React.FC = () => {
       },
       () => {
         message.success(
-          `Bạn đã xác nhận là ${
-            selectedUser.checked ? "đã" : "chưa"
+          `Bạn đã xác nhận là ${selectedUser.checked ? "đã" : "chưa"
           } chuyển tiền cho ${selectedUser?.receiver}`
         );
         setReloadRedeemData(true);
@@ -186,27 +185,27 @@ const TokenTransferManagement: React.FC = () => {
 
   const redeemData = data
     ? data.rows.map((redeem: any) => ({
-        id: redeem.id,
-        avatar: (function () {
-          const userAvatar = redeem.User.UserMedia.filter(
-            (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
-          )
-            .slice(0, 1)
-            .pop();
-          return userAvatar ? userAvatar.link : null;
-        })(),
-        status: redeem.hasRedeemed,
-        amount: redeem.amount,
-        createDate: moment(redeem.redeemedAt).format("hh:mm:ss DD-MM-YYYY"),
-        modifyDate: moment(redeem.modifyDate).format("hh:mm:ss DD-MM-YYYY"),
-        receiver: `${redeem.User.lastName} ${redeem.User.name}`,
-        hasRedeemed: redeem.hasRedeemed,
-        paymentMethod:
-          redeem.User.PaymentMethods.length > 0
-            ? redeem.User.PaymentMethods[0].number
-            : "Chưa có",
-        userId: redeem.User.id,
-      }))
+      id: redeem.id,
+      avatar: (function () {
+        const userAvatar = redeem.User.UserMedia.filter(
+          (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+        )
+          .slice(0, 1)
+          .pop();
+        return userAvatar ? userAvatar.link : null;
+      })(),
+      status: redeem.hasRedeemed,
+      amount: redeem.amount,
+      createDate: moment(redeem.redeemedAt).format("hh:mm:ss DD-MM-YYYY"),
+      modifyDate: moment(redeem.modifyDate).format("hh:mm:ss DD-MM-YYYY"),
+      receiver: `${redeem.User.lastName} ${redeem.User.name}`,
+      hasRedeemed: redeem.hasRedeemed,
+      paymentMethod:
+        redeem.User.PaymentMethods.length > 0
+          ? redeem.User.PaymentMethods[0].number
+          : "Chưa có",
+      userId: redeem.User.id,
+    }))
     : [];
 
   return (
@@ -233,7 +232,7 @@ const TokenTransferManagement: React.FC = () => {
           />
         </div>
         <div className="transfer-management__filter">
-          <Checkbox
+          {/* <Checkbox
             onChange={(e: any) => {
               setHasRedeemed(e.target.checked);
             }}
@@ -241,7 +240,14 @@ const TokenTransferManagement: React.FC = () => {
             checked={hasRedeemed}
           >
             Đã chuyển
-          </Checkbox>
+          </Checkbox> */}
+          <Radio.Group onChange={(e: any) => {
+            setHasRedeemed(e.target.value);
+          }} value={hasRedeemed}>
+            <Radio value={undefined}>Tất cả</Radio>
+            <Radio value={true}>Đã chuyển</Radio>
+            <Radio value={false}>Chưa chuyển</Radio>
+          </Radio.Group>
         </div>
         <Table
           rowKey="id"
@@ -256,9 +262,8 @@ const TokenTransferManagement: React.FC = () => {
         />
         <AppDialog
           type="confirm"
-          title={`Bạn muốn xác nhận là ${
-            selectedUser?.checked ? "đã" : "chưa"
-          } chuyển tiền cho ${selectedUser?.receiver} ?`}
+          title={`Bạn muốn xác nhận là ${selectedUser?.checked ? "đã" : "chưa"
+            } chuyển tiền cho ${selectedUser?.receiver} ?`}
           description="Nếu chưa xem xét hết thông tin, hãy xem lại"
           confirmText={"Đồng ý"}
           cancelText={"Trở về"}
