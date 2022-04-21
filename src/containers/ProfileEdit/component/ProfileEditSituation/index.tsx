@@ -137,13 +137,11 @@ const ProfileSituation = () => {
   };
 
   // Base situation list
-  // list initial situation
   const [situationList, setSituationList] = useState<any>([]);
   // id of situation that user want to delete
   const [deleteId, setDeleteId] = useState<any>(undefined);
   const [updateId, setUpdateId] = useState<any>(undefined);
   const [tempUpdateId, setTempUpdateId] = useState<any>(undefined);
-  // set call api delete or not
   const [isDelete, setIsDelete] = useState<any>(undefined);
   const [isUpdate, setIsUpdate] = useState<any>(undefined);
   const [updateObject, setUpdateObject] = useState<any>(undefined);
@@ -164,6 +162,7 @@ const ProfileSituation = () => {
     {}
   );
   const [oldSituationUpload, setOldSituationUpload] = useState<any>(undefined);
+  const [activeSituation, setActiveSituation] = useState<any>(undefined);
 
   // const onOldSituationChange = ({ fileLsit: newFileList }: any, data: any) => {
   const onOldSituationChange = (fileList: any, file: any, data: any) => {
@@ -324,7 +323,10 @@ const ProfileSituation = () => {
         body: JSON.stringify(updateObject),
       },
       (e) => {
-        console.log(e.data);
+        const action = getUserById(e.data);
+        dispatch(action);
+        setDialogTitle("Cập nhật hoàn canh thành công!");
+        setOpenDialog(true);
       }
     );
 
