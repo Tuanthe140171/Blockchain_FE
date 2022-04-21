@@ -61,8 +61,7 @@ const UserLayout: React.FC = (props): ReactElement => {
     auth: {},
   });
   
-  const { badluckerType } = useSelector((state: any) => state.userLayout);
-  const { userData } = useSelector((state: any) => state.userLayout);
+  const { badluckerType, userData } = useSelector((state: any) => state.userLayout);
 
   const debouncedKeyword = useDebounce<string>(inputSearch, 500);
 
@@ -94,9 +93,7 @@ const UserLayout: React.FC = (props): ReactElement => {
         if (dataResult?.BadLuckTypes?.length === 0) {
           return "";
         } else {
-          return badluckerType?.find(
-            (type: any) => type.id === userData?.BadLuckTypes[0].situationId
-          )?.name;
+          return dataResult?.BadLuckTypes[0].BadLuckerSituation.name
         }
       }())
     })))
@@ -244,7 +241,9 @@ const UserLayout: React.FC = (props): ReactElement => {
               )} ${nativeCurrencySymbol}`}
             </p>
             <div className="connected-account__addr">
-              {shortenAddress(account)}
+              <Tooltip title={account}>
+                {shortenAddress(account)}
+              </Tooltip>
             </div>
           </div>
 

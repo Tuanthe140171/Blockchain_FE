@@ -43,7 +43,10 @@ const DoneeList: React.FC<DoneeListProps> = (props) => {
           className="donee-list__search"
           placeholder="Tìm kiếm theo tên, vị trí ..."
           value={props.inputSearch}
-          onChange={(e) => props.setInputSearch(e.target.value.replace(/[^\w\s]/gi, ""))}
+          onChange={(e) => {
+            props.setCurrentPage(1);
+            props.setInputSearch(e.target.value.replace(/[^\w\s]/gi, ""))
+          }}
         />
         <div className="donee-list__orderBy">
           <span>Sắp xếp theo</span>
