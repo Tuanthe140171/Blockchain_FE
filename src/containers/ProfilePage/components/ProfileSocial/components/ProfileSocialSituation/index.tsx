@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Image } from "antd";
-import { Link, useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import "./index.scss";
+import { useNavigate, useParams } from "react-router-dom";
 import ProfileSituationVoting from "./component/ProfileSocialSituationVoting";
-import { PhotoSlider } from "react-photo-view";
+import "./index.scss";
 
 const ProfileSocialSituation = () => {
   const [viewVerification, setViewVerification] = useState<boolean>(false);
@@ -58,9 +55,11 @@ const ProfileSocialSituation = () => {
         return {
           isConfirmed: data.UserSituationConfirms.find(
             (type: any) => type.userId === userData.id
-          ) ? true: false,
-          ...data
-        }
+          )
+            ? true
+            : false,
+          ...data,
+        };
       });
 
       setYourSituationCfList(listConfirmed);
@@ -187,7 +186,7 @@ const ProfileSocialSituation = () => {
         }}
       >
         <p className="personal-header__title">Hoàn cảnh</p>
-        {id ? null : (
+        {id || userData?.type < 3 ? null : (
           <span
             className="personal-header__edit"
             onClick={() => navigate("/profile-edit/3")}

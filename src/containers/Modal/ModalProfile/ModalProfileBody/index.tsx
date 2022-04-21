@@ -1,15 +1,16 @@
 import {
   FileTextOutlined,
-  SecurityScanOutlined,
   UserOutlined,
   WalletOutlined,
 } from "@ant-design/icons";
 import React from "react";
-import "./index.scss";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import "./index.scss";
 
 const ModalProfileBody = () => {
   const navigate = useNavigate();
+  const { userData } = useSelector((state: any) => state.userLayout);
 
   return (
     <div className="modal-profile__body">
@@ -37,17 +38,17 @@ const ModalProfileBody = () => {
           Phương thức thanh toán
         </div>
       </div>
-      <div
-        className="modal-profile__body__line"
-        onClick={() => {
-          navigate("/profile-edit/3");
-        }}
-      >
-        <FileTextOutlined className="modal-profile__body__line__icon" />
-        <div className="modal-profile__body__line__text">
-          Hoàn cảnh
+      {userData?.type > 2 ? (
+        <div
+          className="modal-profile__body__line"
+          onClick={() => {
+            navigate("/profile-edit/3");
+          }}
+        >
+          <FileTextOutlined className="modal-profile__body__line__icon" />
+          <div className="modal-profile__body__line__text">Hoàn cảnh</div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 };

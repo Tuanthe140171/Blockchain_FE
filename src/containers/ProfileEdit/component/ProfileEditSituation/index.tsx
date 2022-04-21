@@ -1,4 +1,5 @@
 import { Button, Cascader, Divider, Tag, Upload } from "antd";
+import { id } from "ethers/lib/utils";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import AppDialog from "../../../../components/AppDialog";
@@ -26,7 +27,6 @@ const ProfileSituation = () => {
   );
   const dispatch = useDispatch();
 
-  /** Left side */
   // CMND state
   // list initial cmnd
   const [cmndList, setCmndList] = useState<any>([]);
@@ -42,18 +42,6 @@ const ProfileSituation = () => {
   const [isSubmitCmnd, setIsSubmitCmnd] = useState<any>(undefined);
   // set can update cmnd after changing files
   const [canUpdateCmnd, setCanUpdateCmnd] = useState(false);
-
-  // Base situation list
-  // list initial situation
-  const [situationList, setSituationList] = useState<any>([]);
-  // id of situation that user want to delete
-  const [deleteId, setDeleteId] = useState<any>(undefined);
-  // set call api delete or not
-  const [isDelete, setIsDelete] = useState<any>(undefined);
-  // id of situation that user want to update
-  const [updateId, setUpdateId] = useState<any>(undefined);
-  // set call api update or not
-  const [isUpdate, setIsUpdate] = useState<any>(undefined);
 
   /** Dialog */
   // dialog infor data
@@ -107,14 +95,22 @@ const ProfileSituation = () => {
         setTempId([cmnd[0].id, cmnd[1].id]);
       }
       const situation = userData?.BadLuckTypes;
-      setSituationList(userData.BadLuckTypes);
-      const formatSituation = userData.BadLuckTypes?.map((blt: any) => ({
-        id: blt.id,
-        files: blt.BadLuckMedia?.map((blm: any) => ({
-          id: blm.id,
-          link: blm.link,
-        })),
-      }));
+      setSituationList(userData?.BadLuckTypes);
+
+      // do not delete this
+      const formatSituation = userData.BadLuckTypes?.map((blt: any) => {
+        const links = blt?.BadLuckMedia?.map((media: any) => ({
+          id: media?.id,
+          link: media?.link,
+        }));
+        const ids = blt?.BadLuckMedia?.map((media: any) => {
+          return media?.id;
+        });
+        linkOldSituationObject[blt?.situationId] = links;
+        originOldSituationObject[blt?.situationId] = ids;
+        setLinkOldSituationObject(linkOldSituationObject);
+        setOriginOldSituationObject(originOldSituationObject);
+      });
 
       if (badluckerType && badluckerType?.length > 0) {
         const newArr = badluckerType?.filter((blk: any) => {
@@ -127,30 +123,84 @@ const ProfileSituation = () => {
           message: opt.message,
           id: opt.id,
         }));
-        // setOptions(optionRes);
+        setOptions(optionRes);
         setSelectedList([]);
       }
     }
   }, [userData, badluckerType]);
 
-  /** Function about base situations */
-
   // get initial Situation text
   const getSituationText = (type: number, situationId: string) => {
     // 1: title - 2: message
     const text = badluckerType?.find((type: any) => type.id === situationId);
-    return type === 1 ? text.name : text.message;
+    return type === 1 ? text?.name : text?.message;
   };
 
-  // get initial Situation media
+  // Base situation list
+  const [situationList, setSituationList] = useState<any>([]);
+  // id of situation that user want to delete
+  const [deleteId, setDeleteId] = useState<any>(undefined);
+  const [updateId, setUpdateId] = useState<any>(undefined);
+  const [tempUpdateId, setTempUpdateId] = useState<any>(undefined);
+  const [isDelete, setIsDelete] = useState<any>(undefined);
+  const [isUpdate, setIsUpdate] = useState<any>(undefined);
+  const [updateObject, setUpdateObject] = useState<any>(undefined);
   const getSituationMedia = (data: any, text: string) => {
     const situationMedia = data?.map((media: any, index: number) => ({
+      uid: media.id,
       name: `Giấy xác nhận ${text}`,
       status: "done",
       url: media.link,
     }));
     return situationMedia;
   };
+
+  const [oldSituationTempId, setOldSituationTempId] = useState<any>(0);
+  const [oldSituationTemp, setOldSituationTemp] = useState<any>([]);
+  const [linkOldSituationObject, setLinkOldSituationObject] = useState<any>({});
+  const [originOldSituationObject, setOriginOldSituationObject] = useState<any>(
+    {}
+  );
+  const [oldSituationUpload, setOldSituationUpload] = useState<any>(undefined);
+  const [activeSituation, setActiveSituation] = useState<any>(undefined);
+
+  // const onOldSituationChange = ({ fileLsit: newFileList }: any, data: any) => {
+  const onOldSituationChange = (fileList: any, file: any, data: any) => {
+    if (fileList.length === 0) {
+      linkOldSituationObject[data.situationId] = [];
+      setLinkOldSituationObject(linkOldSituationObject);
+      return;
+    }
+    if (file.status === "removed") {
+      if (file.originFileObj) {
+        const newObj = linkOldSituationObject[data.situationId]?.filter(
+          (obj: any) => obj.uid !== file.uid
+        );
+        linkOldSituationObject[data.situationId] = newObj;
+        setLinkOldSituationObject(linkOldSituationObject);
+        return;
+      } else {
+        const newObj1 = linkOldSituationObject[data.situationId]?.filter(
+          (obj: any) => obj.id !== file.uid
+        );
+        linkOldSituationObject[data.situationId] = newObj1;
+        setLinkOldSituationObject(linkOldSituationObject);
+        return;
+      }
+    }
+    if (file.status === "done") {
+      setOldSituationTempId(data.situationId);
+      setOldSituationTemp(file);
+    }
+  };
+
+  useEffect(() => {
+    if (oldSituationTemp && oldSituationTempId !== 0) {
+      let data = new FormData();
+      data.append("files", oldSituationTemp.originFileObj);
+      setOldSituationUpload(data);
+    }
+  }, [oldSituationTemp]);
 
   // render initial Situation
   const renderSituation = () => {
@@ -162,23 +212,27 @@ const ProfileSituation = () => {
         >
           <div className="profile-situation__container__list-situation__situation__wrapper">
             <div>{getSituationText(1, s.situationId)}</div>
-            <Button
-              onClick={() => {
-                setUpdateId(+s.id);
-                setOpenConfirmDialog(true);
-              }}
-            >
-              Cập nhật
-            </Button>
-            <Button
-              onClick={() => {
-                setDeleteId(+s.id);
-                setHasButtons(true);
-                setOpenWarnDialog(true);
-              }}
-            >
-              Xóa
-            </Button>
+            <div>
+              <Button
+                onClick={() => {
+                  setUpdateId(+s.id);
+                  setTempUpdateId(+s.situationId);
+                  setOpenConfirmDialog(true);
+                }}
+              >
+                Cập nhật
+              </Button>
+              <Button
+                onClick={() => {
+                  setDeleteId(+s.id);
+                  setHasButtons(true);
+                  setOpenWarnDialog(true);
+                }}
+                style={{ marginLeft: "20px" }}
+              >
+                Xóa
+              </Button>
+            </div>
           </div>
           <div className="profile-situation__container__list-situation__situation__upload">
             <Button
@@ -189,18 +243,17 @@ const ProfileSituation = () => {
             </Button>
             <Upload
               listType="picture"
-              // defaultFileList={getSituationMedia(
-              //   s.BadLuckMedia,
-              //   getSituationText(2, s.situationId)
-              // )}
-              fileList={getSituationMedia(
+              defaultFileList={getSituationMedia(
                 s.BadLuckMedia,
                 getSituationText(2, s.situationId)
               )}
               className="profile-situation__container__list-situation__situation__upload__component"
-              onChange={(e) => onSituationChange(e, s)}
+              onChange={({ fileList, file }) =>
+                onOldSituationChange(fileList, file, s)
+              }
               customRequest={dummyRequest}
               isImageUrl={(file: any) => true}
+              maxCount={5}
             >
               <Button>+ Tải thêm</Button>
             </Upload>
@@ -210,14 +263,26 @@ const ProfileSituation = () => {
     });
   };
 
-  const onSituationChange = ({ fileLsit: newFileList }: any, data: any) => {
-    // console.log(situationList);
-    // console.log(newFileList);
-    // console.log(data);
-    // const param = {
-    //   badLuckerTypeId: data.id,
-    // };
-  };
+  const { data: uploadOldSituationData, loading: loadingOldSituation } =
+    useFetch<any>(
+      "image/upload-multiple-file",
+      {},
+      false,
+      [oldSituationUpload],
+      {
+        method: "POST",
+        body: oldSituationUpload,
+      },
+      (e) => {
+        linkOldSituationObject[oldSituationTempId].push({
+          id: "0",
+          link: e.data[0],
+          uid: oldSituationTemp.uid,
+        });
+        setLinkOldSituationObject(linkOldSituationObject);
+        setOldSituationUpload(undefined);
+      }
+    );
 
   const { data: deletedSituation, loading: loadingDeleteSituation } =
     useFetch<any>(
@@ -237,10 +302,30 @@ const ProfileSituation = () => {
       (e) => {
         const action = getUserById(e.data);
         dispatch(action);
-        // setSituationList(e.data.BadLuckTypes);
         setIsDelete(undefined);
         setDeleteId(undefined);
         setDialogTitle("Xóa hoàn cảnh thành công!");
+        setOpenDialog(true);
+      }
+    );
+
+  const { data: updateSituation, loading: loadingUpdateSituation } =
+    useFetch<any>(
+      "bad-lucker/edit-badlucker-image",
+      {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      false,
+      [isUpdate],
+      {
+        method: "POST",
+        body: JSON.stringify(updateObject),
+      },
+      (e) => {
+        const action = getUserById(e.data);
+        dispatch(action);
+        setDialogTitle("Cập nhật hoàn canh thành công!");
         setOpenDialog(true);
       }
     );
@@ -263,7 +348,6 @@ const ProfileSituation = () => {
     setSubmitCmndList(modifyCmnd);
     setCanUpdateCmnd(true);
   };
-
   // when user update cmnd files
   const onCmndUpdate = () => {
     if (submitCmndList?.length < 2) {
@@ -272,7 +356,6 @@ const ProfileSituation = () => {
       setIsUpdateCmnd(true);
     }
   };
-
   const { data: linkCmnd, loading: loadingGetLinkCmnd } = useFetch<any>(
     "image/upload-multiple-file",
     {},
@@ -299,7 +382,6 @@ const ProfileSituation = () => {
       setIsSubmitCmnd(true);
     }
   );
-
   const { data: updateCmnd, loading: loadingUpdateCmnd } = useFetch<any>(
     "users/update-identity-image",
     {
@@ -320,39 +402,18 @@ const ProfileSituation = () => {
   );
 
   /**
-   *
    * New situation
    */
   const [options, setOptions] = useState<any>([]);
   const [situationFile, setSituationFile] = useState<ISituation[]>([]);
   const [submitAll, setSubmitAll] = useState<any>(null);
-
-  const randomColor = (() => {
-    "use strict";
-    const randomInt = (min: any, max: any) => {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    };
-    return () => {
-      var h = randomInt(0, 360);
-      var s = randomInt(42, 98);
-      var l = randomInt(40, 90);
-      return `hsl(${h},${s}%,${l}%)`;
-    };
-  })();
-
   const [selectedList, setSelectedList] = useState<any>([]);
-
-  const onTagClose = (e: any, index: any) => {
-    const pos = options.find((option: any) => option.value === e[0])?.id;
-    delete linkSituationObject[pos];
-    const itemPos = selectedList.indexOf(e);
-    const { [itemPos]: item, ...rest } = selectedList;
-    setSelectedList(Object.values(rest));
-    if (situationFile.some((s: any) => s.value === e[0])) {
-      setSituationFile(situationFile.filter((s: any) => s.value !== e[0]));
-    }
-    return;
-  };
+  const [isSubmit, setIsSubmit] = useState<any>(undefined);
+  const [tempSituationId, setTempSituationId] = useState<any>(0);
+  const [tempSituation, setTempSituation] = useState<any>([]);
+  const [fileSituationUpload, setFileSituationUpload] =
+    useState<any>(undefined);
+  const [linkSituationObject, setLinkSituationObject] = useState<any>({});
 
   useEffect(() => {
     if (badluckerType) {
@@ -369,9 +430,34 @@ const ProfileSituation = () => {
     }
   }, [badluckerType]);
 
+  const randomColor = (() => {
+    "use strict";
+    const randomInt = (min: any, max: any) => {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+    return () => {
+      var h = randomInt(0, 360);
+      var s = randomInt(42, 98);
+      var l = randomInt(40, 90);
+      return `hsl(${h},${s}%,${l}%)`;
+    };
+  })();
+
+  const onTagClose = (e: any, index: any) => {
+    const pos = options?.find((option: any) => option.value === e[0])?.id;
+    delete linkSituationObject[pos];
+    const itemPos = selectedList.indexOf(e);
+    const { [itemPos]: item, ...rest } = selectedList;
+    setSelectedList(Object.values(rest));
+    if (situationFile.some((s: any) => s.value === e[0])) {
+      setSituationFile(situationFile.filter((s: any) => s.value !== e[0]));
+    }
+    return;
+  };
+
   const onChange = (value: any) => {
     const listId = value.map(
-      (val: any) => options.find((op: any) => op.value === val[0])?.id
+      (val: any) => options?.find((op: any) => op.value === val[0])?.id
     );
     if (Object.keys(linkSituationObject).length < listId.length) {
       for (let i = 0; i < listId.length; i++) {
@@ -381,20 +467,13 @@ const ProfileSituation = () => {
       }
     } else {
       delete linkSituationObject[
-        `${Object.keys(linkSituationObject).find(
+        `${Object.keys(linkSituationObject)?.find(
           (val) => !listId.includes(val)
         )}`
       ];
     }
     setSelectedList(value);
   };
-
-  const [isSubmit, setIsSubmit] = useState<any>(undefined);
-  const [tempSituationId, setTempSituationId] = useState<any>(0);
-  const [tempSituation, setTempSituation] = useState<any>([]);
-  const [fileSituationUpload, setFileSituationUpload] =
-    useState<any>(undefined);
-  const [linkSituationObject, setLinkSituationObject] = useState<any>({});
 
   const onSituationUpload = ({ fileList: newFileList }: any, id: any) => {
     setTempSituationId(id);
@@ -414,6 +493,29 @@ const ProfileSituation = () => {
       setFileSituationUpload(data);
     }
   }, [tempSituation]);
+
+  const handleSubmit = () => {
+    if (
+      Object.keys(linkSituationObject).length === 0 ||
+      Object.keys(linkSituationObject).some(
+        (value) => linkSituationObject[value].length < 1
+      )
+    ) {
+      setOpenWarnDialog(true);
+    } else {
+      const situationData = Object.keys(linkSituationObject).map((value) => {
+        return {
+          id: value,
+          link: linkSituationObject[value],
+        };
+      });
+      const combineData = {
+        badLuckType: situationData,
+      };
+      setSubmitAll(combineData);
+      setIsSubmit(true);
+    }
+  };
 
   const { data: uploadSituationData, loading: loadingSituation } =
     useFetch<any>(
@@ -448,34 +550,14 @@ const ProfileSituation = () => {
       method: "POST",
       body: JSON.stringify(submitAll),
     },
-    () => {
+    (e) => {
+      const action = getUserById(e.data);
+      dispatch(action);
       setIsSubmit(undefined);
+      setDialogTitle("Bạn đã gửi đơn xác nhận hộ nghèo thành công!");
       setOpenDialog(true);
     }
   );
-
-  const handleSubmit = () => {
-    if (
-      Object.keys(linkSituationObject).length === 0 ||
-      Object.keys(linkSituationObject).some(
-        (value) => linkSituationObject[value].length < 1
-      )
-    ) {
-      setOpenWarnDialog(true);
-    } else {
-      const situationData = Object.keys(linkSituationObject).map((value) => {
-        return {
-          id: value,
-          link: linkSituationObject[value],
-        };
-      });
-      const combineData = {
-        badLuckType: situationData,
-      };
-      setSubmitAll(combineData);
-      setIsSubmit(true);
-    }
-  };
 
   const renderTag = () => {
     return selectedList.map((tag: any, index: any) => {
@@ -497,13 +579,20 @@ const ProfileSituation = () => {
     return options.map((option: any) => {
       if (selectedList.some((data: any) => data[0] === option?.value)) {
         return (
-          <div className="profile-drawer__cmnd" key={option?.index}>
-            <Button type="text" className="profile-drawer__cmnd__title">
+          <div
+            className="profile-situation__container__list-situation__cmnd__upload"
+            key={option?.index}
+          >
+            <Button
+              type="text"
+              className="profile-situation__container__list-situation__cmnd__upload__title"
+            >
               Giấy chứng nhận {option?.message}
             </Button>
             <div className="profile-drawer__cmnd__wrapper">
               <Upload
-                className="profile-drawer__cmnd__wrapper__container"
+                listType="picture"
+                className="profile-situation__container__list-situation__cmnd__upload__component"
                 maxCount={5}
                 defaultFileList={[]}
                 onChange={(e) => onSituationUpload(e, option?.id)}
@@ -530,13 +619,7 @@ const ProfileSituation = () => {
         description={dialogDescription}
         confirmText={Message.INFOR_CF_01}
         onConfirm={() => {
-          if (dialogTitle === "Bạn đã gửi đơn xác nhận hộ nghèo thành công") {
-            setOpenDialog(false);
-            // const action = getUserById(rerenderData);
-            // dispatch(action);
-          } else {
-            setOpenDialog(false);
-          }
+          setOpenDialog(false);
         }}
         visible={openDialog}
         onCancel={() => setOpenDialog(false)}
@@ -547,6 +630,29 @@ const ProfileSituation = () => {
         confirmText={"Xác nhận"}
         cancelText={"Đóng"}
         onConfirm={() => {
+          const newSituation = linkOldSituationObject[tempUpdateId]?.filter(
+            (situation: any) => {
+              if (situation.id === "0") {
+                return { id: situation.id, link: situation.link };
+              }
+            }
+          );
+          const deleteSituation = originOldSituationObject[tempUpdateId]
+            ?.filter(
+              (id: any) =>
+                !linkOldSituationObject[tempUpdateId]?.some(
+                  (situation: any) => situation.id === id
+                )
+            )
+            ?.map((id: any) => ({ id: id }));
+
+          const finalArray = newSituation.concat(deleteSituation);
+
+          const object = {
+            badLuckerTypeId: updateId,
+            images: finalArray,
+          };
+          setUpdateObject(object);
           setIsUpdate(true);
           setOpenConfirmDialog(false);
         }}
@@ -579,7 +685,12 @@ const ProfileSituation = () => {
         visible={openWarnDialog}
         onCancel={() => setOpenWarnDialog(false)}
       />
-      {(loadingDeleteSituation || loadingGetLinkCmnd || loadingUpdateCmnd) && (
+      {(loadingOldSituation ||
+        loadingDeleteSituation ||
+        loadingUpdateSituation ||
+        loadingGetLinkCmnd ||
+        loadingUpdateCmnd ||
+        loadingSituation) && (
         <AppLoading loadingContent={<div></div>} showContent={false} />
       )}
       <div className="profile-situation">
@@ -617,7 +728,7 @@ const ProfileSituation = () => {
                   maxCount={2}
                   isImageUrl={(file: any) => true}
                 >
-                  <Button>+ Tải thêm</Button>
+                  {cmndList.length === 2 ? null : <Button>+ Tải thêm</Button>}
                 </Upload>
               </div>
             </div>
@@ -667,7 +778,7 @@ const ProfileSituation = () => {
                     Hoàn cảnh
                   </div>
                 }
-                dropdownStyle={{ width: "100%" }}
+                dropdownStyle={{ width: "80%" }}
               />
               <div className="profile-situation__container__add-situation__cascader__tags">
                 {renderTag()}
