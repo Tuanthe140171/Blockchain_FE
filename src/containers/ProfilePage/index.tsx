@@ -176,6 +176,7 @@ const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     if (userPostBanner) {
+      setOriginLink(bannerLink);
       setBannerLink(userPostBanner);
       setIsUpload(true);
     }
