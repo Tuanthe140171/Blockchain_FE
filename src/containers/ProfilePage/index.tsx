@@ -49,7 +49,8 @@ const ProfilePage: React.FC = () => {
       : "/icon/testing.jpg"
   );
 
-  console.log(userPostBanner);
+  console.log(bannerLink, "banner");
+  console.log(originLink, "origin");
 
   useEffect(() => {
     if (userData?.id) {
@@ -82,6 +83,19 @@ const ProfilePage: React.FC = () => {
           e.data.UserMedia?.find(
             (media: any) => media.type === "2" && media.active === 1
           )?.link
+            ? e.data.UserMedia?.find(
+                (media: any) => media.type === "2" && media.active === 1
+              )?.link
+            : "/icon/testing.jpg"
+        );
+        setOriginLink(
+          e.data.UserMedia?.find(
+            (media: any) => media.type === "2" && media.active === 1
+          )?.link
+            ? e.data.UserMedia?.find(
+                (media: any) => media.type === "2" && media.active === 1
+              )?.link
+            : "/icon/testing.jpg"
         );
       }
     );
@@ -107,6 +121,15 @@ const ProfilePage: React.FC = () => {
             ? e.data.UserMedia?.find(
                 (media: any) => media.type === "2" && media.active === 1
               ).link
+            : "/icon/testing.jpg"
+        );
+        setOriginLink(
+          e.data.UserMedia?.find(
+            (media: any) => media.type === "2" && media.active === 1
+          )?.link
+            ? e.data.UserMedia?.find(
+                (media: any) => media.type === "2" && media.active === 1
+              )?.link
             : "/icon/testing.jpg"
         );
       }

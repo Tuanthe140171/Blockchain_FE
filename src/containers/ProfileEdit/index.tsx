@@ -73,10 +73,10 @@ const Dashboard = () => {
           </Breadcrumb.Item>
           <Breadcrumb.Item className="profile-edit__header__breadcrumb__to">
             {selectedTab === 1
-              ? "Personal Information"
+              ? "Thông tin cá nhân"
               : selectedTab === 2
-              ? "Payment Method"
-              : "Situation"}
+              ? "Phương thức thanh toán"
+              : "Hoàn cảnh"}
           </Breadcrumb.Item>
         </Breadcrumb>
         <div className="divide">
