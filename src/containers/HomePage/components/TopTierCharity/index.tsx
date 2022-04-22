@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Typography, Image } from "antd";
+//@ts-ignore
+import { Fade } from 'react-reveal';
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
@@ -114,17 +116,19 @@ const TopTierCharity: React.FC<TopTierCharityProps> = (props) => {
         className="top-charity__img"
       />
       <div className="top-charity__header">
-        <p className="header-charity__top-tier">TOP TIER OF CHARITY</p>
-        <Title level={2} className="header-charity__title">
-          Những đối tượng gặp hoàn cảnh khó khăn nhất
-        </Title>
-        <p className="header-charity__desc">
-          Trong số 3.000 gia đình mà chương trình Mỗi Ngày Một Quả Trứng (MNMQT)
-        </p>
-        <div className="header-charity__carousel-btns">
-          <MyCarouselBtn direction={Direction.LEFT} disabled={currentSlide === 0} onClick={() => carouselRef.current?.goToSlide(currentSlide > 1 ? currentSlide - 1: 0)}/>
-          <MyCarouselBtn direction={Direction.RIGHT} disabled={false} onClick={() => carouselRef.current?.goToSlide(currentSlide + 1 <= mockData.length - 2 ? currentSlide + 1: 0)}/>
-        </div>
+        <Fade left>
+          <p className="header-charity__top-tier">TOP TIER OF CHARITY</p>
+          <Title level={2} className="header-charity__title">
+            Những đối tượng gặp hoàn cảnh khó khăn nhất
+          </Title>
+          <p className="header-charity__desc">
+            Trong số 3.000 gia đình mà chương trình Mỗi Ngày Một Quả Trứng (MNMQT)
+          </p>
+          <div className="header-charity__carousel-btns">
+            <MyCarouselBtn direction={Direction.LEFT} disabled={currentSlide === 0} onClick={() => carouselRef.current?.goToSlide(currentSlide > 1 ? currentSlide - 1 : 0)} />
+            <MyCarouselBtn direction={Direction.RIGHT} disabled={false} onClick={() => carouselRef.current?.goToSlide(currentSlide + 1 <= mockData.length - 2 ? currentSlide + 1 : 0)} />
+          </div>
+        </Fade>
       </div>
       <div className="top-charity__cards">
         <Carousel

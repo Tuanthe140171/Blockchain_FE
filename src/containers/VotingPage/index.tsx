@@ -48,7 +48,7 @@ const VotingPage: React.FC = () => {
 
   const doneeData = data
     ? data.rows.map((donee: any) => ({
-        donee: `${donee.lastName || ""} ${donee.name}`,
+        donee: `${donee.lastName || ""} ${donee?.name}`,
         dob: moment(donee.dob).format("DD-MM-yy"),
         createDate: moment(donee.createDate).format("DD-MM-yy"),
         address: `${donee.country} ${donee.baseAddress} ${donee.currentAddress}`,
@@ -84,10 +84,11 @@ const VotingPage: React.FC = () => {
         (donee: any) => donee.id === selectedUser.userId
       )[0];
       setSelectedUser({
-        donee: `${donee.lastName || ""} ${donee.name}`,
+        donee: `${donee?.lastName || ""} ${donee?.name}`,
         dob: moment(donee.dob).format("DD-MM-yy"),
         createDate: moment(donee.createDate).format("DD-MM-yy"),
-        address: `${donee.country} ${donee.baseAddress} ${donee.currentAddress}`,
+        address: `${donee.country} ${donee.baseAddress}`,
+        currentAddress: `${donee.currentAddress}`,
         id: donee.identityId,
         situations: donee.BadLuckTypes,
         avatar: (function () {
@@ -108,7 +109,7 @@ const VotingPage: React.FC = () => {
                 (userVote: any) => userVote.userIdFrom
               ).indexOf(userData.id) >= 0
             : true;
-        })(),
+        })()
       });
     }
   }, [data, confirmationVisible, setSelectedUser, userData]);
@@ -217,6 +218,7 @@ const VotingPage: React.FC = () => {
           <Search
             placeholder="Tìm kiếm"
             onChange={(e: any) => {
+              setCurrentPage(1);
               setInputSearch(e.target.value.replace(/[^\w\s]/gi, ""));
             }}
             value={inputSearch}

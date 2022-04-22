@@ -1,9 +1,10 @@
-import { CaretDownOutlined } from "@ant-design/icons";
 import { Button, Image, Layout, Menu, Modal, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import React, { ReactElement, useState, useEffect, useCallback, useContext } from "react";
 import { WarningOutlined } from "@ant-design/icons";
 import { useWeb3React } from "web3-react-core";
+//@ts-ignore
+import { Fade } from 'react-reveal';
 import { injected } from "../../connectors";
 import useFetch from "../../hooks/useFetch";
 import useLocalStorage from "../../hooks/useLocalStorage";
@@ -44,7 +45,7 @@ const DefaultLayout: React.FC = (props): ReactElement => {
       setSignature(undefined)
     }
   );
-  
+
   useEffect(() => {
     activate && activate(injected);
   }, [activate]);
@@ -93,57 +94,61 @@ const DefaultLayout: React.FC = (props): ReactElement => {
             preview={false}
             className="header__logo"
           />
-          <Menu mode="horizontal" selectable={false} className="header__menu">
-            {/* <Menu.Item
+          <Fade top>
+            <Menu mode="horizontal" selectable={false} className="header__menu">
+              {/* <Menu.Item
               key="1"
               icon={<CaretDownOutlined />}
               className="menu__icon"
             >
               Donate for
             </Menu.Item> */}
-            <Menu.Item key="2" className="menu__icon">
-              Giới thiệu
-            </Menu.Item>
-            <Menu.Item key="3" className="menu__icon">
-              Hướng dẫn sử dụng
-            </Menu.Item>
-          </Menu>
+              <Menu.Item key="2" className="menu__icon">
+                Giới thiệu
+              </Menu.Item>
+              <Menu.Item key="3" className="menu__icon">
+                Hướng dẫn sử dụng
+              </Menu.Item>
+            </Menu>
+          </Fade>
         </div>
         <div className="header__right">
-          <Button className="connect-btn" onClick={async () => {
-            if (authorizeError === AuthorizeErrorType.NONE) {
-              setSelectedKey("Dashboard");
-              navigate("/dashboard");
-            } else if (authorizeError === AuthorizeErrorType.WRONG_NETWORK) {
-              try {
-                await (window as any).ethereum.request({
-                  method: "wallet_addEthereumChain",
-                  params: [
-                    {
-                      chainId: "0x7E2",
-                      chainName: "CharityVerse",
-                      rpcUrls: ["https://rpc.test.charityverse.info"],
-                      blockExplorerUrls: ["https://blockscout.charityverse.info/"],
-                      nativeCurrency: {
-                        name: "CharityVerse",
-                        symbol: "VNC", // 2-6 characters long
-                        decimals: 18,
+          <Fade bottom>
+            <Button className="connect-btn" onClick={async () => {
+              if (authorizeError === AuthorizeErrorType.NONE) {
+                setSelectedKey("Dashboard");
+                navigate("/dashboard");
+              } else if (authorizeError === AuthorizeErrorType.WRONG_NETWORK) {
+                try {
+                  await (window as any).ethereum.request({
+                    method: "wallet_addEthereumChain",
+                    params: [
+                      {
+                        chainId: "0x7E2",
+                        chainName: "CharityVerse",
+                        rpcUrls: ["https://rpc.test.charityverse.info"],
+                        blockExplorerUrls: ["https://blockscout.charityverse.info/"],
+                        nativeCurrency: {
+                          name: "CharityVerse",
+                          symbol: "VNC", // 2-6 characters long
+                          decimals: 18,
+                        },
                       },
-                    },
-                  ],
-                });
-              } catch (addError) {
-                console.log(addError);
+                    ],
+                  });
+                } catch (addError) {
+                  console.log(addError);
+                }
+              } else if (authorizeError === AuthorizeErrorType.UNAUTHORIZED) {
+                setShowSignatureModal(true);
               }
-            } else if (authorizeError === AuthorizeErrorType.UNAUTHORIZED) {
-              setShowSignatureModal(true);
             }
-          }
-          }>
-            {
-              authorizeError === AuthorizeErrorType.NONE ? "Vào ứng dụng" : "Kết nối ví"
-            }
-          </Button>
+            }>
+              {
+                authorizeError === AuthorizeErrorType.NONE ? "Vào ứng dụng" : "Kết nối ví"
+              }
+            </Button>
+          </Fade>
           <Modal
             visible={showSignatureModal}
             centered={true}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Image, Avatar, message } from "antd";
+import { Button, Image, Avatar, message, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -17,6 +17,7 @@ export type SelectedUser = {
   dob: string;
   createDate: string;
   address: string;
+  currentAddress: string;
   id: string;
   situations: any;
   avatar: string | null;
@@ -111,7 +112,7 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
             <Button
               className="voting-confirmation__btn-back"
               disabled={(
-                selectedUser?.isVoted
+                (selectedUser?.isVoted || !userData?.isOnTop)
                   ? true
                   : userData
                     ? (
@@ -157,7 +158,9 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
                     <span>Họ và Tên</span>
                   </div>
                   <span className="profile-personal-v2__detail-content">
-                    {selectedUser?.donee}
+                  <Tooltip title={selectedUser?.donee}>
+                      {selectedUser?.donee}
+                    </Tooltip>
                   </span>
                 </li>
                 <li className="profile-personal-v2__detail">
@@ -183,7 +186,9 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
                     <span>Trú quán</span>
                   </div>
                   <span className="profile-personal-v2__detail-content">
-                    {selectedUser?.address}
+                    <Tooltip title={selectedUser?.currentAddress}>
+                      {selectedUser?.currentAddress}
+                    </Tooltip>
                   </span>
                 </li>
                 <li className="profile-personal-v2__detail">
@@ -196,7 +201,9 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
                     <span>Nguyên quán</span>
                   </div>
                   <span className="profile-personal-v2__detail-content">
-                    {selectedUser?.address}
+                    <Tooltip title={selectedUser?.address}>
+                      {selectedUser?.address}
+                    </Tooltip>
                   </span>
                 </li>
                 <li className="profile-personal-v2__detail">
@@ -260,7 +267,7 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
                     setReloadVotingData={setReloadVotingData}
                     userName={selectedUser?.donee}
                     isVoted={
-                      selectedUser?.isVoted
+                      (selectedUser?.isVoted)
                         ? true
                         : userData
                           ? userSituation.UserSituationConfirms.map(
@@ -268,6 +275,7 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
                           ).indexOf(userData.id) >= 0
                           : true
                     }
+                    isOnTop={userData?.isOnTop}
                   />
                 ))}
             </div>
