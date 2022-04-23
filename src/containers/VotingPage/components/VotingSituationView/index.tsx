@@ -153,7 +153,7 @@ const VotingSituationView: React.FC<VotingSituationViewProps> = (props) => {
           );
         }}
       />
-      {!loading && (
+      {loading && (
         <AppLoading loadingContent={<div></div>} showContent={false} />
       )}
       <AppDialog
