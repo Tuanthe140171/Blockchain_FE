@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { useSelector } from "react-redux";
-import { Input, Typography, Image, message, Tooltip } from "antd";
+import { Typography, Image, message, Tooltip } from "antd";
 import Button from "../../components/Button";
 import BigNumber from "bignumber.js";
+//@ts-ignore
+import Fade from "react-reveal/Fade";
 import useFetch from "../../hooks/useFetch";
 import AppPagination from "../../components/AppPagination";
 import AppLoading from "../../components/AppLoading";
@@ -37,9 +39,9 @@ const Claim: React.FC = () => {
   const userData = useSelector((state: any) => state.userLayout.userData);
   const [pickedDate, setPickedDate] = useState<
     | {
-        from: number;
-        to: number;
-      }
+      from: number;
+      to: number;
+    }
     | undefined
   >(undefined);
 
@@ -50,7 +52,7 @@ const Claim: React.FC = () => {
 
   const { explorer } =
     CHAIN_INFO[
-      chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
+    chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
     ];
 
   const handleDatePickerChange = (dates: any, dateStrings: any) => {
@@ -225,100 +227,100 @@ const Claim: React.FC = () => {
                     /> */}
           <DashDate onChange={handleDatePickerChange} />
         </div>
-            {/* <p className="claim__line"> */}
-              {/* <strong className="claim__amount"> */}
-                {/* <div className="claim__icon"> */}
-                  {/* <Image src="/icon/ethereum_1.svg" preview={false} /> */}
-                {/* </div> */}
-                <div className="claim__content">
-                  <div className="claim__main">
-                    <p className="claim__line">
-                      Tổng thưởng:
-                      <strong className="claim__amount">
-                        <span>
-                          {new BigNumber(userClaimData?.totalLeftReward || 0)
-                            .div(1e18)
-                            .toFixed()}
-                        </span>
-                        <div className="claim__icon">
-                          <Image src="/icon/ethereum_1.svg" preview={false} />
-                        </div>
-                      </strong>
-                    </p>
-                    <p className="claim__line">
-                      Đã lĩnh:
-                      <strong className="claim__amount">
-                        <span>
-                          {new BigNumber(userClaimData?.totalClaimedReward || 0)
-                            .div(1e18)
-                            .toFixed()}
-                        </span>
-                        <div className="claim__icon">
-                          <Image src="/icon/ethereum_1.svg" preview={false} />
-                        </div>
-                      </strong>
-                    </p>
-                    <Button
-                      fontSize="17px"
-                      width="150px"
-                      maxWidth="100%"
-                      content="Lĩnh thưởng"
-                      bgColor="#F0CF27"
-                      className="claim__cta"
-                      padding="20px 20px"
-                      onClick={() => setStartGettingSignature(true)}
-                      disabled={
-                        new BigNumber(userClaimData?.totalLeftReward).eq(0) ||
-                        gettingSignatureLoading
-                      }
-                    />
-                  </div>
-                  <div className="claim__block-container">
-                  {data &&
-                    data.rows.map((claimData: any) => (
-                      <div className="claim__block" key={claimData.id}>
-                        <div className="claim__divider"></div>
-                        <div className="claim__wrapper">
-                          <div className="claim__left">
-                            <p className="claim__line">
-                              Ngày:{" "}
-                              <strong>
-                                {moment(claimData.date).format("DD-MM-YYYY")}
-                              </strong>
-                            </p>
-                            <p className="claim__line">
-                              Số lượng:{" "}
-                              <strong className="claim__amount">
-                                <span>
-                                  {new BigNumber(claimData.amount)
-                                    .div(1e18)
-                                    .toFixed(3)}
-                                </span>
-                                <div className="claim__icon">
-                                  <Image
-                                    src="/icon/ethereum_1.svg"
-                                    preview={false}
-                                  />
-                                </div>
-                              </strong>
-                            </p>
+        {/* <p className="claim__line"> */}
+        {/* <strong className="claim__amount"> */}
+        {/* <div className="claim__icon"> */}
+        {/* <Image src="/icon/ethereum_1.svg" preview={false} /> */}
+        {/* </div> */}
+        <div className="claim__content">
+          <div className="claim__main">
+            <p className="claim__line">
+              Tổng thưởng:
+              <strong className="claim__amount">
+                <span>
+                  {new BigNumber(userClaimData?.totalLeftReward || 0)
+                    .div(1e18)
+                    .toFixed()}
+                </span>
+                <div className="claim__icon">
+                  <Image src="/icon/ethereum_1.svg" preview={false} />
+                </div>
+              </strong>
+            </p>
+            <p className="claim__line">
+              Đã lĩnh:
+              <strong className="claim__amount">
+                <span>
+                  {new BigNumber(userClaimData?.totalClaimedReward || 0)
+                    .div(1e18)
+                    .toFixed()}
+                </span>
+                <div className="claim__icon">
+                  <Image src="/icon/ethereum_1.svg" preview={false} />
+                </div>
+              </strong>
+            </p>
+            <Button
+              fontSize="17px"
+              width="150px"
+              maxWidth="100%"
+              content="Lĩnh thưởng"
+              bgColor="#F0CF27"
+              className="claim__cta"
+              padding="20px 20px"
+              onClick={() => setStartGettingSignature(true)}
+              disabled={
+                new BigNumber(userClaimData?.totalLeftReward).eq(0) ||
+                gettingSignatureLoading
+              }
+            />
+          </div>
+          <div className="claim__block-container">
+            {data &&
+              data.rows.map((claimData: any) => (
+                <div className="claim__block" key={claimData.id}>
+                  <div className="claim__divider"></div>
+                  <div className="claim__wrapper">
+                    <div className="claim__left">
+                      <p className="claim__line">
+                        Ngày:{" "}
+                        <strong>
+                          {moment(claimData.date).format("DD-MM-YYYY")}
+                        </strong>
+                      </p>
+                      <p className="claim__line">
+                        Số lượng:{" "}
+                        <strong className="claim__amount">
+                          <span>
+                            {new BigNumber(claimData.amount)
+                              .div(1e18)
+                              .toFixed(3)}
+                          </span>
+                          <div className="claim__icon">
+                            <Image
+                              src="/icon/ethereum_1.svg"
+                              preview={false}
+                            />
                           </div>
-                          {claimData.deletedAt && (
-                            <Tooltip title="Đã lĩnh">
-                              <Image
-                                className="claim__claimed"
-                                src="/icon/reward.svg"
-                                preview={false}
-                              />
-                            </Tooltip>
-                          )}
-                        </div>
-                        <div className="claim__divider"></div>
-                      </div>
-                    ))}
+                        </strong>
+                      </p>
+                    </div>
+                    {claimData.deletedAt && (
+                      <Tooltip title="Đã lĩnh">
+                        <Image
+                          className="claim__claimed"
+                          src="/icon/reward.svg"
+                          preview={false}
+                        />
+                      </Tooltip>
+                    )}
                   </div>
-              {/* </strong> */}
-            {/* </p> */}
+                  <div className="claim__divider"></div>
+                </div>
+              ))}
+          </div>
+          {/* </strong> */}
+          {/* </p> */}
         </div>
         <div className="claim__pagination-wrapper">
           <AppPagination
@@ -333,28 +335,30 @@ const Claim: React.FC = () => {
           startClaiming ||
           gettingSignatureLoading ||
           rewardRefreshLoading) && (
-          <AppLoading
-            showContent={txHash !== undefined}
-            loadingContent={
-              <div className="tx-info">
-                <p className="tx-info__alert">
-                  Giao dịch của bạn đang được xử lý ! Vui lòng kiên nhẫn.
-                </p>
-                <p className="tx-info__title">
-                  <strong>{txHash}</strong>
-                </p>
-                <span
-                  className="tx-info__view-more"
-                  onClick={() =>
-                    window.open(`${explorer}/tx/${txHash}`, "_blank")
-                  }
-                >
-                  Nhấn để xem thêm
-                </span>
-              </div>
-            }
-          />
-        )}
+            <AppLoading
+              showContent={txHash !== undefined}
+              loadingContent={
+                <Fade bottom>
+                  <div className="tx-info">
+                    <p className="tx-info__alert">
+                      Giao dịch của bạn đang được xử lý ! Vui lòng kiên nhẫn.
+                    </p>
+                    <p className="tx-info__title">
+                      <strong>{txHash}</strong>
+                    </p>
+                    <span
+                      className="tx-info__view-more"
+                      onClick={() =>
+                        window.open(`${explorer}/tx/${txHash}`, "_blank")
+                      }
+                    >
+                      Nhấn để xem thêm
+                    </span>
+                  </div>
+                </Fade>
+              }
+            />
+          )}
 
         <AppDialog
           type="infor"

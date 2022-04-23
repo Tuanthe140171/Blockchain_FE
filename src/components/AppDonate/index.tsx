@@ -37,7 +37,7 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
 
   const { explorer } =
     CHAIN_INFO[
-      chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
+    chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
     ];
 
   // useEffect(() => {
@@ -262,22 +262,24 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
         <AppLoading
           showContent={txHash !== undefined}
           loadingContent={
-            <div className="tx-info">
-              <p className="tx-info__alert">
-                Giao dịch của bạn đang được xử lý ! Vui lòng kiên nhẫn.
-              </p>
-              <p className="tx-info__title">
-                <strong>{txHash}</strong>
-              </p>
-              <span
-                className="tx-info__view-more"
-                onClick={() =>
-                  window.open(`${explorer}/tx/${txHash}`, "_blank")
-                }
-              >
-                Nhấn để xem thêm
-              </span>
-            </div>
+            <Fade bottom>
+              <div className="tx-info">
+                <p className="tx-info__alert">
+                  Giao dịch của bạn đang được xử lý ! Vui lòng kiên nhẫn.
+                </p>
+                <p className="tx-info__title">
+                  <strong>{txHash}</strong>
+                </p>
+                <span
+                  className="tx-info__view-more"
+                  onClick={() =>
+                    window.open(`${explorer}/tx/${txHash}`, "_blank")
+                  }
+                >
+                  Nhấn để xem thêm
+                </span>
+              </div>
+            </Fade>
           }
         />
       )}
