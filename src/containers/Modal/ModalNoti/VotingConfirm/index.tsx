@@ -19,7 +19,7 @@ const VotingConfirm: React.FC<IVotingNotiProps> = (props) => {
           <Avatar size={40} icon={<UserOutlined />} src={data.avatar} />
         </div>
         <div className="voting-confirm__top__message">
-          <Tooltip title={<strong>{data.name} {data.content}</strong>}>
+          <Tooltip title={<strong>{data.name} {data.content}</strong>} zIndex={99999999999}>
             <div>
               <strong>{data.name}</strong>&nbsp;
               <span>{data.content}</span>
