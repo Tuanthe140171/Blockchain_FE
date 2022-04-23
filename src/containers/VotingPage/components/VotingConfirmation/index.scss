@@ -1,4 +1,6 @@
 .voting-confirmation {
+    z-index: 99999999999999;
+    
     & .ant-drawer-body {
         padding-left: 40px;
         padding-right: 40px;
