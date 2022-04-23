@@ -74,8 +74,6 @@ const VotingSituationView: React.FC<VotingSituationViewProps> = (props) => {
   }, [error]);
 
 
-  console.log("IS VOTED", isVoted, isOnTop)
-
   return (
     <div className="voting-situation-view">
       <header className="voting-situation-view__header">

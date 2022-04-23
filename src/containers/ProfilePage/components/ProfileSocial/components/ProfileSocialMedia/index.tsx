@@ -133,6 +133,7 @@ const ProfileSocialMedia = () => {
           onClick={() => {
             setDeleteImage(image);
           }}
+          style={{ cursor: "pointer" }}
         >
           <DeleteOutlined className="icon" />
           <div>Xóa ảnh</div>
@@ -223,7 +224,7 @@ const ProfileSocialMedia = () => {
       <AppDialog
         type="infor"
         title={title}
-        confirmText={"Ok"}
+        confirmText={"Xác nhận"}
         onConfirm={() => {
           setOpenDialog(false);
         }}

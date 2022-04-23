@@ -18,13 +18,19 @@ const ActivityNoti: React.FC<IActivityNotiProps> = (props) => {
           <Avatar size={40} icon={<UserOutlined />} src={data.avatar} />
         </div>
         <div className="activity-noti__top__message">
-          <Tooltip title={<strong>{data.name} {data.content}</strong>}>
+          <Tooltip
+            title={
+              <strong>
+                {data.name} {data.content}
+              </strong>
+            }
+          >
             <div>
               <strong>{data.name}</strong>&nbsp;
               <span>{data.content}</span>
             </div>
           </Tooltip>
-          <span>{moment(data.createDate).format("DD-MM-YYYY")}</span>
+          <span>{moment(data.createDate).format("DD-MM-YYYY hh:mm")}</span>
         </div>
       </div>
     </div>
