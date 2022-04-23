@@ -48,9 +48,6 @@ const ProfilePage: React.FC = () => {
       : "/icon/testing.jpg"
   );
 
-  console.log(bannerLink, "banner");
-  console.log(originLink, "origin");
-
   useEffect(() => {
     if (userData?.id) {
       if (id && id !== userData.id) {
@@ -189,7 +186,6 @@ const ProfilePage: React.FC = () => {
       }),
     },
     (e) => {
-      // console.log(e.data);
       setIsUpload(false);
       setIsSubmit(undefined);
       setOpenDialog(true);
@@ -203,6 +199,8 @@ const ProfilePage: React.FC = () => {
       setIsUpload(true);
     }
   }, [userPostBanner]);
+
+  const [viewVerification, setViewVerification] = useState<boolean>(false);
 
   return (
     <>
@@ -224,6 +222,41 @@ const ProfilePage: React.FC = () => {
       />
       <div className="profile">
         <div className="profile__img-bg">
+          <PhotoSlider
+            images={[{ src: bannerLink, key: 1 }]}
+            visible={viewVerification}
+            onClose={() => setViewVerification(false)}
+            speed={() => 800}
+            easing={(type: any) =>
+              type === 2
+                ? "cubic-bezier(0.36, 0, 0.66, -0.56)"
+                : "cubic-bezier(0.34, 1.56, 0.64, 1)"
+            }
+            toolbarRender={({ onScale, scale, rotate, onRotate }) => {
+              return (
+                <>
+                  <Image
+                    preview={false}
+                    src="/icon/zoom-in.svg"
+                    className="PhotoView-Slider__toolbarIcon"
+                    onClick={() => onScale(scale + 1)}
+                  />
+                  <Image
+                    preview={false}
+                    src="/icon/zoom-out.svg"
+                    className="PhotoView-Slider__toolbarIcon"
+                    onClick={() => onScale(scale - 1)}
+                  />
+                  <Image
+                    preview={false}
+                    src="/icon/rotate.svg"
+                    className="PhotoView-Slider__toolbarIcon"
+                    onClick={() => onRotate(rotate + 90)}
+                  />
+                </>
+              );
+            }}
+          />
           <Image src={bannerLink} />
           {id ? null : isUpload ? (
             <div

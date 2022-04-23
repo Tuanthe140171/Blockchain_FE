@@ -134,7 +134,7 @@ const ProfileSocialPayment = () => {
         };
       });
       setPaymentList(newList);
-      setTitle("Cập nhật tài khoản thành công");
+      setTitle("Cập nhật phương thức thành công!");
       setOpenDialog(true);
     }
   );
@@ -212,6 +212,8 @@ const ProfileSocialPayment = () => {
     }
   );
 
+  const [openDialogCondition, setOpenDialogCondition] = useState(false);
+
   return (
     <>
       {(loadingAddPayment ||
@@ -221,11 +223,27 @@ const ProfileSocialPayment = () => {
         loadingPayment) && (
         <AppLoading showContent={false} loadingContent={<div></div>} />
       )}
+      <AppDialog
+        type="warning"
+        title={"Vui lòng điền trường còn thiếu!"}
+        description=""
+        confirmText="Xác nhận"
+        onConfirm={() => {
+          setOpenDialogCondition(false);
+        }}
+        visible={openDialogCondition}
+        onCancel={() => setOpenDialogCondition(false)}
+      />
       <Modal
         title="Thêm phương thức thanh toán"
         visible={openPaymentModal}
         onOk={() => {
-          setIsAdd(true);
+          if (!newAccount || !newName) {
+            setOpenDialogCondition(true);
+          } else {
+            setIsAdd(true);
+            setOpenPaymentModal(false);
+          }
         }}
         onCancel={() => setOpenPaymentModal(false)}
         cancelText="Đóng"
@@ -246,6 +264,10 @@ const ProfileSocialPayment = () => {
           <p>Số tài khoản:</p>
           <Input
             placeholder="Số tài khoản"
+            type={"number"}
+            minLength={10}
+            maxLength={10}
+            min="0"
             className="profile-social-modal__line__right"
             onChange={(e) => setNewAccount(e.target.value)}
           />
@@ -263,8 +285,12 @@ const ProfileSocialPayment = () => {
         title="Thay đổi thông tin"
         visible={openChangeModal}
         onOk={() => {
-          setIsModify(true);
-          setOpenChangeModal(false);
+          if (!tempData.account || !tempData.name) {
+            setOpenDialogCondition(true);
+          } else {
+            setIsModify(true);
+            setOpenChangeModal(false);
+          }
         }}
         onCancel={() => setOpenChangeModal(false)}
         cancelText="Hủy"

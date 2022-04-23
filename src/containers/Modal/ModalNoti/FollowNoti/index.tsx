@@ -32,7 +32,7 @@ const FollowNoti: React.FC<IFollowNotiProps> = (props) => {
               <span>{data.content}</span>
             </div>
           </Tooltip>
-          <span>{moment(data.createDate).format("DD-MM-YYYY")}</span>
+          <span>{moment(data.createDate).format("DD-MM-YYYY hh:mm")}</span>
         </div>
       </div>
     </div>

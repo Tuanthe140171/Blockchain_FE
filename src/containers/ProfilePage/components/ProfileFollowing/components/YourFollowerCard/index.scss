@@ -23,6 +23,9 @@
       font-weight: 300;
       font-size: 15px;
       color: #2f497f;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     & > span {
