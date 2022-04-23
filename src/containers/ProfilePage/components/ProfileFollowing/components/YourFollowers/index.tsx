@@ -34,31 +34,38 @@ const YourFollowers: React.FC = () => {
     <div className="your-followers">
       <header className="your-followers__header">
         <p className="your-followers__header-title">Người theo dõi bạn</p>
-        <span
-          className="your-followers__header-see"
-          onClick={() => navigate("/follow/2")}
-        >
-          Xem thêm
-        </span>
+
+        {followerData?.rows ? (
+          <span
+            className="your-followers__header-see"
+            onClick={() => navigate("/follow/2")}
+          >
+            Xem thêm
+          </span>
+        ) : null}
       </header>
       <div className="your-followers__cards">
-        {followerData?.rows.map((follower: any, index: number) => (
-          <React.Fragment key={follower.userIdFrom + index}>
-            <YourFollowerCard
-              id={follower.userIdFrom}
-              name={getUserName(
-                follower?.follower?.name,
-                follower?.follower?.lastName
-              )}
-              status={follower.status}
-              avatar={
-                follower?.follower?.UserMedia?.find(
-                  (media: any) => media.active === 1 && media.type === "1"
-                )?.link
-              }
-            />
-          </React.Fragment>
-        ))}
+        {followerData?.rows ? (
+          followerData?.rows.map((follower: any, index: number) => (
+            <React.Fragment key={follower.userIdFrom + index}>
+              <YourFollowerCard
+                id={follower.userIdFrom}
+                name={getUserName(
+                  follower?.follower?.name,
+                  follower?.follower?.lastName
+                )}
+                status={follower.status}
+                avatar={
+                  follower?.follower?.UserMedia?.find(
+                    (media: any) => media.active === 1 && media.type === "1"
+                  )?.link
+                }
+              />
+            </React.Fragment>
+          ))
+        ) : (
+          <div style={{ fontSize: "15px" }}>Bạn chưa có người theo dõi nào</div>
+        )}
       </div>
     </div>
   );

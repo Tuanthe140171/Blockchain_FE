@@ -1,9 +1,7 @@
-import { CheckCircleOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import useFetch from "../../../hooks/useFetch";
 import ActivityNoti from "./ActivityNoti";
 import FollowNoti from "./FollowNoti";
 import "./index.scss";

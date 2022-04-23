@@ -38,35 +38,43 @@ const YourFollowing: React.FC = () => {
     return `${lastName} ${name}`;
   };
 
+  console.log(followingData);
+
   return (
     <div className="your-following">
       <header className="your-following__header">
         <p className="your-following__header-title">Bạn đang theo dõi</p>
-        <span
-          className="your-following__header-see"
-          onClick={() => navigate("/follow/1")}
-        >
-          Xem thêm
-        </span>
+        {followingData?.rows ? (
+          <span
+            className="your-following__header-see"
+            onClick={() => navigate("/follow/1")}
+          >
+            Xem thêm
+          </span>
+        ) : null}
       </header>
       <div className="your-following__cards">
-        {followingData?.rows.map((following: any, index: number) => (
-          <React.Fragment key={following.userIdTo + index}>
-            <YourFollowingCard
-              id={following.userIdTo}
-              name={getUserName(
-                following?.following?.name,
-                following?.following?.lastName
-              )}
-              status={following.status}
-              avatar={
-                following?.following?.UserMedia?.find(
-                  (media: any) => media.active === 1 && media.type === "1"
-                )?.link
-              }
-            />
-          </React.Fragment>
-        ))}
+        {followingData?.rows ? (
+          followingData?.rows.map((following: any, index: number) => (
+            <React.Fragment key={following.userIdTo + index}>
+              <YourFollowingCard
+                id={following.userIdTo}
+                name={getUserName(
+                  following?.following?.name,
+                  following?.following?.lastName
+                )}
+                status={following.status}
+                avatar={
+                  following?.following?.UserMedia?.find(
+                    (media: any) => media.active === 1 && media.type === "1"
+                  )?.link
+                }
+              />
+            </React.Fragment>
+          ))
+        ) : (
+          <div style={{ fontSize: "15px" }}>Bạn chưa theo dõi ai cả</div>
+        )}
       </div>
     </div>
   );
