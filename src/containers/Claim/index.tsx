@@ -83,21 +83,6 @@ const Claim: React.FC = () => {
   //     }
   //   );
 
-  const { data, loading } = useFetch<any>(
-    userData
-      ? pickedDate
-        ? `reward?page=${currentPage}&orderDirection=DESC&limit=8&userId=${userData?.id}&keyword=${debouncedKeyword}&fromDate=${pickedDate.from}&toDate=${pickedDate.to}&orderBy=deletedAt`
-        : `reward?page=${currentPage}&orderDirection=DESC&limit=8&userId=${userData?.id}&keyword=${debouncedKeyword}&orderBy=date`
-      : "",
-    {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    false,
-    [userData, account],
-    {}
-  );
-
   const { loading: rewardRefreshLoading } = useFetch<any>(
     "reward/refresh",
     {
@@ -118,7 +103,7 @@ const Claim: React.FC = () => {
     }
   );
 
-  const { data: userClaimData } = useFetch<any>(
+  const { data: userClaimData, loading: userClaimLoading } = useFetch<any>(
     `reward/me`,
     {
       "Content-Type": "application/json",
@@ -126,6 +111,27 @@ const Claim: React.FC = () => {
     },
     false,
     [reloadClaiming],
+    {},
+    () => {
+      // setReloadClaiming(undefined);
+    },
+    () => {
+      // setReloadClaiming(undefined);
+    }
+  );
+
+  const { data, loading } = useFetch<any>(
+    userData
+      ? pickedDate
+        ? `reward?page=${currentPage}&orderDirection=DESC&limit=10&userId=${userData?.id}&keyword=${debouncedKeyword}&fromDate=${pickedDate.from}&toDate=${pickedDate.to}&orderBy=deletedAt`
+        : `reward?page=${currentPage}&orderDirection=DESC&limit=10&userId=${userData?.id}&keyword=${debouncedKeyword}&orderBy=date`
+      : "",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [userData, account, userClaimLoading ? undefined: true],
     {},
     () => {
       setReloadClaiming(undefined);
