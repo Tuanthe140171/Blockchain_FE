@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Image, Upload } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { PhotoSlider } from "react-photo-view";
 import { UploadOutlined } from "@ant-design/icons";
 import { getUserPostData } from "../../stores/action/user-post.action";
 import ProfileIntroduction from "./components/ProfileIntroduction";
