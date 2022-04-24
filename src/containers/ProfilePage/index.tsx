@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Image, Upload } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { PhotoSlider } from "react-photo-view";
 import { UploadOutlined } from "@ant-design/icons";
-import { getUserById } from "../../stores/action/user-layout.action";
 import { getUserPostData } from "../../stores/action/user-post.action";
 import ProfileIntroduction from "./components/ProfileIntroduction";
 import ProfileSocial from "./components/ProfileSocial";
@@ -11,9 +11,8 @@ import ProfileDonation from "./components/ProfileDonation";
 import ProfileFollowing from "./components/ProfileFollowing";
 import useFetch from "../../hooks/useFetch";
 import AppDialog from "../../components/AppDialog";
-import "./index.scss";
 import AppLoading from "../../components/AppLoading";
-import { PhotoSlider } from "react-photo-view";
+import "./index.scss";
 
 const dummyRequest = ({ file, onSuccess }: any) => {
   setTimeout(() => {
