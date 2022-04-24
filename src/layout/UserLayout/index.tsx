@@ -143,11 +143,13 @@ const UserLayout: React.FC = (props): ReactElement => {
       const socketData = (charityStorage as any).auth[account].socketData;
 
       socket.on(`notification/${socketData}`, (data: any) => {
+        console.log(data);
+
         const contentData = JSON.parse(data);
         setNotifications([
           ...notifications,
           {
-            ...contentData,
+            ...JSON.parse(data),
           },
         ]);
         message.info(
