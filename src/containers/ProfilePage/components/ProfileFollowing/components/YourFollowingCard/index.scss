@@ -9,10 +9,10 @@
   position: relative;
   margin-top: 50px;
 
-  &:nth-child(1),
-  &:nth-child(2) {
-    margin-top: 0px;
-  }
+  // &:nth-child(1),
+  // &:nth-child(2) {
+  //   margin-top: 0px;
+  // }
 
   &__avatar {
     width: 77px;
@@ -28,6 +28,9 @@
     color: #2f497f;
     margin-top: 10px;
     margin-bottom: 0px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   &__status {

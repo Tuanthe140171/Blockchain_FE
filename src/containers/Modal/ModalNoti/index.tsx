@@ -61,33 +61,48 @@ const ModalNoti: React.FC<
   }, [notifications]);
 
   const renderVoting = () => {
-    return propsData ? propsData?.map((data: any) => {
-      return (
-        data.type === 1 && (
-          <VotingConfirm data={data} key={data.avatar + data.createDate} />
-        )
-      );
-    }): [];
+    return propsData
+      ? propsData?.map((data: any, index: number) => {
+          return (
+            data.type === 1 && (
+              <VotingConfirm
+                data={data}
+                key={data.avatar + data.createDate + index}
+              />
+            )
+          );
+        })
+      : [];
   };
 
   const renderFollower = () => {
-    return propsData ? propsData?.map((data: any) => {
-      return (
-        data.type === 2 && (
-          <FollowNoti data={data} key={data.avatar + data.createDate} />
-        )
-      );
-    }): [];
+    return propsData
+      ? propsData?.map((data: any, index: number) => {
+          return (
+            data.type === 2 && (
+              <FollowNoti
+                data={data}
+                key={data.avatar + data.createDate + index}
+              />
+            )
+          );
+        })
+      : [];
   };
 
   const renderActivity = () => {
-    return propsData ? propsData?.map((data: any) => {
-      return (
-        data.type === 3 && (
-          <ActivityNoti data={data} key={data.avatar + data.createDate} />
-        )
-      );
-    }): [];
+    return propsData
+      ? propsData?.map((data: any, index: number) => {
+          return (
+            data.type === 3 && (
+              <ActivityNoti
+                data={data}
+                key={data.avatar + data.createDate + index}
+              />
+            )
+          );
+        })
+      : [];
   };
 
   return (
