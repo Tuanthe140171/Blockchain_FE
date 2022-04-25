@@ -61,7 +61,7 @@ const Followers = () => {
                   />
                 </div>
                 <div className="follow-followers-confirm__top__message">
-                  <strong
+                  <div
                     style={{ cursor: "pointer" }}
                     onClick={() => navigate(`/profile/${follower?.userIdTo}`)}
                   >
@@ -69,7 +69,7 @@ const Followers = () => {
                       follower?.follower?.name,
                       follower?.follower?.lastName
                     )}
-                  </strong>
+                  </div>
                   <div>{follower?.follower?.country}</div>
                 </div>
               </div>
