@@ -1,0 +1,58 @@
+.top-donation {
+    background-color: white;
+    text-align: center;
+
+    &__monthly {
+        display: block;
+        margin-top: 200px;
+        margin-bottom: 40px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        letter-spacing: 0.02em;
+        color: #002169;
+    }
+
+    &__desc {
+        font-weight: 300;
+        font-size: 36px;
+        color: #000000;
+        line-height: 173%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    &__cards {
+        position: relative;
+        max-width: 1300px;
+        margin: 0 auto;
+        margin-top: 65px;
+    }
+
+    &__cards-btns {
+        position: absolute;
+        max-width: 1400px;
+        width: 1400px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    &__carousel {
+        & > .slick-dots {
+            display: none !important;
+        }
+    }
+    
+    &__card-group {
+        max-width: 1280px;
+        display: flex !important;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0 auto;
+    }
+}

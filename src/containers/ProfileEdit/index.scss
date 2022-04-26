@@ -1,0 +1,61 @@
+@import "../../styles/variables.scss";
+
+.profile-edit {
+  &__header {
+    position: relative;
+    padding: 37px 65px 0;
+
+    &__confirm {
+      position: absolute;
+      right: 65px;
+      background-color: #F0CF27;
+      padding: 18px 24px;   
+      height: 56px;
+      width: 235px;
+    }
+
+    &__breadcrumb {
+      margin: 20px 0;
+      font-size: 18px;
+
+      &__from {
+        color: #2f497f;
+      }
+
+      &__to {
+        color: #a7b2c8;
+      }
+    }
+
+    &__buttons {
+      & button {
+        border: none;
+        color: #3156db;
+        font-size: 20px;
+        padding: 5px 20px;
+        background-color: transparent;
+      }
+
+      &__button {
+        border-bottom: 3px solid !important;
+      }
+    }
+
+    &__date {
+      float: left;
+    }
+
+    .divide {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  &__divider {
+    margin-top: 0;
+  }
+
+  &__body {
+    padding: 0 64px;
+  }
+}

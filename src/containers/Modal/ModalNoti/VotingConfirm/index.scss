@@ -1,0 +1,60 @@
+.voting-confirm {
+  position: relative;
+  border: 0.5px solid #E4E8EE;
+  cursor: pointer;
+
+  &__dotted {
+    width: 9px;
+    height: 9px;
+    background-color: #90cdf4;
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    border-radius: 50%;
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    transition: .2s all ease-in;
+
+    &:hover {
+      background-color: #8fa7e9;
+    }
+
+    &__ava {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 76px;
+      height: 76px;
+    }
+
+    &__message {
+      max-width: 398px;
+      color: #002169;
+      font-size: 16px;
+
+      & > div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  &__bottom {
+    color: #a5acb8;
+    font-size: 15px;
+    margin: 2px 0 19px 76px;
+  }
+}
+
+.voting-read {
+  background-color: #ffffff;
+}
+
+.voting-not-read {
+  background-color: #f6faff;
+}

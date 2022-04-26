@@ -1,0 +1,135 @@
+.claim {
+    margin-top: 40px;
+    padding: 0px 66px;
+
+    &__main {
+        width: 600px;
+    }
+
+    &__title {
+        font-style: normal !important;
+        font-weight: normal !important;
+        font-size: 32px !important;
+        line-height: 40px !important;
+        color: #000000 !important;
+    }
+
+    &__list {
+        margin-top: 40px;
+        padding: 40px;
+        background-color: white;
+    
+        &-title {
+          font-style: normal !important;
+          font-weight: 500 !important;
+          font-size: 20px !important;
+          line-height: 25px !important;
+          color: #002169 !important;
+          margin-bottom: 0 !important;
+        }
+    
+        &-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+    }
+
+    &__content {
+        margin-top: 40px;
+    }
+
+    &__block {
+        width: 600px;
+        margin-top: 30px;
+    }
+
+    &__block-container {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        max-height: 800px;
+    }
+
+    &__left {
+        width: 100%;
+    }
+
+    &__wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__claimed {
+        width: 20px;
+        height: 20px;
+    }
+
+    &__divider {
+        height: 1px;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.2);
+        margin: 10px 0px;
+    }
+
+    &__line {
+        display: grid;
+        grid-template-columns: 1fr 4fr;
+        color: #002169;
+    }
+
+    &__pagination-wrapper {
+        margin: 30px 0px;
+        text-align: right;
+    }
+
+    &__main {
+        margin-bottom: 10px;
+    }
+
+    &__cta {
+        margin-top: 20px;
+    }
+
+    &__amount {
+        display: flex;
+        align-items: center;
+    }
+
+    &__icon {
+        margin-left: 10px;
+    }
+}
+
+.tx-info {
+    text-align: center;
+    &__title {
+        margin-bottom: 0;
+        color: #618AFB;
+        text-align: center;
+
+        & > strong {
+            font-family: 'Readex-Light';
+            font-size: 17px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50px;
+            color: #002169;
+        }
+    }
+
+    &__view-more {
+        margin-top: 0px;
+        font-size: 15px;
+        font-family: 'Readex-Light';
+        text-align: center;
+        margin: 0 auto;
+        display: block;
+        margin-top: 15px;
+        color: #618AFB;
+        font-weight: 300;
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,58 @@
+.donation-categories {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #F6F6FF;
+    padding: 200px 0px;
+    position: relative;
+
+    &__img {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    &__list {
+        padding-left: 30px;
+    }
+
+    &__title {
+        color: #002169;
+    }
+
+    &__menu {
+        position: relative;
+        margin-top: 75px;
+
+        &:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background-color: #DCDCFA;
+            opacity: 0.4;
+            z-index: 1;
+        }
+    }
+
+    &__cards {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-left: 120px;
+
+        & > .donation-category__card-group:first-child {
+            margin-top: -80px;
+        }
+
+        & > .donation-category__card-group:last-child {
+            margin-top: 80px;
+        }
+
+        & > .donation-category__card-group:not(:last-child) {
+            margin-right: 36px;
+        }
+    }
+}

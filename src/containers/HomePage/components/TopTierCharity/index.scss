@@ -1,0 +1,85 @@
+@import "../../../../styles/variables";
+
+.top-charity {
+    position: relative;
+    overflow: hidden;
+    background-color: #EFFFF9;
+
+    &__more {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 10.1069px;
+        line-height: 13px;
+        color: #a7b2c8;
+        display: flex;
+        align-items: center;
+    }
+
+    &__desc {
+        display: -webkit-box;
+        line-height: 1.4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: $lines-to-show;
+    }
+
+    &__header {
+        position: absolute;
+        top: 50%;
+        left: 10%;
+        transform: translateY(-50%);
+        max-width: 520px;
+    }
+
+    &__cards {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-0%, -50%);
+        width: 1293px;
+        max-width: 1293px;     
+    }
+
+    &__carousel {
+        overflow: hidden;   
+
+        & .react-multi-carousel-item {
+            width: 406px !important;
+            margin-right: 40px;
+        }
+    }
+
+    .header-charity {
+        &__top-tier {
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            color: #002169;
+        }
+
+        &__title {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 36px;
+            margin-top: 28px;
+        }
+
+        &__desc {
+            font-style: normal;
+            font-weight: 300;
+            font-size: 20px;
+            color: #002169;
+            margin-top: 25px;
+        }
+
+        &__carousel-btns {
+            display: flex;
+            margin-top: 220px;
+
+            & > *:first-child {
+                margin-right: 30px;
+            }
+        }
+    }
+}

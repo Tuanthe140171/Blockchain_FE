@@ -1,0 +1,61 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  & .ant-pagination-item-link {
+    background-color: transparent;
+    border-radius: 50%;
+  }
+
+  & .ant-pagination-item-active {
+    & > a {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 13.2188px;
+      line-height: 17px;
+      color: #3156db !important;
+    }
+  }
+
+  & .ant-pagination-prev,
+  & .ant-pagination-next {
+    min-width: 42px;
+    height: 42px;
+
+    & > button {
+      &:disabled {
+        border-color: #a7b2c8;
+
+        & svg {
+          fill: #a7b2c8;
+        }
+      }
+
+      border-color: #3156db;
+
+      & svg {
+        fill: #3156db;
+      }
+    }
+  }
+
+  & .ant-pagination-item {
+    min-width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & > a {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 13.2188px;
+      line-height: 17px;
+      color: #a7b2c8;
+    }
+  }
+}

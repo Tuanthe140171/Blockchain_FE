@@ -1,0 +1,218 @@
+@import "../../../../styles/variables";
+
+.donee-card {
+  max-width: 304px;
+  width: 304px;
+  margin-top: 20px;
+  align-self: baseline;
+  position: relative;
+  transition: all 0.3s ease-out;
+  top: 0;
+
+  &:hover {
+    transition: all 0.2s ease-out;
+    box-shadow: 0px 4px 8px rgba(38, 38, 38, 0.2);
+    top: -4px;
+    background-color: white;
+  }
+
+  &:not(:nth-child(4n + 1)) {
+    margin-left: 20px;
+  }
+
+  & > .ant-card-body {
+    padding: 0 !important;
+  }
+
+  &__avatar {
+    max-height: 155px;
+    object-fit: cover;
+  }
+
+  &__images {
+    position: relative;
+    min-height: 155px;
+
+    & > .ant-image:nth-child(1) {
+      width: 100%;
+    }
+
+    & > .ant-image:nth-child(2) {
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      right: 10px;
+      bottom: -35px;
+      z-index: 9;
+
+      & > img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        width: 76px;
+        height: 76px;
+        border-radius: 50%;
+        bottom: -2px;
+        right: -3px;
+        background-color: white;
+        z-index: -1111;
+      }
+    }
+  }
+
+  &__thumbnail {
+    // position: absolute;
+    // width: 70px;
+    // height: 70px;
+    // border-radius: 50%;
+    // object-fit: cover;
+    // right: 75px;
+    // bottom: 0;
+  }
+
+  &__body {
+    padding: 0px 20px;
+    margin-top: 14px;
+    margin-bottom: 18px;
+  }
+
+  &__name {
+    margin-top: 15px;
+    margin-bottom: 6px !important;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    color: $secondaryColor !important;
+    cursor: pointer;
+  }
+
+  &__desc {
+    display: -webkit-box;
+    line-height: 1.4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: $lines-to-show;
+  }
+
+  &__more {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 10.1069px;
+    line-height: 13px;
+    color: #a7b2c8;
+    display: flex;
+    align-items: center;
+  }
+
+  &__circumstances {
+    display: flex;
+    margin-bottom: 15px;
+
+    & > * {
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  &__circumstance {
+    // max-width: 40%;
+    line-height: 18px;
+    padding: 5px 12px;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 15px;
+    color: #3156db;
+    background: #f6faff;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  &__divider {
+    width: 1px;
+    height: 48px;
+    background-color: #ededed;
+  }
+
+  &__metrics {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 20px;
+
+    & > * {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  &__metrics-block {
+    & > p {
+      color: #909090;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 15px;
+    }
+    & > span {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 23px;
+    }
+  }
+
+  &__tier {
+    & > span {
+      color: #52bfd6;
+    }
+  }
+
+  &__trust {
+    & > span {
+      color: #977ef4;
+    }
+  }
+
+  &__cta {
+    font-style: normal;
+    font-weight: normal !important;
+    font-size: 16.6084px;
+    line-height: 17px;
+    letter-spacing: 0.207606px;
+    color: #002169 !important;
+    margin-top: 18px;
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+
+    &:hover {
+      color: white !important;
+    }
+  }
+
+  &__location {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+
+    & > span {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 13px;
+      color: #a7b2c8;
+    }
+
+    &-icon {
+      width: 15px;
+      margin-right: 5px;
+    }
+  }
+}

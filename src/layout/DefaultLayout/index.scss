@@ -1,0 +1,152 @@
+@import '../../styles/variables';
+
+.ant-menu-horizontal, .ant-menu-item::after, .ant-menu-submenu::after {
+    border: none !important;
+}
+
+.container {
+    background-color: white;
+}
+
+.header {
+    font-family: Readex;
+    padding: 0px 75px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__logo {
+        cursor: pointer;
+    }
+
+    &__menu {
+        width: 400px;
+        margin-left: 90px;
+    }
+
+    &__left {
+        display: flex;
+        align-items: center;
+    }
+
+    &__right {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    &:hover {
+        &__input {
+            display: block;
+        }
+    }
+
+    &__input {
+        transition: .2s all ease-in;
+        border-radius: 20px;
+        margin-right: 10px;
+        max-width: 50%; /*Set max-wdith*/
+
+
+        &:focus {
+            max-width: 100%; /* Update the max-width of hover*/
+        }
+    }
+}
+
+.menu {
+    &__icon {
+        padding: 5px !important;
+        line-height: normal;
+        transition: .2s all ease-out !important;
+
+        &:hover {
+            & > span {
+                color: $primaryColor !important;
+            }
+
+            transform: translateY(-2px);
+        }
+
+        & > span {
+            color: #000000;
+            font-size: 16px;
+            font-weight: 400;
+        }
+        
+        &:not(:first-child) {
+            margin-left: 50px;
+        }
+    }
+}
+
+.connect-btn, .go-to-dashboard {
+    color: $primaryColor;
+    border-color: $primaryColor;
+    margin-left: 24px;
+    transition: 0.2s all ease-in;
+    display: flex;
+    align-items: center;
+    padding: 10px 24px;
+  
+    & > span {
+      font-size: 16px;
+    }
+  
+    &:hover {
+      background-color: $primaryColor;
+      color: white;
+    }
+  
+    &:active {
+      transform: translateY(-3px);
+    }
+}
+
+.go-to-dashboard {
+    margin-left: 25px;
+}
+
+.signature-require-modal {
+    &__icon {
+        & > svg {
+            fill: #bb1b1b;
+            width: 50px;
+            height: 50px;
+        }
+    }
+
+    & .ant-modal-body {
+        text-align: center;
+    }
+
+    &__title {
+        font-weight: 600;
+        font-size: 22px;
+        margin-bottom: 10px;
+        color: #1D2463;
+    }
+
+    &__btn {
+        background: #3156DB;
+        font-family: Readex;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        letter-spacing: 0.25px;
+        color: #F6FAFF;
+        padding: 18px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+}

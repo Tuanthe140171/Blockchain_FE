@@ -1,0 +1,36 @@
+.modal-profile {
+  &__header {
+    // height: 134px;
+
+    &__avatar-group {
+      display: flex;
+
+      &__avatar {
+        width: 70px;
+        height: 70px;
+        margin-right: 20px;
+      }
+
+      &__name-group {
+        cursor: default;
+        
+        &__name {
+          font-size: 20px;
+          color: #002169;
+        }
+
+        &__description {
+          font-size: 12px;
+          color: #a7b2c8;
+        }
+      }
+    }
+
+    &__profile {
+      font-size: 16px;
+      color: #002169;
+      margin: 20px 0 0;
+      cursor: pointer;
+    }
+  }
+}

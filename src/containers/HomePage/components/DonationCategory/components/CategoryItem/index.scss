@@ -1,0 +1,77 @@
+@import "../../../../../../styles/variables";
+
+.donation-category {
+    // transition: .2s all ease-in;
+    margin-top: 30px;
+
+    &__title {
+        transition: .2s all ease-in;
+        font-weight: 300;
+        font-size: 36px;
+        line-height: 45px;
+        padding: 10px 60px;
+        cursor: pointer;
+        color: #BEC7EA;
+        margin-bottom: 0px;
+    }
+
+    &--active {
+        position: relative;
+        font-weight: normal;
+        font-style: normal;
+
+        &:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            // height: 100%;
+            width: 3px;
+            background-color: #002169;
+            animation: infinite-spinning .2s ease-in forwards;
+        }
+
+        & > .donation-category__title {
+            color: black;
+        }
+    }
+
+    &__link {
+        display: flex;
+        align-items: center;
+        padding-left: 60px;
+
+        & > .anticon {
+            color: $primaryColor;
+            font-size: 16px;
+            transition: .2s all ease-in;
+        }
+
+        &:hover {
+            & > .donation-category__view-more {
+                color: $secondaryColor;
+            }
+
+            & > .anticon {
+                transform: translateX(2px);
+                color: $secondaryColor;
+            }
+        }
+    }
+
+    &__view-more {
+        font-weight: normal;
+        font-size: 22px;
+        color: $primaryColor;
+        margin-right: 20px;
+    }
+}
+
+@keyframes infinite-spinning {
+    from {
+      height: 0;
+    }
+    to {
+      height: 100%;
+    }
+  }

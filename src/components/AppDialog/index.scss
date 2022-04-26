@@ -1,0 +1,76 @@
+.app-dialog {
+  padding: 40px 70px;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+
+  &__title {
+    color: #002169;
+    font-size: 27px;
+  }
+
+  &__description {
+    font-family: "Readex-Light";
+    color: #a7b2c8;
+    font-size: 15px;
+  }
+
+  &__buttons {
+    width: 70%;
+    display: flex;
+    justify-content: space-evenly;
+
+    & button {
+      height: 45px;
+      width: 115px;
+      color: #ffffff;
+      padding: 7px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &__btn-cancel {
+      background-color: #e0d9fb;
+    }
+
+    &__btn-confirm {
+      background-color: #7b61ff;
+    }
+
+    &__btn-warning {
+      background-color: #ea6a3f;
+    }
+  }
+
+  &__button {
+    & button {
+      height: 45px;
+      width: 115px;
+      color: #ffffff;
+    }
+
+    &__btn-infor {
+      background-color: #52bfd6;
+    }
+
+    &__btn-confirm {
+      background-color: #7b61ff;
+    }
+
+    &__btn-warning {
+      background-color: #ea6a3f;
+    }
+  }
+}
+
+.ant-modal-wrap {
+  z-index: 999999999999999;
+}
+
+.ant-modal-mask {
+  z-index: 9999999999999999;
+}

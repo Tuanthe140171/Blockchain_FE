@@ -1,0 +1,67 @@
+.your-following-card {
+  max-width: 140px;
+  width: 140px;
+  padding: 10px;
+  padding-bottom: 15px;
+  background: #f6faff;
+  border-radius: 5.12847px;
+  text-align: center;
+  position: relative;
+  margin-top: 50px;
+
+  // &:nth-child(1),
+  // &:nth-child(2) {
+  //   margin-top: 0px;
+  // }
+
+  &__avatar {
+    width: 77px;
+    height: 77px;
+    margin-top: -40px;
+  }
+
+  &__name {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 20px;
+    color: #2f497f;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  &__status {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 20px;
+    color: #a7b2c8;
+  }
+
+  &__check {
+    padding: 5px 2px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #a7b2c8;
+    margin-top: 10px;
+    cursor: pointer;
+
+    & > .ant-image {
+      display: flex;
+      align-items: center;
+    }
+
+    & > span {
+      margin-left: 7px;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 13px;
+      color: #a7b2c8;
+    }
+  }
+}

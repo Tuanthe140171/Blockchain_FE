@@ -1,0 +1,80 @@
+.your-follower-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  &:not(:first-child) {
+    margin-top: 15px;
+  }
+
+  &__details {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__info {
+    margin-left: 12px;
+
+    & > p {
+      margin-bottom: 0px;
+      font-style: normal;
+      font-weight: 300;
+      font-size: 15px;
+      color: #2f497f;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      max-width: 100px;
+    }
+
+    & > span {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 27px;
+      color: #a7b2c8;
+    }
+  }
+
+  &__following {
+    padding: 8px 0px;
+    background-color: #f6faff;
+    border: 1px solid #c3d1ed;
+    box-sizing: border-box;
+    border-radius: 70.6876px;
+    width: 130px;
+    max-width: 130px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    cursor: pointer;
+
+    & > .ant-image {
+      display: flex;
+      align-items: center;
+    }
+
+    &-txt {
+      margin-left: 5px;
+    }
+
+    &-icon {
+      width: 15px;
+      height: 15px;
+    }
+
+    &--inactive {
+      background-color: #f6faff;
+    }
+  }
+
+  &__divider {
+    height: 1px;
+    background-color: #e0e6f1;
+    margin-top: 20px;
+    width: 100%;
+  }
+}

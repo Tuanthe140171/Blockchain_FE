@@ -1,0 +1,121 @@
+.profile-person {
+  background-color: #ffffff;
+  padding: 37px 40px;
+
+  &__title {
+    font-size: 24px;
+    color: #002169;
+    margin-bottom: 20px;
+  }
+
+  &__description {
+    font-size: 14px;
+    color: #a7b2c8;
+    margin-bottom: 50px;
+  }
+
+  &__container {
+    display: flex;
+
+    &__avatar {
+      width: 174px;
+      margin-right: 132px;
+
+      &__wrapper {
+        &__button {
+          & > span {
+            font-size: 20px;
+            color: #3156db;
+          }
+        }
+
+        & > div {
+          display: flex;
+          flex-direction: column;
+
+          & .ant-upload-list-picture-card-container {
+            width: 174px;
+            height: 174px;
+            margin: 0 0 25px;
+          }
+
+          & .ant-upload-list-item-list-type-picture-card {
+            padding: 0;
+            border: 0;
+
+            & button {
+              display: none;
+            }
+
+            & .ant-upload-list-item-info {
+              width: 174px;
+              height: 174px;
+              border-radius: 50%;
+            }
+          }
+
+          & .ant-upload-select-picture-card {
+            border: none;
+            background: transparent;
+            width: 174px;
+            height: unset;
+            margin: 0;
+
+            & > span {
+              width: 100%;
+              font-size: 20px;
+              color: #3156db;
+
+              & button {
+                border: none;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &__information {
+      &__form {
+        display: flex;
+        flex-direction: row-reverse;
+
+        &__form-item {
+          & > div {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+
+            & > div:first-child > label {
+              color: #2f497f;
+              font-size: 18px;
+            }
+          }
+
+          .ant-form-item-control {
+            width: 100%;
+
+            & input {
+              height: 40px;
+            }
+          }
+        }
+
+        &__submit {
+          height: 56px;
+          width: 258px;
+          font-size: 20px;
+          background-color: #3156db;
+        }
+      }
+    }
+  }
+}
+
+.profile-input-number {
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}

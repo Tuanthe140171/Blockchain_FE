@@ -1,0 +1,79 @@
+.donee-list {
+    margin-left: 20px;
+    margin-top: -70px;
+    width: 100%;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__search {
+        max-width: 500px;
+        width: 500px;
+
+        & input {
+            padding: 12px 12px;
+
+            &:focus {
+                border-color: transparent;
+                box-shadow: none;
+            }
+        }
+
+        & .ant-btn {
+            border: none;
+            background-color: transparent;
+        }
+
+        & .ant-input-group-addon {
+            border: 1px solid #d9d9d9 !important;
+            border-left: none !important;
+            background-color: white;
+
+            & > .ant-btn {
+                &:active {
+                    & > span::after {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+
+    &__orderBy {        
+        & > span {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 18px;
+            line-height: 22px;
+            color: #2F497F;
+            margin-right: 24px;
+        }
+    }
+
+    &__selection {
+        & .ant-select-selector {
+            height: 48px !important;
+            padding: 8px 20px !important;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            line-height: 20px;
+            color: #A7B2C8;
+        }
+    }
+
+    &__content {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        min-height: 850px;
+        max-width: 1300px;
+    }
+
+    &__pagination-wrapper {
+        margin: 30px 0px;
+        text-align: right;
+    }
+}

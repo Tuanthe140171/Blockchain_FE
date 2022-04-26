@@ -1,0 +1,359 @@
+.app-donate {
+    position: relative;
+
+    &__backdrop {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        left: 260px;
+        top: 88px;
+        background-color: #E0E6F1;
+        opacity: 0.7;
+        z-index: 99999999999999;
+        overflow: hidden;
+    }
+
+    &__close {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        cursor: pointer;
+    }
+
+    &__wrapper {
+        width: 950px;
+        left: calc(260px + 20%);
+        top: calc(88px + 10%);
+        // transform: translate(-50%, -30%) !important;
+        position: fixed;
+        padding: 64px 60px;
+        background-color: white;
+        z-index: 99999999999999;
+    }
+
+    & .ant-input-number-wrapper {
+        border: 1px solid #C3D1ED;
+        border-radius: 3px;
+    }
+
+    &__input {
+        width: 100%;
+        border: none;
+        font-weight: 300;
+        font-size: 18px;
+        letter-spacing: 0.01em;
+        color: #002169;
+    }
+
+    &__icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 15px;
+
+        & > p {
+            margin-bottom: 0;
+        }
+    }
+
+    &__donation {
+        text-align: left;
+    }
+
+    &__content {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+    }
+
+    &__cta {
+        margin-top: 20px;
+        padding: 25px 50px !important;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px !important;
+        line-height: 20px;
+        color: #002169 !important;
+        margin-bottom: 20px;
+    }
+
+    &__policy {
+        font-family: 'Readex-Light';
+        font-style: normal;
+        font-weight: 300;
+        font-size: 14px;
+        line-height: 18px;
+        text-align: center;
+        color: #A7B2C8;
+    }
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 40px;
+    }
+
+    &__amount-title {
+        font-family: 'Readex-Light';
+        font-style: normal;
+        font-weight: 300 !important;
+        font-size: 18px !important;
+        line-height: 150%;
+        letter-spacing: 0.01em;
+        color: #2F497F !important;
+        margin-bottom: 10px !important;
+    }
+
+    &__title {
+        font-family: 'Readex';
+        font-style: normal;
+        font-weight: 400 !important;
+        font-size: 24px !important;
+        letter-spacing: 0.01em;
+        color: #2F497F !important;
+    }
+
+    &__balance {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        letter-spacing: 0.01em;
+        color: #A7B2C8;
+        margin-bottom: 10px !important;
+        // max-width: 200px;
+        // white-space: nowrap;
+        // overflow: hidden;
+        // text-overflow: ellipsis;
+    }
+
+    .ant-input-number-group .ant-input-number {
+        float: none;
+    }
+    
+    .ant-input-number-input-wrap {
+        margin-top: 15px;
+        border: none;
+    }
+    
+    .ant-input-number-group-addon {
+        border: none;
+        background-color: transparent;
+        padding: 0;
+        position: relative;
+    
+        &::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 50%;
+            background-color: #E0E6F1;
+        }
+    }
+}
+
+.app-donate-details {
+    margin-left: 25px;
+    padding: 33px 26px;
+    background: #618AFB;
+    box-shadow: 0px 5px 15px rgba(49, 86, 219, 0.6);
+    color: white;
+    text-align: left;
+    align-self: baseline;
+    width: 300px;
+
+    &__title {
+        font-family: 'Readex-Light';
+        font-style: normal;
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 150%;
+        letter-spacing: 0.01em;
+    }
+
+    &__account {
+        padding: 12px 25px;
+        background: #7499FF;
+        border-radius: 2px;
+        margin-top: 45px;
+    }
+
+    &__receipt {
+        padding: 20px 25px;
+        background: #7499FF;;        
+        border-radius: 2px;
+        margin-top: 42px;
+    }
+}
+
+.app-details-info {
+    &__divider {
+        height: 1px;
+        width: 100%;
+        background-color: white;
+        margin-top: 25px;
+    }
+
+    &__block {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 12px;
+    }
+
+    &__label {
+        font-family: "Readex-ExtraLight";
+        font-style: normal;
+        font-weight: 300;
+        font-size: 18px;
+        color: #F6FAFF;    
+    }
+
+    &__text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        color: #F6FAFF;
+
+        & > strong {
+            font-family: "Readex-Light";
+            font-style: normal;
+            font-weight: 400;
+            font-size: 18px;
+            color: #F6FAFF;
+        }
+
+        & > .ant-image {
+            margin-left: 12px;
+            display: flex;
+            align-items: center;
+        }
+    }
+}
+
+.app-details-account {
+    &__title {
+        font-family: "Readex-Light";
+        font-style: normal;
+        font-weight: 300;
+        font-size: 18px;
+        color: #F6FAFF;
+    }
+
+    &__details {
+        display: flex;
+        padding: 15px 21px;
+        align-items: center;
+        background: #F6FAFF;
+        border: 0.698113px solid #C3D1ED;
+        box-sizing: border-box;
+        border-radius: 2.09434px;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 11.1698px;
+        line-height: 14px;
+        color: #A7B2C8;
+    }
+
+    &__banking {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12.566px;
+        line-height: 16px;
+        color: #2F497F;
+    }
+
+    &__personal {
+        margin-left: 15px;
+        & > p {
+            margin-bottom: 0;
+            margin-top: 2px;
+        }
+    }
+}
+
+.app-details-receipt {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: "Readex-Light";
+
+    &__label {
+        font-weight: 300;
+        font-size: 18px;
+        letter-spacing: 0.01em;
+        color: #F6FAFF;
+        width: 50px;
+        height: 50px;
+    }
+
+    &__text {
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+        justify-content: center;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        color: #F6FAFF;
+        margin-left: 0px;
+
+        & > p {
+            margin-bottom: 4px;
+            font-size: 15px;
+            font-weight: 400;
+            color: #E0E6F1;
+        }
+
+        & > strong {
+            font-family: "Readex-Light";
+            font-style: normal;
+            font-weight: 600;
+            font-size: 15px;
+            color: #F6FAFF;
+        }
+
+        & > .ant-image {
+            margin-left: 12px;
+            display: flex;
+            align-items: center;
+        }
+    }
+}
+
+.tx-info {
+    text-align: center;
+    &__title {
+        margin-bottom: 0;
+        color: #618AFB;
+        text-align: center;
+
+        & > strong {
+            font-family: 'Readex-Light';
+            font-size: 17px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50px;
+            color: #002169;
+        }
+    }
+
+    &__view-more {
+        margin-top: 0px;
+        font-size: 15px;
+        font-family: 'Readex-Light';
+        text-align: center;
+        margin: 0 auto;
+        display: block;
+        margin-top: 15px;
+        color: #618AFB;
+        font-weight: 300;
+        cursor: pointer;
+    }
+}

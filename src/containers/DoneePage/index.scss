@@ -1,0 +1,18 @@
+.donee {
+    margin-top: 40px;
+    padding: 0px 66px;
+
+    &__title {
+        font-style: normal !important;
+        font-weight: normal !important;
+        font-size: 32px !important;
+        line-height: 40px !important;
+        color: #000000 !important;
+    }
+    
+    &__content {
+        margin-top: 100px;
+        display: flex;
+        align-items: flex-start;
+    }
+}

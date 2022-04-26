@@ -1,0 +1,38 @@
+.your-following {
+  background-color: white;
+  padding: 30px 25px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &-title {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 22px;
+      color: #2f497f;
+      margin-bottom: 0;
+    }
+
+    &-see {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      color: #3156db;
+      cursor: pointer;
+    }
+  }
+
+  &__cards {
+    // margin-top: 45px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}

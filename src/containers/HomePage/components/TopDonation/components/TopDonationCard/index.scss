@@ -1,0 +1,64 @@
+.top-donation-card {
+    max-width: 620px;
+    width: 620px;
+    background-color: #F7F7F7;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    margin: 10px;
+
+    &__avatar {
+        & > .ant-avatar {
+            width: 100px;
+            height: 100px;
+        }
+    }
+
+    &__name {
+        cursor: pointer;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 22.6306px;
+        display: flex;
+        align-items: center;
+        letter-spacing: 0.02em;
+        color: #000000;
+    }
+
+    &__content {
+        margin-left: 70px;
+        text-align: left;
+    }
+
+    &__last-donation {
+        font-style: normal;
+        font-weight: 300;
+        font-size: 16.9729px;
+        display: flex;
+        align-items: center;
+        letter-spacing: 0.03em;
+
+        color: #9E9E9E;
+    }
+
+    &__total-donation {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+
+        & > span {
+            margin-left: 10px;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 26px;
+            line-height: 207%;
+            /* or 54px */
+
+            display: flex;
+            align-items: center;
+            letter-spacing: 0.02em;
+
+            color: #4368E8;
+        }
+    }
+}

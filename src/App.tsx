@@ -1,25 +1,61 @@
-import CRV001 from "./containers/CRV001";
-import "./themes/App.css";
+import { Suspense } from "react";
+import { Route, Routes } from "react-router-dom";
+//@ts-ignore
+import Lottie from "react-lottie";
+import * as animationData from "./lottie/donation.json";
+import routes, { CRVRoute } from "./routes";
+import UserLayout from "./layout/UserLayout";
+import Web3ReactManager from "./components/Web3ReactManager";
+import AppPrivateRoute from "./components/AppPrivateRoute";
+import HomePage from "./containers/HomePage";
+import locale from "antd/lib/locale/vi_VN";
+import { ConfigProvider } from "antd";
+import "./index.scss";
 
-function App() {
+const App = () => {
+  const renderContainers = (routes: CRVRoute[]) => {
+    return routes.map((route) => (
+      <Route
+        path={route.path}
+        element={
+          <AppPrivateRoute>
+            <UserLayout>
+              <route.component />
+            </UserLayout>
+          </AppPrivateRoute>
+        }
+        key={route.path}
+      />
+    ));
+  };
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <CRV001 />
-      </header>
-    </div>
+    <Suspense
+      fallback={
+        <div className="fallback-loading">
+          <Lottie options={defaultOptions} height={400} width={400} />
+        </div>
+      }
+    >
+      <ConfigProvider locale={locale}>
+        <Web3ReactManager>
+          <Routes>
+            {renderContainers(routes)}
+            <Route path={"/*"} element={<HomePage />} key={"/"} />
+          </Routes>
+        </Web3ReactManager>
+      </ConfigProvider>
+    </Suspense>
   );
-}
+};
 
 export default App;
