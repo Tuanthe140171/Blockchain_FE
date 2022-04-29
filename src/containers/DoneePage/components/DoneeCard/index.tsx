@@ -93,7 +93,7 @@ const DoneeCard: React.FC<DoneeCardProps> = (props: DoneeCardProps) => {
         <AppDonate
           name={name}
           avatar={image}
-          walletAddress={walletAddress}
+          walletAddress={userId}
           onClose={() => {
             setVisible(false);
           }}
