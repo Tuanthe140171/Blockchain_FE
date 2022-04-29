@@ -86,13 +86,13 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
           if (charityContract && account && name) {
             setLoadingDonate(true);
 
-            console.log(data);
+            console.log(data, charityContract);
     
             const tx = await charityContract.donate(
               data.recipient,
               data.amount,
               data.nonce,
-              data.amount
+              data.signature
             );
     
             setTxHash(tx.hash);
