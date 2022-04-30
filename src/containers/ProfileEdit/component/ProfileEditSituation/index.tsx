@@ -602,7 +602,15 @@ const ProfileSituation = () => {
               </Upload>
               <div className="profile-upload__wrapper__download">
                 Bạn chưa có mẫu giấy công chứng?{" "}
-                <Button type="link">Download</Button>
+                <Button type="link">
+                  <a
+                    href={`https://api.test.charityverse.info/assets/download-form?formId=${option?.id}`}
+                    download
+                    target="_blank"
+                  >
+                    Tải xuống
+                  </a>
+                </Button>
               </div>
             </div>
           </div>

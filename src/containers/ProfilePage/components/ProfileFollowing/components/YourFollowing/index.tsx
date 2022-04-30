@@ -38,8 +38,6 @@ const YourFollowing: React.FC = () => {
     return `${lastName} ${name}`;
   };
 
-  console.log(followingData);
-
   return (
     <div className="your-following">
       <header className="your-following__header">
