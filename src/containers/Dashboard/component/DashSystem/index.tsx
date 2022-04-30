@@ -482,7 +482,7 @@ const DashSystem: React.FC<{
                   value={keyWord}
                   onChange={(e) => {
                     setCurrentPage(1);
-                    setKeyWord(e.target.value.replace(/[^\w\s]/gi, ""))
+                    setKeyWord(e.target.value.replace(/[^a-z0-9A-Z ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]/g, ""))
                   }}
                 />
                 <div className="table-group__header__right-group__icons">
