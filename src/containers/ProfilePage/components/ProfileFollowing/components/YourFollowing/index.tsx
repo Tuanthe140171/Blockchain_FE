@@ -71,7 +71,7 @@ const YourFollowing: React.FC = () => {
             </React.Fragment>
           ))
         ) : (
-          <div style={{ fontSize: "15px" }}>Bạn chưa theo dõi ai cả</div>
+          <div style={{ fontSize: "17px", marginTop: 20, color: '#3156db', fontWeight: 'bold' }}>Bạn chưa theo dõi ai!</div>
         )}
       </div>
     </div>
