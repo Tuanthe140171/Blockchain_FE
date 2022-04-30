@@ -83,7 +83,8 @@ const VotingPage: React.FC = () => {
       const donee = data.rows.filter(
         (donee: any) => donee.id === selectedUser.userId
       )[0];
-      setSelectedUser({
+
+      donee && setSelectedUser({
         donee: `${donee?.lastName || ""} ${donee?.name}`,
         dob: moment(donee.dob).format("DD-MM-yy"),
         createDate: moment(donee.createDate).format("DD-MM-yy"),
@@ -219,7 +220,7 @@ const VotingPage: React.FC = () => {
             placeholder="Tìm kiếm"
             onChange={(e: any) => {
               setCurrentPage(1);
-              setInputSearch(e.target.value.replace(/[^\w\s]/gi, ""));
+              setInputSearch(e.target.value.replace(/[^a-z0-9A-Z ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]/g, ""));
             }}
             value={inputSearch}
             style={{ width: 260 }}

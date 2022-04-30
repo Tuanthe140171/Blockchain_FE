@@ -22,6 +22,6 @@ export const CHAIN_INFO: ChainInfoMap = {
         infoLink: 'https://info.uniswap.org/#/',
         label: 'Extreme',
         logoUrl: "/icon/charity.svg",
-        nativeCurrency: { name: 'Extreme', symbol: 'XTR', decimals: 18 },
+        nativeCurrency: { name: 'Vietnamcoin', symbol: 'VNC', decimals: 18 },
     }
 };

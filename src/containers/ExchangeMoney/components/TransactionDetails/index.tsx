@@ -42,7 +42,7 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = (props) => {
                                     Số coin {isBuy ? 'mua': 'bán'}
                                 </span>
                                 <span className="details-info__text">
-                                    <Tooltip title={inputAmount ? (!isBuy ? new BigNumber(inputAmount).toFixed(3): new BigNumber(inputAmount).div(1000).toFixed(3)): 0}><strong>{inputAmount ? (!isBuy ? new BigNumber(inputAmount).toFixed(3): new BigNumber(inputAmount).div(1000).toFixed(3)): 0}</strong></Tooltip>
+                                    <Tooltip title={inputAmount ? (!isBuy ? new BigNumber(inputAmount).toFixed(0): new BigNumber(inputAmount).div(1000).toFixed(0)): 0}><strong>{inputAmount ? (!isBuy ? new BigNumber(inputAmount).toFixed(0): new BigNumber(inputAmount).div(1000).toFixed(0)): 0}</strong></Tooltip>
                                     <Image src="/icon/ethereum_3.svg" preview={false} />
                                 </span>
                             </div>
@@ -60,7 +60,7 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = (props) => {
                                     Số tiền {isBuy ? 'phải chuyển': 'nhận được'}
                                 </span>
                                 <span className="details-info__text">
-                                    <Tooltip title={inputAmount ? (isBuy ? new BigNumber(inputAmount).toFixed(3): new BigNumber(inputAmount).multipliedBy(1000).toFixed(3)): 0}><strong>{currencyFormatter.format(inputAmount ? (isBuy ? new BigNumber(inputAmount).toFixed(3): new BigNumber(inputAmount).multipliedBy(1000).toFixed(3)): 0, { code: 'VND' })}</strong></Tooltip>
+                                    <Tooltip title={inputAmount ? (isBuy ? new BigNumber(inputAmount).toFixed(0): new BigNumber(inputAmount).multipliedBy(1000).toFixed(0)): 0}><strong>{currencyFormatter.format(inputAmount ? (isBuy ? new BigNumber(inputAmount).toFixed(0): new BigNumber(inputAmount).multipliedBy(1000).toFixed(0)): 0, { code: 'VND' })}</strong></Tooltip>
                                 </span>
                             </div>
                         </div>
@@ -80,7 +80,7 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = (props) => {
                                 Tổng số {isBuy ? 'coin mua': 'tiền nhận'}
                             </span>
                             <span className="details-receipt__text">
-                                <Tooltip title={inputAmount ? (isBuy ? new BigNumber(inputAmount).div(1000).toFixed(3): currencyFormatter.format(new BigNumber(inputAmount).multipliedBy(1000).toFixed(3), { code: 'VND' })): 0}><strong>{inputAmount ? (isBuy ? new BigNumber(inputAmount).div(1000).toFixed(3): currencyFormatter.format(new BigNumber(inputAmount).multipliedBy(1000).toFixed(3), { code: 'VND' })): 0}</strong></Tooltip>
+                                <Tooltip title={inputAmount ? (isBuy ? new BigNumber(inputAmount).div(1000).toFixed(0): currencyFormatter.format(new BigNumber(inputAmount).multipliedBy(1000).toFixed(0), { code: 'VND' })): 0}><strong>{inputAmount ? (isBuy ? new BigNumber(inputAmount).div(1000).toFixed(0): currencyFormatter.format(new BigNumber(inputAmount).multipliedBy(1000).toFixed(0), { code: 'VND' })): 0}</strong></Tooltip>
                                 {isBuy && <Image src="/icon/ethereum_3.svg" preview={false} />}
                             </span>
                         </div>
