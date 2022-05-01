@@ -72,6 +72,7 @@ const SelectBuyAmount: React.FC<SelectBuyAmountProps> = (props) => {
                         e.preventDefault();
                     }
                 }}
+                placeholder="Nhập số lượng bạn muốn"
                 value={inputAmount}
                 controls={false}
                 className="select-buy-amount__input"
