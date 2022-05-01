@@ -87,22 +87,22 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
             setLoadingDonate(true);
 
             console.log(data, charityContract);
-    
+
             const tx = await charityContract.donate(
               data.recipient,
               data.amount,
               data.nonce,
               data.signature
             );
-    
+
             setTxHash(tx.hash);
-    
+
             await tx.wait(3);
-    
+
             setTxHash(undefined);
             setLoadingDonate(false);
             setInputAmount("0");
-    
+
             message.success(
               `Bạn đã ủng hộ thành công ${new BigNumber(data.amount).div(1e18).toFixed(3)} coin cho ${name}`,
               5
@@ -173,21 +173,27 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
                     onChange={(e: any) => {
                       !e ? setInputAmount("0") : setInputAmount(e);
                     }}
-                    onKeyDown={(e: any) => {
-                      if (
-                        e.code === "ArrowLeft" ||
-                        e.code === "ArrowRight" ||
-                        e.code === "ArrowUp" ||
-                        e.code === "ArrowDown" ||
-                        e.code === "Delete" ||
-                        e.code === "Backspace"
-                      ) {
-                        return;
-                      } else if (e.key.search(/\d/) === -1) {
+                    onKeyPress={(e: any) => {
+                      const splitString = e.target.value.split(".");
+                      if (splitString[0].length > 5) {
                         e.preventDefault();
-                      } else if (e.target.value.length >= 8) {
-                        e.preventDefault();
+                        return;  
                       }
+
+                      if (splitString[1].length > 2) {
+                        e.preventDefault();
+                        return;
+                      }
+
+                      if (
+                        e.charCode === 0 ||
+                        ((e.charCode >= 48 && e.charCode <= 57) ||
+                          (e.charCode === 46 && e.target.value.indexOf('.') < 0))
+                      ) {
+                        return true;
+                      }
+
+                      e.preventDefault();
                     }}
                     controls={false}
                     className="app-donate__input"

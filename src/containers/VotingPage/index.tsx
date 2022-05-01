@@ -88,7 +88,7 @@ const VotingPage: React.FC = () => {
         donee: `${donee?.lastName || ""} ${donee?.name}`,
         dob: moment(donee.dob).format("DD-MM-yy"),
         createDate: moment(donee.createDate).format("DD-MM-yy"),
-        address: `${donee.country} ${donee.baseAddress}`,
+        address: `${donee.baseAddress}`,
         currentAddress: `${donee.currentAddress}`,
         id: donee.identityId,
         situations: donee.BadLuckTypes,
@@ -99,6 +99,13 @@ const VotingPage: React.FC = () => {
             .slice(0, 1)
             .pop();
           return userAvatar ? userAvatar.link : null;
+        })(),
+        identityImages: (function () {
+          const userAvatar = donee.UserMedia.filter(
+            (userMedia: any) => userMedia.type === "3"
+          ).map((userMedia: any) => userMedia.link)
+
+          return userAvatar ? userAvatar : null;
         })(),
         identityPlace: donee.identityPlace,
         identityDate: donee.identityDate,
