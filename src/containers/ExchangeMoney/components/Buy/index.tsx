@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import BigNumber from 'bignumber.js';
 import SelectBuyAmount from "../SelectBuyAmount";
 import PaymentMethod from "../PaymentMethod";
 import TransactionDetails from "../TransactionDetails";
@@ -128,7 +129,7 @@ const Buy: React.FC = () => {
       />
       <AppDialog
         type="infor"
-        title={`Bạn đã mua thành công thành công ${inputAmount} coin từ nhà phát hành`}
+        title={`Bạn đã mua thành công thành công ${new BigNumber(inputAmount).div(1000).toFixed()} coin từ nhà phát hành`}
         description=""
         confirmText={Message.INFOR_CF_01}
         onConfirm={() => {
