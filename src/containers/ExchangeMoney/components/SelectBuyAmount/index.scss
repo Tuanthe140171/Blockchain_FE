@@ -16,7 +16,7 @@
         font-size: 18px;
         line-height: 150%;
         letter-spacing: 0.01em;
-        color: #C3D1ED;
+        color: #002169;
     }
 
     &__title {
@@ -94,10 +94,18 @@
     .ant-input-number-group .ant-input-number {
         float: none;
     }
+
+  
     
     .ant-input-number-input-wrap {
         margin-top: 20px;
         border: none;
+
+        & .ant-input-number-input {
+            &::placeholder {
+                color: #C3D1ED;
+            }
+        }
     }
     
     .ant-input-number-group-addon {
