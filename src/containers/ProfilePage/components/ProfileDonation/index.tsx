@@ -12,7 +12,7 @@ type ProfileDonationProps = {
   donation: {
     image: string;
     name: string;
-    walletAddress: string;
+    userId: string;
     id: string
   } | undefined
 };
@@ -108,7 +108,7 @@ const ProfileDonation: React.FC<ProfileDonationProps> = (props) => {
           <AppDonate
             name={donation.name}
             avatar={donation.image}
-            walletAddress={donation.walletAddress}
+            walletAddress={donation.userId}
             onClose={() => {
               setVisible(false);
             }}
