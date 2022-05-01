@@ -76,7 +76,7 @@ const DoneePage: React.FC = () => {
                   trustScore: data.trustScore,
                   desc: "Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với sức đối với",
                   id: data.walletAddress,
-                  location: data.country,
+                  location: data.currentAddress,
                   userId: data.id,
                 }))
               : []
