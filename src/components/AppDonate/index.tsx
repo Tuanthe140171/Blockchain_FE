@@ -54,7 +54,7 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
   }, [charityContract]);
 
 
-  const { data, loading } = useFetch<{
+  const { data, loading, error } = useFetch<{
     signature: string;
     nonce: string;
     amount: string;
@@ -78,15 +78,16 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
     () => setStartDonating(undefined)
   );
 
-
+  useEffect(() => {
+    error && message.error(error.message, 4);
+  }, [error]);
+  
   useEffect(() => {
     if (data) {
       const handleUserDonation = async () => {
         try {
           if (charityContract && account && name) {
             setLoadingDonate(true);
-
-            console.log(data, charityContract);
 
             const tx = await charityContract.donate(
               data.recipient,
