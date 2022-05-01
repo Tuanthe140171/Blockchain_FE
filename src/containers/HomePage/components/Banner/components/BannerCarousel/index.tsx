@@ -11,7 +11,8 @@ type BannerProps = {
   posts: {
     id: string,
     title: string,
-    content: string
+    content: string,
+    userName: string
   }[]
 }
 
@@ -29,7 +30,7 @@ const BannerCarousel: React.FC<BannerProps> = (props) => {
             <>
               <div className="banner-carousel__item--first">
                 <Title className="carousel-item__title" level={3}>
-                  {posts[i].title}
+                  {posts[i].userName}
                 </Title>
                 <p className="carousel-item__desc">
                   {posts[i].content}
@@ -50,7 +51,7 @@ const BannerCarousel: React.FC<BannerProps> = (props) => {
                 <div className="banner-carousel__divider"></div>
                 <div className="banner-carousel__item--second">
                   <Title className="carousel-item__title" level={3}>
-                    {posts[i + 1].title}
+                    {posts[i + 1].userName}
                   </Title>
                   <p className="carousel-item__desc">
                     {posts[i + 1].content}
@@ -83,115 +84,6 @@ const BannerCarousel: React.FC<BannerProps> = (props) => {
   return (
     <div className="banner-carousel">
       <Carousel dotPosition="right" autoplay>
-        {/* <div className="banner-carousel__item">
-          <div className="banner-carousel__item--first">
-            <Title className="carousel-item__title" level={3}>
-              Giang Minh- Trẻ nghèo Hà Giang
-            </Title>
-            <p className="carousel-item__desc">
-              Trong số 3.000 gia đình mà chương trình Mỗi Ngày Một Quả Trứng
-              (MNMQT) đang hỗ trợ lương
-
-              Trong số 3.000 gia đình mà chương trình Mỗi Ngày Một Quả Trứng
-              (MNMQT) đang hỗ trợ lương
-
-              Trong số 3.000 gia đình mà chương trình Mỗi Ngày Một Quả Trứng
-              (MNMQT) đang hỗ trợ lương
-            </p>
-            <div className="carousel-item__link">
-              <Link className="carousel-item__view-more" to="/donate">
-                Đọc thêm
-              </Link>
-              <ArrowRightOutlined color="white" className="carousel-item__icon" />
-            </div>
-          </div>
-
-          <div className="banner-carousel__divider"></div>
-
-          <div className="banner-carousel__item--second">
-            <Title className="carousel-item__title" level={3}>
-              Hồng Hạnh- Trẻ nghèo vượt khó
-            </Title>
-            <p className="carousel-item__desc">
-              Trong số 3.000 gia đình mà chương trình Mỗi Ngày Một Quả Trứng
-              (MNMQT) đang hỗ trợ lương
-            </p>
-            <div className="carousel-item__link">
-              <Link className="carousel-item__view-more" to="/donate">
-                Đọc thêm
-              </Link>
-              <ArrowRightOutlined color="white" className="carousel-item__icon" />
-            </div>
-          </div>
-        </div>
-
-        <div className="banner-carousel__item">
-          <div className="banner-carousel__item--first">
-            <Title className="carousel-item__title" level={3}>
-              Giang Vadymus- Trẻ nghèo Hà Giang
-            </Title>
-            <p className="carousel-item__desc">
-              Trong số 3.000 gia đình mà chương trình Mỗi Ngày Một Quả Trứng
-              (MNMQT) đang hỗ trợ lương
-            </p>
-            <div className="carousel-item__link">
-              <Link className="carousel-item__view-more" to="/donate">
-                Đọc thêm
-              </Link>
-              <ArrowRightOutlined color="white" className="carousel-item__icon" />
-            </div>
-          </div>
-
-          <div className="banner-carousel__item--second">
-            <Title className="carousel-item__title" level={3}>
-              HồnG Ly- Trẻ nghèo vượt khó
-            </Title>
-            <p className="carousel-item__desc">
-              Trong số 3.000 gia đình mà chương trình Mỗi Ngày Một Quả Trứng
-              (MNMQT) đang hỗ trợ lương
-            </p>
-            <div className="carousel-item__link">
-              <Link className="carousel-item__view-more" to="/donate">
-                Đọc thêm
-              </Link>
-              <ArrowRightOutlined color="white" className="carousel-item__icon" />
-            </div>
-          </div>
-        </div>
-
-        <div className="banner-carousel__item">
-          <div className="banner-carousel__item--first">
-            <Title className="carousel-item__title" level={3}>
-              Giang Vadymus- Trẻ nghèo Hà Giang
-            </Title>
-            <p className="carousel-item__desc">
-              Trong số 3.000 gia đình mà chương trình Mỗi Ngày Một Quả Trứng
-              (MNMQT) đang hỗ trợ lương
-            </p>
-            <div className="carousel-item__link">
-              <Link className="carousel-item__view-more" to="/donate">
-                Đọc thêm
-              </Link>
-              <ArrowRightOutlined color="white" className="carousel-item__icon" />
-            </div>
-          </div>
-
-          <div className="banner-carousel__item--second">
-            <Title className="carousel-item__title" level={3}>
-              HồnG Ly- Trẻ nghèo vượt khó
-            </Title>
-            <p className="carousel-item__desc">
-              Trong số 3.000 gia đình mà chương trình Mỗi Ngày Một Quả Trứng
-              (MNMQT) đang hỗ trợ lương
-            </p>
-            <div className="carousel-item__link">
-              <Link className="carousel-item__view-more" to="/donate">
-                Đọc thêm
-              </Link>
-              <ArrowRightOutlined color="white" className="carousel-item__icon" />
-            </div>
-          </div>
-        </div> */}
         {renderCarouselCards(posts)}
       </Carousel>
     </div>

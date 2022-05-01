@@ -18,7 +18,8 @@ type BannerProps = {
   posts: {
     id: string,
     title: string,
-    content: string
+    content: string,
+    userName: string
   }[]
 }
 
