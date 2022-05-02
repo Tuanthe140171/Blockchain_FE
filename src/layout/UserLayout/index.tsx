@@ -81,7 +81,7 @@ const UserLayout: React.FC = (props): ReactElement => {
 
   const debouncedKeyword = useDebounce<string>(inputSearch, 500);
 
-  let url = `users/donees?&limit=30&keyword=${debouncedKeyword}&userType=4`;
+  let url = `users/donees?&limit=30&keyword=${debouncedKeyword}&userType=4&notFilterExpiredDate=1`;
 
   const { data, loading } = useFetch<any>(
     url,
