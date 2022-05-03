@@ -57,6 +57,24 @@ const ProfileSituation = () => {
   const [hasButtons, setHasButtons] = useState(false);
 
   const [notifyObject, setNotifyObject] = useState<any>({});
+  // Base situation list
+  const [situationList, setSituationList] = useState<any>([]);
+  // id of situation that user want to delete
+  const [deleteId, setDeleteId] = useState<any>(undefined);
+  const [updateId, setUpdateId] = useState<any>(undefined);
+  const [tempUpdateId, setTempUpdateId] = useState<any>(undefined);
+  const [isDelete, setIsDelete] = useState<any>(undefined);
+  const [isUpdate, setIsUpdate] = useState<any>(undefined);
+  const [updateObject, setUpdateObject] = useState<any>(undefined);
+  const getSituationMedia = (data: any, text: string) => {
+    const situationMedia = data?.map((media: any, index: number) => ({
+      uid: media.id,
+      name: `Giấy xác nhận ${text}`,
+      status: "done",
+      url: media.link,
+    }));
+    return situationMedia;
+  };
 
   useEffect(() => {
     if (userData) {
@@ -140,32 +158,13 @@ const ProfileSituation = () => {
         setSelectedList([]);
       }
     }
-  }, [userData, badluckerType]);
+  }, [userData, badluckerType, situationList]);
 
   // get initial Situation text
   const getSituationText = (type: number, situationId: string) => {
     // 1: title - 2: message
     const text = badluckerType?.find((type: any) => type.id === situationId);
     return type === 1 ? text?.name : text?.message;
-  };
-
-  // Base situation list
-  const [situationList, setSituationList] = useState<any>([]);
-  // id of situation that user want to delete
-  const [deleteId, setDeleteId] = useState<any>(undefined);
-  const [updateId, setUpdateId] = useState<any>(undefined);
-  const [tempUpdateId, setTempUpdateId] = useState<any>(undefined);
-  const [isDelete, setIsDelete] = useState<any>(undefined);
-  const [isUpdate, setIsUpdate] = useState<any>(undefined);
-  const [updateObject, setUpdateObject] = useState<any>(undefined);
-  const getSituationMedia = (data: any, text: string) => {
-    const situationMedia = data?.map((media: any, index: number) => ({
-      uid: media.id,
-      name: `Giấy xác nhận ${text}`,
-      status: "done",
-      url: media.link,
-    }));
-    return situationMedia;
   };
 
   const [oldSituationTempId, setOldSituationTempId] = useState<any>(0);

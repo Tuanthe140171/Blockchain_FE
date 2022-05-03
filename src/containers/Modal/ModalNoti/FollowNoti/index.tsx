@@ -12,13 +12,12 @@ type IFollowNotiProps = {
 const FollowNoti: React.FC<IFollowNotiProps> = (props) => {
   const { data } = props;
   const navigate = useNavigate();
-  console.log(data);
 
   return (
     <div
       className={`follow-noti follow-read`}
       onClick={() => {
-        navigate(`/profile/${data.external.userId}`);
+        navigate(`/profile/${data?.external?.userId}`);
       }}
     >
       {/* {!data.isRead ? <div className="follow-noti__dotted"></div> : null} */}
