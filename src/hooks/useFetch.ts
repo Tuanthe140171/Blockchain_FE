@@ -115,7 +115,6 @@ function useFetch<T = unknown>(
         onSuccess && onSuccess(data);
       } catch (error: any) {
         if (cancelRequest.current) return;
-
         dispatch({ type: "error", payload: error as Error });
         onError && onError();
       }

@@ -50,6 +50,7 @@ const VotingPage: React.FC = () => {
     ? data.rows.map((donee: any) => ({
         donee: `${donee.lastName || ""} ${donee?.name}`,
         dob: moment(donee.dob).format("DD-MM-yy"),
+        sortCreateDate: moment(donee.createDate).toDate().getTime(),
         createDate: moment(donee.createDate).format("DD-MM-yy"),
         address: `${donee.country} ${donee.baseAddress} ${donee.currentAddress}`,
         id: donee.identityId,
@@ -73,6 +74,7 @@ const VotingPage: React.FC = () => {
               ).indexOf(userData.id) >= 0
             : true;
         })(),
+        sortNumberOfConfirmations: `${donee.UserVotes.filter((userVote: any) => userVote.isAgree === 1).length}`,
         numberOfConfirmations: `${donee.UserVotes.filter((userVote: any) => userVote.isAgree === 1).length} / 10`,
         expireDate: donee.expireDate
       }))
@@ -83,11 +85,12 @@ const VotingPage: React.FC = () => {
       const donee = data.rows.filter(
         (donee: any) => donee.id === selectedUser.userId
       )[0];
-      setSelectedUser({
+
+      donee && setSelectedUser({
         donee: `${donee?.lastName || ""} ${donee?.name}`,
         dob: moment(donee.dob).format("DD-MM-yy"),
         createDate: moment(donee.createDate).format("DD-MM-yy"),
-        address: `${donee.country} ${donee.baseAddress}`,
+        address: `${donee.baseAddress}`,
         currentAddress: `${donee.currentAddress}`,
         id: donee.identityId,
         situations: donee.BadLuckTypes,
@@ -98,6 +101,13 @@ const VotingPage: React.FC = () => {
             .slice(0, 1)
             .pop();
           return userAvatar ? userAvatar.link : null;
+        })(),
+        identityImages: (function () {
+          const userAvatar = donee.UserMedia.filter(
+            (userMedia: any) => userMedia.type === "3"
+          ).map((userMedia: any) => userMedia.link)
+
+          return userAvatar ? userAvatar : null;
         })(),
         identityPlace: donee.identityPlace,
         identityDate: donee.identityDate,
@@ -166,11 +176,13 @@ const VotingPage: React.FC = () => {
       },
     },
     {
+      sorter: (a: any, b: any) => a.sortCreateDate - b.sortCreateDate,
       title: "Thời gian nộp",
       dataIndex: "createDate",
-      width: "10%",
+      width: "15%",
     },
     {
+      sorter: (a: any, b: any) => a.sortNumberOfConfirmations - b.sortNumberOfConfirmations,
       title: "Xác nhận",
       dataIndex: "numberOfConfirmations",
       width: "10%",
@@ -219,7 +231,7 @@ const VotingPage: React.FC = () => {
             placeholder="Tìm kiếm"
             onChange={(e: any) => {
               setCurrentPage(1);
-              setInputSearch(e.target.value.replace(/[^\w\s]/gi, ""));
+              setInputSearch(e.target.value.replace(/[^a-z0-9A-Z ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]/g, ""));
             }}
             value={inputSearch}
             style={{ width: 260 }}

@@ -9,14 +9,12 @@ import { useNavigate } from "react-router-dom";
 import "./index.scss";
 
 type ProfileDonationProps = {
-  donation:
-    | {
-        image: string;
-        name: string;
-        walletAddress: string;
-        id: string;
-      }
-    | undefined;
+  donation: {
+    image: string;
+    name: string;
+    userId: string;
+    id: string
+  } | undefined
 };
 
 const convertToLocaleString = (time: string) => {
@@ -129,7 +127,7 @@ const ProfileDonation: React.FC<ProfileDonationProps> = (props) => {
           <AppDonate
             name={donation.name}
             avatar={donation.image}
-            walletAddress={donation.walletAddress}
+            walletAddress={donation.userId}
             onClose={() => {
               setVisible(false);
             }}

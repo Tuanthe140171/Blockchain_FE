@@ -326,7 +326,7 @@ const ProfilePage: React.FC = () => {
                           : "/icon/bad-lucker.svg";
                       })(),
                       name: userWithParam.name,
-                      walletAddress: userWithParam.walletAddress,
+                      userId: userWithParam.id,
                       id: userWithParam.id,
                     }
                   : undefined

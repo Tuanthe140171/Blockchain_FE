@@ -126,7 +126,8 @@ const HomePage = () => {
   const posts = data ? data.trends.map((trend: any) => ({
     id: trend.Post.id,
     title: trend.Post.title,
-    content: trend.Post.content
+    content: trend.Post.content,
+    userName: `${trend.Post?.User?.name || ""} ${trend.Post?.User?.lastName || ""}`
   })) : []
 
   return (
