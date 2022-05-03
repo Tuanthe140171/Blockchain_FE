@@ -12,6 +12,7 @@ type IFollowNotiProps = {
 const FollowNoti: React.FC<IFollowNotiProps> = (props) => {
   const { data } = props;
   const navigate = useNavigate();
+  console.log(data);
 
   return (
     <div
@@ -26,7 +27,13 @@ const FollowNoti: React.FC<IFollowNotiProps> = (props) => {
           <Avatar size={40} icon={<UserOutlined />} src={data.avatar} />
         </div>
         <div className="follow-noti__top__message">
-          <Tooltip title={<strong>{data.name} {data.content}</strong>}>
+          <Tooltip
+            title={
+              <strong>
+                {data.name} {data.content}
+              </strong>
+            }
+          >
             <div>
               <strong>{data.name}</strong>&nbsp;
               <span>{data.content}</span>
