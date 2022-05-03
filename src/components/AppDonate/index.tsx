@@ -86,8 +86,6 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
           if (charityContract && account && name) {
             setLoadingDonate(true);
 
-            console.log(data, charityContract);
-    
             const tx = await charityContract.donate(
               data.recipient,
               data.amount,

@@ -9,12 +9,14 @@ import { useNavigate } from "react-router-dom";
 import "./index.scss";
 
 type ProfileDonationProps = {
-  donation: {
-    image: string;
-    name: string;
-    walletAddress: string;
-    id: string
-  } | undefined
+  donation:
+    | {
+        image: string;
+        name: string;
+        walletAddress: string;
+        id: string;
+      }
+    | undefined;
 };
 
 const convertToLocaleString = (time: string) => {
@@ -54,13 +56,18 @@ const ProfileDonation: React.FC<ProfileDonationProps> = (props) => {
     },
     false,
     donation?.id ? [true] : [undefined],
-    { method: "GET" },
+    { method: "GET" }
   );
 
   return (
     <div className="profile-donation">
       <div className="direct-donation">
-        <Button className="direct-donation__btn" onClick={() => setVisible(true)}>Ủng hộ</Button>
+        <Button
+          className="direct-donation__btn"
+          onClick={() => setVisible(true)}
+        >
+          Ủng hộ
+        </Button>
       </div>
       <div className="people-donated">
         <header className="people-donated__header">
@@ -81,7 +88,8 @@ const ProfileDonation: React.FC<ProfileDonationProps> = (props) => {
                 <Avatar
                   src={(function () {
                     const userAvatar = TOP_DONATED.from.UserMedia.filter(
-                      (userMedia: any) => userMedia.type === "1" && userMedia.active === 1
+                      (userMedia: any) =>
+                        userMedia.type === "1" && userMedia.active === 1
                     )
                       .slice(0, 1)
                       .pop();
@@ -90,20 +98,33 @@ const ProfileDonation: React.FC<ProfileDonationProps> = (props) => {
                   className="people-donated__avatar"
                 />
                 <div className="people-donated__details">
-                  <p className="people-donated__name">{TOP_DONATED.from.name}</p>
+                  <p
+                    className="people-donated__name"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => navigate(`/profile/${TOP_DONATED.from.id}`)}
+                  >
+                    {TOP_DONATED.from.name}
+                  </p>
                   <p className="people-donated__last-donated">
                     {getTimeDiff(TOP_DONATED.from.transactionsFrom[0].date)}
                   </p>
                 </div>
                 <div className="people-donated__amount">
                   <Image src="/icon/ethereum_1.svg" preview={false} />
-                  <span>{new BigNumber(TOP_DONATED.amount).div(1e18).toFixed(3)}</span>
+                  <span>
+                    {new BigNumber(TOP_DONATED.amount).div(1e18).toFixed(3)}
+                  </span>
                 </div>
               </li>
             </React.Fragment>
           ))}
         </ul>
-        <Button className="people-donated__see-all" onClick={() => navigate(`/donations/${donation?.id}`)}>Xem tất cả ủng hộ</Button>
+        <Button
+          className="people-donated__see-all"
+          onClick={() => navigate(`/donations/${donation?.id}`)}
+        >
+          Xem tất cả ủng hộ
+        </Button>
         {visible && donation && (
           <AppDonate
             name={donation.name}

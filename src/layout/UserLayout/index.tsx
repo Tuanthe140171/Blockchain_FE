@@ -163,6 +163,12 @@ const UserLayout: React.FC = (props): ReactElement => {
     }
   }, [socket, charityStorage, account]);
 
+  // useEffect(() => {
+  //   if (account) {
+  //     window.location.reload();
+  //   }
+  // }, [account]);
+
   const avatarLink = userData?.UserMedia?.find(
     (media: any) => media.type === "1" && media.active === 1
   )
@@ -223,8 +229,6 @@ const UserLayout: React.FC = (props): ReactElement => {
     const getCRVBalance = async () => {
       const balance = await charityContract.balanceOf(account);
       setUserBalance(ethers.utils.formatEther(balance));
-
-      console.log(charityContract);
 
       interval = setInterval(async () => {
         const balance = await charityContract.balanceOf(account);
