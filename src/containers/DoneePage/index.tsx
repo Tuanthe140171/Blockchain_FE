@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Typography } from "antd";
 import DoneeSearchFilter from "./components/DoneeSearchFilter";
 import DoneeList from "./components/DoneeList";
@@ -14,6 +14,10 @@ const DoneePage: React.FC = () => {
   const [inputSearch, setInputSearch] = useState("");
 
   const debouncedKeyword = useDebounce<string>(inputSearch, 500);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [situations, provinces]);
 
   let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}&orderBy=${sortBy}&orderDirection=DESC&userType=4&notFilterExpiredDate=1`;
 
