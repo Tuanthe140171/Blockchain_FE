@@ -83,6 +83,11 @@
             color: #a7b2c8;
             border: none;
           }
+
+          &__title {
+            display: flex;
+            align-items: center;
+          }
         }
 
         &__upload {
