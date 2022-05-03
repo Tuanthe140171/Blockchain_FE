@@ -228,9 +228,7 @@ const ProfileSituation = () => {
                 <Tag color="magenta">
                   Quá hạn ({notifyObject[s?.situationId]}%)
                 </Tag>
-              ) : (
-                "father mucker"
-              )}
+              ) : null}
             </div>
             <div>
               <Button
