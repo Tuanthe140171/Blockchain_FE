@@ -231,15 +231,17 @@ const ProfileSituation = () => {
               ) : null}
             </div>
             <div>
-              <Button
-                onClick={() => {
-                  setUpdateId(+s.id);
-                  setTempUpdateId(+s.situationId);
-                  setOpenConfirmDialog(true);
-                }}
-              >
-                Cập nhật
-              </Button>
+              {userData?.type === 4 ? null : (
+                <Button
+                  onClick={() => {
+                    setUpdateId(+s.id);
+                    setTempUpdateId(+s.situationId);
+                    setOpenConfirmDialog(true);
+                  }}
+                >
+                  Cập nhật
+                </Button>
+              )}
               <Button
                 onClick={() => {
                   setDeleteId(+s.id);
@@ -343,7 +345,7 @@ const ProfileSituation = () => {
       (e) => {
         const action = getUserById(e.data);
         dispatch(action);
-        setDialogTitle("Cập nhật hoàn canh thành công!");
+        setDialogTitle("Cập nhật hoàn cảnh thành công!");
         setOpenDialog(true);
       }
     );
@@ -724,19 +726,22 @@ const ProfileSituation = () => {
         <div className="profile-situation__container">
           <div className="profile-situation__container__list-situation">
             <div className="profile-situation__container__list-situation__title">
-              Hoàn cảnh của bạn ({situationList?.length})
+              <div>Hoàn cảnh của bạn ({situationList?.length})</div>
+              <Button>Nộp lại đơn</Button>
             </div>
             <div className="profile-situation__container__list-situation__cmnd">
               <div className="profile-situation__container__list-situation__cmnd__title-wrapper">
                 <div>Chứng minh nhân dân</div>
-                <Button
-                  onClick={() => {
-                    onCmndUpdate();
-                  }}
-                  disabled={!canUpdateCmnd}
-                >
-                  Cập nhật
-                </Button>
+                {userData?.type === 4 ? null : (
+                  <Button
+                    onClick={() => {
+                      onCmndUpdate();
+                    }}
+                    disabled={!canUpdateCmnd}
+                  >
+                    Cập nhật
+                  </Button>
+                )}
               </div>
               <div className="profile-situation__container__list-situation__cmnd__upload">
                 <Button

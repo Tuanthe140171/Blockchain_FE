@@ -12,6 +12,9 @@
         font-size: 24px;
         color: #002169;
         margin-bottom: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
 
       &__cmnd {
