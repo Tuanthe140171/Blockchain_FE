@@ -56,7 +56,7 @@ const DoneeCard: React.FC<DoneeCardProps> = (props: DoneeCardProps) => {
             preview={false}
             className="donee-card__location-icon"
           />
-          <span>Hà Nội, {location}</span>
+          <span>{location}</span>
         </div>
         <div className="donee-card__circumstances">
           {(more > 0 ? circumstances.slice(0, 2) : circumstances).map(
@@ -93,7 +93,7 @@ const DoneeCard: React.FC<DoneeCardProps> = (props: DoneeCardProps) => {
         <AppDonate
           name={name}
           avatar={image}
-          walletAddress={walletAddress}
+          walletAddress={userId}
           onClose={() => {
             setVisible(false);
           }}

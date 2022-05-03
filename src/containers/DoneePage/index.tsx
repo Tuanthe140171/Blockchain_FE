@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Typography } from "antd";
 import DoneeSearchFilter from "./components/DoneeSearchFilter";
 import DoneeList from "./components/DoneeList";
@@ -15,7 +15,11 @@ const DoneePage: React.FC = () => {
 
   const debouncedKeyword = useDebounce<string>(inputSearch, 500);
 
-  let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}&orderBy=${sortBy}&userType=4`;
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [situations, provinces]);
+
+  let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}&orderBy=${sortBy}&orderDirection=DESC&userType=4&notFilterExpiredDate=1`;
 
   if (situations.length > 0) {
     situations.forEach((situation) => {
@@ -76,7 +80,7 @@ const DoneePage: React.FC = () => {
                   trustScore: data.trustScore,
                   desc: "Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với Thảo gặp nhiều khó khăn trong cuộc sống, mọi thứ quá sức đối với sức đối với",
                   id: data.walletAddress,
-                  location: data.country,
+                  location: data.currentAddress,
                   userId: data.id,
                 }))
               : []

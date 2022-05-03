@@ -21,6 +21,7 @@ export type SelectedUser = {
   id: string;
   situations: any;
   avatar: string | null;
+  identityImages: string[];
   identityPlace: string;
   identityDate: string;
   status: string;
@@ -158,7 +159,7 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
                     <span>Họ và Tên</span>
                   </div>
                   <span className="profile-personal-v2__detail-content">
-                  <Tooltip title={selectedUser?.donee}>
+                    <Tooltip title={selectedUser?.donee}>
                       {selectedUser?.donee}
                     </Tooltip>
                   </span>
@@ -250,6 +251,23 @@ const VotingConfirmation: React.FC<VotingConfirmationProps> = (props) => {
           </div>
 
           <div className="profile-situation-verification">
+            <p className="profile-situation-verification__header">
+              Chứng minh nhân dân
+            </p>
+            <div className="profile-situation-verification__content">
+              {selectedUser && selectedUser.identityImages && selectedUser.identityImages.length > 0 && <VotingSituationView
+                key={selectedUser.id}
+                id={selectedUser.id}
+                title={`Giấy chứng minh nhân dân`}
+                verificationType={`Giấy chứng minh nhân dân`}
+                images={selectedUser?.identityImages}
+                setReloadVotingData={setReloadVotingData}
+                userName={selectedUser?.donee}
+                isVoted={true}
+                isOnTop={userData?.isOnTop}
+                displayIdentity={true}
+              />}
+            </div>
             <p className="profile-situation-verification__header">
               Hoàn cảnh ({selectedUser?.situations.length || 0})
             </p>

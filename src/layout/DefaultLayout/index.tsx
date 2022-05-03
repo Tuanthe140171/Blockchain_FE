@@ -1,10 +1,16 @@
 import { Button, Image, Layout, Menu, Modal, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import React, { ReactElement, useState, useEffect, useCallback, useContext } from "react";
+import React, {
+  ReactElement,
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+} from "react";
 import { WarningOutlined } from "@ant-design/icons";
 import { useWeb3React } from "web3-react-core";
 //@ts-ignore
-import { Fade } from 'react-reveal';
+import { Fade } from "react-reveal";
 import { injected } from "../../connectors";
 import useFetch from "../../hooks/useFetch";
 import useLocalStorage from "../../hooks/useLocalStorage";
@@ -20,29 +26,31 @@ const DefaultLayout: React.FC = (props): ReactElement => {
   const { error: authorizeError } = useContext(AuthorizationContext);
   const navigate = useNavigate();
   const { activate, library, account } = useWeb3React();
-  const [charityStorage, setCharityStorage] = useLocalStorage("charity", { auth: {} });
+  const [charityStorage, setCharityStorage] = useLocalStorage("charity", {
+    auth: {},
+  });
   const [_, setSelectedKey] = useLocalStorage("activeTab", "Dashboard");
 
   const { data: authData, loading } = useFetch<any>(
     "auth",
     {
       "Content-Type": "application/json",
-      Accept: "application/json"
+      Accept: "application/json",
     },
     false,
     [signature, account],
     {
       body: JSON.stringify({
         signature,
-        address: account
+        address: account,
       }),
-      method: "POST"
+      method: "POST",
     },
     () => {
-      setSignature(undefined)
+      setSignature(undefined);
     },
     () => {
-      setSignature(undefined)
+      setSignature(undefined);
     }
   );
 
@@ -51,7 +59,8 @@ const DefaultLayout: React.FC = (props): ReactElement => {
   }, [activate]);
 
   useEffect(() => {
-    authorizeError && setShowSignatureModal(authorizeError === AuthorizeErrorType.UNAUTHORIZED)
+    authorizeError &&
+      setShowSignatureModal(authorizeError === AuthorizeErrorType.UNAUTHORIZED);
   }, [authorizeError]);
 
   useEffect(() => {
@@ -62,10 +71,10 @@ const DefaultLayout: React.FC = (props): ReactElement => {
           [account]: {
             token: authData.key,
             address: account,
-            socketData: authData.socketData
-          }
-        }
-      })
+            socketData: authData.socketData,
+          },
+        },
+      });
     }
   }, [authData, account]);
 
@@ -74,7 +83,11 @@ const DefaultLayout: React.FC = (props): ReactElement => {
   }, [account]);
 
   const doAuthorize = useCallback(async () => {
-    if (authorizeError === AuthorizeErrorType.UNAUTHORIZED && library && account) {
+    if (
+      authorizeError === AuthorizeErrorType.UNAUTHORIZED &&
+      library &&
+      account
+    ) {
       try {
         const signature = await signTypedMessage(library, account);
         setSignature(signature);
@@ -103,50 +116,62 @@ const DefaultLayout: React.FC = (props): ReactElement => {
             >
               Donate for
             </Menu.Item> */}
-              <Menu.Item key="2" className="menu__icon">
+              {/* <Menu.Item key="2" className="menu__icon">
                 Giới thiệu
-              </Menu.Item>
+              </Menu.Item> */}
               <Menu.Item key="3" className="menu__icon">
-                Hướng dẫn sử dụng
+                <a
+                  href={'icon/User Manual.docx'}
+                  download
+                  target="_blank"
+                >
+                  Hướng dẫn sử dụng
+                </a>
               </Menu.Item>
             </Menu>
           </Fade>
         </div>
         <div className="header__right">
           <Fade bottom>
-            <Button className="connect-btn" onClick={async () => {
-              if (authorizeError === AuthorizeErrorType.NONE) {
-                setSelectedKey("Dashboard");
-                navigate("/dashboard");
-              } else if (authorizeError === AuthorizeErrorType.WRONG_NETWORK) {
-                try {
-                  await (window as any).ethereum.request({
-                    method: "wallet_addEthereumChain",
-                    params: [
-                      {
-                        chainId: "0x7E2",
-                        chainName: "CharityVerse",
-                        rpcUrls: ["https://rpc.test.charityverse.info"],
-                        blockExplorerUrls: ["https://blockscout.charityverse.info/"],
-                        nativeCurrency: {
-                          name: "CharityVerse",
-                          symbol: "VNC", // 2-6 characters long
-                          decimals: 18,
+            <Button
+              className="connect-btn"
+              onClick={async () => {
+                if (authorizeError === AuthorizeErrorType.NONE) {
+                  setSelectedKey("Dashboard");
+                  navigate("/dashboard");
+                } else if (
+                  authorizeError === AuthorizeErrorType.WRONG_NETWORK
+                ) {
+                  try {
+                    await (window as any).ethereum.request({
+                      method: "wallet_addEthereumChain",
+                      params: [
+                        {
+                          chainId: "0x7E2",
+                          chainName: "CharityVerse",
+                          rpcUrls: ["https://rpc.test.charityverse.info"],
+                          blockExplorerUrls: [
+                            "https://blockscout.charityverse.info/",
+                          ],
+                          nativeCurrency: {
+                            name: "CharityVerse",
+                            symbol: "VNC", // 2-6 characters long
+                            decimals: 18,
+                          },
                         },
-                      },
-                    ],
-                  });
-                } catch (addError) {
-                  console.log(addError);
+                      ],
+                    });
+                  } catch (addError) {
+                    console.log(addError);
+                  }
+                } else if (authorizeError === AuthorizeErrorType.UNAUTHORIZED) {
+                  setShowSignatureModal(true);
                 }
-              } else if (authorizeError === AuthorizeErrorType.UNAUTHORIZED) {
-                setShowSignatureModal(true);
-              }
-            }
-            }>
-              {
-                authorizeError === AuthorizeErrorType.NONE ? "Vào ứng dụng" : "Kết nối ví"
-              }
+              }}
+            >
+              {authorizeError === AuthorizeErrorType.NONE
+                ? "Vào ứng dụng"
+                : "Kết nối ví"}
             </Button>
           </Fade>
           <Modal
@@ -160,8 +185,15 @@ const DefaultLayout: React.FC = (props): ReactElement => {
           >
             <WarningOutlined className="signature-require-modal__icon" />
             <p className="signature-require-modal__title">Yêu cầu chữ ký</p>
-            <p className="signature-require-modal__desc">Vui lòng đăng kí bằng ví của bạn để xác nhận</p>
-            <Button className="signature-require-modal__btn" onClick={doAuthorize}>Ký</Button>
+            <p className="signature-require-modal__desc">
+              Vui lòng đăng kí bằng ví của bạn để xác nhận
+            </p>
+            <Button
+              className="signature-require-modal__btn"
+              onClick={doAuthorize}
+            >
+              Ký
+            </Button>
           </Modal>
         </div>
       </Layout.Header>

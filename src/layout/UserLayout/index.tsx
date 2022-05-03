@@ -81,7 +81,7 @@ const UserLayout: React.FC = (props): ReactElement => {
 
   const debouncedKeyword = useDebounce<string>(inputSearch, 500);
 
-  let url = `users/donees?&limit=30&keyword=${debouncedKeyword}&userType=4`;
+  let url = `users/donees?&limit=30&keyword=${debouncedKeyword}&userType=4&notFilterExpiredDate=1`;
 
   const { data, loading } = useFetch<any>(
     url,
@@ -143,8 +143,6 @@ const UserLayout: React.FC = (props): ReactElement => {
       const socketData = (charityStorage as any).auth[account].socketData;
 
       socket.on(`notification/${socketData}`, (data: any) => {
-        console.log(data);
-
         const contentData = JSON.parse(data);
         setNotifications([
           ...notifications,
@@ -164,6 +162,12 @@ const UserLayout: React.FC = (props): ReactElement => {
       });
     }
   }, [socket, charityStorage, account]);
+
+  // useEffect(() => {
+  //   if (account) {
+  //     window.location.reload();
+  //   }
+  // }, [account]);
 
   const avatarLink = userData?.UserMedia?.find(
     (media: any) => media.type === "1" && media.active === 1
@@ -457,17 +461,6 @@ const UserLayout: React.FC = (props): ReactElement => {
               Đổi tiền
             </Menu.Item>
             <Menu.Item
-              key="ContactF"
-              icon={<Image src="/icon/contact-us.svg" preview={false} />}
-              className="main-layout__sider__menu__item"
-              onClick={() => {
-                setSelectedKey("ContactUs");
-                navigate("/contact-us");
-              }}
-            >
-              Liên lạc
-            </Menu.Item>
-            <Menu.Item
               key="Voting"
               icon={<Image src="/icon/voting.svg" preview={false} />}
               className="main-layout__sider__menu__item"
@@ -515,6 +508,18 @@ const UserLayout: React.FC = (props): ReactElement => {
               hidden={user?.isAdmin}
             >
               Tiền thưởng
+            </Menu.Item>
+            <Menu.Item
+              key="ContactF"
+              icon={<Image src="/icon/contact-us.svg" preview={false} />}
+              className="main-layout__sider__menu__item"
+              onClick={() => {
+                setSelectedKey("ContactUs");
+                navigate("/contact-us");
+              }}
+              hidden={user?.isAdmin}
+            >
+              Liên lạc
             </Menu.Item>
           </Menu>
         </Sider>

@@ -12,6 +12,9 @@
         font-size: 24px;
         color: #002169;
         margin-bottom: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
 
       &__cmnd {
@@ -82,6 +85,11 @@
             font-size: 16px;
             color: #a7b2c8;
             border: none;
+          }
+
+          &__title {
+            display: flex;
+            align-items: center;
           }
         }
 

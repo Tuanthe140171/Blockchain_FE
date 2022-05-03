@@ -56,6 +56,8 @@ const ProfileSituation = () => {
   // set warning dialog has 2 buttons or not
   const [hasButtons, setHasButtons] = useState(false);
 
+  const [notifyObject, setNotifyObject] = useState<any>({});
+
   useEffect(() => {
     if (userData) {
       const cmnd = userData?.UserMedia?.filter(
@@ -106,10 +108,21 @@ const ProfileSituation = () => {
         const ids = blt?.BadLuckMedia?.map((media: any) => {
           return media?.id;
         });
+        if (
+          blt?.trustScore <= 66 &&
+          new Date(userData?.expireDate) < new Date()
+        ) {
+          notifyObject[blt?.situationId] = blt?.trustScore;
+        }
         linkOldSituationObject[blt?.situationId] = links;
         originOldSituationObject[blt?.situationId] = ids;
         setLinkOldSituationObject(linkOldSituationObject);
         setOriginOldSituationObject(originOldSituationObject);
+        if (new Date(userData?.expireDate) > new Date()) {
+          setNotifyObject({});
+        } else {
+          setNotifyObject(notifyObject);
+        }
       });
 
       if (badluckerType && badluckerType?.length > 0) {
@@ -211,17 +224,28 @@ const ProfileSituation = () => {
           key={index}
         >
           <div className="profile-situation__container__list-situation__situation__wrapper">
-            <div>{getSituationText(1, s.situationId)}</div>
+            <div className="profile-situation__container__list-situation__situation__wrapper__title">
+              <div style={{ marginRight: "10px" }}>
+                {getSituationText(1, s.situationId)}
+              </div>
+              {Object.keys(notifyObject)?.includes(s?.situationId) ? (
+                <Tag color="magenta">
+                  Quá hạn ({notifyObject[s?.situationId]}%)
+                </Tag>
+              ) : null}
+            </div>
             <div>
-              <Button
-                onClick={() => {
-                  setUpdateId(+s.id);
-                  setTempUpdateId(+s.situationId);
-                  setOpenConfirmDialog(true);
-                }}
-              >
-                Cập nhật
-              </Button>
+              {userData?.type === 4 ? null : (
+                <Button
+                  onClick={() => {
+                    setUpdateId(+s.id);
+                    setTempUpdateId(+s.situationId);
+                    setOpenConfirmDialog(true);
+                  }}
+                >
+                  Cập nhật
+                </Button>
+              )}
               <Button
                 onClick={() => {
                   setDeleteId(+s.id);
@@ -325,7 +349,7 @@ const ProfileSituation = () => {
       (e) => {
         const action = getUserById(e.data);
         dispatch(action);
-        setDialogTitle("Cập nhật hoàn canh thành công!");
+        setDialogTitle("Cập nhật hoàn cảnh thành công!");
         setOpenDialog(true);
       }
     );
@@ -382,6 +406,7 @@ const ProfileSituation = () => {
       setIsSubmitCmnd(true);
     }
   );
+
   const { data: updateCmnd, loading: loadingUpdateCmnd } = useFetch<any>(
     "users/update-identity-image",
     {
@@ -602,7 +627,15 @@ const ProfileSituation = () => {
               </Upload>
               <div className="profile-upload__wrapper__download">
                 Bạn chưa có mẫu giấy công chứng?{" "}
-                <Button type="link">Download</Button>
+                <Button type="link">
+                  <a
+                    href={`https://api.test.charityverse.info/assets/download-form?formId=${option?.id}`}
+                    download
+                    target="_blank"
+                  >
+                    Tải xuống
+                  </a>
+                </Button>
               </div>
             </div>
           </div>
@@ -610,6 +643,27 @@ const ProfileSituation = () => {
       }
     });
   };
+
+  const [resubmit, setResubmit] = useState<any>(undefined);
+  const { data: resubmitData, loading: loadingResubmit } = useFetch<any>(
+    "bad-lucker/resubmit",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [resubmit],
+    {
+      method: "PUT",
+    },
+    (e) => {
+      const action = getUserById(e.data);
+      dispatch(action);
+      setResubmit(undefined);
+      setDialogTitle("Yêu cầu xác minh lại thành công!");
+      setOpenDialog(true);
+    }
+  );
 
   return (
     <>
@@ -625,8 +679,9 @@ const ProfileSituation = () => {
         onCancel={() => setOpenDialog(false)}
       />
       <AppDialog
-        type="confirm"
+        type="warning"
         title={"Bạn chắc chắn muốn cập nhật các giấy tờ này chứ?"}
+        description={"Cảnh báo: Hoàn cảnh này sẽ được bỏ phiếu lại từ đầu"}
         confirmText={"Xác nhận"}
         cancelText={"Đóng"}
         onConfirm={() => {
@@ -690,6 +745,7 @@ const ProfileSituation = () => {
         loadingUpdateSituation ||
         loadingGetLinkCmnd ||
         loadingUpdateCmnd ||
+        loadingConfirmRes ||
         loadingSituation) && (
         <AppLoading loadingContent={<div></div>} showContent={false} />
       )}
@@ -697,19 +753,24 @@ const ProfileSituation = () => {
         <div className="profile-situation__container">
           <div className="profile-situation__container__list-situation">
             <div className="profile-situation__container__list-situation__title">
-              Hoàn cảnh của bạn ({situationList?.length})
+              <div>Hoàn cảnh của bạn ({situationList?.length})</div>
+              {Object.keys(notifyObject).length > 0 ? (
+                <Button onClick={() => setResubmit(true)}>Nộp lại đơn</Button>
+              ) : null}
             </div>
             <div className="profile-situation__container__list-situation__cmnd">
               <div className="profile-situation__container__list-situation__cmnd__title-wrapper">
                 <div>Chứng minh nhân dân</div>
-                <Button
-                  onClick={() => {
-                    onCmndUpdate();
-                  }}
-                  disabled={!canUpdateCmnd}
-                >
-                  Cập nhật
-                </Button>
+                {userData?.type === 4 ? null : (
+                  <Button
+                    onClick={() => {
+                      onCmndUpdate();
+                    }}
+                    disabled={!canUpdateCmnd}
+                  >
+                    Cập nhật
+                  </Button>
+                )}
               </div>
               <div className="profile-situation__container__list-situation__cmnd__upload">
                 <Button

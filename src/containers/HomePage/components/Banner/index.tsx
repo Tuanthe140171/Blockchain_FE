@@ -18,7 +18,8 @@ type BannerProps = {
   posts: {
     id: string,
     title: string,
-    content: string
+    content: string,
+    userName: string
   }[]
 }
 
@@ -54,9 +55,7 @@ const Banner: React.FC<BannerProps> = (props) => {
           </Fade>
         </div>
       </div>
-      <Slide right>
-        <BannerCarousel posts={posts} />
-      </Slide>
+      <BannerCarousel posts={posts} />
     </div>
   );
 };

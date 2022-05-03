@@ -224,7 +224,7 @@ const TokenTransferManagement: React.FC = () => {
           <Input.Search
             placeholder="Tìm kiếm"
             onChange={(e: any) => {
-              setInputSearch(e.target.value.replace(/[^\w\s]/gi, ""));
+              setInputSearch(e.target.value.replace(/[^a-z0-9A-Z ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]/g, ""));
             }}
             value={inputSearch}
             style={{ width: 260 }}

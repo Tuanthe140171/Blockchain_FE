@@ -45,7 +45,7 @@ const DoneeList: React.FC<DoneeListProps> = (props) => {
           value={props.inputSearch}
           onChange={(e) => {
             props.setCurrentPage(1);
-            props.setInputSearch(e.target.value.replace(/[^\w\s]/gi, ""))
+            props.setInputSearch(e.target.value.replace(/[^a-z0-9A-Z ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]/g, ""));
           }}
         />
         <div className="donee-list__orderBy">

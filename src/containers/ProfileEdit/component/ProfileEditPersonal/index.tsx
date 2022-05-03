@@ -31,6 +31,7 @@ const ProfilePerson = () => {
     },
   ]);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [openWarningDialog, setOpenWarningDialog] = useState<boolean>(false);
   const { userData } = useSelector((state: any) => state.userLayout);
   const dispatch = useDispatch();
   const avatarLink = userData?.UserMedia?.find(
@@ -123,6 +124,7 @@ const ProfilePerson = () => {
     }
   );
 
+  const [val, setVal] = useState<any>(null);
   const onSubmit = (values: any) => {
     if (new Date(birthday) > new Date()) {
       form.setFields([{ name: "dob", errors: ["Ngày sinh không phù hợp!"] }]);
@@ -146,15 +148,9 @@ const ProfilePerson = () => {
         gender:
           values.gender === "male" ? 0 : values.gender === "female" ? 1 : 2,
       };
+      setVal(values);
       setFormData(dataSubmit);
-      if (isUploadAva) {
-        setIsUploadAva(false);
-        let data = new FormData();
-        data.append("files", values.upload.file.originFileObj);
-        setImgData(data);
-      } else {
-        setUpdateWithoutAva(true);
-      }
+      setIsCheckCmnd(true);
     }
   };
 
@@ -231,6 +227,32 @@ const ProfilePerson = () => {
     }
   }, [errorCmndField]);
 
+  const [isCheckCmnd, setIsCheckCmnd] = useState<any>(undefined);
+  const { data: checkCmdData, loading: loadingCheckCmnd } = useFetch<any>(
+    `users/check-identity-exist?identityId=${formData.identityId}`,
+    {
+      "Content-Type": "application/json",
+    },
+    false,
+    [isCheckCmnd],
+    {},
+    (e) => {
+      setIsCheckCmnd(undefined);
+      if (e.data) {
+        setOpenWarningDialog(true);
+      } else {
+        if (isUploadAva) {
+          setIsUploadAva(false);
+          let data = new FormData();
+          data.append("files", val.upload.file.originFileObj);
+          setImgData(data);
+        } else {
+          setUpdateWithoutAva(true);
+        }
+      }
+    }
+  );
+
   return (
     <>
       <AppDialog
@@ -244,10 +266,21 @@ const ProfilePerson = () => {
         visible={openDialog}
         onCancel={() => setOpenDialog(false)}
       />
+      <AppDialog
+        type="warning"
+        title={"Số CMND đã được sử dụng"}
+        confirmText={"OK"}
+        onConfirm={() => {
+          setOpenWarningDialog(false);
+        }}
+        visible={openWarningDialog}
+        onCancel={() => setOpenWarningDialog(false)}
+      />
       {(loadingCountry ||
         loadingProvince ||
         loadingSubmitData ||
         loadingSubmitImg ||
+        loadingCheckCmnd ||
         loadingSubmitWithoutAva) && (
         <AppLoading loadingContent={<div></div>} showContent={false} />
       )}

@@ -14,6 +14,7 @@ import AppLoading from "../AppLoading";
 import { CHAIN_INFO } from "../../constants/chainInfo";
 import { SupportedChainId } from "../../constants/chains";
 import "./index.scss";
+import useFetch from "../../hooks/useFetch";
 
 type AppDonateProps = {
   onClose: () => void;
@@ -24,6 +25,9 @@ type AppDonateProps = {
 
 const AppDonate: React.FC<AppDonateProps> = (props) => {
   const { name, avatar, walletAddress, onClose } = props;
+  const [startDonating, setStartDonating] = useState<boolean | undefined>(
+    undefined
+  );
   const [txHash, setTxHash] = useState<undefined | string>(undefined);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [loadingDonate, setLoadingDonate] = useState<boolean>(false);
@@ -40,10 +44,6 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
     chainId ? (chainId as SupportedChainId) : SupportedChainId.CHARITY
     ];
 
-  // useEffect(() => {
-  //     !isComponentVisible && onClose && onClose();
-  // }, [isComponentVisible, onClose]);
-
   useEffect(() => {
     const queryDonateFee = async () => {
       const donateFee = await charityContract.donateFeePercent();
@@ -52,6 +52,72 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
 
     charityContract && queryDonateFee();
   }, [charityContract]);
+
+
+  const { data, loading, error } = useFetch<{
+    signature: string;
+    nonce: string;
+    amount: string;
+    recipient: string;
+  }>(
+    `transactions/donate`,
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [startDonating],
+    {
+      method: "POST",
+      body: JSON.stringify({
+        amount: `${inputAmount}`,
+        receiverId: walletAddress
+      }),
+    },
+    () => setStartDonating(undefined),
+    () => setStartDonating(undefined)
+  );
+
+  useEffect(() => {
+    error && message.error(error.message, 4);
+  }, [error]);
+  
+  useEffect(() => {
+    if (data) {
+      const handleUserDonation = async () => {
+        try {
+          if (charityContract && account && name) {
+            setLoadingDonate(true);
+
+            const tx = await charityContract.donate(
+              data.recipient,
+              data.amount,
+              data.nonce,
+              data.signature
+            );
+
+            setTxHash(tx.hash);
+
+            await tx.wait(3);
+
+            setTxHash(undefined);
+            setLoadingDonate(false);
+            setInputAmount("0");
+
+            message.success(
+              `Bạn đã ủng hộ thành công ${new BigNumber(data.amount).div(1e18).toFixed(3)} coin cho ${name}`,
+              5
+            );
+          }
+        } catch (err: any) {
+          setLoadingDonate(false);
+          message.error(err.message, 3);
+        }
+      };
+
+      handleUserDonation();
+    }
+  }, [data, charityContract, account, name]);
 
   useEffect(() => {
     const getCRVBalance = async () => {
@@ -63,35 +129,6 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
 
     charityContract && (account || txHash) && getCRVBalance();
   }, [charityContract, account, txHash]);
-
-  const handleUserDonation = async () => {
-    try {
-      if (charityContract && account && walletAddress) {
-        setLoadingDonate(true);
-
-        const tx = await charityContract.donate(
-          walletAddress,
-          new BigNumber(inputAmount).multipliedBy(1e18).toFixed()
-        );
-
-        setTxHash(tx.hash);
-
-        await tx.wait(3);
-
-        setTxHash(undefined);
-        setLoadingDonate(false);
-        setInputAmount("0");
-
-        message.success(
-          `Bạn đã ủng hộ thành công ${inputAmount} coin cho ${name}`,
-          5
-        );
-      }
-    } catch (err: any) {
-      setLoadingDonate(false);
-      message.error(err.message, 3);
-    }
-  };
 
   return (
     <>
@@ -137,21 +174,27 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
                     onChange={(e: any) => {
                       !e ? setInputAmount("0") : setInputAmount(e);
                     }}
-                    onKeyDown={(e: any) => {
-                      if (
-                        e.code === "ArrowLeft" ||
-                        e.code === "ArrowRight" ||
-                        e.code === "ArrowUp" ||
-                        e.code === "ArrowDown" ||
-                        e.code === "Delete" ||
-                        e.code === "Backspace"
-                      ) {
-                        return;
-                      } else if (e.key.search(/\d/) === -1) {
+                    onKeyPress={(e: any) => {
+                      const splitString = e.target.value.split(".");
+                      if (splitString[0].length > 5) {
                         e.preventDefault();
-                      } else if (e.target.value.length >= 8) {
-                        e.preventDefault();
+                        return;  
                       }
+
+                      if (splitString[1].length > 2) {
+                        e.preventDefault();
+                        return;
+                      }
+
+                      if (
+                        e.charCode === 0 ||
+                        ((e.charCode >= 48 && e.charCode <= 57) ||
+                          (e.charCode === 46 && e.target.value.indexOf('.') < 0))
+                      ) {
+                        return true;
+                      }
+
+                      e.preventDefault();
                     }}
                     controls={false}
                     className="app-donate__input"
@@ -250,7 +293,7 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
         cancelText={"No"}
         onConfirm={() => {
           setOpenDialog(false);
-          handleUserDonation();
+          setStartDonating(true);
         }}
         onClose={() => {
           setOpenDialog(false);
@@ -258,7 +301,7 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
         visible={openDialog}
         onCancel={() => setOpenDialog(false)}
       />
-      {loadingDonate && (
+      {(loadingDonate || loading) && (
         <AppLoading
           showContent={txHash !== undefined}
           loadingContent={
