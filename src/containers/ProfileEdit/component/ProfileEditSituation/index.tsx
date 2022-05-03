@@ -56,6 +56,8 @@ const ProfileSituation = () => {
   // set warning dialog has 2 buttons or not
   const [hasButtons, setHasButtons] = useState(false);
 
+  const [notifyObject, setNotifyObject] = useState<any>({});
+
   useEffect(() => {
     if (userData) {
       const cmnd = userData?.UserMedia?.filter(
@@ -106,10 +108,17 @@ const ProfileSituation = () => {
         const ids = blt?.BadLuckMedia?.map((media: any) => {
           return media?.id;
         });
+        if (
+          blt?.trustScore <= 66 &&
+          new Date(userData?.expireDate) < new Date()
+        ) {
+          notifyObject[blt?.situationId] = blt?.trustScore;
+        }
         linkOldSituationObject[blt?.situationId] = links;
         originOldSituationObject[blt?.situationId] = ids;
         setLinkOldSituationObject(linkOldSituationObject);
         setOriginOldSituationObject(originOldSituationObject);
+        setNotifyObject(notifyObject);
       });
 
       if (badluckerType && badluckerType?.length > 0) {
@@ -211,7 +220,16 @@ const ProfileSituation = () => {
           key={index}
         >
           <div className="profile-situation__container__list-situation__situation__wrapper">
-            <div>{getSituationText(1, s.situationId)}</div>
+            <div className="profile-situation__container__list-situation__situation__wrapper__title">
+              <div style={{ marginRight: "10px" }}>
+                {getSituationText(1, s.situationId)}
+              </div>
+              {Object.keys(notifyObject)?.includes(s?.situationId) ? (
+                <Tag color="magenta">
+                  Quá hạn ({notifyObject[s?.situationId]}%)
+                </Tag>
+              ) : null}
+            </div>
             <div>
               <Button
                 onClick={() => {
@@ -633,8 +651,9 @@ const ProfileSituation = () => {
         onCancel={() => setOpenDialog(false)}
       />
       <AppDialog
-        type="confirm"
+        type="warning"
         title={"Bạn chắc chắn muốn cập nhật các giấy tờ này chứ?"}
+        description={"Cảnh báo: Hoàn cảnh này sẽ được bỏ phiếu lại từ đầu"}
         confirmText={"Xác nhận"}
         cancelText={"Đóng"}
         onConfirm={() => {
