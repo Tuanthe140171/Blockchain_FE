@@ -118,7 +118,11 @@ const ProfileSituation = () => {
         originOldSituationObject[blt?.situationId] = ids;
         setLinkOldSituationObject(linkOldSituationObject);
         setOriginOldSituationObject(originOldSituationObject);
-        setNotifyObject(notifyObject);
+        if (new Date(userData?.expireDate) > new Date()) {
+          setNotifyObject({});
+        } else {
+          setNotifyObject(notifyObject);
+        }
       });
 
       if (badluckerType && badluckerType?.length > 0) {
@@ -402,6 +406,7 @@ const ProfileSituation = () => {
       setIsSubmitCmnd(true);
     }
   );
+
   const { data: updateCmnd, loading: loadingUpdateCmnd } = useFetch<any>(
     "users/update-identity-image",
     {
@@ -639,6 +644,27 @@ const ProfileSituation = () => {
     });
   };
 
+  const [resubmit, setResubmit] = useState<any>(undefined);
+  const { data: resubmitData, loading: loadingResubmit } = useFetch<any>(
+    "bad-lucker/resubmit",
+    {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    false,
+    [resubmit],
+    {
+      method: "PUT",
+    },
+    (e) => {
+      const action = getUserById(e.data);
+      dispatch(action);
+      setResubmit(undefined);
+      setDialogTitle("Yêu cầu xác minh lại thành công!");
+      setOpenDialog(true);
+    }
+  );
+
   return (
     <>
       <AppDialog
@@ -719,6 +745,7 @@ const ProfileSituation = () => {
         loadingUpdateSituation ||
         loadingGetLinkCmnd ||
         loadingUpdateCmnd ||
+        loadingConfirmRes ||
         loadingSituation) && (
         <AppLoading loadingContent={<div></div>} showContent={false} />
       )}
@@ -727,7 +754,9 @@ const ProfileSituation = () => {
           <div className="profile-situation__container__list-situation">
             <div className="profile-situation__container__list-situation__title">
               <div>Hoàn cảnh của bạn ({situationList?.length})</div>
-              <Button>Nộp lại đơn</Button>
+              {Object.keys(notifyObject).length > 0 ? (
+                <Button onClick={() => setResubmit(true)}>Nộp lại đơn</Button>
+              ) : null}
             </div>
             <div className="profile-situation__container__list-situation__cmnd">
               <div className="profile-situation__container__list-situation__cmnd__title-wrapper">
