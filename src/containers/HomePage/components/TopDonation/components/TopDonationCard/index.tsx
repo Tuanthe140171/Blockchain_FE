@@ -31,7 +31,7 @@ const TopDonationCard: React.FC<TopDonationCardProps> = (props: TopDonationCardP
                         src="/icon/ethereum_1.svg"
                         preview={false}
                     />
-                    <span>{totalDonation} VNC</span>
+                    <span>{totalDonation} CRV</span>
                 </p>
             </div>
         </div>

@@ -19,7 +19,7 @@ const DoneePage: React.FC = () => {
     setCurrentPage(1);
   }, [situations, provinces]);
 
-  let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}&orderBy=${sortBy}&orderDirection=DESC&userType=4&notFilterExpiredDate=1`;
+  let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}&orderBy=${sortBy}&orderDirection=DESC&userType[]=4&notFilterExpiredDate=1`;
 
   if (situations.length > 0) {
     situations.forEach((situation) => {
