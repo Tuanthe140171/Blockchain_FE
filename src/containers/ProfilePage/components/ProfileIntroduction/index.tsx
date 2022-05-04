@@ -239,7 +239,7 @@ const ProfileIntroduction: React.FC<ProfileIntroductionProps> = (props) => {
           <div className="profile-intro__metrics">
             <div className="profile-intro__tier profile-intro__metrics-block">
               <p>Tier of Charity</p>
-              <span>{userData?.tierCharity ? userData?.tierCharity : 0}%</span>
+              <span>{userData?.tierCharity ? userData?.tierCharity : 0}</span>
             </div>
             <div className="profile-intro__divider"></div>
             <div className="profile-intro__trust profile-intro__metrics-block">

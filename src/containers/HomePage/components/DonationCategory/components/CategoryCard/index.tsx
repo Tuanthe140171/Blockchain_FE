@@ -44,7 +44,7 @@ const CategoryCard: React.FC<TopTierCharityCardProps> = (props: TopTierCharityCa
                 <p className="category-card__desc">{desc}</p>
                 <div className="category-card__metrics">
                     <div className="category-card__tier category-card__metrics-block">
-                        <span>{tierOfCharity}%</span>
+                        <span>{tierOfCharity}</span>
                         <p>Tier of Charity</p>
                     </div>
                     <div className="category-card__divider"></div>
