@@ -289,6 +289,9 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
         >
           Xác nhận
         </Button>
+        <div className="profile-drawer__title">
+          Xác nhận hộ nghèo
+        </div>
         <div className="profile-drawer__text">
           Bạn hãy chọn những hoàn cảnh phù hợp với hoàn cảnh của bạn :
         </div>
