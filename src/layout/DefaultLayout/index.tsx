@@ -155,7 +155,7 @@ const DefaultLayout: React.FC = (props): ReactElement => {
                           ],
                           nativeCurrency: {
                             name: "CharityVerse",
-                            symbol: "VNC", // 2-6 characters long
+                            symbol: "CRV", // 2-6 characters long
                             decimals: 18,
                           },
                         },

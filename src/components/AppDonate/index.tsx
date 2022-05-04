@@ -166,7 +166,7 @@ const AppDonate: React.FC<AppDonateProps> = (props) => {
                     addonAfter={
                       <div className="app-donate__icon">
                         <Image src="/icon/ethereum_1.svg" preview={false} />
-                        <p>VNC</p>
+                        <p>CRV</p>
                       </div>
                     }
                     placeholder="0"

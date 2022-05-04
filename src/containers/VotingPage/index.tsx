@@ -25,7 +25,7 @@ const VotingPage: React.FC = () => {
   const debouncedKeyword = useDebounce<string>(inputSearch, 500);
   const navigate = useNavigate();
 
-  let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}&userType=3`;
+  let url = `users/donees?page=${currentPage}&limit=8&keyword=${debouncedKeyword}&userType[]=3`;
 
   const { data, loading } = useFetch<any>(
     url,

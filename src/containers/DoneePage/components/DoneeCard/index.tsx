@@ -70,7 +70,7 @@ const DoneeCard: React.FC<DoneeCardProps> = (props: DoneeCardProps) => {
         </div>
         <div className="donee-card__metrics">
           <div className="donee-card__tier donee-card__metrics-block">
-            <span>{tierOfCharity}%</span>
+            <span>{tierOfCharity}</span>
             <p>Tier of Charity</p>
           </div>
           <div className="donee-card__divider"></div>

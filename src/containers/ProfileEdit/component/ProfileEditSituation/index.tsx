@@ -217,6 +217,8 @@ const ProfileSituation = () => {
   // render initial Situation
   const renderSituation = () => {
     return situationList?.map((s: any, index: number) => {
+      console.log(s);
+
       return (
         <div
           className="profile-situation__container__list-situation__situation"
@@ -231,7 +233,11 @@ const ProfileSituation = () => {
                 <Tag color="magenta">
                   Quá hạn ({notifyObject[s?.situationId]}%)
                 </Tag>
-              ) : null}
+              ) : s?.trustScore > 66 ? (
+                <Tag color="green">Đã xác minh ({s?.trustScore}%)</Tag>
+              ) : (
+                <Tag color="gold">Đang xác minh ({s?.trustScore}%)</Tag>
+              )}
             </div>
             <div>
               {userData?.type === 4 ? null : (
@@ -679,7 +685,9 @@ const ProfileSituation = () => {
       />
       <AppDialog
         type="warning"
-        title={"Bạn chắc chắn muốn cập nhật các giấy tờ này chứ?"}
+        title={
+          "Trust score và toàn bộ thông tin liên quan đến hoàn cảnh này sẽ bị ảnh hưởng!"
+        }
         description={"Cảnh báo: Hoàn cảnh này sẽ được bỏ phiếu lại từ đầu"}
         confirmText={"Xác nhận"}
         cancelText={"Đóng"}
