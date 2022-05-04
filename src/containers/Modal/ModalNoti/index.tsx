@@ -40,7 +40,7 @@ const ModalNoti: React.FC<
       name: noti.name,
       avatar: noti.avatar,
       external: {
-        userId: JSON.parse(noti.external)?.postId,
+        userId: JSON.parse(noti.external)?.userId,
         description: JSON.parse(noti.external)?.description,
       },
       type: noti.type,
