@@ -253,6 +253,7 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
                 defaultFileList={[]}
                 onChange={(e) => onSituationUpload(e, option?.id)}
                 customRequest={dummyRequest}
+                accept=".jpg,.jpeg,.png"
               >
                 <Button>+ Tải thêm</Button>
               </Upload>
@@ -289,9 +290,7 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
         >
           Xác nhận
         </Button>
-        <div className="profile-drawer__title">
-          Xác nhận hộ nghèo
-        </div>
+        <div className="profile-drawer__title">Xác nhận hộ nghèo</div>
         <div className="profile-drawer__text">
           Bạn hãy chọn những hoàn cảnh phù hợp với hoàn cảnh của bạn :
         </div>
@@ -319,6 +318,7 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
             </div>
           }
           dropdownStyle={{ width: "100%" }}
+          dropdownClassName={"profile-drawer__cascader-dropdown"}
         />
         <div className="profile-drawer__tags">{renderTag()}</div>
         <div className="profile-drawer__text">
@@ -335,6 +335,7 @@ const ProfileModal: React.FC<ProfileModalProps> = (props) => {
               onChange={onCmndUpload}
               className="profile-drawer__cmnd__wrapper__container"
               customRequest={dummyRequest}
+              accept=".jpg,.jpeg,.png"
             >
               <Button>+ Tải thêm</Button>
             </Upload>

@@ -283,6 +283,7 @@ const ProfileSituation = () => {
               customRequest={dummyRequest}
               isImageUrl={(file: any) => true}
               maxCount={5}
+              accept=".jpg,.jpeg,.png"
             >
               <Button>+ Tải thêm</Button>
             </Upload>
@@ -584,7 +585,7 @@ const ProfileSituation = () => {
       const action = getUserById(e.data);
       dispatch(action);
       setIsSubmit(undefined);
-      setDialogTitle("Bạn đã gửi đơn xác nhận hộ nghèo thành công!");
+      setDialogTitle("Bạn đã gửi đơn xác nhận thành công!");
       setOpenDialog(true);
     }
   );
@@ -627,6 +628,7 @@ const ProfileSituation = () => {
                 defaultFileList={[]}
                 onChange={(e) => onSituationUpload(e, option?.id)}
                 customRequest={dummyRequest}
+                accept=".jpg,.jpeg,.png"
               >
                 <Button>+ Tải thêm</Button>
               </Upload>
@@ -795,6 +797,7 @@ const ProfileSituation = () => {
                   onChange={onCmndChange}
                   maxCount={2}
                   isImageUrl={(file: any) => true}
+                  accept=".jpg,.jpeg,.png"
                 >
                   {cmndList.length === 2 ? null : <Button>+ Tải thêm</Button>}
                 </Upload>

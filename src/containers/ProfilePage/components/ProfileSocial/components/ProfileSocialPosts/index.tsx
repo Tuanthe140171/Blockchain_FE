@@ -366,6 +366,7 @@ const ProfileSocialPosts: React.FC = (props) => {
                   className="profile-social__posts__upload__form__image__wrapper"
                   isImageUrl={(file: any) => true}
                   customRequest={dummyRequest}
+                  accept=".jpg,.jpeg,.png"
                 >
                   +
                 </Upload>
@@ -388,6 +389,7 @@ const ProfileSocialPosts: React.FC = (props) => {
                     onChange={onPictureChange}
                     className="profile-social__posts__upload__form__footer__buttons__temp"
                     customRequest={dummyRequest}
+                    accept=".jpg,.jpeg,.png"
                   >
                     <Button
                       disabled={fileList.length > 0}
