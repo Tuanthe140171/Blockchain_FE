@@ -5,10 +5,16 @@
 
   &__btn-submit {
     position: absolute;
-    top: 24px;
-    right: 20px;
-    height: 50px;
-    width: 155px;
+    top: 10px;
+    right: 45px;
+    height: 40px;
+    width: 120px;
+  }
+
+  &__title {
+    color: #002169;
+    font-size: 24px;
+    margin-bottom: 40px;
   }
 
   &__text {
@@ -43,7 +49,7 @@
       background: #ffffff;
       padding: 5px;
       margin: 0 15px;
-      color: #2F497F;
+      color: #2f497f;
       font-size: 18px;
     }
 
@@ -52,7 +58,7 @@
       background: #ffffff;
       padding: 5px;
       margin: 0 15px;
-      color: #2F497F;
+      color: #2f497f;
       font-size: 18px;
     }
 
@@ -75,7 +81,7 @@
 
           & .ant-upload-list-text-container {
             padding: 30px 20px;
-            border: 1px solid #E0E6F1;
+            border: 1px solid #e0e6f1;
           }
         }
       }

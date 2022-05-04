@@ -12,7 +12,6 @@ type IActivityNotiProps = {
 const ActivityNoti: React.FC<IActivityNotiProps> = (props) => {
   const { data } = props;
   const navigate = useNavigate();
-  console.log(data);
 
   return (
     <div
