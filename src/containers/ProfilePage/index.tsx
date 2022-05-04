@@ -290,6 +290,7 @@ const ProfilePage: React.FC = () => {
               isImageUrl={(file: any) => true}
               customRequest={dummyRequest}
               showUploadList={false}
+              accept=".jpg,.jpeg,.png"
             >
               <Button
                 type="ghost"

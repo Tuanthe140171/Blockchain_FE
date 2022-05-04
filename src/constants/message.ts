@@ -12,7 +12,7 @@ enum Message {
   CONFIRM_CC_01 = "Disagree",
   CONFIRM_CF_01 = "Agree",
 
-  INFOR_01 = "Bạn đã gửi đơn xác nhận hộ nghèo thành công",
+  INFOR_01 = "Bạn đã gửi đơn xác nhận thành công",
   INFOR_DC_01 = "Những người trong hệ thống sẽ xác nhận giúp bạn.",
   INFOR_CF_01 = "OK",
 }

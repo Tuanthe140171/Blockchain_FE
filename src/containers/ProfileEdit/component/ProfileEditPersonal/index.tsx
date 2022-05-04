@@ -606,6 +606,7 @@ const ProfilePerson = () => {
                   className="profile-person__container__avatar__wrapper"
                   isImageUrl={(file: any) => true}
                   customRequest={dummyRequest}
+                  accept=".jpg,.jpeg,.png"
                 >
                   <Button
                     type="ghost"
