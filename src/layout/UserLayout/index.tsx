@@ -144,6 +144,7 @@ const UserLayout: React.FC = (props): ReactElement => {
 
       socket.on(`notification/${socketData}`, (data: any) => {
         const contentData = JSON.parse(data);
+        console.log(contentData);
         setNotifications([
           ...notifications,
           {
